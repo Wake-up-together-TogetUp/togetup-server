@@ -1,0 +1,41 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.10'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.jogijo'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+compileJava.options.encoding = 'UTF-8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// security
+	implementation('org.springframework.boot:spring-boot-starter-security')
+
+	// DB
+//	runtimeOnly ('mysql:mysql-connector-java') //mysql8
+//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
