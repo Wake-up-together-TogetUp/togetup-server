@@ -41,6 +41,7 @@ public class JwtService {
 
     public static String generateAccessToken(String username, String key, long expiredTimeMs) {
         return doGenerateToken(username, expiredTimeMs, key);
+
     }
 
     private static String doGenerateToken(String username, long expireTime, String key) {
