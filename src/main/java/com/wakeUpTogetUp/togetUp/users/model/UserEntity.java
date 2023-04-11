@@ -69,9 +69,9 @@ public class UserEntity {
         this.removedAt = Timestamp.from(Instant.now());
     }
 
-    public static UserEntity of(String userName, String encodedPwd) {
+    public static UserEntity of(String nickName, String encodedPwd) {
         UserEntity entity = new UserEntity();
-        entity.setUserName(userName);
+        entity.setNickName(nickName);
         entity.setPassword(encodedPwd);
         return entity;
     }

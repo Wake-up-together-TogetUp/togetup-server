@@ -12,9 +12,9 @@ import java.util.Date;
 
 public class JwtService {
 
-    public static Boolean validate(String token, String userName, String key) {
-        String usernameByToken = getUsername(token, key);
-        return usernameByToken.equals(userName) && !isTokenExpired(token, key);
+    public static Boolean validate(String token, String nickName, String key) {
+        String usernameByToken = getNickname(token, key);
+        return usernameByToken.equals(nickName) && !isTokenExpired(token, key);
     }
 
     public static Claims extractAllClaims(String token, String key) {
@@ -25,7 +25,7 @@ public class JwtService {
                 .getBody();
     }
 
-    public static String getUsername(String token, String key) {
+    public static String getNickname(String token, String key) {
         return extractAllClaims(token, key).get("username", String.class);
     }
 
@@ -39,13 +39,13 @@ public class JwtService {
         return expiration.before(new Date());
     }
 
-    public static String generateAccessToken(String username, String key, long expiredTimeMs) {
-        return doGenerateToken(username, expiredTimeMs, key);
+    public static String generateAccessToken(String nickname, String key, long expiredTimeMs) {
+        return doGenerateToken(nickname, expiredTimeMs, key);
     }
 
-    private static String doGenerateToken(String username, long expireTime, String key) {
+    private static String doGenerateToken(String nickname, long expireTime, String key) {
         Claims claims = Jwts.claims();
-        claims.put("username", username);
+        claims.put("nickname", nickname);
 
         return Jwts.builder()
                 .setClaims(claims)
