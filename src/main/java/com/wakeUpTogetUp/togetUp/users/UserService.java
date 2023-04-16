@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.users;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -27,16 +28,17 @@ public class UserService {
 
  //   private final UserEntityRepository userRepository;
  //   private final AlarmEntityRepository alarmEntityRepository;
+    @Autowired
     private final BCryptPasswordEncoder encoder;
  //   private final UserCacheRepository redisRepository;
 
 
 
-    @Value("${jwt.secret-key}")
-    private String secretKey;
-
-    @Value("${jwt.token.expired-time-ms}")
-    private Long expiredTimeMs;
+//    @Value("${jwt.secret-key}")
+//    private String secretKey;
+//
+//    @Value("${jwt.token.expired-time-ms}")
+//    private Long expiredTimeMs;
 
 
     public User loadUserByNickname(String nickName) throws UsernameNotFoundException {
@@ -50,14 +52,14 @@ public class UserService {
 //                ));
     }
 
-    public String login(String nickName, String password) {
-        User savedUser = loadUserByNickname(nickName);
-       // redisRepository.setUser(savedUser);
-        if (!encoder.matches(password, savedUser.getPassword())) {
-            throw new TogetUpApplicationException(ErrorCode.INVALID_PASSWORD);
-        }
-        return JwtService.generateAccessToken(nickName, secretKey, expiredTimeMs);
-    }
+//    public String login(String nickName, String password) {
+//        User savedUser = loadUserByNickname(nickName);
+//       // redisRepository.setUser(savedUser);
+//        if (!encoder.matches(password, savedUser.getPassword())) {
+//            throw new TogetUpApplicationException(ErrorCode.INVALID_PASSWORD);
+//        }
+//        return JwtService.generateAccessToken(nickName, secretKey, expiredTimeMs);
+//    }
 
 
     @Transactional

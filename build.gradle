@@ -32,7 +32,7 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-security')
 
 	// DB
-//	runtimeOnly ('mysql:mysql-connector-java') //mysql8
+	runtimeOnly ('mysql:mysql-connector-java:8.0.32') //mysql8
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 	//jwt
