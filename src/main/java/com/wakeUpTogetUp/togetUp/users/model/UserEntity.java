@@ -64,10 +64,10 @@ public class UserEntity {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    @PrePersist
-    void removedAt() {
-        this.removedAt = Timestamp.from(Instant.now());
-    }
+//    @PrePersist
+//    void removedAt() {
+//        this.removedAt = Timestamp.from(Instant.now());
+//    }
 
     public static UserEntity of(String nickName, String encodedPwd) {
         UserEntity entity = new UserEntity();
