@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp;
+package com.wakeUpTogetUp.togetUp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
