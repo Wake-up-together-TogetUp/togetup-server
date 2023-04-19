@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.users.model;
 
+import com.wakeUpTogetUp.togetUp.login.oauth.entity.ProviderType;
 import com.wakeUpTogetUp.togetUp.users.model.UserEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -34,6 +35,7 @@ public class User implements UserDetails {
     private Timestamp registeredAt;
     private Timestamp updatedAt;
     private Timestamp removedAt;
+    private ProviderType providerType;
 
 
     public static User fromEntity(UserEntity entity) {
@@ -48,7 +50,8 @@ public class User implements UserDetails {
                 entity.getRole(),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt(),
-                entity.getRemovedAt()
+                entity.getRemovedAt(),
+                entity.getProviderType()
         );
     }
 
