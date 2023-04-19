@@ -37,7 +37,8 @@ public enum BaseResponseStatus {
      * 4000 : Database, Server 오류
      */
     DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
-    SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다.");
+    SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
+    DELETE_FILE_NOT_FOUND(false, 4002, "삭제할 파일을 찾을 수 없습니다.");
 
     // 5000 : 필요시 만들어서 쓰세요
     // 6000 : 필요시 만들어서 쓰세요
