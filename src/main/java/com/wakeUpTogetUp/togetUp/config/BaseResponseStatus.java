@@ -1,6 +1,7 @@
 package com.wakeUpTogetUp.togetUp.config;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 /**
  * 에러 코드 관리
@@ -8,48 +9,37 @@ import lombok.Getter;
 @Getter
 public enum BaseResponseStatus {
     /**
-     * 1000 : 요청 성공
+     * 200번대(성공)
      */
-    SUCCESS(true, 1000, "요청에 성공하였습니다."),
+    // 공통
+    SUCCESS(HttpStatus.OK, "요청에 성공하였습니다."),
+
+    /**
+     * 300번대(리다이렉트)
+     */
 
 
     /**
-     * 2000 : Request 오류
+     * 400번대(클라이언트 에러)
      */
-    // Common
-    REQUEST_ERROR(false, 2000, "입력값을 확인해주세요."),
-    EMPTY_JWT(false, 2001, "JWT를 입력해주세요."),
-
-    INVALID_USER_JWT(false,2003,"권한이 없는 유저의 접근입니다."),
-
-    // users
-    USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
+    // 공통
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, "요청 값을 확인해주세요."),
+    // files
+    FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 파일을 찾을 수 없습니다."),
 
     /**
-     * 3000 : Response 오류
+     * 500번대(서버 에러)
      */
-    // Common
-    RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
-    INVALID_JWT(false, 3001, "유효하지 않은 JWT입니다."),
+    // 공통
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 서버 에러입니다. 제보 부탁드립니다.")
 
+    ;
 
-    /**
-     * 4000 : Database, Server 오류
-     */
-    DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
-    SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
-    DELETE_FILE_NOT_FOUND(false, 4002, "삭제할 파일을 찾을 수 없습니다.");
-
-    // 5000 : 필요시 만들어서 쓰세요
-    // 6000 : 필요시 만들어서 쓰세요
-
-    private final boolean isSuccess;
-    private final int code;
+    private final HttpStatus httpStatus;
     private final String message;
 
-    private BaseResponseStatus(boolean isSuccess, int code, String message) {
-        this.isSuccess = isSuccess;
-        this.code = code;
+    private BaseResponseStatus(HttpStatus httpStatus, String message) {
+        this.httpStatus = httpStatus;
         this.message = message;
     }
 }
