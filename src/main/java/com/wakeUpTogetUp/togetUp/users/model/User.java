@@ -34,8 +34,8 @@ public class User {
 
     @Column(name = "email")
     private String email;
-//    @Column(name = "password")
-//    private String password;
+    @Column(name = "password")
+    private String password;
 //
 //    @Column(name = "phoneNumber")
 //    private String phoneNumber;
@@ -73,8 +73,9 @@ public class User {
 
 
     @Builder
-    public User(Integer id, String username,  String email) {
+    public User(Integer id, String password,String username,  String email) {
         this.id = id;
+        this.password=password;
         this.userName = username;
         this.email = email;
     }
