@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.config;
+package com.wakeUpTogetUp.togetUp.common;
 
 //import org.hibernate.TypeMismatchException;
 import org.slf4j.Logger;

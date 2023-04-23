@@ -1,7 +1,5 @@
 package com.wakeUpTogetUp.togetUp.exception;
 
-
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

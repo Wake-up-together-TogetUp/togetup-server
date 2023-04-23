@@ -1,6 +1,5 @@
-package com.wakeUpTogetUp.togetUp.config;
+package com.wakeUpTogetUp.togetUp.common;
 
-import com.wakeUpTogetUp.togetUp.config.BaseResponseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

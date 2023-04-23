@@ -1,9 +1,5 @@
 package com.wakeUpTogetUp.togetUp.users;
 
-import com.wakeUpTogetUp.togetUp.config.BaseException;
-import com.wakeUpTogetUp.togetUp.config.BaseResponse;
-import com.wakeUpTogetUp.togetUp.users.model.GetUserRes;
-import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +42,4 @@ public class UserController {
 //            return new BaseResponse<>((exception.getStatus()));
 //        }
 //    }
-
-    @GetMapping("")
-    public String serverTest(){
-        return "Success";
-    }
 }

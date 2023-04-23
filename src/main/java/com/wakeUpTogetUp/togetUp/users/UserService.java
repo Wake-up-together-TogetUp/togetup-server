@@ -1,26 +1,19 @@
 package com.wakeUpTogetUp.togetUp.users;
 
+import com.wakeUpTogetUp.togetUp.common.BaseException;
+import com.wakeUpTogetUp.togetUp.common.BaseResponseStatus;
+import com.wakeUpTogetUp.togetUp.users.model.GetUserRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import com.wakeUpTogetUp.togetUp.exception.ErrorCode;
-import com.wakeUpTogetUp.togetUp.exception.TogetUpApplicationException;
 //import com.wakeUpTogetUp.togetUp.alram.model.Alarm;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import com.wakeUpTogetUp.togetUp.users.model.UserEntity;
-import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -83,4 +76,8 @@ public class UserService {
 //        return alarmEntityRepository.findAllByUserId(userId, pageable).map(Alarm::fromEntity);
 //    }
 
+    // 실험
+    public GetUserRes getUser(){
+        throw new BaseException(BaseResponseStatus.BAD_REQUEST);
+    }
 }

@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.config;
+package com.wakeUpTogetUp.togetUp.common;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -26,6 +26,9 @@ public enum BaseResponseStatus {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "요청 값을 확인해주세요."),
     // files
     FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 파일을 찾을 수 없습니다."),
+
+    // alarms
+    ALARM_INVALID_USER_ID(HttpStatus.BAD_REQUEST, "해당하는 유저를 찾을 수 없습니다."),
 
     /**
      * 500번대(서버 에러)

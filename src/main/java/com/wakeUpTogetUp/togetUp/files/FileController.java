@@ -3,9 +3,9 @@ package com.wakeUpTogetUp.togetUp.files;
 
 import java.util.List;
 
-import com.wakeUpTogetUp.togetUp.config.BaseException;
-import com.wakeUpTogetUp.togetUp.config.BaseResponse;
-import com.wakeUpTogetUp.togetUp.config.BaseResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.BaseException;
+import com.wakeUpTogetUp.togetUp.common.BaseResponse;
+import com.wakeUpTogetUp.togetUp.common.BaseResponseStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

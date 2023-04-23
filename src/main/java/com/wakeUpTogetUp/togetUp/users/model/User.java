@@ -23,66 +23,75 @@ import java.util.List;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements UserDetails {
-
     private Integer id;
     private String username;
-    private String nickName;
     private String email;
     private String password;
     private String statusMessage;
-    private String avatarImgLink;
-    private UserRole role;
-    private Timestamp registeredAt;
+//    private String avatarImgLink;
+//    private UserRole role;
     private Timestamp updatedAt;
-    private Timestamp removedAt;
-    private ProviderType providerType;
-
 
     public static User fromEntity(UserEntity entity) {
         return new User(
                 entity.getId(),
                 entity.getUserName(),
-                entity.getNickName(),
                 entity.getEmail(),
                 entity.getPassword(),
                 entity.getStatusMessage(),
-                entity.getAvatarImgLink(),
-                entity.getRole(),
-                entity.getRegisteredAt(),
-                entity.getUpdatedAt(),
-                entity.getRemovedAt(),
-                entity.getProviderType()
+//                entity.getAvatarImgLink(),
+//                entity.getRole(),
+                entity.getUpdatedAt()
         );
     }
 
+//    @Override
+//    @JsonIgnore
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return List.of(new SimpleGrantedAuthority(role.toString()));
+//    }
+
     @Override
-    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.toString()));
+        return null;
     }
 
     @Override
-    @JsonIgnore
     public boolean isAccountNonExpired() {
-        return removedAt == null;
+        return false;
     }
 
     @Override
-    @JsonIgnore
     public boolean isAccountNonLocked() {
-        return removedAt == null;
+        return false;
     }
 
     @Override
-    @JsonIgnore
     public boolean isCredentialsNonExpired() {
-        return removedAt == null;
+        return false;
     }
 
     @Override
-    @JsonIgnore
     public boolean isEnabled() {
-        return removedAt == null;
+        return false;
     }
+
+//    @Override
+//    @JsonIgnore
+//    public boolean isAccountNonLocked() {
+//        return removedAt == null;
+//    }
+//
+//    @Override
+//    @JsonIgnore
+//    public boolean isCredentialsNonExpired() {
+//        return removedAt == null;
+//    }
+//
+//    @Override
+//    @JsonIgnore
+//    public boolean isEnabled() {
+//        return removedAt == null;
+//    }
 }
 

@@ -19,7 +19,7 @@ import java.time.Instant;
 @Entity
 @Table(name = "\"user\"")
 @SQLDelete(sql = "UPDATE \"user\" SET removed_at = NOW() WHERE id=?")
-@Where(clause = "removed_at is NULL")
+//@Where(clause = "removed_at is NULL")
 @NoArgsConstructor
 public class UserEntity {
 
@@ -30,9 +30,6 @@ public class UserEntity {
     @Column(name = "name")
     private String userName;
 
-    @Column(name = "nickName", unique = true)
-    private String nickName;
-
     @Column(name = "email")
     private String email;
 
@@ -41,31 +38,14 @@ public class UserEntity {
     @Column(name = "statusMessage")
     private String statusMessage;
 
-    @Column(name = "avatarImgLink")
-    private String avatarImgLink;
+//    @Column(name = "avatarImgLink")
+//    private String avatarImgLink;
 
-    @Enumerated(EnumType.STRING)
-    private UserRole role = UserRole.USER;
-
-    @Column(name = "registeredAt")
-    private Timestamp registeredAt;
+//    @Enumerated(EnumType.STRING)
+//    private UserRole role = UserRole.USER;
 
     @Column(name = "updatedAt")
     private Timestamp updatedAt;
-
-    @Column(name = "removedAt")
-    private Timestamp removedAt;
-
-    //추가
-    @Column(name = "PROVIDER_TYPE", length = 20)
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private ProviderType providerType;
-
-    @PrePersist
-    void registeredAt() {
-        this.registeredAt = Timestamp.from(Instant.now());
-    }
 
     @PreUpdate
     void updatedAt() {
@@ -77,9 +57,8 @@ public class UserEntity {
 //        this.removedAt = Timestamp.from(Instant.now());
 //    }
 
-    public static UserEntity of(String nickName, String encodedPwd) {
+    public static UserEntity of(String encodedPwd) {
         UserEntity entity = new UserEntity();
-        entity.setNickName(nickName);
         entity.setPassword(encodedPwd);
         return entity;
     }

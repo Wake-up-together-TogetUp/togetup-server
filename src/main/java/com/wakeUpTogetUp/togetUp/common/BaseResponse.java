@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.config;
+package com.wakeUpTogetUp.togetUp.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
