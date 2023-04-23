@@ -1,88 +1,83 @@
 package com.wakeUpTogetUp.togetUp.users.model;
 
+import com.wakeUpTogetUp.togetUp.users.model.UserRole;
 import com.wakeUpTogetUp.togetUp.login.oauth.entity.ProviderType;
-import com.wakeUpTogetUp.togetUp.users.model.UserEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
+import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.List;
+import java.time.Instant;
 
 
-@Data
-@AllArgsConstructor
+
+@Setter
+@Getter
+@Entity
+@Table(name="user")
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class User implements UserDetails {
+public class User {
 
-    private Integer id;
-    private String username;
-    private String nickName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id = null;
+
+    @Column(name = "name")
+    private String userName;
+
+//    @Column(name = "nickName")
+//    private String nickName;
+
+    @Column(name = "email")
     private String email;
+    @Column(name = "password")
     private String password;
+//
+//    @Column(name = "phoneNumber")
+//    private String phoneNumber;
+
+    @Column(name = "statusMessage")
     private String statusMessage;
-    private String avatarImgLink;
-    private UserRole role;
-    private Timestamp registeredAt;
+
+//    @Column(name = "avatarImgLink")
+//    private String avatarImgLink;
+
+    @Column(name = "createdAt")
+    private Timestamp createdAt;
+
+    @Column(name = "updatedAt")
     private Timestamp updatedAt;
-    private Timestamp removedAt;
-    private ProviderType providerType;
 
+//    @Column(name = "removedAt")
+//    private Timestamp removedAt;
 
-    public static User fromEntity(UserEntity entity) {
-        return new User(
-                entity.getId(),
-                entity.getUserName(),
-                entity.getNickName(),
-                entity.getEmail(),
-                entity.getPassword(),
-                entity.getStatusMessage(),
-                entity.getAvatarImgLink(),
-                entity.getRole(),
-                entity.getRegisteredAt(),
-                entity.getUpdatedAt(),
-                entity.getRemovedAt(),
-                entity.getProviderType()
-        );
+    //추가
+//    @Column(name = "PROVIDER_TYPE", length = 20)
+//    @Enumerated(EnumType.STRING)
+//    @NotNull
+//    private ProviderType providerType;
+
+    @PrePersist
+    void registeredAt() {
+        this.createdAt = Timestamp.from(Instant.now());
     }
 
-    @Override
-    @JsonIgnore
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.toString()));
+    @PreUpdate
+    void updatedAt() {
+        this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonExpired() {
-        return removedAt == null;
+
+    @Builder
+    public User(Integer id, String password,String username,  String email) {
+        this.id = id;
+        this.password=password;
+        this.userName = username;
+        this.email = email;
     }
 
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonLocked() {
-        return removedAt == null;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isCredentialsNonExpired() {
-        return removedAt == null;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isEnabled() {
-        return removedAt == null;
-    }
 }
-

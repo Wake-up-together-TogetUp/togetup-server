@@ -1,86 +1,46 @@
 package com.wakeUpTogetUp.togetUp.users;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-
-import com.wakeUpTogetUp.togetUp.exception.ErrorCode;
-import com.wakeUpTogetUp.togetUp.exception.TogetUpApplicationException;
-//import com.wakeUpTogetUp.togetUp.alram.model.Alarm;
 import com.wakeUpTogetUp.togetUp.users.model.User;
-import com.wakeUpTogetUp.togetUp.users.model.UserEntity;
-import com.wakeUpTogetUp.togetUp.utils.JwtService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.wakeUpTogetUp.togetUp.users.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import lombok.RequiredArgsConstructor;
+
 
 import java.io.IOException;
+import java.util.List;
+
+
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
 
- //   private final UserEntityRepository userRepository;
- //   private final AlarmEntityRepository alarmEntityRepository;
+    private final UserRepository userRepository;
+
     @Autowired
-    private final BCryptPasswordEncoder encoder;
- //   private final UserCacheRepository redisRepository;
-
-
-
-//    @Value("${jwt.secret-key}")
-//    private String secretKey;
-//
-//    @Value("${jwt.token.expired-time-ms}")
-//    private Long expiredTimeMs;
-
-
-    public User loadUserByNickname(String nickName) throws UsernameNotFoundException {
-
-        //db 연동 후 바꾸기
-        UserEntity tempUser = new UserEntity();
-        return User.fromEntity(tempUser);
-//        return redisRepository.getUser(nickName).orElseGet(
-//                () -> userRepository.findByUserNickName(nickName).map(User::fromEntity).orElseThrow(
-//                        () -> new TogetUpApplicationException(ErrorCode.USER_NOT_FOUND, String.format("nickName is %s", nickName))
-//                ));
-    }
-
-//    public String login(String nickName, String password) {
-//        User savedUser = loadUserByNickname(nickName);
-//       // redisRepository.setUser(savedUser);
-//        if (!encoder.matches(password, savedUser.getPassword())) {
-//            throw new TogetUpApplicationException(ErrorCode.INVALID_PASSWORD);
-//        }
-//        return JwtService.generateAccessToken(nickName, secretKey, expiredTimeMs);
-//    }
-
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
-    public User join(String nickName, String password) {
-        // check the userId not exist
-//        userRepository.findByNickName(nickName).ifPresent(it -> {
-//            throw new TogetUpApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("NickName is %s", userName));
-//        });
-//
- //       UserEntity savedUser = userRepository.save(UserEntity.of(nickName, encoder.encode(password)));
-        //DB 연동 후 바꾸기
-        UserEntity savedUser = new UserEntity();
-        return User.fromEntity(savedUser);
-
+    public  Integer createUser(UserForm userForm){
+        userForm.setPassword(bCryptPasswordEncoder.encode(userForm.getPassword()));
+        User user =userForm.toEntity();
+        userRepository.save(user);
+        return user.getId();
     }
 
-//Alarm 개발 후
 
-//    @Transactional
-//    public Page<Alarm> alarmList(Integer userId, Pageable pageable) {
-//        return alarmEntityRepository.findAllByUserId(userId, pageable).map(Alarm::fromEntity);
-//    }
+
+    //회원 전체 조회
+    public  List<User> findMembers(){
+        return userRepository.findAll();
+    }
+
+
+
 
 }
