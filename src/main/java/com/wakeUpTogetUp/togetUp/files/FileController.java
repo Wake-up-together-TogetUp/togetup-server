@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.file;
+package com.wakeUpTogetUp.togetUp.files;
 
 
 import java.util.List;
@@ -53,9 +53,9 @@ public class FileController {
         String result = fileService.deleteFile(fileName);
 
         if(result.equals("delete process success")) {
-            return new BaseResponse<>();
+            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
         } else {
-            return new BaseResponse<>(new BaseException(BaseResponseStatus.DELETE_FILE_NOT_FOUND).getStatus());
+            return new BaseResponse<>(new BaseException(BaseResponseStatus.FILE_NOT_FOUND));
         }
     }
 }

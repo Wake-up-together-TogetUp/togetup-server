@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.file;
+package com.wakeUpTogetUp.togetUp.files;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
