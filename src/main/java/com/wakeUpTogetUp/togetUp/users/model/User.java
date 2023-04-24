@@ -28,7 +28,7 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String statusMessage;
-//    private String avatarImgLink;
+    private String avatarImgLink;
 //    private UserRole role;
     private Timestamp updatedAt;
 
@@ -39,7 +39,7 @@ public class User implements UserDetails {
                 entity.getEmail(),
                 entity.getPassword(),
                 entity.getStatusMessage(),
-//                entity.getAvatarImgLink(),
+                entity.getAvatarImgLink(),
 //                entity.getRole(),
                 entity.getUpdatedAt()
         );

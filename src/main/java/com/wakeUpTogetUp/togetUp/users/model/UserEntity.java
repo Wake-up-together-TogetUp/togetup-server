@@ -38,8 +38,8 @@ public class UserEntity {
     @Column(name = "statusMessage")
     private String statusMessage;
 
-//    @Column(name = "avatarImgLink")
-//    private String avatarImgLink;
+    @Column(name = "avatarImgLink")
+    private String avatarImgLink;
 
 //    @Enumerated(EnumType.STRING)
 //    private UserRole role = UserRole.USER;
