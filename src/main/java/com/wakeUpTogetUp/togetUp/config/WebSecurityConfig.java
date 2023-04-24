@@ -22,6 +22,9 @@ public class WebSecurityConfig {
                 .build();
     }
 
+    /**
+     * PasswordEncoder를 Bean으로 등록
+     */
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
