@@ -4,12 +4,16 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
+@RequiredArgsConstructor
+@Component
 public class JwtService {
 
     public static Boolean validate(String token, String nickName, String key) {
@@ -54,5 +58,18 @@ public class JwtService {
                 .signWith(getSigningKey(key), SignatureAlgorithm.HS256)
                 .compact();
     }
+    public static String createJwt(int userNum, String nickname) {
+        Claims claims = Jwts.claims();
+        claims.put("nickname", nickname);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + userNum))
+                .signWith(getSigningKey("dd"), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+
 }
 
