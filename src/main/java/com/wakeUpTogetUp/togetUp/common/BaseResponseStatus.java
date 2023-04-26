@@ -24,11 +24,12 @@ public enum BaseResponseStatus {
      */
     // 공통
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "요청 값을 확인해주세요."),
+    INVALID_USER_ID(HttpStatus.BAD_REQUEST, "해당하는 유저를 찾을 수 없습니다."),
+    INVALID_MISSION_ID(HttpStatus.BAD_REQUEST, "해당하는 미션을 찾을 수 없습니다."),
+    INVALID_ROUTINE_ID(HttpStatus.BAD_REQUEST, "해당하는 루틴을 찾을 수 없습니다."),
+
     // files
     FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 파일을 찾을 수 없습니다."),
-
-    // alarms
-    ALARM_INVALID_USER_ID(HttpStatus.BAD_REQUEST, "해당하는 유저를 찾을 수 없습니다."),
 
     /**
      * 500번대(서버 에러)

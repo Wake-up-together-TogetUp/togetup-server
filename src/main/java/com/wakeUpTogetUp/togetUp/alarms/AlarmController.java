@@ -6,6 +6,8 @@ import com.wakeUpTogetUp.togetUp.common.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/app/users")
 @RequiredArgsConstructor
@@ -21,13 +23,17 @@ public class AlarmController {
 //    }
 
 //    알람 1개 불러오기
+
 //    알람 생성(알람, 알람-루틴 매핑)
     @PostMapping("/{userId}/alarms")
-    public BaseResponse<Long> createAlarm(@RequestBody PostAlarmReq postAlarmReq, @PathVariable Integer userId){
+    public BaseResponse createAlarm(
+            @PathVariable("userId") int userId,
+            @RequestBody @Valid PostAlarmReq postAlarmReq
+    ){
         //TODO : jwt 정보와 일치하는지 확인하기
-        Long createdUserId = alarmService.createAlarm(userId, postAlarmReq);
+        int createdAlarmId = alarmService.createAlarm(userId, postAlarmReq);
 
-        return new BaseResponse<Long>(BaseResponseStatus.SUCCESS, createdUserId);
+        return new BaseResponse(BaseResponseStatus.SUCCESS, createdAlarmId);
     }
 
 //    알람 수정

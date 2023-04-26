@@ -1,8 +1,8 @@
 package com.wakeUpTogetUp.togetUp.users;
 
-import com.wakeUpTogetUp.togetUp.config.BaseException;
-import com.wakeUpTogetUp.togetUp.config.BaseResponse;
-import com.wakeUpTogetUp.togetUp.config.BaseResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.BaseException;
+import com.wakeUpTogetUp.togetUp.common.BaseResponse;
+import com.wakeUpTogetUp.togetUp.common.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,21 +18,14 @@ public class UserController  {
 
     @ResponseBody
     @PostMapping("/new") //
-    public BaseResponse<BaseResponseStatus> join(@RequestBody UserForm form) {
+    public BaseResponse join(@RequestBody UserForm form) {
         try {
-
             userService.createUser(form);
             return new BaseResponse(BaseResponseStatus.SUCCESS);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-
-
-
-
-
-
 }
 
 

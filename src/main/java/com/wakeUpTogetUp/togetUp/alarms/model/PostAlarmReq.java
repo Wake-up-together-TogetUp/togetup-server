@@ -1,21 +1,21 @@
 package com.wakeUpTogetUp.togetUp.alarms.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class PostAlarmReq {
-    private Long userId;
+    @NotBlank(message = "알람 이름은 공백일 수 없습니다.")
     private String name;
     private String icon;
     private String sound;
     private int volume;
-    private Boolean isEnabled;
     private Boolean isVibrate;
     private Boolean isRoutineOn;
     private int snoozeInterval;
@@ -29,4 +29,5 @@ public class PostAlarmReq {
     private Boolean friday;
     private Boolean saturday;
     private Boolean sunday;
+    private List<Integer> routineIdList;        // 알람에 등록할 루틴 리스트
 }
