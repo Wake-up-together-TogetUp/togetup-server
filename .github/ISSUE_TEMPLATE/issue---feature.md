@@ -3,7 +3,7 @@ name: 'Issue : Feature'
 about: github issue - feauture template
 title: "[FEATURE]"
 labels: enhancement
-assignees: hye-on
+assignees: hye-on, 05AM
 
 ---
 
