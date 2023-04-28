@@ -12,6 +12,6 @@ public class GetSocialOAuthRes {
 
     private String jwtToken;
     private String user_name;
-    private String accessToken;
+  //  private String accessToken;
     private String tokenType;
 }
