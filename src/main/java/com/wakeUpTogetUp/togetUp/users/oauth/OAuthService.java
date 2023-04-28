@@ -1,14 +1,19 @@
 package com.wakeUpTogetUp.togetUp.users.oauth;
 
+import com.wakeUpTogetUp.togetUp.users.LoginType;
+import com.wakeUpTogetUp.togetUp.users.model.User;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
+import com.wakeUpTogetUp.togetUp.users.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 //import static com.wakeUpTogetUp.togetUp.users.oauth.ProviderType.GOOGLE;
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -16,8 +21,15 @@ public class OAuthService {
     private final GoogleOauth googleOauth;
     private final HttpServletResponse response;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
 
-    public String request(SocialLoginType socialLoginType) throws IOException {
+    @Value("${jwt.secret-key}")
+    private String secretKey;
+
+    @Value("${jwt.token.expired-time-ms}")
+    private Long expiredTimeMs;
+
+    public String request(LoginType socialLoginType) throws IOException {
         String redirectURL;
         switch (socialLoginType) {
             case GOOGLE: {
@@ -36,7 +48,7 @@ public class OAuthService {
         return redirectURL;
     }
 
-    public GetSocialOAuthRes oAuthLogin(SocialLoginType socialLoginType, String code) throws IOException {
+    public GetSocialOAuthRes oAuthLogin(LoginType socialLoginType, String code) throws IOException {
 
         switch (socialLoginType) {
             case GOOGLE: {
@@ -47,27 +59,35 @@ public class OAuthService {
 
                 //액세스 토큰을 다시 구글로 보내 구글에 저장된 사용자 정보가 담긴 응답 객체를 받아온다.
                 ResponseEntity<String> userInfoResponse = googleOauth.requestUserInfo(oAuthToken);
-                System.out.println("here!!"+userInfoResponse);
                 //다시 JSON 형식의 응답 객체를 자바 객체로 역직렬화한다.
                 GoogleUser googleUser = googleOauth.getUserInfo(userInfoResponse);
-                System.out.println("here3"+googleUser);
-                String user_id = googleUser.getEmail();
-                System.out.println("here4"+user_id);
+
+                String user_email = googleUser.getEmail();
+                String user_name=googleUser.getName();
+                System.out.println("here4"+user_email);
 
                 //우리 서버의 db와 대조하여 해당 user가 존재하는 지 확인한다.
-                //int user_num=accountProvider.getUserNum(user_id);
-                int user_num = 1;
+                int user_num= userRepository.countByEmail(user_email);//accountProvider.getUserNum(user_id);
 
-                //   if(user_num!=0){
+
+                if(user_num!=0){
                 //서버에 user가 존재하면 앞으로 회원 인가 처리를 위한 jwtToken을 발급한다.
-                String jwtToken = "dfdda";//jwtService.createJwt(user_num, user_id);
+                String jwtToken = jwtService.generateAccessToken(user_email, secretKey, expiredTimeMs);//"dfdda";//jwtService.createJwt(user_num, user_id);
                 //액세스 토큰과 jwtToken, 이외 정보들이 담긴 자바 객체를 다시 전송한다.
-                GetSocialOAuthRes getSocialOAuthRes = new GetSocialOAuthRes(jwtToken, user_num, oAuthToken.getAccess_token(), oAuthToken.getToken_type());
+
+                GetSocialOAuthRes getSocialOAuthRes = new GetSocialOAuthRes(jwtToken, user_name, oAuthToken.getAccess_token(), oAuthToken.getToken_type());
                 return getSocialOAuthRes;
-                //     }
-//                else {
-//                    throw new BaseException(BaseResponseStatus.ACCOUNT_DOESNT_EXISTS);
-//                }
+                    }
+              else //서버에 user가 존재하지 않으면 회원가입을 한다.
+              {
+                  User user =googleUser.toEntity();
+                  userRepository.save(user);
+                  System.out.println("여기!"+user);
+                  String jwtToken = "dfdda";//jwtService.createJwt(user_num, user_id);
+                  GetSocialOAuthRes getSocialOAuthRes = new GetSocialOAuthRes(jwtToken, user_name, oAuthToken.getAccess_token(), oAuthToken.getToken_type());
+                  return getSocialOAuthRes;
+                    //throw new BaseException(BaseResponseStatus.ACCOUNT_DOESNT_EXISTS);
+                }
 
             }
             default: {

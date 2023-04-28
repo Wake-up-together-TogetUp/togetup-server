@@ -5,7 +5,6 @@ import com.wakeUpTogetUp.togetUp.config.BaseResponse;
 import com.wakeUpTogetUp.togetUp.config.BaseResponseStatus;
 import com.wakeUpTogetUp.togetUp.users.oauth.GetSocialOAuthRes;
 import com.wakeUpTogetUp.togetUp.users.oauth.OAuthService;
-import com.wakeUpTogetUp.togetUp.users.oauth.SocialLoginType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +25,7 @@ public class UserController  {
     @PostMapping("/new") //
     public BaseResponse<BaseResponseStatus> join(@RequestBody UserForm form) {
         try {
-
+            System.out.println("로그인"+form.getLoginType());
             userService.createUser(form);
             return new BaseResponse(BaseResponseStatus.SUCCESS);
         } catch (BaseException exception) {
@@ -43,7 +42,7 @@ public class UserController  {
     @GetMapping("/auth/{socialLoginType}") //GOOGLE이 들어올 것이다.
     @ResponseBody
     public BaseResponse<String> socialLoginRedirect(@PathVariable(name="socialLoginType") String SocialLoginPath) throws IOException {
-        SocialLoginType socialLoginType= SocialLoginType.valueOf(SocialLoginPath.toUpperCase());
+        LoginType socialLoginType= LoginType.valueOf(SocialLoginPath.toUpperCase());
         String  redirectURL= oAuthService.request(socialLoginType);
 
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,redirectURL);
@@ -62,7 +61,7 @@ public class UserController  {
             @PathVariable(name = "socialLoginType") String socialLoginPath,
             @RequestParam(name = "code") String code)throws IOException,BaseException{
         System.out.println(">> 소셜 로그인 API 서버로부터 받은 code :"+ code);
-        SocialLoginType socialLoginType= SocialLoginType.valueOf(socialLoginPath.toUpperCase());
+        LoginType socialLoginType= LoginType.valueOf(socialLoginPath.toUpperCase());
         GetSocialOAuthRes getSocialOAuthRes=oAuthService.oAuthLogin(socialLoginType,code);
 
         return new BaseResponse<>(BaseResponseStatus.SUCCESS,getSocialOAuthRes);

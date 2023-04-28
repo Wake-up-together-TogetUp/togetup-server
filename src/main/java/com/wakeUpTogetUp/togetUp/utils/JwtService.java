@@ -16,9 +16,9 @@ import java.util.Date;
 @Component
 public class JwtService {
 
-    public static Boolean validate(String token, String nickName, String key) {
-        String usernameByToken = getNickname(token, key);
-        return usernameByToken.equals(nickName) && !isTokenExpired(token, key);
+    public static Boolean validate(String token, String userEmail, String key) {
+        String useremailByToken = getUseremail(token, key);
+        return useremailByToken.equals(userEmail) && !isTokenExpired(token, key);
     }
 
     public static Claims extractAllClaims(String token, String key) {
@@ -29,7 +29,7 @@ public class JwtService {
                 .getBody();
     }
 
-    public static String getNickname(String token, String key) {
+    public static String getUseremail(String token, String key) {
         return extractAllClaims(token, key).get("username", String.class);
     }
 
@@ -43,13 +43,13 @@ public class JwtService {
         return expiration.before(new Date());
     }
 
-    public static String generateAccessToken(String nickname, String key, long expiredTimeMs) {
-        return doGenerateToken(nickname, expiredTimeMs, key);
+    public static String generateAccessToken(String useremail, String key, long expiredTimeMs) {
+        return doGenerateToken(useremail, expiredTimeMs, key);
     }
 
-    private static String doGenerateToken(String nickname, long expireTime, String key) {
+    private static String doGenerateToken(String useremail, long expireTime, String key) {
         Claims claims = Jwts.claims();
-        claims.put("nickname", nickname);
+        claims.put("useremail", useremail);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -58,18 +58,5 @@ public class JwtService {
                 .signWith(getSigningKey(key), SignatureAlgorithm.HS256)
                 .compact();
     }
-    public static String createJwt(int userNum, String nickname) {
-        Claims claims = Jwts.claims();
-        claims.put("nickname", nickname);
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + userNum))
-                .signWith(getSigningKey("dd"), SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-
 }
 

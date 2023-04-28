@@ -1,13 +1,11 @@
 package com.wakeUpTogetUp.togetUp.users.model;
 
-import com.wakeUpTogetUp.togetUp.users.model.UserRole;
-import com.wakeUpTogetUp.togetUp.login.oauth.entity.ProviderType;
+import com.wakeUpTogetUp.togetUp.users.LoginType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
@@ -56,10 +54,10 @@ public class User {
 //    private Timestamp removedAt;
 
     //추가
-//    @Column(name = "PROVIDER_TYPE", length = 20)
-//    @Enumerated(EnumType.STRING)
-//    @NotNull
-//    private ProviderType providerType;
+    @Column(name = "loginType", length = 20)
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private LoginType loginType ;
 
     @PrePersist
     void registeredAt() {
@@ -73,11 +71,12 @@ public class User {
 
 
     @Builder
-    public User(Integer id, String password,String username,  String email) {
+    public User(Integer id, String password, String username, String email, LoginType loginType) {
         this.id = id;
         this.password=password;
         this.userName = username;
         this.email = email;
+        this.loginType=loginType;
     }
 
 }
