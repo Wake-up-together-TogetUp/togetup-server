@@ -66,7 +66,7 @@ public class AlarmService {
                         .user(user)
                         .alarm(alarm)
                         .routine(routine)
-                        .order(i)
+                        .routineOrder(i)
                         .build();
                 alarmDao.save(mappingAlarmRoutine);
                 i++;

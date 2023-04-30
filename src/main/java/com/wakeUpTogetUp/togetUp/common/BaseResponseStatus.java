@@ -28,6 +28,7 @@ public enum BaseResponseStatus {
     INVALID_MISSION_ID(HttpStatus.BAD_REQUEST, "해당하는 미션을 찾을 수 없습니다."),
     INVALID_ROUTINE_ID(HttpStatus.BAD_REQUEST, "해당하는 루틴을 찾을 수 없습니다."),
 
+    ACCOUNT_DOESNT_EXISTS(HttpStatus.NOT_FOUND,"계정이 존재하지 않습니다."),
     // files
     FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 파일을 찾을 수 없습니다."),
 

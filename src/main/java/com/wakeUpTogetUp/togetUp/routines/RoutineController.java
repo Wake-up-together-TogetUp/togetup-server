@@ -36,6 +36,12 @@ public class RoutineController {
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, getRoutineRes);
     }
 
+    //test
+    @GetMapping("/test")
+    public String test(){
+        return "success";
+    }
+
 //    알람 1개 불러오기
 //    알람 수정
 //    알람 삭제

@@ -16,11 +16,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class MappingAlarmRoutine {
     @Builder
-    public MappingAlarmRoutine(User user, Alarm alarm, Routine routine, int order) {
+    public MappingAlarmRoutine(User user, Alarm alarm, Routine routine, int routineOrder) {
         this.user = user;
         this.alarm = alarm;
         this.routine = routine;
-        this.order = order;
+        this.routineOrder = routineOrder;
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +34,6 @@ public class MappingAlarmRoutine {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "routineId")
     private Routine routine;
-    @Column(name = "order")
-    private int order;
+    @Column(name = "routineOrder")
+    private int routineOrder;
 }
