@@ -29,6 +29,7 @@ public class UserService {
     public  Integer createUser(UserForm userForm){
         userForm.setPassword(bCryptPasswordEncoder.encode(userForm.getPassword()));
         User user =userForm.toEntity();
+        System.out.println("유저"+user.getLoginType());
         userRepository.save(user);
         return user.getId();
     }

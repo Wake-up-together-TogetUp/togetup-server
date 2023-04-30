@@ -4,17 +4,21 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
+@RequiredArgsConstructor
+@Component
 public class JwtService {
 
-    public static Boolean validate(String token, String nickName, String key) {
-        String usernameByToken = getNickname(token, key);
-        return usernameByToken.equals(nickName) && !isTokenExpired(token, key);
+    public static Boolean validate(String token, String userEmail, String key) {
+        String useremailByToken = getUseremail(token, key);
+        return useremailByToken.equals(userEmail) && !isTokenExpired(token, key);
     }
 
     public static Claims extractAllClaims(String token, String key) {
@@ -25,7 +29,7 @@ public class JwtService {
                 .getBody();
     }
 
-    public static String getNickname(String token, String key) {
+    public static String getUseremail(String token, String key) {
         return extractAllClaims(token, key).get("username", String.class);
     }
 
@@ -39,13 +43,13 @@ public class JwtService {
         return expiration.before(new Date());
     }
 
-    public static String generateAccessToken(String nickname, String key, long expiredTimeMs) {
-        return doGenerateToken(nickname, expiredTimeMs, key);
+    public static String generateAccessToken(String useremail, String key, long expiredTimeMs) {
+        return doGenerateToken(useremail, expiredTimeMs, key);
     }
 
-    private static String doGenerateToken(String nickname, long expireTime, String key) {
+    private static String doGenerateToken(String useremail, long expireTime, String key) {
         Claims claims = Jwts.claims();
-        claims.put("nickname", nickname);
+        claims.put("useremail", useremail);
 
         return Jwts.builder()
                 .setClaims(claims)

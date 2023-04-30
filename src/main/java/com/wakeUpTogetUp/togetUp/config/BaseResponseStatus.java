@@ -24,6 +24,7 @@ public enum BaseResponseStatus {
      */
     // 공통
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "요청 값을 확인해주세요."),
+    ACCOUNT_DOESNT_EXISTS(HttpStatus.NOT_FOUND,"계정이 존재하지 않습니다."),
     // files
     FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 파일을 찾을 수 없습니다."),
 
