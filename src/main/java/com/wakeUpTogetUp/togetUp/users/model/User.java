@@ -61,7 +61,7 @@ public class User {
     @NotNull
     private LoginType loginType ;
 
-    @OneToMany(mappedBy = "userId")
+    @OneToMany(mappedBy = "user")
     private List<MappingGroupUser> mappingGroupUsers = new ArrayList<>();
 
     @PrePersist

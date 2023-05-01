@@ -2,10 +2,8 @@ package com.wakeUpTogetUp.togetUp.group.model;
 
 
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.model.MappingGroupUser;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.wakeUpTogetUp.togetUp.users.LoginType;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -16,16 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "group")
+@Table(name = "group2")//예약어를 피해서 작성해야함. group은 예약어임.
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor()//access = AccessLevel.PROTECTED)
 public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    private Integer id=null;
+
 
     @Column(name = "name",length = 10)
     private String name;
@@ -39,8 +37,9 @@ public class Group {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "groupId")
+    @OneToMany(mappedBy = "group")
     private List<MappingGroupUser> mappingGroupUsers= new ArrayList<>();
+
 
     @Column(name="state",columnDefinition = "TINYINT", length=1)
     @ColumnDefault("1")
@@ -60,6 +59,8 @@ public class Group {
     void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
+
+
 
 }
 
