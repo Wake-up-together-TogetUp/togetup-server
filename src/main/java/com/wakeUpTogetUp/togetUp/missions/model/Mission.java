@@ -1,5 +1,7 @@
 package com.wakeUpTogetUp.togetUp.missions.model;
 
+import com.wakeUpTogetUp.togetUp.mappingGroupMission.model.MappingGroupMission;
+import com.wakeUpTogetUp.togetUp.mappingGroupUser.model.MappingGroupUser;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +10,8 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "mission")
@@ -29,4 +33,7 @@ public class Mission {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private boolean isActivated;
+
+    @OneToMany(mappedBy = "mission")
+    private List<MappingGroupMission> mappingGroupMissions= new ArrayList<>();
 }
