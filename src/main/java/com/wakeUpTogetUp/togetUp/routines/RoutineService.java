@@ -22,7 +22,7 @@ public class RoutineService {
 
     // 루틴 생성
     @Transactional
-    public int createRoutine(int userId, PostRoutineReq postRoutineReq) {
+    public int createRoutine(Integer userId, PostRoutineReq postRoutineReq) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new BaseException(BaseResponseStatus.INVALID_USER_ID)
         );
