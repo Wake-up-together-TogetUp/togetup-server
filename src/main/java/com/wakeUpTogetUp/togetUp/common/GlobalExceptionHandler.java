@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.config;
+package com.wakeUpTogetUp.togetUp.common;
 
 //import org.hibernate.TypeMismatchException;
 import org.slf4j.Logger;
@@ -27,7 +27,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             MissingServletRequestParameterException.class,
             MissingRequestHeaderException.class,
-            MethodArgumentNotValidException.class,
             IllegalStateException.class,
             IllegalArgumentException.class,
 //            TypeMismatchException.class,
@@ -42,6 +41,14 @@ public class GlobalExceptionHandler {
                 exception);
 
         return new BaseResponse<>(BaseResponseStatus.BAD_REQUEST);
+    }
+
+    // vallidation
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected BaseResponse validException(MethodArgumentNotValidException exception) {
+        String msg = "유효성 검사 실패 : " + exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+
+        return new BaseResponse(BaseResponseStatus.BAD_REQUEST, msg);
     }
 
     // Catch all Exception
