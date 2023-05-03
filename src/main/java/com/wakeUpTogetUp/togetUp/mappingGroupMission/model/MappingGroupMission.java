@@ -25,11 +25,11 @@ public class MappingGroupMission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id = null;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "groupId")
     private Group group;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "missionId")
     private Mission mission;
 
@@ -61,4 +61,9 @@ public class MappingGroupMission {
     void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
+
+
+
+
+
 }

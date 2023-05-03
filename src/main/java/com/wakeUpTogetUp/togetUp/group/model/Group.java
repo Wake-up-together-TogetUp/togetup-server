@@ -2,7 +2,6 @@ package com.wakeUpTogetUp.togetUp.group.model;
 
 
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.model.MappingGroupUser;
-import com.wakeUpTogetUp.togetUp.users.LoginType;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -10,7 +9,6 @@ import org.hibernate.annotations.DynamicInsert;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

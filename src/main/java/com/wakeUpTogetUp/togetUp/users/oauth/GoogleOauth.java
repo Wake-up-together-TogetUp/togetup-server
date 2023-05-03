@@ -21,21 +21,19 @@ import org.springframework.web.client.RestTemplate;
 public class GoogleOauth implements SocialOauth {
 
     //application-dev.yml 에서 value annotation을 통해서 값을 받아온다.
-    @Value("${spring.security.oauth2.google.url}")
-    private String GOOGLE_SNS_LOGIN_URL;
+    private String GOOGLE_SNS_LOGIN_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 
-    @Value("${spring.security.oauth2.google.client-id}")
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String GOOGLE_SNS_CLIENT_ID;
 
-    @Value("${spring.security.oauth2.google.callback-url}")
-    private String GOOGLE_SNS_CALLBACK_URL;
+    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
+    private String GOOGLE_SNS_REDIRECT_URL;
 
-    @Value("${spring.security.oauth2.google.client-secret}")
+    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
     private String GOOGLE_SNS_CLIENT_SECRET;
 
-    @Value("${spring.security.oauth2.google.scope}")
+    @Value("${spring.security.oauth2.client.registration.google.scope}")
     private String GOOGLE_DATA_ACCESS_SCOPE;
-
 
     private final ObjectMapper objectMapper;
    // private final RestTemplateConfig restTemplate;
@@ -48,7 +46,7 @@ public class GoogleOauth implements SocialOauth {
 
         params.put("response_type", "code");
         params.put("client_id", GOOGLE_SNS_CLIENT_ID);
-        params.put("redirect_uri", GOOGLE_SNS_CALLBACK_URL);
+        params.put("redirect_uri", GOOGLE_SNS_REDIRECT_URL);
 
         //parameter를 형식에 맞춰 구성해주는 함수
         String parameterString = params.entrySet().stream()
@@ -72,7 +70,7 @@ public class GoogleOauth implements SocialOauth {
         params.put("code", code);
         params.put("client_id", GOOGLE_SNS_CLIENT_ID);
         params.put("client_secret", GOOGLE_SNS_CLIENT_SECRET);
-        params.put("redirect_uri", GOOGLE_SNS_CALLBACK_URL);
+        params.put("redirect_uri", GOOGLE_SNS_REDIRECT_URL);
         params.put("grant_type", "authorization_code");
 
         ResponseEntity<String> responseEntity=restTemplate.postForEntity(GOOGLE_TOKEN_REQUEST_URL,
