@@ -45,14 +45,16 @@ public class RoutineController {
 
         return new BaseResponse(BaseResponseStatus.SUCCESS, createdRoutineId);
     }
+    
+    // 루틴 수정
 
+
+    // 루틴 삭제
+    
+    
     //test
     @GetMapping("/test")
     public String test(){
         return "success";
     }
-
-//    알람 1개 불러오기
-//    알람 수정
-//    알람 삭제
 }
