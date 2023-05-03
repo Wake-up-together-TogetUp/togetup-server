@@ -22,7 +22,7 @@ public class AlarmService {
     private final UserRepository userRepository;
     @Transactional
     // TODO : create Alarm 테스트해봐야함
-    public int createAlarm(int userId, PostAlarmReq postAlarmReq) {
+    public int createAlarm(Integer userId, PostAlarmReq postAlarmReq) {
         User user = userRepository.findById(userId)
                 .orElseThrow(
                 () -> new BaseException(BaseResponseStatus.INVALID_USER_ID)

@@ -24,13 +24,26 @@ public enum BaseResponseStatus {
      */
     // 공통
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "요청 값을 확인해주세요."),
-    INVALID_USER_ID(HttpStatus.BAD_REQUEST, "해당하는 유저를 찾을 수 없습니다."),
-    INVALID_MISSION_ID(HttpStatus.BAD_REQUEST, "해당하는 미션을 찾을 수 없습니다."),
-    INVALID_ROUTINE_ID(HttpStatus.BAD_REQUEST, "해당하는 루틴을 찾을 수 없습니다."),
+
+    // 유효하지 않은 요청
+    INVALID_USER_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 유저 id 입니다."),
+    INVALID_MISSION_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 미션 id 입니다."),
+    INVALID_ALARM_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 알람 id 입니다."),
+    INVALID_ROUTINE_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 루틴 id 입니다."),
+
+    // Alarm
+    ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 알람을 찾을 수 없습니다."),
+
+    // Routine
+    ROUTINE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 루틴을 찾을 수 없습니다."),
+
+
+    // File
+    FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 파일을 찾을 수 없습니다."),
+
 
     ACCOUNT_DOESNT_EXISTS(HttpStatus.NOT_FOUND,"계정이 존재하지 않습니다."),
     // files
-    FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 파일을 찾을 수 없습니다."),
 
     /**
      * 500번대(서버 에러)

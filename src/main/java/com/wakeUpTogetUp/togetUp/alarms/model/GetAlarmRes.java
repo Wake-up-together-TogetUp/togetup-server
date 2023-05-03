@@ -1,21 +1,20 @@
 package com.wakeUpTogetUp.togetUp.alarms.model;
 
-import com.wakeUpTogetUp.togetUp.users.model.User;
+import com.wakeUpTogetUp.togetUp.routines.model.GetRoutineRes;
+import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import lombok.*;
-import org.hibernate.annotations.DynamicInsert;
 
-import javax.persistence.*;
+import java.util.List;
 
-@Entity
-@Table(name = "alarm")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
-@DynamicInsert          // insert 시 값이 null인 필드 제외
-public class Alarm {
-    @Builder
-    public Alarm(User user, String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, String startHour, String startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
-        this.user = user;
+@AllArgsConstructor
+public class GetAlarmRes {
+    public GetAlarmRes(Integer id, Integer userId, String name, String icon, String sound, int volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, String startHour, String startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, Boolean isActivated) {
+        this.id = id;
+        this.userId = userId;
         this.name = name;
         this.icon = icon;
         this.sound = sound;
@@ -33,18 +32,15 @@ public class Alarm {
         this.friday = friday;
         this.saturday = saturday;
         this.sunday = sunday;
+        this.isActivated = isActivated;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
-    private User user;
+    private Integer userId;
     private String name;
     private String icon;
     private String sound;
-    private Integer volume;
+    private int volume;
     private Boolean isVibrate;
     private Boolean isRoutineOn;
     private Integer snoozeInterval;
@@ -59,4 +55,5 @@ public class Alarm {
     private Boolean saturday;
     private Boolean sunday;
     private Boolean isActivated;
+    private List<GetRoutineRes> getRoutineResList;
 }
