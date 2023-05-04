@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.alarms.model;
+package com.wakeUpTogetUp.togetUp.alarms.dto.response;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetAlarmsRes {
+public class AlarmsRes {
     private Integer id;
     private Integer userId;
     private String name;
@@ -18,8 +18,8 @@ public class GetAlarmsRes {
     private Boolean isRoutineOn;
     private Integer snoozeInterval;
     private Integer snoozeCnt;
-    private String startHour;
-    private String startMinute;
+    private Integer startHour;
+    private Integer startMinute;
     private Boolean monday;
     private Boolean tuesday;
     private Boolean wednesday;
