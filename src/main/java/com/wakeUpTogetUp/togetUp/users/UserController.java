@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.users;
 
 import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import com.wakeUpTogetUp.togetUp.common.exception.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import com.wakeUpTogetUp.togetUp.users.oauth.GetSocialOAuthRes;
 import com.wakeUpTogetUp.togetUp.users.oauth.OAuthService;
 import lombok.RequiredArgsConstructor;

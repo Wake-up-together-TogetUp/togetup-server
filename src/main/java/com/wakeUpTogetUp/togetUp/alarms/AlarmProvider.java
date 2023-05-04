@@ -4,7 +4,7 @@ import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmRes;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmsRes;
 import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.common.exception.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import com.wakeUpTogetUp.togetUp.routines.RoutineRepository;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;

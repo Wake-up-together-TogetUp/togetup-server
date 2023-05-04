@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.common.exception;
 
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

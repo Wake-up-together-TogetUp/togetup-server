@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.routines;
 
 import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.common.exception.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import com.wakeUpTogetUp.togetUp.missions.MissionRepository;
 import com.wakeUpTogetUp.togetUp.missions.model.Mission;
 import com.wakeUpTogetUp.togetUp.routines.dto.request.RoutineReq;

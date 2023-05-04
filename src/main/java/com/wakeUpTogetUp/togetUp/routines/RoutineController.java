@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.routines;
 
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import com.wakeUpTogetUp.togetUp.common.exception.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.dto.request.RoutineReq;
 import lombok.RequiredArgsConstructor;

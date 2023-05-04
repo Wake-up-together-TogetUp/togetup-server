@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.common.exception;
+package com.wakeUpTogetUp.togetUp.common;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

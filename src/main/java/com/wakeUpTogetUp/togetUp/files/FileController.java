@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import com.wakeUpTogetUp.togetUp.common.exception.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

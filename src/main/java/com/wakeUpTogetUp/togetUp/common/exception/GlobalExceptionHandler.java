@@ -1,6 +1,7 @@
 package com.wakeUpTogetUp.togetUp.common.exception;
 
 //import org.hibernate.TypeMismatchException;
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

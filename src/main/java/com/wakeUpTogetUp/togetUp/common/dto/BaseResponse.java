@@ -3,7 +3,7 @@ package com.wakeUpTogetUp.togetUp.common.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.common.exception.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import lombok.Getter;
 
 @Getter
