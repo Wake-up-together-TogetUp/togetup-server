@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.routines.model;
+package com.wakeUpTogetUp.togetUp.routines.dto.response;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GetRoutineRes {
+public class RoutineRes {
     private Integer id;
     private Integer userId;
     private Integer missionId;

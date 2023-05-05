@@ -1,8 +1,8 @@
 package com.wakeUpTogetUp.togetUp.users;
 
-import com.wakeUpTogetUp.togetUp.common.BaseException;
-import com.wakeUpTogetUp.togetUp.common.BaseResponse;
-import com.wakeUpTogetUp.togetUp.common.BaseResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import com.wakeUpTogetUp.togetUp.users.oauth.GetSocialOAuthRes;
 import com.wakeUpTogetUp.togetUp.users.oauth.OAuthService;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +23,11 @@ public class UserController  {
 
     @ResponseBody
     @PostMapping("/new") //
-    public BaseResponse<BaseResponseStatus> join(@RequestBody UserForm form) {
+    public BaseResponse<ResponseStatus> join(@RequestBody UserForm form) {
         try {
             System.out.println("로그인"+form.getLoginType());
             userService.createUser(form);
-            return new BaseResponse(BaseResponseStatus.SUCCESS);
+            return new BaseResponse(ResponseStatus.SUCCESS);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -45,7 +45,7 @@ public class UserController  {
         LoginType socialLoginType= LoginType.valueOf(SocialLoginPath.toUpperCase());
         String  redirectURL= oAuthService.request(socialLoginType);
 
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS,redirectURL);
+        return new BaseResponse<>(ResponseStatus.SUCCESS,redirectURL);
     }
     /**
      * Social Login API Server 요청에 의한 callback 을 처리
@@ -64,7 +64,7 @@ public class UserController  {
         LoginType socialLoginType= LoginType.valueOf(socialLoginPath.toUpperCase());
         GetSocialOAuthRes getSocialOAuthRes=oAuthService.oAuthLogin(socialLoginType,code);
 
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS,getSocialOAuthRes);
+        return new BaseResponse<>(ResponseStatus.SUCCESS,getSocialOAuthRes);
     }
 
 

@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.utils.mappers;
 
-import com.wakeUpTogetUp.togetUp.routines.model.GetRoutineRes;
+import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,5 +12,5 @@ public interface RoutineMapper {
 
     @Mapping(target = "userId", expression = "java(routine.getUser().getId())")
     @Mapping(target = "missionId", expression = "java(routine.getMission().getId())")
-    GetRoutineRes entityToGetRoutineRes(Routine routine);
+    RoutineRes toGetRoutineRes(Routine routine);
 }

@@ -1,20 +1,19 @@
-package com.wakeUpTogetUp.togetUp.alarms.model;
+package com.wakeUpTogetUp.togetUp.alarms.dto.request;
 
-import com.wakeUpTogetUp.togetUp.routines.model.GetRoutineRes;
-import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import lombok.*;
 
+import javax.persistence.Access;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
 import java.util.List;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-public class GetAlarmRes {
-    public GetAlarmRes(Integer id, Integer userId, String name, String icon, String sound, int volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, String startHour, String startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, Boolean isActivated) {
-        this.id = id;
-        this.userId = userId;
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class AlarmReq {
+    @Builder
+    public AlarmReq(String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, List<Integer> routineIdList) {
         this.name = name;
         this.icon = icon;
         this.sound = sound;
@@ -32,21 +31,23 @@ public class GetAlarmRes {
         this.friday = friday;
         this.saturday = saturday;
         this.sunday = sunday;
-        this.isActivated = isActivated;
+        this.routineIdList = routineIdList;
     }
 
+    @Null
     private Integer id;
     private Integer userId;
+    @NotBlank(message = "알람 이름은 공백일 수 없습니다.")
     private String name;
     private String icon;
     private String sound;
-    private int volume;
+    private Integer volume;
     private Boolean isVibrate;
     private Boolean isRoutineOn;
     private Integer snoozeInterval;
     private Integer snoozeCnt;
-    private String startHour;
-    private String startMinute;
+    private Integer startHour;
+    private Integer startMinute;
     private Boolean monday;
     private Boolean tuesday;
     private Boolean wednesday;
@@ -54,6 +55,5 @@ public class GetAlarmRes {
     private Boolean friday;
     private Boolean saturday;
     private Boolean sunday;
-    private Boolean isActivated;
-    private List<GetRoutineRes> getRoutineResList;
+    private List<Integer> routineIdList;        // 알람에 등록할 루틴 리스트
 }

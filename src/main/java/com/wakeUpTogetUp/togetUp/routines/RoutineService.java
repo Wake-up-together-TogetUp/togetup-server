@@ -1,10 +1,10 @@
 package com.wakeUpTogetUp.togetUp.routines;
 
-import com.wakeUpTogetUp.togetUp.common.BaseException;
-import com.wakeUpTogetUp.togetUp.common.BaseResponseStatus;
-import com.wakeUpTogetUp.togetUp.missions.MissionDao;
+import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.missions.MissionRepository;
 import com.wakeUpTogetUp.togetUp.missions.model.Mission;
-import com.wakeUpTogetUp.togetUp.routines.model.PostRoutineReq;
+import com.wakeUpTogetUp.togetUp.routines.dto.request.RoutineReq;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.users.model.User;
@@ -16,31 +16,31 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 public class RoutineService {
-    private final RoutineDao routineDao;
+    private final RoutineRepository routineRepository;
     private final UserRepository userRepository;
-    private final MissionDao missionDao;
+    private final MissionRepository missionRepository;
 
     // 루틴 생성
     @Transactional
-    public int createRoutine(Integer userId, PostRoutineReq postRoutineReq) {
+    public int createRoutine(Integer userId, RoutineReq routineReq) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new BaseException(BaseResponseStatus.INVALID_USER_ID)
+                () -> new BaseException(ResponseStatus.INVALID_USER_ID)
         );
 
-        Mission mission = missionDao.findById(postRoutineReq.getMissionId()).orElseThrow(
-                () -> new BaseException(BaseResponseStatus.INVALID_MISSION_ID)
+        Mission mission = missionRepository.findById(routineReq.getMissionId()).orElseThrow(
+                () -> new BaseException(ResponseStatus.INVALID_MISSION_ID)
         );
 
         Routine routine = Routine.builder()
                 .user(user)
                 .mission(mission)
-                .name(postRoutineReq.getName())
-                .estimatedTime(postRoutineReq.getEstimatedTime())
-                .icon(postRoutineReq.getIcon())
-                .color(postRoutineReq.getColor())
+                .name(routineReq.getName())
+                .estimatedTime(routineReq.getEstimatedTime())
+                .icon(routineReq.getIcon())
+                .color(routineReq.getColor())
                 .build();
 
-        routineDao.save(routine);
+        routineRepository.save(routine);
 
         return routine.getId();
     }
