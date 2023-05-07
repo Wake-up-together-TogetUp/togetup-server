@@ -80,5 +80,15 @@ public class AlarmController {
         return new BaseResponse<>(ResponseStatus.SUCCESS, patchAlarmRes);
     }
 
-//    알람 삭제
+    // 알람 삭제
+    @DeleteMapping("{userId}/alarms/{alarmId}")
+    public BaseResponse<Integer> deleteAlarm(
+            @PathVariable @Valid Integer userId,
+            @PathVariable @Valid Integer alarmId
+    ) {
+        // TODO : JWT
+        alarmService.deleteAlarm(alarmId);
+
+        return new BaseResponse<Integer>(ResponseStatus.SUCCESS);
+    }
 }

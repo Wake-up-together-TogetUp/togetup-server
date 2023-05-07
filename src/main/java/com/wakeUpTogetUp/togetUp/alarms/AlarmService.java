@@ -154,4 +154,12 @@ public class AlarmService {
             i++;
         }
     }
+
+    /**
+     * 알람 삭제
+     * @param alarmId
+     */
+    public void deleteAlarm(Integer alarmId) {
+        alarmRepository.deleteById(alarmId);
+    }
 }
