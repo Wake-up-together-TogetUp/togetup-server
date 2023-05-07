@@ -17,7 +17,12 @@ public class RoutineController {
     private final RoutineService routineService;
     private final RoutineProvider routineProvider;
 
-    // 루틴 1개 가져오기
+    /**
+     * 루틴 1개 가져오기
+     * @param userId
+     * @param routineId
+     * @return
+     */
     @GetMapping("{userId}/routines/{routineId}")
     public BaseResponse<RoutineRes> getRoutine(
             @PathVariable("userId") Integer userId,
@@ -28,7 +33,11 @@ public class RoutineController {
         return new BaseResponse<>(ResponseStatus.SUCCESS, routineRes);
     }
 
-    // 루틴 목록 가져오기
+    /**
+     * 루틴 목록 가져오기
+     * @param userId
+     * @return
+     */
     @GetMapping("{userId}/routines")
     public BaseResponse<List<RoutineRes>> getRoutinesByUserId(@PathVariable Integer userId) {
         List<RoutineRes> routineResList = routineProvider.getRoutinesByUserId(userId);
@@ -36,22 +45,55 @@ public class RoutineController {
         return new BaseResponse<>(ResponseStatus.SUCCESS, routineResList);
     }
 
-    // 루틴 생성
+    /**
+     * 루틴 생성
+     * @param userId
+     * @param routineReq
+     * @return
+     */
     @PostMapping("{userId}/routines")
     public BaseResponse createRoutine(
             @PathVariable("userId") Integer userId,
             @RequestBody @Valid RoutineReq routineReq
     ) {
+        // TODO : JWT
+
         Integer createdRoutineId = routineService.createRoutine(userId, routineReq);
 
         return new BaseResponse(ResponseStatus.SUCCESS, createdRoutineId);
     }
     
     // 루틴 수정
+    @PatchMapping("{userId}/routines/{routineId}")
+    public BaseResponse<RoutineRes> updateRoutine(
+            @PathVariable Integer userId,
+            @PathVariable Integer routineId,
+            @RequestBody @Valid RoutineReq patchRoutineReq
+    ) {
+        // TODO : JWT
+
+        RoutineRes patchRoutineRes = routineService.updateRoutine(routineId, patchRoutineReq);
+
+        return new BaseResponse<>(ResponseStatus.SUCCESS, patchRoutineRes);
+    }
 
 
-    // 루틴 삭제
-    
+    /**
+     * 루틴 삭제
+     * @param userId
+     * @param routineId
+     * @return
+     */
+    @DeleteMapping("{userId}/routines/{routineId}")
+    public BaseResponse<Integer> deleteAlarm(
+            @PathVariable @Valid Integer userId,
+            @PathVariable @Valid Integer routineId
+    ) {
+        // TODO : JWT
+        routineService.deleteRoutine(routineId);
+
+        return new BaseResponse<>(ResponseStatus.SUCCESS);
+    }
     
     //test
     @GetMapping("/test")

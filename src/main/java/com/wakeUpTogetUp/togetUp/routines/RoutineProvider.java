@@ -21,7 +21,7 @@ public class RoutineProvider {
                         () -> new BaseException(ResponseStatus.INVALID_ROUTINE_ID)
                 );
 
-        RoutineRes routineRes = RoutineMapper.INSTANCE.toGetRoutineRes(routine);
+        RoutineRes routineRes = RoutineMapper.INSTANCE.toRoutineRes(routine);
 
         return routineRes;
     }
@@ -34,7 +34,7 @@ public class RoutineProvider {
 
         ArrayList<RoutineRes> routineResList = new ArrayList<>();
         for(Routine routine : routineList) {
-            routineResList.add(RoutineMapper.INSTANCE.toGetRoutineRes(routine));
+            routineResList.add(RoutineMapper.INSTANCE.toRoutineRes(routine));
         }
 
         return routineResList;

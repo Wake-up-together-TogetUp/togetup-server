@@ -28,12 +28,7 @@ public class AlarmService {
     private final UserRepository userRepository;
     private final MappingAlarmRoutineRepository mappingAlarmRoutineRepository;
 
-    /**
-     * 알람 생성
-     * @param userId
-     * @param postAlarmReq
-     * @return
-     */
+    // 알람 생성
     @Transactional
     public int createAlarm(Integer userId, AlarmReq postAlarmReq) {
         User user = userRepository.findById(userId)
@@ -73,13 +68,7 @@ public class AlarmService {
         return alarm.getId();
     }
 
-    /**
-     * 알람 수정
-     * @param userId
-     * @param alarmId
-     * @param patchAlarmReq
-     * @return
-     */
+    // 알람 수정
     @Transactional
     public AlarmRes updateAlarm(Integer userId, Integer alarmId, AlarmReq patchAlarmReq) {
         // 추가 값 설정
@@ -129,11 +118,7 @@ public class AlarmService {
         return alarmRes;
     }
 
-    /**
-     * 매핑 알람 루틴 리스트 생성하기
-     * @param alarmReq
-     * @param alarm
-     */
+    // 매핑 알람 루틴 리스트 생성하기
     protected void createMappingAlarmRoutineList(AlarmReq alarmReq, Alarm alarm){
         int i=1;
 
@@ -155,10 +140,7 @@ public class AlarmService {
         }
     }
 
-    /**
-     * 알람 삭제
-     * @param alarmId
-     */
+    // 알람 삭제
     public void deleteAlarm(Integer alarmId) {
         alarmRepository.deleteById(alarmId);
     }

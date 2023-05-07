@@ -73,7 +73,7 @@ public class AlarmProvider {
 
         ArrayList<RoutineRes> routineResList = new ArrayList<>();
         for(Routine routine : routineList) {
-            routineResList.add(RoutineMapper.INSTANCE.toGetRoutineRes(routine));
+            routineResList.add(RoutineMapper.INSTANCE.toRoutineRes(routine));
         }
 
         return routineResList;

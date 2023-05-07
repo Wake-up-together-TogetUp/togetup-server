@@ -12,5 +12,5 @@ public interface RoutineMapper {
 
     @Mapping(target = "userId", expression = "java(routine.getUser().getId())")
     @Mapping(target = "missionId", expression = "java(routine.getMission().getId())")
-    RoutineRes toGetRoutineRes(Routine routine);
+    RoutineRes toRoutineRes(Routine routine);
 }
