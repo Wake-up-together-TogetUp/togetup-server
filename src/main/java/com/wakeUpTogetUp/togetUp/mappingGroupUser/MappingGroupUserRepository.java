@@ -7,4 +7,9 @@ import java.util.List;
 
 public interface MappingGroupUserRepository extends JpaRepository<MappingGroupUser, Integer> {
     List<MappingGroupUser> findByGroupId(Integer groupId);
+    List<MappingGroupUser> findByUserId(Integer UserId);
+    MappingGroupUser findByUserIdAndGroupId(Integer userId, Integer groupId);
+
+    Integer deleteByUserIdAndGroupId(Integer userId,Integer groupId);
+
 }

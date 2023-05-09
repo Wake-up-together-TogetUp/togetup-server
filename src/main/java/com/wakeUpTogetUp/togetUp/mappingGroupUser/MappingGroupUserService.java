@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +47,7 @@ public class MappingGroupUserService {
     }
 
     /**
-     * 그룹아이디로 유저 가져오기
+     * 그룹아이디로 그룹유저 가져오기
      * @param groupId
      * @return
      */
@@ -64,4 +65,68 @@ public class MappingGroupUserService {
 
         return mappingGroupUserResList;
     }
+    /**
+     * 유저아이디로 그룹유저 가져오기
+     * @param userId
+     * @return
+     */
+    public List<MappingGroupUserRes> getGroupByUserId(Integer userId) {
+        // 유저 가져오기
+        List<MappingGroupUser> mappingGroupUserList= mappingGroupUserRepository.findByUserId(userId);
+
+
+        // dto 매핑
+        ArrayList<MappingGroupUserRes> mappingGroupUserResList = new ArrayList<>();
+        for(MappingGroupUser mappingGroupUser : mappingGroupUserList) {
+            mappingGroupUserResList.add(MappingGroupUserMapper.INSTANCE.toMappingGroupUserRes(mappingGroupUser));
+        }
+
+        return mappingGroupUserResList;
+    }
+
+
+    /**
+     * 그룹유저 수정  : ex) 알림여부, 미션여부
+     * @param userId
+     * @param groupId
+     * @param mappingGroupUserReq
+     * @return
+     */
+
+    @Transactional
+    public MappingGroupUserRes editMappingGroupUser(Integer userId, Integer groupId, MappingGroupUserReq mappingGroupUserReq) {
+
+
+        // 그룹유저 수정  ex) 알림을 키던가, 개인미션알림 설정
+        MappingGroupUser mappingGroupUser= mappingGroupUserRepository.findByUserIdAndGroupId(userId,groupId);
+        mappingGroupUser.setIsPersonalNotice(mappingGroupUserReq.getIsPersonalNotice());
+        mappingGroupUser.setIsNotice(mappingGroupUserReq.getIsNotice());
+        mappingGroupUser.setIsHostUser(mappingGroupUserReq.getIsHostUser());
+
+
+        //저장
+        MappingGroupUser mappingGroupUserModified = mappingGroupUserRepository.save(mappingGroupUser);
+
+
+        MappingGroupUserRes mappingGroupUserRes = MappingGroupUserMapper.INSTANCE.toMappingGroupUserRes(mappingGroupUserModified);
+
+        // return
+        return mappingGroupUserRes;
+    }
+
+    /**
+     *  그룹 탈퇴
+     */
+    @Transactional
+    public void deleteMappingGroupUser(Integer userId,Integer groupId) {
+        // TODO : 없으면 예외처리
+
+        Integer cnt=mappingGroupUserRepository.deleteByUserIdAndGroupId(userId,groupId);
+
+        if(cnt==0)
+        {
+            new BaseException(BaseResponseStatus.BAD_REQUEST);
+        }
+    }
+
 }

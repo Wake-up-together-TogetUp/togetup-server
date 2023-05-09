@@ -26,6 +26,7 @@ public enum BaseResponseStatus {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "요청 값을 확인해주세요."),
 
     // 유효하지 않은 요청
+
     INVALID_USER_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 유저 id 입니다."),
     INVALID_GROUP_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 그룹 id 입니다."),
     INVALID_MISSION_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 미션 id 입니다."),

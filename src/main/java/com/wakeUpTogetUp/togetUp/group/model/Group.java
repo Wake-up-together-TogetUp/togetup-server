@@ -40,7 +40,7 @@ public class Group {
 
 
 
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group",cascade = CascadeType.ALL)
     private List<MappingGroupUser> mappingGroupUsers= new ArrayList<>();
 
 

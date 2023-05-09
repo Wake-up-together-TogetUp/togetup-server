@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.utils.mappers;
 
-import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
+
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.response.MappingGroupUserRes;
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.model.MappingGroupUser;
 import org.mapstruct.Mapper;
