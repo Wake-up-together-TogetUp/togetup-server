@@ -3,9 +3,7 @@ package com.wakeUpTogetUp.togetUp.mappingGroupUser;
 import com.wakeUpTogetUp.togetUp.common.BaseException;
 import com.wakeUpTogetUp.togetUp.common.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.BaseResponseStatus;
-import com.wakeUpTogetUp.togetUp.group.GroupDto;
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.request.MappingGroupUserReq;
-import com.wakeUpTogetUp.togetUp.group.GroupService;
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.response.MappingGroupUserRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/app/mapping/group/user")
 public class MappingGroupUserController {

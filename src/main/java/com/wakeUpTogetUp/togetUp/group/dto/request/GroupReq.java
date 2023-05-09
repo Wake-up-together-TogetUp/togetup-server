@@ -1,8 +1,7 @@
-package com.wakeUpTogetUp.togetUp.group;
+package com.wakeUpTogetUp.togetUp.group.dto.request;
 
 
 import com.wakeUpTogetUp.togetUp.group.model.Group;
-import com.wakeUpTogetUp.togetUp.users.model.User;
 import lombok.*;
 
 
@@ -13,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class GroupDto {
+public class GroupReq {
 
     private Integer id;
     private String name;
