@@ -4,13 +4,11 @@ import com.wakeUpTogetUp.togetUp.common.BaseException;
 import com.wakeUpTogetUp.togetUp.common.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.BaseResponseStatus;
 import com.wakeUpTogetUp.togetUp.group.GroupDto;
+import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.request.MappingGroupUserReq;
 import com.wakeUpTogetUp.togetUp.group.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,14 +18,23 @@ public class MappingGroupUserController {
 
     private final MappingGroupUserService MappinggroupUserService;
 
+    /**
+     * 사용자 그룹 가입
+     * @param userId
+     * @param groupId
+     * @param mappingGroupUserReq
+     * @return
+     */
+
     @ResponseBody
-    @PostMapping()
-    public BaseResponse<BaseResponseStatus> create(@RequestBody GroupUserDto dto) {
+    @PostMapping("/{userId}/{groupId}/registration")
+    public BaseResponse create(@PathVariable("userId") Integer userId,@PathVariable("groupId")Integer groupId,@RequestBody MappingGroupUserReq mappingGroupUserReq) {
         try {
 
-
-            MappinggroupUserService.createGroupUser(dto);
-            return new BaseResponse(BaseResponseStatus.SUCCESS);
+            //TODO : 그 그룹에 Host 유저가 있는지. (host는 한명)
+            //TODO : 이미 가입한 그룹인지
+            Integer groupUserId = MappinggroupUserService.createGroupUser(userId,groupId,mappingGroupUserReq);
+            return new BaseResponse(BaseResponseStatus.SUCCESS,groupUserId);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

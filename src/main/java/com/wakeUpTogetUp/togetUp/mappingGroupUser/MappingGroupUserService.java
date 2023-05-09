@@ -1,7 +1,9 @@
 package com.wakeUpTogetUp.togetUp.mappingGroupUser;
 
 
-import com.wakeUpTogetUp.togetUp.group.GroupDto;
+import com.wakeUpTogetUp.togetUp.common.BaseException;
+import com.wakeUpTogetUp.togetUp.common.BaseResponseStatus;
+import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.request.MappingGroupUserReq;
 import com.wakeUpTogetUp.togetUp.group.GroupRepository;
 import com.wakeUpTogetUp.togetUp.group.model.Group;
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.model.MappingGroupUser;
@@ -21,14 +23,18 @@ public class MappingGroupUserService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     @Transactional
-    public  Integer createGroupUser(GroupUserDto dto){
+    public  Integer createGroupUser(Integer userId, Integer groupId,MappingGroupUserReq mappingGroupUserReq){
 
-
-//        User user = userRepository.findById(dto.getUser());
-//        Group group = groupRepository.findById(dto.getGroup());
-        MappingGroupUser groupUser =dto.toEntity();
-//        groupUser.setUser(user);
-//        groupUser.setGroup(group);
+        //조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_USER_ID)
+                );
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_GROUP_ID)
+                );
+        //dto->entitiy
+        MappingGroupUser groupUser =mappingGroupUserReq.toEntity(user,group);
+        //저장
         mappingGroupUserRepository.save(groupUser);
         return groupUser.getId();
     }

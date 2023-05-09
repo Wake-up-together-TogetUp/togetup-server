@@ -37,20 +37,20 @@ public class MappingGroupUser {
 
     @Column(name="isPersonalNotice",columnDefinition = "TINYINT", length=1)
     @ColumnDefault("1")
-    private int isPersonalNotice;
+    private Integer isPersonalNotice;
 
     //채팅방 알림여부
     @Column(name="isNotice", columnDefinition = "TINYINT", length=1)
     @ColumnDefault("1")
-    private int isNotice;
+    private Integer isNotice;
 
     @Column(name="isHostUser", columnDefinition = "TINYINT", length=1)
     @ColumnDefault("0")
-    private int isHostUser;
+    private Integer isHostUser;
 
     @Column(name="isActivated",columnDefinition = "TINYINT", length=1)
     @ColumnDefault("1")
-    private int isActivated;
+    private Integer isActivated;
 
     @Column(name = "createdAt")
     private Timestamp createdAt;
@@ -85,13 +85,14 @@ public class MappingGroupUser {
 //    }
 
     @Builder
-    public static MappingGroupUser of( Integer id ,User user,Group group,Integer isHostUser) {
-        MappingGroupUser groupUser = new MappingGroupUser();
-        groupUser.setId(id);
-        groupUser.setUser(user);
-        groupUser.setGroup(group);
-        groupUser.setIsHostUser(isHostUser);
-        return groupUser;
+    private MappingGroupUser ( Integer id ,User user,Group group,Integer isPersonalNotice,Integer isNotice,Integer isHostUser) {
+        this.id=id;
+        this.user=user;
+        this.group=group;
+        this.isPersonalNotice=isPersonalNotice;
+        this.isNotice=isNotice;
+        this.isHostUser=isHostUser;
+
     }
     public void setUser(User user) {
         this.user = user;
