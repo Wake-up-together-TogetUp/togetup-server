@@ -6,9 +6,12 @@ import com.wakeUpTogetUp.togetUp.common.BaseResponseStatus;
 import com.wakeUpTogetUp.togetUp.group.GroupDto;
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.request.MappingGroupUserReq;
 import com.wakeUpTogetUp.togetUp.group.GroupService;
+import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.response.MappingGroupUserRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -16,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class MappingGroupUserController {
     //user하고 , 등등 세팅
 
-    private final MappingGroupUserService MappinggroupUserService;
+    private final MappingGroupUserService mappinggroupUserService;
 
     /**
      * 사용자 그룹 가입
@@ -33,10 +36,23 @@ public class MappingGroupUserController {
 
             //TODO : 그 그룹에 Host 유저가 있는지. (host는 한명)
             //TODO : 이미 가입한 그룹인지
-            Integer groupUserId = MappinggroupUserService.createGroupUser(userId,groupId,mappingGroupUserReq);
+            Integer groupUserId = mappinggroupUserService.createGroupUser(userId,groupId,mappingGroupUserReq);
             return new BaseResponse(BaseResponseStatus.SUCCESS,groupUserId);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
+    }
+
+    /**
+     * 어떤 그룹에 가입한 유저 불러오기
+     * @param groupId
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("{groupId}/user")
+    public BaseResponse<List<MappingGroupUserRes>> GetUserInGroup(@PathVariable Integer groupId){
+        List<MappingGroupUserRes> mappingGroupUserResList = mappinggroupUserService.getUserByGroupId(groupId);
+
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, mappingGroupUserResList);
     }
 }
