@@ -13,10 +13,9 @@ import java.util.Optional;
 public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
     @Override
     <S extends Alarm> S save(S entity);
-
     @Override
     Optional<Alarm> findById(Integer id);
 
     @Query("select a from Alarm a where a.user.id = :userId")
-    Optional<List<Alarm>> findByUserId(@Param(value = "userId") Integer userId);
+    List<Alarm> findByUserId(@Param(value = "userId") Integer userId);
 }

@@ -2,8 +2,8 @@ package com.wakeUpTogetUp.togetUp.alarms.dto.request;
 
 import lombok.*;
 
-import javax.persistence.Access;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.List;
 
@@ -36,6 +36,7 @@ public class AlarmReq {
 
     @Null
     private Integer id;
+    @NotNull(message = "사용자 아이디를 넣어주세요.")
     private Integer userId;
     @NotBlank(message = "알람 이름은 공백일 수 없습니다.")
     private String name;
@@ -46,7 +47,9 @@ public class AlarmReq {
     private Boolean isRoutineOn;
     private Integer snoozeInterval;
     private Integer snoozeCnt;
+    @NotNull(message = "알람 시작시는 공백일 수 없습니다.")
     private Integer startHour;
+    @NotNull(message = "알람 시작분은 공백일 수 없습니다.")
     private Integer startMinute;
     private Boolean monday;
     private Boolean tuesday;

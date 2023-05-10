@@ -55,6 +55,7 @@ public class AlarmController {
             @RequestBody @Valid AlarmReq alarmReq
     ){
         //TODO : jwt 정보와 일치하는지 확인하기
+
         Integer createdAlarmId = alarmService.createAlarm(userId, alarmReq);
 
         return new BaseResponse(ResponseStatus.SUCCESS, createdAlarmId);
@@ -80,5 +81,21 @@ public class AlarmController {
         return new BaseResponse<>(ResponseStatus.SUCCESS, patchAlarmRes);
     }
 
-//    알람 삭제
+    /**
+     * 알람 삭제
+     * @param userId
+     * @param alarmId
+     * @return
+     */
+    @DeleteMapping("{userId}/alarms/{alarmId}")
+    public BaseResponse<Integer> deleteAlarm(
+            @PathVariable @Valid Integer userId,
+            @PathVariable @Valid Integer alarmId
+    ) {
+        // TODO : JWT
+
+        alarmService.deleteAlarm(alarmId);
+
+        return new BaseResponse<Integer>(ResponseStatus.SUCCESS);
+    }
 }

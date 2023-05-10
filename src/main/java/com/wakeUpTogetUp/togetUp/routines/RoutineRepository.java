@@ -12,6 +12,9 @@ import java.util.Optional;
 @Repository
 public interface RoutineRepository extends JpaRepository<Routine, Integer> {
     @Override
+    <S extends Routine> S save(S entity);
+
+    @Override
     Optional<Routine> findById(Integer id);
 
     @Query("SELECT r FROM Routine r JOIN MappingAlarmRoutine mar ON (r.id = mar.routine.id) WHERE mar.alarm.id = :alarmId")
