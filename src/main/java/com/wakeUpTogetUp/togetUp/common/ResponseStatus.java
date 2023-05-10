@@ -33,6 +33,8 @@ public enum ResponseStatus {
     INVALID_ALARM_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 알람 id 입니다."),
     INVALID_ROUTINE_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 루틴 id 입니다."),
 
+
+
     // Alarm
     ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 알람을 찾을 수 없습니다."),
 
