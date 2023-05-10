@@ -1,9 +1,9 @@
 package com.wakeUpTogetUp.togetUp.mappingGroupUser;
 
 
-import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
-import com.wakeUpTogetUp.togetUp.common.BaseException;
-import com.wakeUpTogetUp.togetUp.common.BaseResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.request.MappingGroupUserReq;
 import com.wakeUpTogetUp.togetUp.group.GroupRepository;
 import com.wakeUpTogetUp.togetUp.group.model.Group;
@@ -11,7 +11,6 @@ import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.response.MappingGroupUserR
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.model.MappingGroupUser;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.users.model.User;
-import com.wakeUpTogetUp.togetUp.utils.mappers.AlarmMapper;
 import com.wakeUpTogetUp.togetUp.utils.mappers.MappingGroupUserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,10 +33,10 @@ public class MappingGroupUserService {
 
         //조회
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_USER_ID)
+                .orElseThrow(() -> new BaseException(ResponseStatus.INVALID_USER_ID)
                 );
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_GROUP_ID)
+                .orElseThrow(() -> new BaseException(ResponseStatus.INVALID_GROUP_ID)
                 );
         //dto->entitiy
         MappingGroupUser groupUser =mappingGroupUserReq.toEntity(user,group);
@@ -125,7 +124,7 @@ public class MappingGroupUserService {
 
         if(cnt==0)
         {
-            new BaseException(BaseResponseStatus.BAD_REQUEST);
+            new BaseException(ResponseStatus.BAD_REQUEST);
         }
     }
 

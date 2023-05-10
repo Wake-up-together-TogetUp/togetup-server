@@ -1,8 +1,8 @@
 package com.wakeUpTogetUp.togetUp.group;
 
-import com.wakeUpTogetUp.togetUp.common.BaseException;
-import com.wakeUpTogetUp.togetUp.common.BaseResponse;
-import com.wakeUpTogetUp.togetUp.common.BaseResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import com.wakeUpTogetUp.togetUp.group.dto.request.GroupReq;
 import com.wakeUpTogetUp.togetUp.group.dto.response.GroupRes;
 
@@ -27,11 +27,11 @@ public class GroupController {
      */
     @ResponseBody
     @PostMapping() //
-    public BaseResponse<BaseResponseStatus> create(@RequestBody GroupReq groupReq) {
+    public BaseResponse<ResponseStatus> create(@RequestBody GroupReq groupReq) {
         try {
 
             groupService.createGroup(groupReq);
-            return new BaseResponse(BaseResponseStatus.SUCCESS);
+            return new BaseResponse(ResponseStatus.SUCCESS);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -47,7 +47,7 @@ public class GroupController {
     public BaseResponse<List<GroupRes>> getGroup(){
         List<GroupRes> GroupResList = groupService.getGroup();
 
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS, GroupResList);
+        return new BaseResponse<>(ResponseStatus.SUCCESS, GroupResList);
     }
 
     /**
@@ -81,7 +81,7 @@ public class GroupController {
 //Todo : aws 사진
         GroupRes groupRes = groupService.editGroup( groupId, groupReq);
 
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS, groupRes);
+        return new BaseResponse<>(ResponseStatus.SUCCESS, groupRes);
     }
 
     /**
@@ -91,13 +91,13 @@ public class GroupController {
      */
     @DeleteMapping("{groupId}")
     @ResponseBody
-    public BaseResponse<BaseResponseStatus> deleteGroup(
+    public BaseResponse<ResponseStatus> deleteGroup(
             @PathVariable @Valid Integer groupId
     ) {
 
         groupService.deleteGroup(groupId);
 
-        return new BaseResponse(BaseResponseStatus.SUCCESS);
+        return new BaseResponse(ResponseStatus.SUCCESS);
     }
 
 }
