@@ -1,12 +1,13 @@
 package com.wakeUpTogetUp.togetUp.routines;
 
-import com.wakeUpTogetUp.togetUp.common.BaseResponse;
-import com.wakeUpTogetUp.togetUp.common.BaseResponseStatus;
-import com.wakeUpTogetUp.togetUp.routines.model.GetRoutineRes;
-import com.wakeUpTogetUp.togetUp.routines.model.PostRoutineReq;
+import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
+import com.wakeUpTogetUp.togetUp.routines.dto.request.RoutineReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -16,41 +17,83 @@ public class RoutineController {
     private final RoutineService routineService;
     private final RoutineProvider routineProvider;
 
-    // 루틴 1개 가져오기
+    /**
+     * 루틴 1개 가져오기
+     * @param userId
+     * @param routineId
+     * @return
+     */
     @GetMapping("{userId}/routines/{routineId}")
-    public BaseResponse<GetRoutineRes> getRoutine(
+    public BaseResponse<RoutineRes> getRoutine(
             @PathVariable("userId") Integer userId,
             @PathVariable("routineId") Integer routineId
     ) {
-        GetRoutineRes getRoutineRes = routineProvider.getRoutine(routineId);
+        RoutineRes routineRes = routineProvider.getRoutine(routineId);
 
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS, getRoutineRes);
+        return new BaseResponse<>(ResponseStatus.SUCCESS, routineRes);
     }
 
-    // 루틴 목록 가져오기
+    /**
+     * 루틴 목록 가져오기
+     * @param userId
+     * @return
+     */
     @GetMapping("{userId}/routines")
-    public BaseResponse<List<GetRoutineRes>> getRoutinesByUserId(@PathVariable Integer userId) {
-        List<GetRoutineRes> getRoutineResList = routineProvider.getRoutinesByUserId(userId);
+    public BaseResponse<List<RoutineRes>> getRoutinesByUserId(@PathVariable Integer userId) {
+        List<RoutineRes> routineResList = routineProvider.getRoutinesByUserId(userId);
 
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS, getRoutineResList);
+        return new BaseResponse<>(ResponseStatus.SUCCESS, routineResList);
     }
 
-    // 루틴 생성
+    /**
+     * 루틴 생성
+     * @param userId
+     * @param routineReq
+     * @return
+     */
     @PostMapping("{userId}/routines")
     public BaseResponse createRoutine(
             @PathVariable("userId") Integer userId,
-            @RequestBody PostRoutineReq postRoutineReq
+            @RequestBody @Valid RoutineReq routineReq
     ) {
-        Integer createdRoutineId = routineService.createRoutine(userId, postRoutineReq);
+        // TODO : JWT
 
-        return new BaseResponse(BaseResponseStatus.SUCCESS, createdRoutineId);
+        Integer createdRoutineId = routineService.createRoutine(userId, routineReq);
+
+        return new BaseResponse(ResponseStatus.SUCCESS, createdRoutineId);
     }
     
     // 루틴 수정
+    @PatchMapping("{userId}/routines/{routineId}")
+    public BaseResponse<RoutineRes> updateRoutine(
+            @PathVariable Integer userId,
+            @PathVariable Integer routineId,
+            @RequestBody @Valid RoutineReq patchRoutineReq
+    ) {
+        // TODO : JWT
+
+        RoutineRes patchRoutineRes = routineService.updateRoutine(routineId, patchRoutineReq);
+
+        return new BaseResponse<>(ResponseStatus.SUCCESS, patchRoutineRes);
+    }
 
 
-    // 루틴 삭제
-    
+    /**
+     * 루틴 삭제
+     * @param userId
+     * @param routineId
+     * @return
+     */
+    @DeleteMapping("{userId}/routines/{routineId}")
+    public BaseResponse<Integer> deleteAlarm(
+            @PathVariable @Valid Integer userId,
+            @PathVariable @Valid Integer routineId
+    ) {
+        // TODO : JWT
+        routineService.deleteRoutine(routineId);
+
+        return new BaseResponse<>(ResponseStatus.SUCCESS);
+    }
     
     //test
     @GetMapping("/test")

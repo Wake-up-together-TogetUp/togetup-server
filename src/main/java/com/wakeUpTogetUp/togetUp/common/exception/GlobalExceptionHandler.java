@@ -1,6 +1,8 @@
-package com.wakeUpTogetUp.togetUp.common;
+package com.wakeUpTogetUp.togetUp.common.exception;
 
 //import org.hibernate.TypeMismatchException;
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -40,7 +42,7 @@ public class GlobalExceptionHandler {
                 exception.getMessage(),
                 exception);
 
-        return new BaseResponse<>(BaseResponseStatus.BAD_REQUEST);
+        return new BaseResponse<>(ResponseStatus.BAD_REQUEST);
     }
 
     // vallidation
@@ -48,7 +50,7 @@ public class GlobalExceptionHandler {
     protected BaseResponse validException(MethodArgumentNotValidException exception) {
         String msg = "유효성 검사 실패 : " + exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();
 
-        return new BaseResponse(BaseResponseStatus.BAD_REQUEST, msg);
+        return new BaseResponse(ResponseStatus.BAD_REQUEST, msg);
     }
 
     // Catch all Exception
@@ -58,6 +60,6 @@ public class GlobalExceptionHandler {
                 exception.getMessage(),
                 exception);
 
-        return new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR);
+        return new BaseResponse<>(ResponseStatus.INTERNAL_SERVER_ERROR);
     }
 }

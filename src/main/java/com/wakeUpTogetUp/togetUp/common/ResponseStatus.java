@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
  * 에러 코드 관리
  */
 @Getter
-public enum BaseResponseStatus {
+public enum ResponseStatus {
     /**
      * 200번대(성공)
      */
@@ -58,7 +58,7 @@ public enum BaseResponseStatus {
     private final HttpStatus httpStatus;
     private final String message;
 
-    private BaseResponseStatus(HttpStatus httpStatus, String message) {
+    private ResponseStatus(HttpStatus httpStatus, String message) {
         this.httpStatus = httpStatus;
         this.message = message;
     }

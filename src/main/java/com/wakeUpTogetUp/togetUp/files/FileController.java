@@ -3,9 +3,9 @@ package com.wakeUpTogetUp.togetUp.files;
 
 import java.util.List;
 
-import com.wakeUpTogetUp.togetUp.common.BaseException;
-import com.wakeUpTogetUp.togetUp.common.BaseResponse;
-import com.wakeUpTogetUp.togetUp.common.BaseResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,9 +53,9 @@ public class FileController {
         String result = fileService.deleteFile(fileName);
 
         if(result.equals("delete process success")) {
-            return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+            return new BaseResponse<>(ResponseStatus.SUCCESS);
         } else {
-            return new BaseResponse<>(new BaseException(BaseResponseStatus.FILE_NOT_FOUND));
+            return new BaseResponse<>(new BaseException(ResponseStatus.FILE_NOT_FOUND));
         }
     }
 }

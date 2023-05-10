@@ -6,7 +6,6 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 @Table(name = "routine")
@@ -24,6 +23,14 @@ public class Routine {
         this.estimatedTime = estimatedTime;
         this.icon = icon;
         this.color = color;
+    }
+
+    public void modifyProperties(Mission mission, String name, int estimatedTime, String icon, String color) {
+        setMission(mission);
+        setName(name);
+        setEstimatedTime(estimatedTime);
+        setIcon(icon);
+        setColor(color);
     }
 
     @Id
