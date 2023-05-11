@@ -28,10 +28,14 @@ public enum ResponseStatus {
     EMPTY_JWT(HttpStatus.BAD_REQUEST, "빈 jwt 입니다."),
 
     // 유효하지 않은 요청
+
     INVALID_USER_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 유저 id 입니다."),
+    INVALID_GROUP_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 그룹 id 입니다."),
     INVALID_MISSION_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 미션 id 입니다."),
     INVALID_ALARM_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 알람 id 입니다."),
     INVALID_ROUTINE_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 루틴 id 입니다."),
+
+
 
     // Alarm
     ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 알람을 찾을 수 없습니다."),

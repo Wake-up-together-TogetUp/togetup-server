@@ -3,6 +3,8 @@ package com.wakeUpTogetUp.togetUp.users;
 import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.users.dto.request.UserReq;
+import com.wakeUpTogetUp.togetUp.users.dto.response.UserRes;
 import com.wakeUpTogetUp.togetUp.users.oauth.GetSocialOAuthRes;
 import com.wakeUpTogetUp.togetUp.users.oauth.OAuthService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/app/users")
 public class UserController  {
@@ -23,11 +25,11 @@ public class UserController  {
 
     @ResponseBody
     @PostMapping("/new") //
-    public BaseResponse<ResponseStatus> join(@RequestBody UserForm form) {
+    public BaseResponse<UserRes> join(@RequestBody UserReq form) {
         try {
-            System.out.println("로그인"+form.getLoginType());
-            userService.createUser(form);
-            return new BaseResponse(ResponseStatus.SUCCESS);
+            System.out.println("로그인"+form);
+            UserRes userRes=userService.createUser(form);
+            return new BaseResponse<>(ResponseStatus.SUCCESS,userRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

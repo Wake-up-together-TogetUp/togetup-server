@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.users.model;
 
+import com.wakeUpTogetUp.togetUp.mappingGroupUser.model.MappingGroupUser;
 import com.wakeUpTogetUp.togetUp.users.LoginType;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.time.Instant;
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Setter
@@ -30,7 +32,7 @@ public class User {
 //    @Column(name = "nickName")
 //    private String nickName;
 
-    @Column(name = "email")
+    @Column(name = "email",unique = true)
     private String email;
     @Column(name = "password")
     private String password;
@@ -58,6 +60,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     @NotNull
     private LoginType loginType ;
+
+    @OneToMany(mappedBy = "user")
+    private List<MappingGroupUser> mappingGroupUsers = new ArrayList<>();
 
     @PrePersist
     void registeredAt() {
