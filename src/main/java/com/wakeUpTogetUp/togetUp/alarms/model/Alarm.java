@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.alarms.model;
 
+import com.wakeUpTogetUp.togetUp.missions.model.Mission;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -13,13 +14,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @DynamicInsert          // insert 시 값이 null인 필드 제외
 public class Alarm {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
     @Builder
-    private Alarm(User user, String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
+    public Alarm(User user, Mission mission, String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
         this.user = user;
+        this.mission = mission;
         this.name = name;
         this.icon = icon;
         this.sound = sound;
@@ -40,7 +38,8 @@ public class Alarm {
     }
 
     // TODO : 접근제어자를 public으로 두는게 맞나?
-    public void modifyProperties(String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
+    public void modifyProperties(Mission mission, String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
+        setMission(mission);
         setName(name);
         setIcon(icon);
         setSound(sound);
@@ -50,7 +49,7 @@ public class Alarm {
         setSnoozeInterval(snoozeInterval);
         setSnoozeCnt(snoozeCnt);
         setStartHour(startHour);
-        setId(startMinute);
+        setStartMinute(startMinute);
         setMonday(monday);
         setTuesday(tuesday);
         setWednesday(wednesday);
@@ -59,9 +58,13 @@ public class Alarm {
         setSaturday(saturday);
         setSunday(sunday);
     }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
+    private Mission mission;
     private String name;
     private String icon;
     private String sound;

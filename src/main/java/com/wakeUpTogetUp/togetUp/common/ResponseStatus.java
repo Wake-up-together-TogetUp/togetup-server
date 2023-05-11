@@ -24,6 +24,8 @@ public enum ResponseStatus {
      */
     // 공통
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "요청 값을 확인해주세요."),
+    BAD_REQUEST_PARAM(HttpStatus.BAD_REQUEST, "요청 파라미터를 확인해주세요."),
+    EMPTY_JWT(HttpStatus.BAD_REQUEST, "빈 jwt 입니다."),
 
     // 유효하지 않은 요청
     INVALID_USER_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 유저 id 입니다."),

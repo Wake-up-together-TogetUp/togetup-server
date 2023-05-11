@@ -11,9 +11,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class AlarmReq {
+public class PostAlarmReq {
     @Builder
-    public AlarmReq(String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, List<Integer> routineIdList) {
+    public PostAlarmReq(String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, List<Integer> routineIdList) {
         this.name = name;
         this.icon = icon;
         this.sound = sound;
@@ -38,6 +38,8 @@ public class AlarmReq {
     private Integer id;
     @NotNull(message = "사용자 아이디를 넣어주세요.")
     private Integer userId;
+    @NotNull(message = "미션 아이디를 넣어주세요.")
+    private Integer missionId;
     @NotBlank(message = "알람 이름은 공백일 수 없습니다.")
     private String name;
     private String icon;

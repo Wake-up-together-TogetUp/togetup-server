@@ -1,5 +1,6 @@
-package com.wakeUpTogetUp.togetUp.alarms.model;
+package com.wakeUpTogetUp.togetUp.mappingAlarmRoutine.model;
 
+import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import lombok.Builder;
