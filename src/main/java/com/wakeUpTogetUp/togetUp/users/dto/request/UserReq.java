@@ -1,26 +1,24 @@
-package com.wakeUpTogetUp.togetUp.users;
+package com.wakeUpTogetUp.togetUp.users.dto.request;
 
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import com.wakeUpTogetUp.togetUp.users.LoginType;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
+@Setter
 @Getter
 @Data
 @NoArgsConstructor
-public class UserForm {
-   private Integer id;
+public class UserReq {
+  // private Integer id;
    private String password;
     private String username;
     private String email;
-    private LoginType loginType;
+    private String loginType;
 
     @Builder
-    public UserForm(Integer id,String password, String username,String email,LoginType loginType) {
-        this.id = id;
+    public UserReq(Integer id, String password, String username, String email, String loginType) {
+      //  this.id = id;
         this.password=password;
         this.username = username;
         this.email = email;
@@ -35,21 +33,20 @@ public class UserForm {
 //        this.role = role;
 //    }
 
-    @Builder(builderClassName = "OAuth2Register", builderMethodName = "oauth2Register")
-    public UserForm(String username, String email, LoginType loginType) {
-        this.username = username;
-        this.email = email;
-        this.loginType=loginType;
-
-    }
+//    @Builder(builderClassName = "OAuth2Register", builderMethodName = "oauth2Register")
+//    public UserReq(String username, String email, LoginType loginType) {
+//        this.username = username;
+//        this.email = email;
+//        this.loginType=loginType;
+//
+//    }
 
     public User toEntity(){
         return User.builder()
-                .id(id)
+             //   .id(id)
                 .password(password)
                 .username(username)
                 .email(email)
-                .loginType(loginType)
                 .build();
     }
 }

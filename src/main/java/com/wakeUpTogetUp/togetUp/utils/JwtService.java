@@ -43,13 +43,13 @@ public class JwtService {
         return expiration.before(new Date());
     }
 
-    public static String generateAccessToken(String useremail, String key, long expiredTimeMs) {
-        return doGenerateToken(useremail, expiredTimeMs, key);
+    public static String generateAccessToken(Integer userId, String key, long expiredTimeMs) {
+        return doGenerateToken(userId, expiredTimeMs, key);
     }
 
-    private static String doGenerateToken(String useremail, long expireTime, String key) {
+    private static String doGenerateToken(Integer userId, long expireTime, String key) {
         Claims claims = Jwts.claims();
-        claims.put("useremail", useremail);
+        claims.put("userId", userId);
 
         return Jwts.builder()
                 .setClaims(claims)
