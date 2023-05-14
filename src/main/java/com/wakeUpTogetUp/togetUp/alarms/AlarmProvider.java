@@ -32,7 +32,7 @@ public class AlarmProvider {
      */
     public List<AlarmsRes> getAlarmsByUserId(Integer userId) {
         // 유저 id 유무 확인
-        User user = userRepository.findById(userId).orElseThrow(
+        userRepository.findById(userId).orElseThrow(
                 () -> new BaseException(ResponseStatus.INVALID_USER_ID)
         );
 

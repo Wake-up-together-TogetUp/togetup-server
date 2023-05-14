@@ -2,8 +2,10 @@ package com.wakeUpTogetUp.togetUp.routines;
 
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.dto.request.RoutineReq;
+import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class RoutineController {
     private final RoutineService routineService;
     private final RoutineProvider routineProvider;
+    private final JwtService jwtService;
 
     /**
      * 루틴 1개 가져오기
@@ -56,11 +59,12 @@ public class RoutineController {
             @PathVariable("userId") Integer userId,
             @RequestBody @Valid RoutineReq routineReq
     ) {
-        // TODO : JWT
+        if(jwtService.validate(userId)) {
+            Integer createdRoutineId = routineService.createRoutine(userId, routineReq);
 
-        Integer createdRoutineId = routineService.createRoutine(userId, routineReq);
-
-        return new BaseResponse(ResponseStatus.SUCCESS, createdRoutineId);
+            return new BaseResponse(ResponseStatus.SUCCESS, createdRoutineId);
+        } else
+            throw new BaseException(ResponseStatus.JWT_MISMATCH);
     }
     
     // 루틴 수정
@@ -70,11 +74,12 @@ public class RoutineController {
             @PathVariable Integer routineId,
             @RequestBody @Valid RoutineReq patchRoutineReq
     ) {
-        // TODO : JWT
+        if(jwtService.validate(userId)) {
+            RoutineRes patchRoutineRes = routineService.updateRoutine(routineId, patchRoutineReq);
 
-        RoutineRes patchRoutineRes = routineService.updateRoutine(routineId, patchRoutineReq);
-
-        return new BaseResponse<>(ResponseStatus.SUCCESS, patchRoutineRes);
+            return new BaseResponse<>(ResponseStatus.SUCCESS, patchRoutineRes);
+        } else
+            throw new BaseException(ResponseStatus.JWT_MISMATCH);
     }
 
 
@@ -89,10 +94,12 @@ public class RoutineController {
             @PathVariable @Valid Integer userId,
             @PathVariable @Valid Integer routineId
     ) {
-        // TODO : JWT
-        routineService.deleteRoutine(routineId);
+        if(jwtService.validate(userId)) {
+            routineService.deleteRoutine(routineId);
 
-        return new BaseResponse<>(ResponseStatus.SUCCESS);
+            return new BaseResponse<>(ResponseStatus.SUCCESS);
+        } else
+            throw new BaseException(ResponseStatus.JWT_MISMATCH);
     }
     
     //test

@@ -70,10 +70,9 @@ public class AlarmService {
         alarmRepository.save(alarm);
 
         // 루틴 리스트가 있으면
-        if(postAlarmReq.getRoutineIdList() != null) {
+        if(postAlarmReq.getRoutineIdList() != null)
             // 매핑 알람 루틴 생성
             createMappingAlarmRoutineList(postAlarmReq, alarm);
-        }
 
         return alarm.getId();
     }
@@ -123,7 +122,8 @@ public class AlarmService {
         mappingAlarmRoutineRepository.deleteByAlarmId(alarmId);
 
         // 매핑 루틴 리스트 재생성
-        createMappingAlarmRoutineList(patchAlarmReq, alarmModified);
+        if(patchAlarmReq.getRoutineIdList() != null)
+            createMappingAlarmRoutineList(patchAlarmReq, alarmModified);
 
         // routine response 리스트 가져오기
         List<RoutineRes> routineResList = alarmProvider.getRoutineResByAlarmId(alarmId);

@@ -6,8 +6,10 @@ import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmsRes;
 import com.wakeUpTogetUp.togetUp.alarms.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -58,11 +60,14 @@ public class AlarmController {
             @RequestBody @Valid PostAlarmReq postAlarmReq
     ){
         //TODO : jwt 정보와 일치하는지 확인하기
+        if(jwtService.validate(userId)) {
+            Integer createdAlarmId = alarmService.createAlarm(userId, postAlarmReq);
 
-
-        Integer createdAlarmId = alarmService.createAlarm(userId, postAlarmReq);
-
-        return new BaseResponse(ResponseStatus.SUCCESS, createdAlarmId);
+            return new BaseResponse(ResponseStatus.SUCCESS, createdAlarmId);
+        }
+        else {
+            throw new BaseException(ResponseStatus.JWT_MISMATCH);
+        }
     }
 
     /**
@@ -79,10 +84,13 @@ public class AlarmController {
             @RequestBody @Valid PatchAlarmReq patchAlarmReq
     ) {
         // TODO : JWT
+        if(jwtService.validate(userId)) {
+            AlarmRes patchAlarmRes = alarmService.updateAlarm(userId, alarmId, patchAlarmReq);
 
-        AlarmRes patchAlarmRes = alarmService.updateAlarm(userId, alarmId, patchAlarmReq);
-
-        return new BaseResponse<>(ResponseStatus.SUCCESS, patchAlarmRes);
+            return new BaseResponse<>(ResponseStatus.SUCCESS, patchAlarmRes);
+        } else {
+            throw new BaseException(ResponseStatus.JWT_MISMATCH);
+        }
     }
 
     /**
@@ -97,9 +105,12 @@ public class AlarmController {
             @PathVariable @Valid Integer alarmId
     ) {
         // TODO : JWT
+        if(jwtService.validate(userId)) {
+            alarmService.deleteAlarm(alarmId);
 
-        alarmService.deleteAlarm(alarmId);
-
-        return new BaseResponse<Integer>(ResponseStatus.SUCCESS);
+            return new BaseResponse<>(ResponseStatus.SUCCESS);
+        } else {
+            throw new BaseException(ResponseStatus.JWT_MISMATCH);
+        }
     }
 }

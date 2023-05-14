@@ -29,8 +29,6 @@ public class Mission {
     private int id;
     private String name;
     private String object;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
     private boolean isActivated;
 
     @OneToMany(mappedBy = "mission")
