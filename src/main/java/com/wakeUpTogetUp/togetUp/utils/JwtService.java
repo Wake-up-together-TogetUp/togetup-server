@@ -1,25 +1,74 @@
 package com.wakeUpTogetUp.togetUp.utils;
 
+import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 @RequiredArgsConstructor
 @Component
 public class JwtService {
+    @Value("${jwt.secret-key}")
+    private String key;
 
     public static Boolean validate(String token, String userEmail, String key) {
         String useremailByToken = getUseremail(token, key);
         return useremailByToken.equals(userEmail) && !isTokenExpired(token, key);
     }
+
+    // 추가한 부분
+    public Boolean validate(Integer userId) {
+        String accessToken = getJwt();
+
+        if(accessToken == null || accessToken.length() == 0){
+            throw new BaseException(ResponseStatus.EMPTY_JWT);
+        }
+
+        Integer userIdInToken = getUserId(accessToken);
+
+        System.out.println(userIdInToken.equals(userId));
+        System.out.println(isTokenExpired(accessToken, key));
+
+        return userIdInToken.equals(userId) && !isTokenExpired(accessToken, key);
+    }
+
+    public String getJwt(){
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        return request.getHeader("X-ACCESS-TOKEN");
+    }
+
+    public Integer getUserId(String accessToken) {
+        System.out.println(accessToken);
+        System.out.println(key);
+
+        Claims claims;
+        try{
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey(key))
+                    .build()
+                    .parseClaimsJws(accessToken)
+                    .getBody();
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new BaseException(ResponseStatus.INVALID_JWT);
+        }
+
+        return claims.get("userId", Integer.class);
+    }
+    // 여기까지
 
     public static Claims extractAllClaims(String token, String key) {
         return Jwts.parserBuilder()

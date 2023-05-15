@@ -1,7 +1,5 @@
 package com.wakeUpTogetUp.togetUp.users.oauth;
 
-
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

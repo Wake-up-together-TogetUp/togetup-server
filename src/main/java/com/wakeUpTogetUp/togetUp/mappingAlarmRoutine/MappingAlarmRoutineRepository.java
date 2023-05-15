@@ -1,6 +1,6 @@
-package com.wakeUpTogetUp.togetUp.mappingAlarmRoutine.model;
+package com.wakeUpTogetUp.togetUp.mappingAlarmRoutine;
 
-import com.wakeUpTogetUp.togetUp.alarms.model.MappingAlarmRoutine;
+import com.wakeUpTogetUp.togetUp.mappingAlarmRoutine.model.MappingAlarmRoutine;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

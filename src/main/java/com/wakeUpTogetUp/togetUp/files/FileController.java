@@ -6,6 +6,7 @@ import java.util.List;
 import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import org.hibernate.validator.constraints.ParameterScriptAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,23 +30,17 @@ public class FileController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/avatar")
-    public ResponseEntity<Object> uploadFilesAvatar(MultipartFile[] multipartFileList) throws Exception {
-        // fileType이 없으면 Error Bad Request
-        // 아바타 : avatarImage
-        List<String> imagePathList = fileService.uploadFiles(multipartFileList, "avatar");
+    @PostMapping("")
+    public ResponseEntity<Object> uploadFilesAvatar(
+            MultipartFile[] multipartFileList,
+            @RequestParam String type
+    ) throws Exception {
+        // avatar, group, mission
+        if(type != "avatar" || type != "group" || type != "mission")
+            throw new BaseException(ResponseStatus.BAD_REQUEST_PARAM);
+        List<String> imagePathList = fileService.uploadFiles(multipartFileList, type);
 
-        return new ResponseEntity<Object>(imagePathList, HttpStatus.OK);
-    }
-
-    @PostMapping("/mission")
-    public ResponseEntity<Object> uploadFilesMission(MultipartFile[] multipartFileList) throws Exception {
-        // fileType이 없으면 Error Bad Request
-        // 아바타 : avatarImage
-        // 미션수행사진 : missionImage
-        List<String> imagePathList = fileService.uploadFiles(multipartFileList, "mission");
-
-        return new ResponseEntity<Object>(imagePathList, HttpStatus.OK);
+        return new ResponseEntity<>(imagePathList, HttpStatus.OK);
     }
 
     @DeleteMapping("")

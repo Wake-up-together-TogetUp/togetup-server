@@ -69,26 +69,26 @@ public class OAuthService {
                 //우리 서버의 db와 대조하여 해당 user가 존재하는 지 확인한다.
                 int user_num= userRepository.countByEmail(user_email);//accountProvider.getUserNum(user_id);
 
-
                 if(user_num!=0){
                 //서버에 user가 존재하면 앞으로 회원 인가 처리를 위한 jwtToken을 발급한다.
-                String jwtToken = jwtService.generateAccessToken(1, secretKey, expiredTimeMs);//"dfdda";//jwtService.createJwt(user_num, user_id);
+                    // TODO : userId 가져와서 넣기
+                String jwtToken = jwtService.generateAccessToken(9, secretKey, expiredTimeMs);//"dfdda";//jwtService.createJwt(user_num, user_id);
                 //액세스 토큰과 jwtToken, 이외 정보들이 담긴 자바 객체를 다시 전송한다.
 
                 GetSocialOAuthRes getSocialOAuthRes = new GetSocialOAuthRes(jwtToken, user_name, oAuthToken.getToken_type());
                 return getSocialOAuthRes;
-                    }
-              else //서버에 user가 존재하지 않으면 회원가입을 한다.
-              {
-                  User user =googleUser.toEntity();
-                  userRepository.save(user);
-                  System.out.println("여기!"+user);
-                  String jwtToken = "dfdda";//jwtService.createJwt(user_num, user_id);
-                  GetSocialOAuthRes getSocialOAuthRes = new GetSocialOAuthRes(jwtToken, user_name,  oAuthToken.getToken_type());
-                  return getSocialOAuthRes;
-                    //throw new BaseException(BaseResponseStatus.ACCOUNT_DOESNT_EXISTS);
                 }
-
+                else //서버에 user가 존재하지 않으면 회원가입을 한다.
+                {
+                      User user =googleUser.toEntity();
+                      userRepository.save(user);
+                      // TODO : 토큰 고정됨?
+                      System.out.println("여기!"+user);
+                      String jwtToken = "dfdda";//jwtService.createJwt(user_num, user_id);
+                      GetSocialOAuthRes getSocialOAuthRes = new GetSocialOAuthRes(jwtToken, user_name,  oAuthToken.getToken_type());
+                      return getSocialOAuthRes;
+                        //throw new BaseException(BaseResponseStatus.ACCOUNT_DOESNT_EXISTS);
+                }
             }
             default: {
                 throw new IllegalArgumentException("알 수 없는 소셜 로그인 형식입니다.");
