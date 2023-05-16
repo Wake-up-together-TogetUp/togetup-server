@@ -3,15 +3,24 @@ package com.wakeUpTogetUp.togetUp.users;
 import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.config.annotation.NoAuth;
+import com.wakeUpTogetUp.togetUp.group.dto.request.GroupReq;
+import com.wakeUpTogetUp.togetUp.group.dto.response.GroupRes;
+import com.wakeUpTogetUp.togetUp.users.dto.request.LoginReq;
+import com.wakeUpTogetUp.togetUp.users.dto.request.PatchUserReq;
 import com.wakeUpTogetUp.togetUp.users.dto.request.UserReq;
+import com.wakeUpTogetUp.togetUp.users.dto.response.UserInfoRes;
 import com.wakeUpTogetUp.togetUp.users.dto.response.UserRes;
+import com.wakeUpTogetUp.togetUp.users.dto.response.UserTokenRes;
 import com.wakeUpTogetUp.togetUp.users.oauth.GetSocialOAuthRes;
 import com.wakeUpTogetUp.togetUp.users.oauth.OAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 
 @RestController
@@ -22,18 +31,98 @@ public class UserController  {
     private final UserService userService;
     private final OAuthService oAuthService;
 
-
+    /**
+     * 회원가입
+     * @param userReq
+     * @return
+     */
+    @NoAuth
     @ResponseBody
-    @PostMapping("/new") //
-    public BaseResponse<UserRes> join(@RequestBody UserReq form) {
+    @PostMapping() //
+    public BaseResponse<UserRes> join(@RequestBody UserReq userReq) {
         try {
-            System.out.println("로그인"+form);
-            UserRes userRes=userService.createUser(form);
+            System.out.println("안녕");
+            UserRes userRes=userService.createUser(userReq);
             return new BaseResponse<>(ResponseStatus.SUCCESS,userRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /**
+     *
+     * @param loginReq
+     * @return
+     */
+    @NoAuth
+    @PostMapping("/login")
+    public BaseResponse<UserTokenRes> login(@RequestBody LoginReq loginReq) {
+        String token = userService.createToken(loginReq);
+        return new BaseResponse<>(ResponseStatus.SUCCESS,new UserTokenRes(token, "bearer"));
+    }
+
+
+    /**
+     *유저 전체 GET
+     * @return
+     */
+    @NoAuth
+    @ResponseBody
+    @GetMapping("list")
+    public BaseResponse<List<UserRes>> getUserAll(){
+        List<UserRes> UserResList = userService.getUserAll();
+
+        return new BaseResponse<>(ResponseStatus.SUCCESS, UserResList);
+    }
+
+
+    /**
+     * 유저 한명 get
+     * @param userId
+     * @return
+     */
+
+    @ResponseBody
+    @GetMapping("{userId}")
+    public BaseResponse<UserInfoRes> getUser(@PathVariable Integer userId){
+        System.out.println("정보");
+        UserInfoRes userInfoRes = userService.getUser(userId);
+        return new BaseResponse<>(ResponseStatus.SUCCESS, userInfoRes);
+    }
+
+    /**
+     *
+     * @param userId
+     * @param patchUserReq
+     * @return
+     */
+    @PatchMapping("{userId}")
+    @ResponseBody
+    public BaseResponse<UserInfoRes> updateUser(
+            @PathVariable Integer userId,
+            @RequestBody PatchUserReq patchUserReq
+    ) {
+
+        UserInfoRes userInfoRes = userService.editUser(userId, patchUserReq);
+        return new BaseResponse<>(ResponseStatus.SUCCESS, userInfoRes);
+    }
+
+    /**
+     * 유저삭제
+     * @param userId
+     * @return
+     */
+    @DeleteMapping("{userId}")
+    @ResponseBody
+    public BaseResponse<ResponseStatus> deleteUser(
+            @PathVariable @Valid Integer userId
+    ) {
+
+        userService.deleteUser(userId);
+
+        return new BaseResponse(ResponseStatus.SUCCESS);
+    }
+
 
     /**
      * 유저 소셜 로그인으로 리다이렉트 해주는 url

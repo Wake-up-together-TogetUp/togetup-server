@@ -7,10 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRes {
-
-
-    private Integer id;
-    //private String jwt;
-
+public class UserTokenRes {
+    private String accessToken;
+    private String tokenType;
 }

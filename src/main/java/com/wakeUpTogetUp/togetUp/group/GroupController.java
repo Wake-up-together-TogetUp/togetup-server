@@ -3,6 +3,7 @@ package com.wakeUpTogetUp.togetUp.group;
 import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.config.annotation.NoAuth;
 import com.wakeUpTogetUp.togetUp.group.dto.request.GroupReq;
 import com.wakeUpTogetUp.togetUp.group.dto.response.GroupRes;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -89,6 +91,7 @@ public class GroupController {
      * @param groupId
      * @return
      */
+    @NoAuth
     @DeleteMapping("{groupId}")
     @ResponseBody
     public BaseResponse<ResponseStatus> deleteGroup(
