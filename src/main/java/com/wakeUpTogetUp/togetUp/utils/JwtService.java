@@ -3,6 +3,7 @@ package com.wakeUpTogetUp.togetUp.utils;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -69,6 +70,35 @@ public class JwtService {
         return claims.get("userId", Integer.class);
     }
     // 여기까지
+
+    /**
+     *
+     * @return int
+     * @throws BaseException
+     */
+    // TODO :getUserId 와 합치기
+    public int getUserNum() throws BaseException{
+        //1. JWT 추출
+        String accessToken = getJwt();
+        if(accessToken == null || accessToken.length() == 0){
+            throw new BaseException(ResponseStatus.EMPTY_JWT);
+        }
+
+        // 2. JWT parsing
+        Claims claims;
+        try{
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey(key))
+                    .build()
+                    .parseClaimsJws(accessToken)
+                    .getBody();
+        } catch (Exception ignored) {
+            throw new BaseException(ResponseStatus.INVALID_JWT);
+        }
+
+        // 3. userId 추출
+        return claims.get("userId",Integer.class);
+    }
 
     public static Claims extractAllClaims(String token, String key) {
         return Jwts.parserBuilder()

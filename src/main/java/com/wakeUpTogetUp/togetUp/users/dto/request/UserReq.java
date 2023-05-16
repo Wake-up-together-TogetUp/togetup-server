@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 @Data
 @NoArgsConstructor
-public class UserReq {
+public class UserReq {//TODO PostUserReq로 이름 바꾸어야함
   // private Integer id;
    private String password;
     private String username;

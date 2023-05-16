@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     int countByEmail(String email);
-
+    User findByEmail(String email);
 //    private final EntityManager em;
 //    public void save(User user) {
 //        em.persist(user);
