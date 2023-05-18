@@ -7,12 +7,14 @@ import com.wakeUpTogetUp.togetUp.group.dto.response.GroupRes;
 import com.wakeUpTogetUp.togetUp.group.model.Group;
 import com.wakeUpTogetUp.togetUp.users.dto.request.LoginReq;
 import com.wakeUpTogetUp.togetUp.users.dto.request.PatchUserReq;
+import com.wakeUpTogetUp.togetUp.users.dto.request.SocialLoginReq;
 import com.wakeUpTogetUp.togetUp.users.dto.request.UserReq;
 import com.wakeUpTogetUp.togetUp.users.dto.response.UserInfoRes;
 import com.wakeUpTogetUp.togetUp.users.dto.response.UserRes;
+import com.wakeUpTogetUp.togetUp.users.dto.response.UserTokenRes;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
-import com.wakeUpTogetUp.togetUp.utils.mappers.GroupMapper;
+import com.wakeUpTogetUp.togetUp.users.LoginType;
 import com.wakeUpTogetUp.togetUp.utils.mappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,9 +57,15 @@ public class UserService {
 
         if(userRepository.countByEmail(userReq.getEmail())!=0)//db에 저장되어 있으면
         {
+            System.out.println(userReq.getLoginType());
             new BaseException(ResponseStatus.BAD_REQUEST); //다른 메시지로 해야하나?
         }
-        userReq.setPassword(bCryptPasswordEncoder.encode(userReq.getPassword()));
+        System.out.println(userReq.getLoginType());
+        //일반회원가입
+        if(userReq.getLoginType().equals(LoginType.LOCAL.toString()))
+            userReq.setPassword(bCryptPasswordEncoder.encode(userReq.getPassword()));
+
+
         User user =userReq.toEntity();
         user.setLoginType(LoginType.valueOf(userReq.getLoginType().toUpperCase()));
         //액세스 토큰과 jwtToken, 이외 정보들이 담긴 자바 객체를 다시 전송한다.
@@ -76,6 +84,28 @@ public class UserService {
         //비밀번호 확인 등의 유효성 검사 진행
         return jwtService.generateAccessToken(user.getId(), secretKey, expiredTimeMs);//createToken(user.getName());
     }
+    /**
+     * 소셜로그인
+     */
+    @Transactional
+    public UserTokenRes socialLogin(SocialLoginReq socialLoginReq) {
+        Integer userCnt = userRepository.countByEmail(socialLoginReq.getEmail());
+        if (userCnt ==0) {
+            User user = socialLoginReq.toEntity();
+            User savedUser = userRepository.save(user);
+            String token = jwtService.generateAccessToken(savedUser.getId(), secretKey, expiredTimeMs);
+            return new UserTokenRes(savedUser.getId(), token, "bearer");
+
+        }
+        else{
+            User exUser = userRepository.findByEmail(socialLoginReq.getEmail());
+            String token = jwtService.generateAccessToken(exUser.getId(), secretKey, expiredTimeMs);
+             return new UserTokenRes(exUser.getId(), token, "bearer");
+    }
+
+
+    }
+
     /**
      * 모든 유저 찾기
      * @return
