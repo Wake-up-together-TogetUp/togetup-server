@@ -31,16 +31,17 @@ public class FileController {
      * @throws Exception
      */
     @PostMapping("")
-    public ResponseEntity<Object> uploadFilesAvatar(
+    public ResponseEntity<Object> uploadFiles(
             MultipartFile[] multipartFileList,
             @RequestParam String type
     ) throws Exception {
         // avatar, group, mission
-        if(type != "avatar" || type != "group" || type != "mission")
-            throw new BaseException(ResponseStatus.BAD_REQUEST_PARAM);
-        List<String> imagePathList = fileService.uploadFiles(multipartFileList, type);
+        if(type.equals("avatar") || type.equals("group") || type.equals("mission") ) {
+            List<String> imagePathList = fileService.uploadFiles(multipartFileList, type);
 
-        return new ResponseEntity<>(imagePathList, HttpStatus.OK);
+            return new ResponseEntity<>(imagePathList, HttpStatus.OK);
+        } else
+            throw new BaseException(ResponseStatus.BAD_REQUEST_PARAM);
     }
 
     @DeleteMapping("")
