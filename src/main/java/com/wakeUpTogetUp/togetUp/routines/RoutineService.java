@@ -4,7 +4,8 @@ import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import com.wakeUpTogetUp.togetUp.missions.MissionRepository;
 import com.wakeUpTogetUp.togetUp.missions.model.Mission;
-import com.wakeUpTogetUp.togetUp.routines.dto.request.RoutineReq;
+import com.wakeUpTogetUp.togetUp.routines.dto.request.PatchRoutineReq;
+import com.wakeUpTogetUp.togetUp.routines.dto.request.PostRoutineReq;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
@@ -24,22 +25,22 @@ public class RoutineService {
 
     // 루틴 생성
     @Transactional
-    public int createRoutine(Integer userId, RoutineReq routineReq) {
+    public int createRoutine(Integer userId, PostRoutineReq postRoutineReq) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new BaseException(ResponseStatus.INVALID_USER_ID)
         );
 
-        Mission mission = missionRepository.findById(routineReq.getMissionId()).orElseThrow(
+        Mission mission = missionRepository.findById(postRoutineReq.getMissionId()).orElseThrow(
                 () -> new BaseException(ResponseStatus.INVALID_MISSION_ID)
         );
 
         Routine routine = Routine.builder()
                 .user(user)
                 .mission(mission)
-                .name(routineReq.getName())
-                .estimatedTime(routineReq.getEstimatedTime())
-                .icon(routineReq.getIcon())
-                .color(routineReq.getColor())
+                .name(postRoutineReq.getName())
+                .estimatedTime(postRoutineReq.getEstimatedTime())
+                .icon(postRoutineReq.getIcon())
+                .color(postRoutineReq.getColor())
                 .build();
 
         routineRepository.save(routine);
@@ -48,7 +49,7 @@ public class RoutineService {
     }
 
     // 루틴 수정
-    public RoutineRes updateRoutine(Integer routineId, RoutineReq patchRoutineReq) {
+    public RoutineRes updateRoutine(Integer routineId, PatchRoutineReq patchRoutineReq) {
         patchRoutineReq.setId(routineId);
 
         Routine routine = routineRepository.findById(routineId).orElseThrow(

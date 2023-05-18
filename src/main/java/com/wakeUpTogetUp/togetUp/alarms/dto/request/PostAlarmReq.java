@@ -13,28 +13,6 @@ import java.util.Optional;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostAlarmReq {
-    @Builder
-    public PostAlarmReq(String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, List<Integer> routineIdList) {
-        this.name = name;
-        this.icon = icon;
-        this.sound = sound;
-        this.volume = volume;
-        this.isVibrate = isVibrate;
-        this.isRoutineOn = isRoutineOn;
-        this.snoozeInterval = snoozeInterval;
-        this.snoozeCnt = snoozeCnt;
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.monday = monday;
-        this.tuesday = tuesday;
-        this.wednesday = wednesday;
-        this.thursday = thursday;
-        this.friday = friday;
-        this.saturday = saturday;
-        this.sunday = sunday;
-        this.routineIdList = routineIdList;
-    }
-
     @Null
     private Integer id;
     @NotNull(message = "사용자 아이디를 넣어주세요.")

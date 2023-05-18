@@ -1,0 +1,48 @@
+[source,options="nowrap"]
+----
+{
+  "httpStatusCode" : 200,
+  "httpReasonPhrase" : "OK",
+  "message" : "요청에 성공하였습니다.",
+  "result" : {
+    "id" : 42,
+    "userId" : 9,
+    "missionId" : 1,
+    "name" : "기상알람",
+    "icon" : "⏰",
+    "sound" : "default",
+    "volume" : 80,
+    "isVibrate" : true,
+    "isRoutineOn" : true,
+    "snoozeInterval" : 5,
+    "snoozeCnt" : 3,
+    "startHour" : 6,
+    "startMinute" : 0,
+    "monday" : true,
+    "tuesday" : true,
+    "wednesday" : true,
+    "thursday" : true,
+    "friday" : true,
+    "saturday" : true,
+    "sunday" : false,
+    "isActivated" : true,
+    "routineResList" : [ {
+      "id" : 5,
+      "userId" : 9,
+      "missionId" : 1,
+      "name" : "기상",
+      "estimatedTime" : 10,
+      "icon" : "⏰",
+      "color" : "#000000"
+    }, {
+      "id" : 7,
+      "userId" : 9,
+      "missionId" : 2,
+      "name" : "샤워",
+      "estimatedTime" : 15,
+      "icon" : "\uD83D\uDEBF",
+      "color" : "#000000"
+    } ]
+  }
+}
+----

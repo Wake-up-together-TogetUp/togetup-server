@@ -3,7 +3,6 @@ package com.wakeUpTogetUp.togetUp.routines.dto.request;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -11,15 +10,7 @@ import javax.validation.constraints.Null;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RoutineReq {
-    public RoutineReq(Integer userId, Integer missionId, String name, Integer estimatedTime, String icon, String color) {
-        this.userId = userId;
-        this.missionId = missionId;
-        this.name = name;
-        this.estimatedTime = estimatedTime;
-        this.icon = icon;
-        this.color = color;
-    }
+public class PatchRoutineReq {
     @Null
     private Integer id;
     @NotNull(message = "userId는 null일 수 없습니다.")
