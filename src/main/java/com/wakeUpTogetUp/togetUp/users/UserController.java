@@ -8,6 +8,7 @@ import com.wakeUpTogetUp.togetUp.group.dto.request.GroupReq;
 import com.wakeUpTogetUp.togetUp.group.dto.response.GroupRes;
 import com.wakeUpTogetUp.togetUp.users.dto.request.LoginReq;
 import com.wakeUpTogetUp.togetUp.users.dto.request.PatchUserReq;
+import com.wakeUpTogetUp.togetUp.users.dto.request.SocialLoginReq;
 import com.wakeUpTogetUp.togetUp.users.dto.request.UserReq;
 import com.wakeUpTogetUp.togetUp.users.dto.response.UserInfoRes;
 import com.wakeUpTogetUp.togetUp.users.dto.response.UserRes;
@@ -30,9 +31,9 @@ public class UserController  {
 
     private final UserService userService;
     private final OAuthService oAuthService;
-
+    private final UserRepository userRepository;
     /**
-     * 회원가입
+     * 일반 회원가입
      * @param userReq
      * @return
      */
@@ -41,9 +42,28 @@ public class UserController  {
     @PostMapping() //
     public BaseResponse<UserRes> join(@RequestBody UserReq userReq) {
         try {
-            System.out.println("안녕");
+
             UserRes userRes=userService.createUser(userReq);
             return new BaseResponse<>(ResponseStatus.SUCCESS,userRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+    /**
+     * 소셜 회원가입 & 로그인
+     * @params SocialLoginReq
+     * @return
+     */
+    @NoAuth
+    @ResponseBody
+    @PostMapping("/social") //
+    public BaseResponse<UserTokenRes> oauthLogin(@RequestBody SocialLoginReq socialLoginReq) {
+        try {
+
+           UserTokenRes userTokenRes= userService.socialLogin(socialLoginReq);
+            return new BaseResponse<>(ResponseStatus.SUCCESS,userTokenRes);
+
+
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -57,8 +77,11 @@ public class UserController  {
     @NoAuth
     @PostMapping("/login")
     public BaseResponse<UserTokenRes> login(@RequestBody LoginReq loginReq) {
+
         String token = userService.createToken(loginReq);
-        return new BaseResponse<>(ResponseStatus.SUCCESS,new UserTokenRes(token, "bearer"));
+        //TODO : refactor
+        Integer id = userRepository.findByEmail(loginReq.getEmail()).getId();
+        return new BaseResponse<>(ResponseStatus.SUCCESS,new UserTokenRes(id,token, "bearer"));
     }
 
 

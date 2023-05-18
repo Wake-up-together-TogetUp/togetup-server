@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserTokenRes {
+    Integer id;
     private String accessToken;
     private String tokenType;
 }
