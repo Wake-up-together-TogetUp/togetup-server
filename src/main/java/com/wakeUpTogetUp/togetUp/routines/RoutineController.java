@@ -3,8 +3,10 @@ package com.wakeUpTogetUp.togetUp.routines;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.routines.dto.request.DeleteRoutineReq;
+import com.wakeUpTogetUp.togetUp.routines.dto.request.PatchRoutineReq;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
-import com.wakeUpTogetUp.togetUp.routines.dto.request.RoutineReq;
+import com.wakeUpTogetUp.togetUp.routines.dto.request.PostRoutineReq;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +15,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/app/users")
+@RequestMapping("/app/routines")
 @RequiredArgsConstructor
 public class RoutineController {
     private final RoutineService routineService;
@@ -22,13 +24,11 @@ public class RoutineController {
 
     /**
      * 루틴 1개 가져오기
-     * @param userId
      * @param routineId
      * @return
      */
-    @GetMapping("{userId}/routines/{routineId}")
+    @GetMapping("/{routineId}")
     public BaseResponse<RoutineRes> getRoutine(
-            @PathVariable("userId") Integer userId,
             @PathVariable("routineId") Integer routineId
     ) {
         RoutineRes routineRes = routineProvider.getRoutine(routineId);
@@ -41,8 +41,8 @@ public class RoutineController {
      * @param userId
      * @return
      */
-    @GetMapping("{userId}/routines")
-    public BaseResponse<List<RoutineRes>> getRoutinesByUserId(@PathVariable Integer userId) {
+    @GetMapping("")
+    public BaseResponse<List<RoutineRes>> getRoutinesByUserId(@RequestParam("userId") Integer userId) {
         List<RoutineRes> routineResList = routineProvider.getRoutinesByUserId(userId);
 
         return new BaseResponse<>(ResponseStatus.SUCCESS, routineResList);
@@ -50,31 +50,37 @@ public class RoutineController {
 
     /**
      * 루틴 생성
-     * @param userId
-     * @param routineReq
+     * @param postRoutineReq
      * @return
      */
-    @PostMapping("{userId}/routines")
+    @PostMapping("")
     public BaseResponse createRoutine(
-            @PathVariable("userId") Integer userId,
-            @RequestBody @Valid RoutineReq routineReq
+            @RequestBody @Valid PostRoutineReq postRoutineReq
     ) {
-        if(jwtService.validate(userId)) {
-            Integer createdRoutineId = routineService.createRoutine(userId, routineReq);
+        Integer userId = postRoutineReq.getUserId();
+
+        if(jwtService.validateByUserId(userId)) {
+            Integer createdRoutineId = routineService.createRoutine(userId, postRoutineReq);
 
             return new BaseResponse(ResponseStatus.SUCCESS, createdRoutineId);
         } else
             throw new BaseException(ResponseStatus.JWT_MISMATCH);
     }
-    
-    // 루틴 수정
-    @PatchMapping("{userId}/routines/{routineId}")
+
+    /**
+     * 루틴 수정
+     * @param routineId
+     * @param patchRoutineReq
+     * @return
+     */
+    @PatchMapping("/{routineId}")
     public BaseResponse<RoutineRes> updateRoutine(
-            @PathVariable Integer userId,
             @PathVariable Integer routineId,
-            @RequestBody @Valid RoutineReq patchRoutineReq
+            @RequestBody @Valid PatchRoutineReq patchRoutineReq
     ) {
-        if(jwtService.validate(userId)) {
+        Integer userId = patchRoutineReq.getUserId();
+
+        if(jwtService.validateByUserId(userId)) {
             RoutineRes patchRoutineRes = routineService.updateRoutine(routineId, patchRoutineReq);
 
             return new BaseResponse<>(ResponseStatus.SUCCESS, patchRoutineRes);
@@ -85,23 +91,25 @@ public class RoutineController {
 
     /**
      * 루틴 삭제
-     * @param userId
+     * @param deleteRoutineReq
      * @param routineId
      * @return
      */
-    @DeleteMapping("{userId}/routines/{routineId}")
+    @DeleteMapping("/{routineId}")
     public BaseResponse<Integer> deleteAlarm(
-            @PathVariable @Valid Integer userId,
-            @PathVariable @Valid Integer routineId
+            @RequestBody @Valid DeleteRoutineReq deleteRoutineReq,
+            @PathVariable Integer routineId
     ) {
-        if(jwtService.validate(userId)) {
+        Integer userId = deleteRoutineReq.getUserId();
+
+        if(jwtService.validateByUserId(userId)) {
             routineService.deleteRoutine(routineId);
 
             return new BaseResponse<>(ResponseStatus.SUCCESS);
         } else
             throw new BaseException(ResponseStatus.JWT_MISMATCH);
     }
-    
+
     //test
     @GetMapping("/test")
     public String test(){

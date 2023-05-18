@@ -27,6 +27,7 @@ public interface AlarmMapper {
         AlarmRes alarmRes = AlarmRes.builder()
                 .id(alarm.getId())
                 .userId(alarm.getUser().getId())
+                .missionId(alarm.getMission().getId())
                 .name(alarm.getName())
                 .icon(alarm.getIcon())
                 .sound(alarm.getSound())

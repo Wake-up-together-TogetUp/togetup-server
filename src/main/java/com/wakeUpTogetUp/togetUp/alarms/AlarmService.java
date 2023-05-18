@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.alarms;
 
+import com.wakeUpTogetUp.togetUp.alarms.dto.request.DeleteAlarmReq;
 import com.wakeUpTogetUp.togetUp.alarms.dto.request.PatchAlarmReq;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmRes;
 import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
@@ -80,10 +81,6 @@ public class AlarmService {
     // 알람 수정
     @Transactional
     public AlarmRes updateAlarm(Integer userId, Integer alarmId, PatchAlarmReq patchAlarmReq) {
-        // 추가 값 설정
-        patchAlarmReq.setUserId(userId);
-        patchAlarmReq.setId(alarmId);
-
         // 알람 수정
         Alarm alarm = alarmRepository.findById(alarmId, userId)
                 .orElseThrow(
@@ -134,6 +131,17 @@ public class AlarmService {
         return alarmRes;
     }
 
+    // 알람 삭제
+    @Transactional
+    public void deleteAlarm(Integer alarmId) {
+        // 해당 아이디의 알람이 존재하는지 확인
+        Alarm alarm = alarmRepository.findById(alarmId).orElseThrow(
+                () -> new BaseException(ResponseStatus.INVALID_ALARM_ID)
+        );
+
+        alarmRepository.delete(alarm);
+    }
+
     // 매핑 알람 루틴 리스트 생성하기 - 생성
     @Transactional
     protected void createMappingAlarmRoutineList(PostAlarmReq postAlarmReq, Alarm alarm){
@@ -178,16 +186,5 @@ public class AlarmService {
             mappingAlarmRoutineRepository.save(mappingAlarmRoutine);
             i++;
         }
-    }
-
-    // 알람 삭제
-    @Transactional
-    public void deleteAlarm(Integer alarmId) {
-        // 해당 아이디의 알람이 존재하는지 확인
-        Alarm alarm = alarmRepository.findById(alarmId).orElseThrow(
-                () -> new BaseException(ResponseStatus.INVALID_ALARM_ID)
-        );
-
-        alarmRepository.delete(alarm);
     }
 }

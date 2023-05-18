@@ -10,6 +10,7 @@ import lombok.*;
 public class AlarmsRes {
     private Integer id;
     private Integer userId;
+    private Integer missionId;
     private String name;
     private String icon;
     private String sound;

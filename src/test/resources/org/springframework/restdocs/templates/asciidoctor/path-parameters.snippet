@@ -1,0 +1,13 @@
+.+{{path}}+
+[%autowidth.stretch]
+|===
+|Parameter|Type|Description|Optional
+
+{{#parameters}}
+|{{#tableCellContent}}`+{{name}}+`{{/tableCellContent}}
+|{{#tableCellContent}}{{type}}{{/tableCellContent}}
+|{{#tableCellContent}}{{description}}{{/tableCellContent}}
+|{{#tableCellContent}}{{optional}}{{/tableCellContent}}
+
+{{/parameters}}
+|===

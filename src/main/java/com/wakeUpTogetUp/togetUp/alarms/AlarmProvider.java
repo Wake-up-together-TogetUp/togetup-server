@@ -3,6 +3,7 @@ package com.wakeUpTogetUp.togetUp.alarms;
 import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmRes;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmsRes;
+import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import com.wakeUpTogetUp.togetUp.routines.RoutineRepository;
@@ -52,9 +53,9 @@ public class AlarmProvider {
      * @param alarmId
      * @return
      */
-    public AlarmRes getAlarm(Integer alarmId, Integer userId) {
+    public AlarmRes getAlarm(Integer alarmId) {
         // 알람 가져오기
-        Alarm alarm = alarmRepository.findById(alarmId, userId)
+        Alarm alarm = alarmRepository.findById(alarmId)
                 .orElseThrow(
                         () -> new BaseException(ResponseStatus.INVALID_ALARM_ID)
                 );

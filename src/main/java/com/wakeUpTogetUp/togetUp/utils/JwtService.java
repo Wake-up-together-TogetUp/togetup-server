@@ -30,8 +30,7 @@ public class JwtService {
         return useremailByToken.equals(userEmail) && !isTokenExpired(token, key);
     }
 
-    // 추가한 부분
-    public Boolean validate(Integer userId) {
+    public Boolean validateByUserId(Integer userId) {
         String accessToken = getJwt();
 
         if(accessToken == null || accessToken.length() == 0){
@@ -69,7 +68,6 @@ public class JwtService {
 
         return claims.get("userId", Integer.class);
     }
-    // 여기까지
 
     /**
      *

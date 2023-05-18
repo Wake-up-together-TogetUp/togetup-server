@@ -1,0 +1,136 @@
+|===
+|Path|Type|Description
+
+|`+httpStatusCode+`
+|`+Number+`
+|http 상태코드
+
+|`+httpReasonPhrase+`
+|`+String+`
+|http 상태코드 설명문구
+
+|`+message+`
+|`+String+`
+|설명 메시지
+
+|`+result+`
+|`+Object+`
+|결과
+
+|`+result.id+`
+|`+Number+`
+|알람 Id
+
+|`+result.userId+`
+|`+Number+`
+|사용자 Id
+
+|`+result.missionId+`
+|`+Number+`
+|미션 Id
+
+|`+result.name+`
+|`+String+`
+|알람 이름
+
+|`+result.icon+`
+|`+String+`
+|아이콘
+
+|`+result.sound+`
+|`+String+`
+|알람 벨소리
+
+|`+result.volume+`
+|`+Number+`
+|볼륨
+
+|`+result.isVibrate+`
+|`+Boolean+`
+|진동 여부
+
+|`+result.isRoutineOn+`
+|`+Boolean+`
+|루틴 활성 여부
+
+|`+result.snoozeInterval+`
+|`+Number+`
+|다시울림 간격(분)
+
+|`+result.snoozeCnt+`
+|`+Number+`
+|다시울림 횟수
+
+|`+result.startHour+`
+|`+Number+`
+|시작 시
+
+|`+result.startMinute+`
+|`+Number+`
+|시작 분
+
+|`+result.monday+`
+|`+Boolean+`
+|월요일 알림 여부
+
+|`+result.tuesday+`
+|`+Boolean+`
+|화요일 알림 여부
+
+|`+result.wednesday+`
+|`+Boolean+`
+|수요일 알림 여부
+
+|`+result.thursday+`
+|`+Boolean+`
+|목요일 알림 여부
+
+|`+result.friday+`
+|`+Boolean+`
+|금요일 알림 여부
+
+|`+result.saturday+`
+|`+Boolean+`
+|토요일 알림 여부
+
+|`+result.sunday+`
+|`+Boolean+`
+|일요일 알림 여부
+
+|`+result.isActivated+`
+|`+Boolean+`
+|알람 활성 여부
+
+|`+result.routineResList[]+`
+|`+Array+`
+|루틴 리스트
+
+|`+result.routineResList[].id+`
+|`+Number+`
+|루틴 Id
+
+|`+result.routineResList[].userId+`
+|`+Number+`
+|사용자 Id
+
+|`+result.routineResList[].missionId+`
+|`+Number+`
+|미션 Id
+
+|`+result.routineResList[].name+`
+|`+String+`
+|루틴 이름
+
+|`+result.routineResList[].estimatedTime+`
+|`+Number+`
+|예상 소요 시간
+
+|`+result.routineResList[].icon+`
+|`+String+`
+|아이콘
+
+|`+result.routineResList[].color+`
+|`+String+`
+|색상
+
+|===

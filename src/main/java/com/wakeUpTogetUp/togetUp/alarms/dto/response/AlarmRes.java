@@ -13,6 +13,7 @@ import java.util.List;
 public class AlarmRes {
     private Integer id;
     private Integer userId;
+    private Integer missionId;
     private String name;
     private String icon;
     private String sound;
