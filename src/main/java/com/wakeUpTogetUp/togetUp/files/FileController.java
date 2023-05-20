@@ -3,10 +3,9 @@ package com.wakeUpTogetUp.togetUp.files;
 
 import java.util.List;
 
-import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
-import org.hibernate.validator.constraints.ParameterScriptAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/app/files")
 public class FileController {
-
     @Autowired
-    private final FileService fileService;
-
-    public FileController(FileService fileService){
-        this.fileService = fileService;
-    }
+    private FileService fileService;
 
     /**
      * upload 메소드

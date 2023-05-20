@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.config.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.config.annotation.NoAuth;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import lombok.RequiredArgsConstructor;

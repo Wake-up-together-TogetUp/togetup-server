@@ -7,7 +7,7 @@ import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmsRes;
 import com.wakeUpTogetUp.togetUp.alarms.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
-import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

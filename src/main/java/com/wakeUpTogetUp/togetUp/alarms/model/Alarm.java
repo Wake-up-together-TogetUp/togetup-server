@@ -9,34 +9,11 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "alarm")
+@DynamicInsert          // insert 시 값이 null인 필드 제외
 @Getter
 @Setter
 @NoArgsConstructor
-@DynamicInsert          // insert 시 값이 null인 필드 제외
 public class Alarm {
-    @Builder
-    public Alarm(User user, Mission mission, String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
-        this.user = user;
-        this.mission = mission;
-        this.name = name;
-        this.icon = icon;
-        this.sound = sound;
-        this.volume = volume;
-        this.isVibrate = isVibrate;
-        this.isRoutineOn = isRoutineOn;
-        this.snoozeInterval = snoozeInterval;
-        this.snoozeCnt = snoozeCnt;
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.monday = monday;
-        this.tuesday = tuesday;
-        this.wednesday = wednesday;
-        this.thursday = thursday;
-        this.friday = friday;
-        this.saturday = saturday;
-        this.sunday = sunday;
-    }
-
     // TODO : 접근제어자를 public으로 두는게 맞나?
     public void modifyProperties(Mission mission, String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
         setMission(mission);

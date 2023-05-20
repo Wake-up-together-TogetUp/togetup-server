@@ -1,12 +1,11 @@
 package com.wakeUpTogetUp.togetUp.alarms;
 
-import com.wakeUpTogetUp.togetUp.alarms.dto.request.DeleteAlarmReq;
 import com.wakeUpTogetUp.togetUp.alarms.dto.request.PatchAlarmReq;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmRes;
 import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
 import com.wakeUpTogetUp.togetUp.mappingAlarmRoutine.model.MappingAlarmRoutine;
 import com.wakeUpTogetUp.togetUp.alarms.dto.request.PostAlarmReq;
-import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import com.wakeUpTogetUp.togetUp.mappingAlarmRoutine.MappingAlarmRoutineRepository;
 import com.wakeUpTogetUp.togetUp.missions.MissionRepository;
@@ -16,7 +15,7 @@ import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.users.model.User;
-import com.wakeUpTogetUp.togetUp.utils.mappers.AlarmMapper;
+import com.wakeUpTogetUp.togetUp.utils.mapper.AlarmMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

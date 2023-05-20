@@ -29,16 +29,15 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
 	implementation 'org.apache.httpcomponents:httpcore:4.4.15'
 	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+
+	// JPA
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 	//implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-	// 유효성
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	// model struct
 	implementation 'org.mapstruct:mapstruct:1.5.4.Final'

@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.utils.mappers;
+package com.wakeUpTogetUp.togetUp.utils.mapper;
 
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;

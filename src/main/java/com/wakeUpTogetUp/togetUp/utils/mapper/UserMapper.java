@@ -1,10 +1,9 @@
-package com.wakeUpTogetUp.togetUp.utils.mappers;
+package com.wakeUpTogetUp.togetUp.utils.mapper;
 
 import com.wakeUpTogetUp.togetUp.users.dto.response.UserInfoRes;
 import com.wakeUpTogetUp.togetUp.users.dto.response.UserRes;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 
-import com.wakeUpTogetUp.togetUp.users.dto.response.UserRes;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

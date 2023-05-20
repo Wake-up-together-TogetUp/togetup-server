@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.common.exception;
+package com.wakeUpTogetUp.togetUp.exception;
 
 //import org.hibernate.TypeMismatchException;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;

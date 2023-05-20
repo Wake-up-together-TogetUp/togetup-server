@@ -1,11 +1,9 @@
 package com.wakeUpTogetUp.togetUp.users;
 
-import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import com.wakeUpTogetUp.togetUp.config.annotation.NoAuth;
-import com.wakeUpTogetUp.togetUp.group.dto.request.GroupReq;
-import com.wakeUpTogetUp.togetUp.group.dto.response.GroupRes;
 import com.wakeUpTogetUp.togetUp.users.dto.request.LoginReq;
 import com.wakeUpTogetUp.togetUp.users.dto.request.PatchUserReq;
 import com.wakeUpTogetUp.togetUp.users.dto.request.SocialLoginReq;
@@ -16,7 +14,6 @@ import com.wakeUpTogetUp.togetUp.users.dto.response.UserTokenRes;
 import com.wakeUpTogetUp.togetUp.users.oauth.GetSocialOAuthRes;
 import com.wakeUpTogetUp.togetUp.users.oauth.OAuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

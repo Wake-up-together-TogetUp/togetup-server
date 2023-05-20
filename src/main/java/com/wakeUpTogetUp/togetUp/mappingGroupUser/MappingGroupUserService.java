@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.mappingGroupUser;
 
 
-import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.request.MappingGroupUserReq;
@@ -11,7 +11,7 @@ import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.response.MappingGroupUserR
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.model.MappingGroupUser;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.users.model.User;
-import com.wakeUpTogetUp.togetUp.utils.mappers.MappingGroupUserMapper;
+import com.wakeUpTogetUp.togetUp.utils.mapper.MappingGroupUserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)

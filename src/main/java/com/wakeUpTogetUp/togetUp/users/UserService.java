@@ -1,10 +1,7 @@
 package com.wakeUpTogetUp.togetUp.users;
 
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
-import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.group.dto.response.GroupRes;
-import com.wakeUpTogetUp.togetUp.group.model.Group;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.users.dto.request.LoginReq;
 import com.wakeUpTogetUp.togetUp.users.dto.request.PatchUserReq;
 import com.wakeUpTogetUp.togetUp.users.dto.request.SocialLoginReq;
@@ -14,8 +11,7 @@ import com.wakeUpTogetUp.togetUp.users.dto.response.UserRes;
 import com.wakeUpTogetUp.togetUp.users.dto.response.UserTokenRes;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
-import com.wakeUpTogetUp.togetUp.users.LoginType;
-import com.wakeUpTogetUp.togetUp.utils.mappers.UserMapper;
+import com.wakeUpTogetUp.togetUp.utils.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

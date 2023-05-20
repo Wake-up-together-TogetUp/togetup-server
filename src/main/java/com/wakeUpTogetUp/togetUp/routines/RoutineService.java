@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.routines;
 
-import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import com.wakeUpTogetUp.togetUp.missions.MissionRepository;
 import com.wakeUpTogetUp.togetUp.missions.model.Mission;
@@ -10,7 +10,7 @@ import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.users.model.User;
-import com.wakeUpTogetUp.togetUp.utils.mappers.RoutineMapper;
+import com.wakeUpTogetUp.togetUp.utils.mapper.RoutineMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

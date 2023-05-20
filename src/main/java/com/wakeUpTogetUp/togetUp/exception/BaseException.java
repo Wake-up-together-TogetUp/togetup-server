@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.common.exception;
+package com.wakeUpTogetUp.togetUp.exception;
 
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
 import lombok.AllArgsConstructor;

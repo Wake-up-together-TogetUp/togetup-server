@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.routines;
 
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
-import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.routines.dto.request.DeleteRoutineReq;
 import com.wakeUpTogetUp.togetUp.routines.dto.request.PatchRoutineReq;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
