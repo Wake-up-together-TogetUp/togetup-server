@@ -11,8 +11,6 @@ import java.util.Optional;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PatchAlarmReq {
-    @Null
-    private Integer id;
     private Integer userId;
     private Integer missionId;
     private String name;

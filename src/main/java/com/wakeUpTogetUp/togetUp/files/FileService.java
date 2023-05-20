@@ -4,79 +4,83 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.files.dto.response.PostFileRes;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-@Transactional()
+@RequiredArgsConstructor
 public class FileService {
     private String S3Bucket = "togetup"; // Bucket 이름
     final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final AmazonS3Client amazonS3Client;
 
-    @Autowired
-    AmazonS3Client amazonS3Client;
+    @Transactional
+    public PostFileRes uploadFiles(MultipartFile[] fileList, String fileType) throws Exception {
+        // avatar, group, mission
+        if(fileType.equals("avatar") || fileType.equals("group") || fileType.equals("mission") ) {
+            List<String> imagePathList = new ArrayList<>();
+            String uploadFilePath = fileType;
 
-    public List<String> uploadFiles(MultipartFile[] multipartFileList, String fileType) throws Exception {
-        List<String> imagePathList = new ArrayList<>();
+            // mission 일 때
+            if(fileType.equals("mission")) {
+                // 날짜 폴더 붙이기
+                uploadFilePath += ("/" + getFolderName());
+                // TODO : 그룹 이름 붙이기
+            }
 
-        String uploadFilePath = fileType;
+            for(MultipartFile file: fileList) {
+                // 파일 이름
+                String originalName = file.getOriginalFilename();
+                String uploadFileName = getUuidFileName(originalName);
 
-        // mission일때만 날짜 폴더 붙이기
-        if(fileType.equals("mission")) {
-            uploadFilePath += ("/" + getFolderName());
-        }
+                // 파일 크기
+                long size = file.getSize();
 
-        for(MultipartFile multipartFile: multipartFileList) {
-            String originalName = multipartFile.getOriginalFilename();  // 파일 이름
-            String uploadFileName = getUuidFileName(originalName);      // 중복을 막기 위해 uuid로 문자열 생성
+                ObjectMetadata objectMetaData = new ObjectMetadata();
+                objectMetaData.setContentType(file.getContentType());
+                objectMetaData.setContentLength(size);
 
-            long size = multipartFile.getSize(); // 파일 크기
+                String keyName = uploadFilePath + "/" + uploadFileName;
 
-            ObjectMetadata objectMetaData = new ObjectMetadata();
-            objectMetaData.setContentType(multipartFile.getContentType());
-            objectMetaData.setContentLength(size);
+                // S3에 업로드
+                amazonS3Client.putObject(
+                        new PutObjectRequest(S3Bucket, keyName, file.getInputStream(), objectMetaData)
+                                .withCannedAcl(CannedAccessControlList.PublicRead)
+                );
 
-            String keyName = uploadFilePath + "/" + uploadFileName; // ex) 파일구분/년/월/일/파일.확장자
+                String imagePath = amazonS3Client.getUrl(S3Bucket, keyName).toString(); // 접근가능한 URL 가져오기
+                imagePathList.add(imagePath);
+            }
 
-            // S3에 업로드
-            amazonS3Client.putObject(
-                    new PutObjectRequest(S3Bucket, keyName, multipartFile.getInputStream(), objectMetaData)
-                            .withCannedAcl(CannedAccessControlList.PublicRead)
-            );
-
-            String imagePath = amazonS3Client.getUrl(S3Bucket, keyName).toString(); // 접근가능한 URL 가져오기
-            imagePathList.add(imagePath);
-        }
-
-        return imagePathList;
+            return new PostFileRes(imagePathList);
+        } else
+            throw new BaseException(Status.BAD_REQUEST_PARAM);
     }
 
     /**
      * S3에 업로드된 파일 삭제
      */
-    public String deleteFile(String fileName) {
+    @Transactional
+    public void deleteFile(String fileName) {
+        // 파일 이름 자르기
+        fileName = fileName.substring(48, fileName.length());
 
-        String result = "delete process success";
+        boolean isObjectExist = amazonS3Client.doesObjectExist(S3Bucket, fileName);
 
-        try {
-            boolean isObjectExist = amazonS3Client.doesObjectExist(S3Bucket, fileName);
-            if (isObjectExist) {
-                amazonS3Client.deleteObject(S3Bucket, fileName);
-            } else {
-                result = "file not found";
-            }
-        } catch (Exception e) {
-            logger.debug("Delete File failed", e);
-        }
-
-        return result;
+        if (isObjectExist)
+            amazonS3Client.deleteObject(S3Bucket, fileName);
+        else
+            throw new BaseException(Status.FILE_NOT_FOUND);
     }
 
     /**

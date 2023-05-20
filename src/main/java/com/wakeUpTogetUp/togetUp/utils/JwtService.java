@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.utils;
 
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -32,13 +32,10 @@ public class JwtService {
         String accessToken = getJwt();
 
         if(accessToken == null || accessToken.length() == 0){
-            throw new BaseException(ResponseStatus.EMPTY_JWT);
+            throw new BaseException(Status.EMPTY_JWT);
         }
 
         Integer userIdInToken = getUserId(accessToken);
-
-        System.out.println(userIdInToken.equals(userId));
-        System.out.println(isTokenExpired(accessToken, key));
 
         return userIdInToken.equals(userId) && !isTokenExpired(accessToken, key);
     }
@@ -61,7 +58,7 @@ public class JwtService {
                     .getBody();
         } catch(Exception e) {
             System.out.println(e.getMessage());
-            throw new BaseException(ResponseStatus.INVALID_JWT);
+            throw new BaseException(Status.INVALID_JWT);
         }
 
         return claims.get("userId", Integer.class);
@@ -77,7 +74,7 @@ public class JwtService {
         //1. JWT 추출
         String accessToken = getJwt();
         if(accessToken == null || accessToken.length() == 0){
-            throw new BaseException(ResponseStatus.EMPTY_JWT);
+            throw new BaseException(Status.EMPTY_JWT);
         }
 
         // 2. JWT parsing
@@ -89,7 +86,7 @@ public class JwtService {
                     .parseClaimsJws(accessToken)
                     .getBody();
         } catch (Exception ignored) {
-            throw new BaseException(ResponseStatus.INVALID_JWT);
+            throw new BaseException(Status.INVALID_JWT);
         }
 
         // 3. userId 추출

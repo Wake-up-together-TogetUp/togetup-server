@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.mappingGroupUser;
 
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.request.MappingGroupUserReq;
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.response.MappingGroupUserRes;
@@ -36,7 +36,7 @@ public class MappingGroupUserController {
             //TODO : 그 그룹에 Host 유저가 있는지. (host는 한명)
             //TODO : 이미 가입한 그룹인지
             Integer groupUserId = mappingGroupUserService.createGroupUser(userId,groupId,mappingGroupUserReq);
-            return new BaseResponse(ResponseStatus.SUCCESS,groupUserId);
+            return new BaseResponse(Status.SUCCESS,groupUserId);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -52,7 +52,7 @@ public class MappingGroupUserController {
     public BaseResponse<List<MappingGroupUserRes>> GetUserInGroup(@PathVariable Integer groupId){
         List<MappingGroupUserRes> mappingGroupUserResList = mappingGroupUserService.getUserByGroupId(groupId);
 
-        return new BaseResponse<>(ResponseStatus.SUCCESS, mappingGroupUserResList);
+        return new BaseResponse<>(Status.SUCCESS, mappingGroupUserResList);
     }
 
     /**
@@ -65,7 +65,7 @@ public class MappingGroupUserController {
     public BaseResponse<List<MappingGroupUserRes>> GetGroupOfUser(@PathVariable Integer userId){
         List<MappingGroupUserRes> mappingGroupUserResList = mappingGroupUserService.getGroupByUserId(userId);
 
-        return new BaseResponse<>(ResponseStatus.SUCCESS, mappingGroupUserResList);
+        return new BaseResponse<>(Status.SUCCESS, mappingGroupUserResList);
     }
 
 
@@ -87,7 +87,7 @@ public class MappingGroupUserController {
 
         MappingGroupUserRes mappingGroupUserRes = mappingGroupUserService.editMappingGroupUser(userId, groupId, mappingGroupUserReq);
 
-        return new BaseResponse<>(ResponseStatus.SUCCESS, mappingGroupUserRes);
+        return new BaseResponse<>(Status.SUCCESS, mappingGroupUserRes);
     }
 
     /**
@@ -98,14 +98,14 @@ public class MappingGroupUserController {
      */
     @DeleteMapping("{userId}/{groupId}")
     @ResponseBody
-    public BaseResponse<ResponseStatus> deleteMappingGroupUser(
+    public BaseResponse<Status> deleteMappingGroupUser(
             @PathVariable @Valid Integer userId,
             @PathVariable @Valid Integer groupId
     ) {
 
         mappingGroupUserService.deleteMappingGroupUser(userId,groupId);
 
-        return new BaseResponse(ResponseStatus.SUCCESS);
+        return new BaseResponse(Status.SUCCESS);
     }
 
 }

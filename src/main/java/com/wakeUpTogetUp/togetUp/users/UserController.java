@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.users;
 
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.config.annotation.NoAuth;
 import com.wakeUpTogetUp.togetUp.users.dto.request.LoginReq;
 import com.wakeUpTogetUp.togetUp.users.dto.request.PatchUserReq;
@@ -41,7 +41,7 @@ public class UserController  {
         try {
 
             UserRes userRes=userService.createUser(userReq);
-            return new BaseResponse<>(ResponseStatus.SUCCESS,userRes);
+            return new BaseResponse<>(Status.SUCCESS,userRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -58,7 +58,7 @@ public class UserController  {
         try {
 
            UserTokenRes userTokenRes= userService.socialLogin(socialLoginReq);
-            return new BaseResponse<>(ResponseStatus.SUCCESS,userTokenRes);
+            return new BaseResponse<>(Status.SUCCESS,userTokenRes);
 
 
         } catch (BaseException exception) {
@@ -78,7 +78,7 @@ public class UserController  {
         String token = userService.createToken(loginReq);
         //TODO : refactor
         Integer id = userRepository.findByEmail(loginReq.getEmail()).getId();
-        return new BaseResponse<>(ResponseStatus.SUCCESS,new UserTokenRes(id,token, "bearer"));
+        return new BaseResponse<>(Status.SUCCESS,new UserTokenRes(id,token, "bearer"));
     }
 
 
@@ -92,7 +92,7 @@ public class UserController  {
     public BaseResponse<List<UserRes>> getUserAll(){
         List<UserRes> UserResList = userService.getUserAll();
 
-        return new BaseResponse<>(ResponseStatus.SUCCESS, UserResList);
+        return new BaseResponse<>(Status.SUCCESS, UserResList);
     }
 
 
@@ -107,7 +107,7 @@ public class UserController  {
     public BaseResponse<UserInfoRes> getUser(@PathVariable Integer userId){
         System.out.println("정보");
         UserInfoRes userInfoRes = userService.getUser(userId);
-        return new BaseResponse<>(ResponseStatus.SUCCESS, userInfoRes);
+        return new BaseResponse<>(Status.SUCCESS, userInfoRes);
     }
 
     /**
@@ -124,7 +124,7 @@ public class UserController  {
     ) {
 
         UserInfoRes userInfoRes = userService.editUser(userId, patchUserReq);
-        return new BaseResponse<>(ResponseStatus.SUCCESS, userInfoRes);
+        return new BaseResponse<>(Status.SUCCESS, userInfoRes);
     }
 
     /**
@@ -134,13 +134,13 @@ public class UserController  {
      */
     @DeleteMapping("{userId}")
     @ResponseBody
-    public BaseResponse<ResponseStatus> deleteUser(
+    public BaseResponse<Status> deleteUser(
             @PathVariable @Valid Integer userId
     ) {
 
         userService.deleteUser(userId);
 
-        return new BaseResponse(ResponseStatus.SUCCESS);
+        return new BaseResponse(Status.SUCCESS);
     }
 
 
@@ -156,7 +156,7 @@ public class UserController  {
         LoginType socialLoginType= LoginType.valueOf(SocialLoginPath.toUpperCase());
         String  redirectURL= oAuthService.request(socialLoginType);
 
-        return new BaseResponse<>(ResponseStatus.SUCCESS,redirectURL);
+        return new BaseResponse<>(Status.SUCCESS,redirectURL);
     }
     /**
      * Social Login API Server 요청에 의한 callback 을 처리
@@ -175,7 +175,7 @@ public class UserController  {
         LoginType socialLoginType= LoginType.valueOf(socialLoginPath.toUpperCase());
         GetSocialOAuthRes getSocialOAuthRes=oAuthService.oAuthLogin(socialLoginType,code);
 
-        return new BaseResponse<>(ResponseStatus.SUCCESS,getSocialOAuthRes);
+        return new BaseResponse<>(Status.SUCCESS,getSocialOAuthRes);
     }
 
 

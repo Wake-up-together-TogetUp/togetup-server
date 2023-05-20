@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.mappingGroupUser;
 
 
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.Status;
 
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.request.MappingGroupUserReq;
 import com.wakeUpTogetUp.togetUp.group.GroupRepository;
@@ -32,10 +32,10 @@ public class MappingGroupUserService {
 
         //조회
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ResponseStatus.INVALID_USER_ID)
+                .orElseThrow(() -> new BaseException(Status.INVALID_USER_ID)
                 );
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new BaseException(ResponseStatus.INVALID_GROUP_ID)
+                .orElseThrow(() -> new BaseException(Status.INVALID_GROUP_ID)
                 );
         //dto->entitiy
         MappingGroupUser groupUser =mappingGroupUserReq.toEntity(user,group);
@@ -123,7 +123,7 @@ public class MappingGroupUserService {
 
         if(cnt==0)
         {
-            new BaseException(ResponseStatus.BAD_REQUEST);
+            new BaseException(Status.BAD_REQUEST);
         }
     }
 

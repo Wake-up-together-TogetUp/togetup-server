@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.routines;
 
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.routines.dto.request.DeleteRoutineReq;
 import com.wakeUpTogetUp.togetUp.routines.dto.request.PatchRoutineReq;
@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/app/routines")
+@RequestMapping("/app/routine")
 @RequiredArgsConstructor
 public class RoutineController {
     private final RoutineService routineService;
@@ -31,9 +31,7 @@ public class RoutineController {
     public BaseResponse<RoutineRes> getRoutine(
             @PathVariable("routineId") Integer routineId
     ) {
-        RoutineRes routineRes = routineProvider.getRoutine(routineId);
-
-        return new BaseResponse<>(ResponseStatus.SUCCESS, routineRes);
+        return new BaseResponse<>(Status.SUCCESS, routineProvider.getRoutine(routineId));
     }
 
     /**
@@ -43,9 +41,7 @@ public class RoutineController {
      */
     @GetMapping("")
     public BaseResponse<List<RoutineRes>> getRoutinesByUserId(@RequestParam("userId") Integer userId) {
-        List<RoutineRes> routineResList = routineProvider.getRoutinesByUserId(userId);
-
-        return new BaseResponse<>(ResponseStatus.SUCCESS, routineResList);
+        return new BaseResponse<>(Status.SUCCESS, routineProvider.getRoutinesByUserId(userId));
     }
 
     /**
@@ -60,11 +56,9 @@ public class RoutineController {
         Integer userId = postRoutineReq.getUserId();
 
         if(jwtService.validateByUserId(userId)) {
-            Integer createdRoutineId = routineService.createRoutine(userId, postRoutineReq);
-
-            return new BaseResponse(ResponseStatus.SUCCESS, createdRoutineId);
+            return new BaseResponse(Status.SUCCESS, routineService.createRoutine(userId, postRoutineReq));
         } else
-            throw new BaseException(ResponseStatus.JWT_MISMATCH);
+            throw new BaseException(Status.JWT_MISMATCH);
     }
 
     /**
@@ -81,11 +75,9 @@ public class RoutineController {
         Integer userId = patchRoutineReq.getUserId();
 
         if(jwtService.validateByUserId(userId)) {
-            RoutineRes patchRoutineRes = routineService.updateRoutine(routineId, patchRoutineReq);
-
-            return new BaseResponse<>(ResponseStatus.SUCCESS, patchRoutineRes);
+            return new BaseResponse<>(Status.SUCCESS, routineService.updateRoutine(routineId, patchRoutineReq));
         } else
-            throw new BaseException(ResponseStatus.JWT_MISMATCH);
+            throw new BaseException(Status.JWT_MISMATCH);
     }
 
 
@@ -105,14 +97,8 @@ public class RoutineController {
         if(jwtService.validateByUserId(userId)) {
             routineService.deleteRoutine(routineId);
 
-            return new BaseResponse<>(ResponseStatus.SUCCESS);
+            return new BaseResponse<>(Status.SUCCESS);
         } else
-            throw new BaseException(ResponseStatus.JWT_MISMATCH);
-    }
-
-    //test
-    @GetMapping("/test")
-    public String test(){
-        return "success";
+            throw new BaseException(Status.JWT_MISMATCH);
     }
 }

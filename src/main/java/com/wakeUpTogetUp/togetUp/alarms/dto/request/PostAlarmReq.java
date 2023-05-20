@@ -13,8 +13,6 @@ import java.util.Optional;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostAlarmReq {
-    @Null
-    private Integer id;
     @NotNull(message = "사용자 아이디를 넣어주세요.")
     private Integer userId;
     @NotNull(message = "미션 아이디를 넣어주세요.")

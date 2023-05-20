@@ -1,51 +1,44 @@
 package com.wakeUpTogetUp.togetUp.files;
 
-
-import java.util.List;
-
-import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.files.dto.response.PostFileRes;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/app/files")
+@RequiredArgsConstructor
 public class FileController {
-    @Autowired
-    private FileService fileService;
+    private final FileService fileService;
 
     /**
      * upload 메소드
-     * @param multipartFileList
+     * @param files
      * @return
      * @throws Exception
      */
     @PostMapping("")
-    public ResponseEntity<Object> uploadFiles(
-            MultipartFile[] multipartFileList,
-            @RequestParam String type
+    @ResponseStatus(HttpStatus.CREATED)
+    public BaseResponse<PostFileRes> uploadFiles(
+            @RequestPart final MultipartFile[] files,
+            @RequestParam final String type
     ) throws Exception {
-        // avatar, group, mission
-        if(type.equals("avatar") || type.equals("group") || type.equals("mission") ) {
-            List<String> imagePathList = fileService.uploadFiles(multipartFileList, type);
-
-            return new ResponseEntity<>(imagePathList, HttpStatus.OK);
-        } else
-            throw new BaseException(ResponseStatus.BAD_REQUEST_PARAM);
+        return new BaseResponse<>(Status.SUCCESS, fileService.uploadFiles(files, type));
     }
 
+    /**
+     * 파일 삭제
+     * @param name
+     * @return
+     */
     @DeleteMapping("")
-    public BaseResponse<Object> deleteFile(@RequestParam(value = "fileName") String fileName) {
-        String result = fileService.deleteFile(fileName);
+    @ResponseStatus(HttpStatus.OK)
+    public BaseResponse<Object> deleteFile(@RequestParam final String name) {
+        fileService.deleteFile(name);
 
-        if(result.equals("delete process success")) {
-            return new BaseResponse<>(ResponseStatus.SUCCESS);
-        } else {
-            return new BaseResponse<>(new BaseException(ResponseStatus.FILE_NOT_FOUND));
-        }
+        return new BaseResponse<>(Status.SUCCESS);
     }
 }

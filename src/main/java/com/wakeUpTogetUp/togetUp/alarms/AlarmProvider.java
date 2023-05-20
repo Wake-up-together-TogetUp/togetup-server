@@ -4,7 +4,7 @@ import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmRes;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmsRes;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.routines.RoutineRepository;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
@@ -32,7 +32,7 @@ public class AlarmProvider {
     public List<AlarmsRes> getAlarmsByUserId(Integer userId) {
         // 유저 id 유무 확인
         userRepository.findById(userId).orElseThrow(
-                () -> new BaseException(ResponseStatus.INVALID_USER_ID)
+                () -> new BaseException(Status.INVALID_USER_ID)
         );
 
         List<Alarm> alarmList = alarmRepository.findByUserId(userId);
@@ -55,7 +55,7 @@ public class AlarmProvider {
         // 알람 가져오기
         Alarm alarm = alarmRepository.findById(alarmId)
                 .orElseThrow(
-                        () -> new BaseException(ResponseStatus.INVALID_ALARM_ID)
+                        () -> new BaseException(Status.INVALID_ALARM_ID)
                 );
 
         // 루틴 리스트 가져오기
@@ -73,7 +73,7 @@ public class AlarmProvider {
      * @return
      */
     public List<RoutineRes> getRoutineResByAlarmId(Integer alarmId){
-        List<Routine> routineList = routineRepository.findByAlarmId(alarmId).orElseGet(() -> null);
+        List<Routine> routineList = routineRepository.findByAlarmId(alarmId);
 
         ArrayList<RoutineRes> routineResList = new ArrayList<>();
         for(Routine routine : routineList) {

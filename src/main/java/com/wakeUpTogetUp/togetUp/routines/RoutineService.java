@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.routines;
 
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.missions.MissionRepository;
 import com.wakeUpTogetUp.togetUp.missions.model.Mission;
 import com.wakeUpTogetUp.togetUp.routines.dto.request.PatchRoutineReq;
@@ -27,11 +27,11 @@ public class RoutineService {
     @Transactional
     public int createRoutine(Integer userId, PostRoutineReq postRoutineReq) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new BaseException(ResponseStatus.INVALID_USER_ID)
+                () -> new BaseException(Status.INVALID_USER_ID)
         );
 
         Mission mission = missionRepository.findById(postRoutineReq.getMissionId()).orElseThrow(
-                () -> new BaseException(ResponseStatus.INVALID_MISSION_ID)
+                () -> new BaseException(Status.INVALID_MISSION_ID)
         );
 
         Routine routine = Routine.builder()
@@ -50,15 +50,13 @@ public class RoutineService {
 
     // 루틴 수정
     public RoutineRes updateRoutine(Integer routineId, PatchRoutineReq patchRoutineReq) {
-        patchRoutineReq.setId(routineId);
-
         Routine routine = routineRepository.findById(routineId).orElseThrow(
-                () -> new BaseException(ResponseStatus.INVALID_ROUTINE_ID)
+                () -> new BaseException(Status.INVALID_ROUTINE_ID)
         );
 
         routine.modifyProperties(
                 missionRepository.findById(patchRoutineReq.getMissionId()).orElseThrow(
-                        () -> new BaseException(ResponseStatus.INVALID_MISSION_ID)
+                        () -> new BaseException(Status.INVALID_MISSION_ID)
                 ),
                 patchRoutineReq.getName(),
                 patchRoutineReq.getEstimatedTime(),

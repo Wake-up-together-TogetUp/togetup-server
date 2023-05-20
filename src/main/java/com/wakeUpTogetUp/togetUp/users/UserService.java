@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.users;
 
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.users.dto.request.LoginReq;
 import com.wakeUpTogetUp.togetUp.users.dto.request.PatchUserReq;
@@ -54,7 +54,7 @@ public class UserService {
         if(userRepository.countByEmail(userReq.getEmail())!=0)//db에 저장되어 있으면
         {
             System.out.println(userReq.getLoginType());
-            new BaseException(ResponseStatus.BAD_REQUEST); //다른 메시지로 해야하나?
+            new BaseException(Status.BAD_REQUEST); //다른 메시지로 해야하나?
         }
         System.out.println(userReq.getLoginType());
         //일반회원가입
@@ -137,7 +137,7 @@ public class UserService {
         // 유저 수정
         Optional<User> user = Optional.ofNullable(userRepository.findById(userId)
                 .orElseThrow(
-                        () -> new BaseException(ResponseStatus.INVALID_USER_ID)
+                        () -> new BaseException(Status.INVALID_USER_ID)
                 ));
         user.get().setUserName(patchUserReq.getUsername());
         user.get().setStatusMessage(patchUserReq.getStatusMessage());

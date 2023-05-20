@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.alarms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmRes;
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
@@ -17,7 +17,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.constraints.ConstraintDescriptions;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,10 +26,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.mockito.BDDMockito.*;
-import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -111,14 +108,14 @@ class AlarmControllerTest {
         Integer alarmId = 42;
         //when
         ResultActions action = mockMvc.perform(
-                        RestDocumentationRequestBuilders.get("/app/alarms/{alarmId}", alarmId)
+                        RestDocumentationRequestBuilders.get("/app/alarm/{alarmId}", alarmId)
                         .accept(MediaType.APPLICATION_JSON)
                         .with(oauth2Login())
                 )
                 .andDo(print());
 
         //then
-        BaseResponse<AlarmRes> responseData = new BaseResponse<>(ResponseStatus.SUCCESS, response);
+        BaseResponse<AlarmRes> responseData = new BaseResponse<>(Status.SUCCESS, response);
 
         action.andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(responseData)))

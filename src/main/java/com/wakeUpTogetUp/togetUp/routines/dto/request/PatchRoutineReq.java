@@ -11,8 +11,6 @@ import javax.validation.constraints.Null;
 @Setter
 @NoArgsConstructor
 public class PatchRoutineReq {
-    @Null
-    private Integer id;
     @NotNull(message = "userId는 null일 수 없습니다.")
     private Integer userId;
     @NotNull(message = "missionId는 null일 수 없습니다.")

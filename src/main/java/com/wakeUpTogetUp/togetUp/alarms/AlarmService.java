@@ -6,7 +6,7 @@ import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
 import com.wakeUpTogetUp.togetUp.mappingAlarmRoutine.model.MappingAlarmRoutine;
 import com.wakeUpTogetUp.togetUp.alarms.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.mappingAlarmRoutine.MappingAlarmRoutineRepository;
 import com.wakeUpTogetUp.togetUp.missions.MissionRepository;
 import com.wakeUpTogetUp.togetUp.missions.model.Mission;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -37,12 +38,12 @@ public class AlarmService {
     public int createAlarm(Integer userId, PostAlarmReq postAlarmReq) {
         User user = userRepository.findById(userId)
                 .orElseThrow(
-                () -> new BaseException(ResponseStatus.INVALID_USER_ID)
+                () -> new BaseException(Status.INVALID_USER_ID)
         );
 
         Mission mission = missionRepository.findById(postAlarmReq.getMissionId())
                 .orElseThrow(
-                        () -> new BaseException(ResponseStatus.INVALID_MISSION_ID)
+                        () -> new BaseException(Status.INVALID_MISSION_ID)
                 );
 
         Alarm alarm = Alarm.builder()
@@ -70,7 +71,7 @@ public class AlarmService {
         alarmRepository.save(alarm);
 
         // 루틴 리스트가 있으면
-        if(postAlarmReq.getRoutineIdList() != null)
+        if(Objects.isNull(postAlarmReq.getRoutineIdList()))
             // 매핑 알람 루틴 생성
             createMappingAlarmRoutineList(postAlarmReq, alarm);
 
@@ -83,12 +84,12 @@ public class AlarmService {
         // 알람 수정
         Alarm alarm = alarmRepository.findById(alarmId, userId)
                 .orElseThrow(
-                () -> new BaseException(ResponseStatus.INVALID_ALARM_ID)
+                () -> new BaseException(Status.INVALID_ALARM_ID)
         );
 
         Mission mission = missionRepository.findById(patchAlarmReq.getMissionId())
                 .orElseThrow(
-                        () -> new BaseException(ResponseStatus.INVALID_MISSION_ID)
+                        () -> new BaseException(Status.INVALID_MISSION_ID)
                 );
 
         alarm.modifyProperties(
@@ -135,7 +136,7 @@ public class AlarmService {
     public void deleteAlarm(Integer alarmId) {
         // 해당 아이디의 알람이 존재하는지 확인
         Alarm alarm = alarmRepository.findById(alarmId).orElseThrow(
-                () -> new BaseException(ResponseStatus.INVALID_ALARM_ID)
+                () -> new BaseException(Status.INVALID_ALARM_ID)
         );
 
         alarmRepository.delete(alarm);
@@ -144,13 +145,14 @@ public class AlarmService {
     // 매핑 알람 루틴 리스트 생성하기 - 생성
     @Transactional
     protected void createMappingAlarmRoutineList(PostAlarmReq postAlarmReq, Alarm alarm){
+        // TODO : for문으로 바꾸기
         int i=1;
 
         // 매핑 알람-루틴 생성
         for(Integer routineId : postAlarmReq.getRoutineIdList()) {
             Routine routine = routineRepository.findById(routineId)
                     .orElseThrow(
-                            () -> new BaseException(ResponseStatus.INVALID_ROUTINE_ID)
+                            () -> new BaseException(Status.INVALID_ROUTINE_ID)
                     );
             MappingAlarmRoutine mappingAlarmRoutine = MappingAlarmRoutine.builder()
                     .user(alarm.getUser())
@@ -167,13 +169,14 @@ public class AlarmService {
     // 매핑 알람 루틴 리스트 생성하기 - 수정
     @Transactional
     protected void createMappingAlarmRoutineList(PatchAlarmReq patchAlarmReq, Alarm alarm){
+        // TODO : for문으로 바꾸기
         int i=1;
 
         // 매핑 알람-루틴 생성
         for(Integer routineId : patchAlarmReq.getRoutineIdList()) {
             Routine routine = routineRepository.findById(routineId)
                     .orElseThrow(
-                            () -> new BaseException(ResponseStatus.INVALID_ROUTINE_ID)
+                            () -> new BaseException(Status.INVALID_ROUTINE_ID)
                     );
             MappingAlarmRoutine mappingAlarmRoutine = MappingAlarmRoutine.builder()
                     .user(alarm.getUser())

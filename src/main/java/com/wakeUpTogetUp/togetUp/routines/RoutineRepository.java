@@ -18,8 +18,8 @@ public interface RoutineRepository extends JpaRepository<Routine, Integer> {
     Optional<Routine> findById(Integer id);
 
     @Query("SELECT r FROM Routine r JOIN MappingAlarmRoutine mar ON (r.id = mar.routine.id) WHERE mar.alarm.id = :alarmId")
-    Optional<List<Routine>> findByAlarmId(@Param(value = "alarmId") Integer alarmId);
+    List<Routine> findByAlarmId(@Param(value = "alarmId") Integer alarmId);
 
     @Query("select r from Routine r where r.user.id = :userId")
-    Optional<List<Routine>> findByUserId(@Param(value = "userId") Integer userId);
+    List<Routine> findByUserId(@Param(value = "userId") Integer userId);
 }
