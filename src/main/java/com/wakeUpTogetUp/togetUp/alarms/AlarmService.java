@@ -12,11 +12,10 @@ import com.wakeUpTogetUp.togetUp.missions.MissionRepository;
 import com.wakeUpTogetUp.togetUp.missions.model.Mission;
 import com.wakeUpTogetUp.togetUp.routines.RoutineProvider;
 import com.wakeUpTogetUp.togetUp.routines.RoutineRepository;
-import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.users.model.User;
-import com.wakeUpTogetUp.togetUp.utils.mapper.AlarmMapper;
+import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,19 +66,21 @@ public class AlarmService {
                 .friday(postAlarmReq.getFriday())
                 .saturday(postAlarmReq.getSaturday())
                 .sunday(postAlarmReq.getSunday())
+                .isActivated(postAlarmReq.getIsActivated())
                 .build();
 
+        // 영속성 컨텍스트의 특성으로 default 값으로 넣은 속성은 값이 null 로 나오는 것 같다.
         Alarm alarmCreated = alarmRepository.save(alarm);
+        AlarmRes alarmRes = EntityDtoMapper.INSTANCE.toAlarmRes(alarmCreated);
 
         // 루틴 리스트가 있으면
-        if(!Objects.isNull(postAlarmReq.getRoutineIdList()))
+        if(!Objects.isNull(postAlarmReq.getRoutineIdList())) {
             // 매핑 알람 루틴 생성
             createMappingAlarmRoutineList(postAlarmReq, alarm);
+            alarmRes.setRoutineResList(routineProvider.getRoutineResByAlarmId(alarmCreated.getId()));
+        }
 
-        // routine response 리스트 가져오기
-        List<RoutineRes> routineResList = routineProvider.getRoutineResByAlarmId(alarmCreated.getId());
-
-        return AlarmMapper.INSTANCE.toAlarmRes(alarmCreated, routineResList);
+        return alarmRes;
     }
 
     // 알람 수정
@@ -114,22 +115,24 @@ public class AlarmService {
                 patchAlarmReq.getThursday(),
                 patchAlarmReq.getFriday(),
                 patchAlarmReq.getSaturday(),
-                patchAlarmReq.getSunday()
+                patchAlarmReq.getSunday(),
+                patchAlarmReq.getIsActivated()
         );
         Alarm alarmModified = alarmRepository.save(alarm);
+        AlarmRes alarmRes = EntityDtoMapper.INSTANCE.toAlarmRes(alarmModified);
 
         // 루틴 리스트 수정
         // 연관된 매핑 루틴 리스트 삭제
         mappingAlarmRoutineRepository.deleteByAlarmId(alarmId);
 
         // 매핑 루틴 리스트 재생성
-        if(!Objects.isNull(patchAlarmReq.getRoutineIdList()))
+        if(!Objects.isNull(patchAlarmReq.getRoutineIdList())){
             createMappingAlarmRoutineList(patchAlarmReq, alarmModified);
+            alarmRes.setRoutineResList(routineProvider.getRoutineResByAlarmId(alarmModified.getId()));
+        }
 
         // routine response 리스트 가져오기
-        List<RoutineRes> routineResList = routineProvider.getRoutineResByAlarmId(alarmModified.getId());
 
-        AlarmRes alarmRes = AlarmMapper.INSTANCE.toAlarmRes(alarmModified, routineResList);
 
         // return
         return alarmRes;

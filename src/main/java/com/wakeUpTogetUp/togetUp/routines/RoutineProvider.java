@@ -5,11 +5,10 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
-import com.wakeUpTogetUp.togetUp.utils.mapper.RoutineMapper;
+import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,9 +22,7 @@ public class RoutineProvider {
                         () -> new BaseException(Status.INVALID_ROUTINE_ID)
                 );
 
-        RoutineRes routineRes = RoutineMapper.INSTANCE.toRoutineRes(routine);
-
-        return routineRes;
+        return EntityDtoMapper.INSTANCE.toRoutineRes(routine);
     }
 
     public List<RoutineRes> getRoutinesByUserId(Integer userId) {
@@ -36,23 +33,13 @@ public class RoutineProvider {
 
         List<Routine> routineList = routineRepository.findByUserId(userId);
 
-        ArrayList<RoutineRes> routineResList = new ArrayList<>();
-        for(Routine routine : routineList) {
-            routineResList.add(RoutineMapper.INSTANCE.toRoutineRes(routine));
-        }
-
-        return routineResList;
+        return EntityDtoMapper.INSTANCE.toRoutineResList(routineList);
     }
 
     // alarmId로 routineRes 리스트 가져오기
     public List<RoutineRes> getRoutineResByAlarmId(Integer alarmId){
         List<Routine> routineList = routineRepository.findByAlarmId(alarmId);
 
-        ArrayList<RoutineRes> routineResList = new ArrayList<>();
-        for(Routine routine : routineList) {
-            routineResList.add(RoutineMapper.INSTANCE.toRoutineRes(routine));
-        }
-
-        return routineResList;
+        return EntityDtoMapper.INSTANCE.toRoutineResList(routineList);
     }
 }

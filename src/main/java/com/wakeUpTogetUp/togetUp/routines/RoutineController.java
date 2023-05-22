@@ -52,7 +52,7 @@ public class RoutineController {
      */
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponse createRoutine(
+    public BaseResponse<RoutineRes> createRoutine(
             @RequestBody @Valid PostRoutineReq postRoutineReq
     ) {
         Integer userId = postRoutineReq.getUserId();

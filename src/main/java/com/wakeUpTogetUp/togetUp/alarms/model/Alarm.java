@@ -1,21 +1,25 @@
 package com.wakeUpTogetUp.togetUp.alarms.model;
 
 import com.wakeUpTogetUp.togetUp.missions.model.Mission;
+import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "alarm")
 @DynamicInsert          // insert 시 값이 null인 필드 제외
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class Alarm {
     @Builder
-    public Alarm(User user, Mission mission, String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
+    public Alarm(User user, Mission mission, String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, Boolean isActivated) {
         this.user = user;
         this.mission = mission;
         this.name = name;
@@ -35,9 +39,10 @@ public class Alarm {
         this.friday = friday;
         this.saturday = saturday;
         this.sunday = sunday;
+        this.isActivated = isActivated;
     }
 
-    public void modifyProperties(Mission mission, String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
+    public void modifyProperties(Mission mission, String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, Boolean isActivated) {
         setMission(mission);
         setName(name);
         setIcon(icon);
@@ -56,6 +61,7 @@ public class Alarm {
         setFriday(friday);
         setSaturday(saturday);
         setSunday(sunday);
+        setIsActivated(isActivated);
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

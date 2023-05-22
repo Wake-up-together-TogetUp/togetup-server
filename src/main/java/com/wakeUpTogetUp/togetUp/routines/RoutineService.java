@@ -10,7 +10,7 @@ import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.users.model.User;
-import com.wakeUpTogetUp.togetUp.utils.mapper.RoutineMapper;
+import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class RoutineService {
 
     // 루틴 생성
     @Transactional
-    public int createRoutine(Integer userId, PostRoutineReq postRoutineReq) {
+    public RoutineRes createRoutine(Integer userId, PostRoutineReq postRoutineReq) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new BaseException(Status.INVALID_USER_ID)
         );
@@ -43,9 +43,11 @@ public class RoutineService {
                 .color(postRoutineReq.getColor())
                 .build();
 
-        routineRepository.save(routine);
+        Routine routineCreated = routineRepository.save(routine);
 
-        return routine.getId();
+        RoutineRes postRoutineRes = EntityDtoMapper.INSTANCE.toRoutineRes(routineCreated);
+
+        return postRoutineRes;
     }
 
     // 루틴 수정
@@ -66,7 +68,7 @@ public class RoutineService {
 
         Routine routineModified = routineRepository.save(routine);
 
-        RoutineRes patchRoutineRes = RoutineMapper.INSTANCE.toRoutineRes(routineModified);
+        RoutineRes patchRoutineRes = EntityDtoMapper.INSTANCE.toRoutineRes(routineModified);
 
         return patchRoutineRes;
     }

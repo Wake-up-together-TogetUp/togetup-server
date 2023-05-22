@@ -6,12 +6,9 @@ import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmsRes;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.routines.RoutineProvider;
-import com.wakeUpTogetUp.togetUp.routines.RoutineRepository;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
-import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
-import com.wakeUpTogetUp.togetUp.utils.mapper.AlarmMapper;
-import com.wakeUpTogetUp.togetUp.utils.mapper.RoutineMapper;
+import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +38,7 @@ public class AlarmProvider {
         // dto 매핑
         ArrayList<AlarmsRes> alarmsResList = new ArrayList<>();
         for(Alarm alarm : alarmList) {
-            alarmsResList.add(AlarmMapper.INSTANCE.toAlarmsRes(alarm));
+            alarmsResList.add(EntityDtoMapper.INSTANCE.toAlarmsRes(alarm));
         }
 
         return alarmsResList;
@@ -63,7 +60,8 @@ public class AlarmProvider {
         // 하나도 존재하지 않아도 됨
         List<RoutineRes> routineResList = routineProvider.getRoutineResByAlarmId(alarmId);
 
-        AlarmRes alarmRes = AlarmMapper.INSTANCE.toAlarmRes(alarm, routineResList);
+        AlarmRes alarmRes = EntityDtoMapper.INSTANCE.toAlarmRes(alarm);
+        alarmRes.setRoutineResList(routineResList);
 
         return alarmRes;
     }

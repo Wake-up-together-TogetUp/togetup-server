@@ -46,9 +46,6 @@ public class JwtService {
     }
 
     public Integer getUserId(String accessToken) {
-        System.out.println(accessToken);
-        System.out.println(key);
-
         Claims claims;
         try{
             claims = Jwts.parserBuilder()
