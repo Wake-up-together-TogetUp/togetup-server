@@ -9,6 +9,7 @@ import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.dto.request.PostRoutineReq;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -50,6 +51,7 @@ public class RoutineController {
      * @return
      */
     @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
     public BaseResponse createRoutine(
             @RequestBody @Valid PostRoutineReq postRoutineReq
     ) {

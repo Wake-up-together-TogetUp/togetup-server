@@ -10,6 +10,7 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.mappingAlarmRoutine.MappingAlarmRoutineRepository;
 import com.wakeUpTogetUp.togetUp.missions.MissionRepository;
 import com.wakeUpTogetUp.togetUp.missions.model.Mission;
+import com.wakeUpTogetUp.togetUp.routines.RoutineProvider;
 import com.wakeUpTogetUp.togetUp.routines.RoutineRepository;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
@@ -26,7 +27,7 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class AlarmService {
-    private final AlarmProvider alarmProvider;
+    private final RoutineProvider routineProvider;
     private final AlarmRepository alarmRepository;
     private final RoutineRepository routineRepository;
     private final UserRepository userRepository;
@@ -35,7 +36,7 @@ public class AlarmService {
 
     // 알람 생성
     @Transactional
-    public int createAlarm(Integer userId, PostAlarmReq postAlarmReq) {
+    public AlarmRes createAlarm(Integer userId, PostAlarmReq postAlarmReq) {
         User user = userRepository.findById(userId)
                 .orElseThrow(
                 () -> new BaseException(Status.INVALID_USER_ID)
@@ -68,14 +69,17 @@ public class AlarmService {
                 .sunday(postAlarmReq.getSunday())
                 .build();
 
-        alarmRepository.save(alarm);
+        Alarm alarmCreated = alarmRepository.save(alarm);
 
         // 루틴 리스트가 있으면
-        if(Objects.isNull(postAlarmReq.getRoutineIdList()))
+        if(!Objects.isNull(postAlarmReq.getRoutineIdList()))
             // 매핑 알람 루틴 생성
             createMappingAlarmRoutineList(postAlarmReq, alarm);
 
-        return alarm.getId();
+        // routine response 리스트 가져오기
+        List<RoutineRes> routineResList = routineProvider.getRoutineResByAlarmId(alarmCreated.getId());
+
+        return AlarmMapper.INSTANCE.toAlarmRes(alarmCreated, routineResList);
     }
 
     // 알람 수정
@@ -119,11 +123,11 @@ public class AlarmService {
         mappingAlarmRoutineRepository.deleteByAlarmId(alarmId);
 
         // 매핑 루틴 리스트 재생성
-        if(patchAlarmReq.getRoutineIdList() != null)
+        if(!Objects.isNull(patchAlarmReq.getRoutineIdList()))
             createMappingAlarmRoutineList(patchAlarmReq, alarmModified);
 
         // routine response 리스트 가져오기
-        List<RoutineRes> routineResList = alarmProvider.getRoutineResByAlarmId(alarmId);
+        List<RoutineRes> routineResList = routineProvider.getRoutineResByAlarmId(alarmModified.getId());
 
         AlarmRes alarmRes = AlarmMapper.INSTANCE.toAlarmRes(alarmModified, routineResList);
 
@@ -145,7 +149,7 @@ public class AlarmService {
     // 매핑 알람 루틴 리스트 생성하기 - 생성
     @Transactional
     protected void createMappingAlarmRoutineList(PostAlarmReq postAlarmReq, Alarm alarm){
-        // TODO : for문으로 바꾸기
+        // TODO : 어떻게든 바꿔보셈
         int i=1;
 
         // 매핑 알람-루틴 생성
@@ -169,7 +173,6 @@ public class AlarmService {
     // 매핑 알람 루틴 리스트 생성하기 - 수정
     @Transactional
     protected void createMappingAlarmRoutineList(PatchAlarmReq patchAlarmReq, Alarm alarm){
-        // TODO : for문으로 바꾸기
         int i=1;
 
         // 매핑 알람-루틴 생성

@@ -5,6 +5,7 @@ import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmRes;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmsRes;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.routines.RoutineProvider;
 import com.wakeUpTogetUp.togetUp.routines.RoutineRepository;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
@@ -20,9 +21,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AlarmProvider {
+    private final RoutineProvider routineProvider;
     private final UserRepository userRepository;
     private final AlarmRepository alarmRepository;
-    private final RoutineRepository routineRepository;
 
     /**
      * 유저 아이디로 알람 리스트 가져오기
@@ -60,26 +61,10 @@ public class AlarmProvider {
 
         // 루틴 리스트 가져오기
         // 하나도 존재하지 않아도 됨
-        List<RoutineRes> routineResList = getRoutineResByAlarmId(alarmId);
+        List<RoutineRes> routineResList = routineProvider.getRoutineResByAlarmId(alarmId);
 
         AlarmRes alarmRes = AlarmMapper.INSTANCE.toAlarmRes(alarm, routineResList);
 
         return alarmRes;
-    }
-
-    /**
-     * alarmId로 routineRes 리스트 가져오기
-     * @param alarmId
-     * @return
-     */
-    public List<RoutineRes> getRoutineResByAlarmId(Integer alarmId){
-        List<Routine> routineList = routineRepository.findByAlarmId(alarmId);
-
-        ArrayList<RoutineRes> routineResList = new ArrayList<>();
-        for(Routine routine : routineList) {
-            routineResList.add(RoutineMapper.INSTANCE.toRoutineRes(routine));
-        }
-
-        return routineResList;
     }
 }

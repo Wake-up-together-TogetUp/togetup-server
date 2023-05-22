@@ -10,6 +10,7 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -53,7 +54,8 @@ public class AlarmController {
      * @return
      */
     @PostMapping("")
-    public BaseResponse createAlarm(
+    @ResponseStatus(HttpStatus.CREATED)
+    public BaseResponse<AlarmRes> createAlarm(
             @RequestBody @Valid PostAlarmReq postAlarmReq
     ){
         Integer userId = postAlarmReq.getUserId();

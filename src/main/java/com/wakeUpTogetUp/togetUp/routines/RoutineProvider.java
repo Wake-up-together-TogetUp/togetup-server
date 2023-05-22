@@ -43,4 +43,16 @@ public class RoutineProvider {
 
         return routineResList;
     }
+
+    // alarmId로 routineRes 리스트 가져오기
+    public List<RoutineRes> getRoutineResByAlarmId(Integer alarmId){
+        List<Routine> routineList = routineRepository.findByAlarmId(alarmId);
+
+        ArrayList<RoutineRes> routineResList = new ArrayList<>();
+        for(Routine routine : routineList) {
+            routineResList.add(RoutineMapper.INSTANCE.toRoutineRes(routine));
+        }
+
+        return routineResList;
+    }
 }
