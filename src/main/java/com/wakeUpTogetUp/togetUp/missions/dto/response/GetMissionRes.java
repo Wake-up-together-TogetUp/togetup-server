@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.missions.dto;
+package com.wakeUpTogetUp.togetUp.missions.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -61,7 +61,7 @@ public class AlarmController {
         Integer userId = postAlarmReq.getUserId();
 
         if(jwtService.validateByUserId(userId))
-            return new BaseResponse(Status.SUCCESS, alarmService.createAlarm(userId, postAlarmReq));
+            return new BaseResponse(Status.SUCCESS_CREATED, alarmService.createAlarm(userId, postAlarmReq));
         else
             throw new BaseException(Status.JWT_MISMATCH);
     }

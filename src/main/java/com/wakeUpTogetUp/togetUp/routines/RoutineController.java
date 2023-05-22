@@ -58,7 +58,7 @@ public class RoutineController {
         Integer userId = postRoutineReq.getUserId();
 
         if(jwtService.validateByUserId(userId)) {
-            return new BaseResponse(Status.SUCCESS, routineService.createRoutine(userId, postRoutineReq));
+            return new BaseResponse(Status.SUCCESS_CREATED, routineService.createRoutine(userId, postRoutineReq));
         } else
             throw new BaseException(Status.JWT_MISMATCH);
     }

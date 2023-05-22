@@ -13,6 +13,7 @@ public enum Status {
      */
     // 공통
     SUCCESS(HttpStatus.OK, "요청에 성공하였습니다."),
+    SUCCESS_CREATED(HttpStatus.CREATED, "생성 되었습니다."),
 
     /**
      * 300번대(리다이렉트)

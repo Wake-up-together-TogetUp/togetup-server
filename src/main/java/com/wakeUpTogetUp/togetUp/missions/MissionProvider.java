@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.missions;
 
-import com.wakeUpTogetUp.togetUp.missions.dto.GetMissionRes;
+import com.wakeUpTogetUp.togetUp.missions.dto.response.GetMissionRes;
 import com.wakeUpTogetUp.togetUp.missions.model.Mission;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +14,13 @@ import java.util.List;
 public class MissionProvider {
     private final MissionRepository missionRepository;
 
-    public List<GetMissionRes> getMissions() {
-        List<Mission> missionList = missionRepository.findAll(Sort.by("id"));
+    public List<GetMissionRes> getMissions(Boolean isActivated) {
+        List<Mission> missionList;
 
-        System.out.println(missionList.get(0).getId());
+        if(isActivated)
+            missionList = missionRepository.findAllTrue(Sort.by("id"));
+        else
+            missionList = missionRepository.findAll(Sort.by("id"));
 
         return EntityDtoMapper.INSTANCE.toGetMissionResList(missionList);
     }

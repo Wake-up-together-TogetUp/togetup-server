@@ -3,7 +3,7 @@ package com.wakeUpTogetUp.togetUp.utils.mapper;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmRes;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmsRes;
 import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
-import com.wakeUpTogetUp.togetUp.missions.dto.GetMissionRes;
+import com.wakeUpTogetUp.togetUp.missions.dto.response.GetMissionRes;
 import com.wakeUpTogetUp.togetUp.missions.model.Mission;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
