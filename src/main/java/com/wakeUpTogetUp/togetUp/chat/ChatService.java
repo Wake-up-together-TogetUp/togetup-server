@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.chat;
 
-import com.websocket.chat.model.ChatMessage;
+import com.wakeUpTogetUp.togetUp.chat.model.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;

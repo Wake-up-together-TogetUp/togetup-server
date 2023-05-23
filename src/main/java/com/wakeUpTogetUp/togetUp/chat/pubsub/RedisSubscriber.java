@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.chat.pubsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.websocket.chat.model.ChatMessage;
+import com.wakeUpTogetUp.togetUp.chat.model.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;

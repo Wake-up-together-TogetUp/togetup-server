@@ -1,9 +1,9 @@
 package com.wakeUpTogetUp.togetUp.chat;
 
-import com.websocket.chat.model.ChatMessage;
-import com.websocket.chat.repo.ChatRoomRepository;
-import com.websocket.chat.service.ChatService;
-import com.websocket.chat.service.JwtTokenProvider;
+import com.wakeUpTogetUp.togetUp.chat.model.ChatMessage;
+import com.wakeUpTogetUp.togetUp.chat.ChatRoomRepository;
+import com.wakeUpTogetUp.togetUp.chat.ChatService;
+import com.wakeUpTogetUp.togetUp.chat.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.Header;

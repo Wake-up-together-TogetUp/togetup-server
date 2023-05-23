@@ -1,9 +1,9 @@
 package com.wakeUpTogetUp.togetUp.chat;
 
-import com.websocket.chat.model.ChatRoom;
-import com.websocket.chat.model.LoginInfo;
-import com.websocket.chat.repo.ChatRoomRepository;
-import com.websocket.chat.service.JwtTokenProvider;
+import com.wakeUpTogetUp.togetUp.chat.model.ChatRoom;
+import com.wakeUpTogetUp.togetUp.chat.model.LoginInfo;
+import com.wakeUpTogetUp.togetUp.chat.ChatRoomRepository;
+import com.wakeUpTogetUp.togetUp.chat.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

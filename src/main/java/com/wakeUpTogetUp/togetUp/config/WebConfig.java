@@ -37,7 +37,9 @@ public class WebConfig implements WebMvcConfigurer {
         reg.addInterceptor(new AuthenticationInterceptor(jwtService,objectMapper))
                 .order(1)
                 .addPathPatterns("/app/users")
-                .excludePathPatterns("/app/group");
+                .excludePathPatterns("/app/group")
+                .excludePathPatterns("/app/chat");
+
        //         .addPathPatterns("/**"); //interceptor 작업이 필요한 path를 모두 추가한다.
 
         //.excludePathPatterns("app/accounts","/app/accounts/auth","app/videos/**");

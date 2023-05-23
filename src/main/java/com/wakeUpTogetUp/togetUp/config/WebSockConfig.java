@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.config;
 
-import com.websocket.chat.config.handler.StompHandler;
+import com.wakeUpTogetUp.togetUp.config.interceptor.StompHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;

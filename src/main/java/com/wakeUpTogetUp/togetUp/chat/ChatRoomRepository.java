@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.chat;
 
-import com.websocket.chat.model.ChatRoom;
+import com.wakeUpTogetUp.togetUp.chat.model.ChatRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ValueOperations;
