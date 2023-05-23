@@ -149,7 +149,7 @@ class AlarmControllerTest {
                                         fieldWithPath("httpStatusCode").description("http 상태코드"),
                                         fieldWithPath("httpReasonPhrase").description("http 상태코드 설명문구"),
                                         fieldWithPath("message").description("설명 메시지"),
-                                        fieldWithPath("result").description("결과"),
+                                        fieldWithPath("images/result").description("결과"),
                                         fieldWithPath("result.id").description("알람 Id"),
                                         fieldWithPath("result.userId").description("사용자 Id"),
                                         fieldWithPath("result.missionId").description("미션 Id"),

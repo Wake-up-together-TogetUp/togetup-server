@@ -19,13 +19,12 @@ import java.util.List;
 @NoArgsConstructor
 public class Alarm {
     @Builder
-    public Alarm(User user, Mission mission, String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, Boolean isActivated) {
+    public Alarm(User user, Mission mission, String name, String icon, String sound, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, Boolean isActivated) {
         this.user = user;
         this.mission = mission;
         this.name = name;
         this.icon = icon;
         this.sound = sound;
-        this.volume = volume;
         this.isVibrate = isVibrate;
         this.isRoutineOn = isRoutineOn;
         this.snoozeInterval = snoozeInterval;
@@ -42,12 +41,11 @@ public class Alarm {
         this.isActivated = isActivated;
     }
 
-    public void modifyProperties(Mission mission, String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, Boolean isActivated) {
+    public void modifyProperties(Mission mission, String name, String icon, String sound, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, Boolean isActivated) {
         setMission(mission);
         setName(name);
         setIcon(icon);
         setSound(sound);
-        setVolume(volume);
         setIsVibrate(isVibrate);
         setIsRoutineOn(isRoutineOn);
         setSnoozeInterval(snoozeInterval);
@@ -75,7 +73,6 @@ public class Alarm {
     private String name;
     private String icon;
     private String sound;
-    private Integer volume;
     private Boolean isVibrate;
     private Boolean isRoutineOn;
     private Integer snoozeInterval;

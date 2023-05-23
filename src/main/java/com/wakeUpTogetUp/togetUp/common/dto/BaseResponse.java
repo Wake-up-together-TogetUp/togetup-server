@@ -7,7 +7,7 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import lombok.Getter;
 
 @Getter
-@JsonPropertyOrder({"httpStatusCode", "httpReasonPhrase", "message", "result"})
+@JsonPropertyOrder({"httpStatusCode", "httpReasonPhrase", "message", "images/result"})
 public class BaseResponse<T> {
     private final int httpStatusCode;
     private final String httpReasonPhrase;

@@ -30,11 +30,11 @@ public class MissionController {
     }
 
     // 사물 인식 미션
-    @PostMapping("/recognition/object/{object}")
+    @PostMapping("/detection/object/{object}")
     @ResponseStatus(HttpStatus.CREATED)
     BaseResponse<PostObjectRecognitionRes> recognizeObject(
             @PathVariable String object
-            // TODO : rendering 하는거 추가하기
+            // TODO : rendering 하는거 추가
 //            @RequestParam String rendering
     ){
         return new BaseResponse(Status.SUCCESS_CREATED, missionService.recognizeObject(object));

@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -52,7 +51,6 @@ public class AlarmService {
                 .name(postAlarmReq.getName())
                 .icon(postAlarmReq.getIcon())
                 .sound(postAlarmReq.getSound())
-                .volume(postAlarmReq.getVolume())
                 .isVibrate(postAlarmReq.getIsVibrate())
                 .isRoutineOn(postAlarmReq.getIsRoutineOn())
                 .snoozeInterval(postAlarmReq.getSnoozeInterval())
@@ -102,7 +100,6 @@ public class AlarmService {
                 patchAlarmReq.getName(),
                 patchAlarmReq.getIcon(),
                 patchAlarmReq.getSound(),
-                patchAlarmReq.getVolume(),
                 patchAlarmReq.getIsVibrate(),
                 patchAlarmReq.getIsRoutineOn(),
                 patchAlarmReq.getSnoozeInterval(),
@@ -128,12 +125,9 @@ public class AlarmService {
         // 매핑 루틴 리스트 재생성
         if(!Objects.isNull(patchAlarmReq.getRoutineIdList())){
             createMappingAlarmRoutineList(patchAlarmReq, alarmModified);
+            // routine response 리스트 가져오기
             alarmRes.setRoutineResList(routineProvider.getRoutineResByAlarmId(alarmModified.getId()));
         }
-
-        // routine response 리스트 가져오기
-
-
         // return
         return alarmRes;
     }

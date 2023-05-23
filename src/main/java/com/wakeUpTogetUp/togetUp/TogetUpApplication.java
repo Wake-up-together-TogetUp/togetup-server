@@ -11,6 +11,7 @@ public class TogetUpApplication {
 	}
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(TogetUpApplication.class, args);
 	}
 

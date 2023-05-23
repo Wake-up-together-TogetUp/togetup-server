@@ -81,6 +81,8 @@ dependencies {
 
 	// OpenCV
 	implementation 'org.openpnp:opencv:4.6.0-0'
+
+	implementation group: 'com.microsoft.onnxruntime', name: 'onnxruntime', version: '1.12.1'
 }
 
 ext {

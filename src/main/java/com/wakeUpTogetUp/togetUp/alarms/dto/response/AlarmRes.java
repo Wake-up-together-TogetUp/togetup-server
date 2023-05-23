@@ -17,7 +17,6 @@ public class AlarmRes {
     private String name;
     private String icon;
     private String sound;
-    private int volume;
     private Boolean isVibrate;
     private Boolean isRoutineOn;
     private Integer snoozeInterval;

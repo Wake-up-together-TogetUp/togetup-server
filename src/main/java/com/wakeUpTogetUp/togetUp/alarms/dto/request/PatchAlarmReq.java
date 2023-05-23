@@ -16,7 +16,6 @@ public class PatchAlarmReq {
     private String name;
     private String icon;
     private String sound;
-    private Integer volume;
     private Boolean isVibrate;
     private Boolean isRoutineOn;
     private Integer snoozeInterval;
