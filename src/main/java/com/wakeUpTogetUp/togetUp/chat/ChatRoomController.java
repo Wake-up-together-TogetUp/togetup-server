@@ -15,14 +15,16 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/chat")
+@RequestMapping("app/chat")
 public class ChatRoomController {
 
     private final ChatRoomRepository chatRoomRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final ChatRoomRepository2 chatRoomRepository2;
 
     @GetMapping("/room")
     public String rooms() {
+        System.out.println("채팅");
         return "/chat/room";
     }
 
@@ -36,8 +38,10 @@ public class ChatRoomController {
 
     @PostMapping("/room")
     @ResponseBody
-    public ChatRoom createRoom(@RequestParam String name) {
-        return chatRoomRepository.createChatRoom(name);
+    public ChatRoom createRoom(@RequestParam() String name) {
+        System.out.println("채팅룸");
+        ChatRoom chatRoom = ChatRoom.create(name);
+        return chatRoomRepository2.save(chatRoom);//;createChatRoom(name);
     }
 
     @GetMapping("/room/enter/{roomId}")
@@ -55,8 +59,9 @@ public class ChatRoomController {
     @GetMapping("/user")
     @ResponseBody
     public LoginInfo getUserInfo() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String name = auth.getName();
+      //  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = "혜온";//auth.getName();
+        System.out.println(name+"name");
         return LoginInfo.builder().name(name).token(jwtTokenProvider.generateToken(name)).build();
     }
 }

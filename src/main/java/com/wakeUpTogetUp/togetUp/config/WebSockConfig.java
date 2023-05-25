@@ -16,12 +16,13 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
 
     private final StompHandler stompHandler;
 
+    //메시지 브로커에 관련된 설정을 한다
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/sub");
-        config.setApplicationDestinationPrefixes("/pub");
+        config.enableSimpleBroker("/sub");//구독 요청 prefix
+        config.setApplicationDestinationPrefixes("/pub");//발행 prefix
     }
-
+//SockJs Fallback을 이용해 노출할 STOMP endpoint를 설정
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-stomp").setAllowedOrigins("*")

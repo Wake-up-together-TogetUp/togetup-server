@@ -1,15 +1,18 @@
 package com.wakeUpTogetUp.togetUp.chat.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
+import javax.persistence.*;
+
 @Setter
+@Getter
+@Table(name="user")
+@NoArgsConstructor
+@Entity
 public class ChatMessage {
 
-    public ChatMessage() {
-    }
+//    public ChatMessage() {
+//    }
 
     @Builder
     public ChatMessage(MessageType type, String roomId, String sender, String message, long userCount) {
@@ -25,6 +28,9 @@ public class ChatMessage {
         ENTER, QUIT, TALK
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private MessageType type; // 메시지 타입
     private String roomId; // 방번호
     private String sender; // 메시지 보낸사람
