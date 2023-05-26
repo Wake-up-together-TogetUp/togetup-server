@@ -7,6 +7,7 @@ import com.wakeUpTogetUp.togetUp.missions.dto.response.PostObjectRecognitionRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -32,11 +33,16 @@ public class MissionController {
     // 사물 인식 미션
     @PostMapping("/detection/object/{object}")
     @ResponseStatus(HttpStatus.CREATED)
-    BaseResponse<PostObjectRecognitionRes> recognizeObject(
+//    BaseResponse<PostObjectRecognitionRes> recognizeObject(
+    BaseResponse recognizeObject(
+            @RequestPart MultipartFile missionImage,
             @PathVariable String object
             // TODO : rendering 하는거 추가
 //            @RequestParam String rendering
     ){
-        return new BaseResponse(Status.SUCCESS_CREATED, missionService.recognizeObject(object));
+        missionService.recognizeObject(object, missionImage);
+        // TODO : 렌더링해서 파일에 저장하기
+
+        return new BaseResponse(Status.MISSION_COMPLETE);
     }
 }

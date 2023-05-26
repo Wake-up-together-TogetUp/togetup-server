@@ -5,6 +5,7 @@ import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.missions.dto.response.PostObjectRecognitionRes;
 import com.wakeUpTogetUp.togetUp.objectDetection.ObjectDetection;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class MissionService {
@@ -12,14 +13,22 @@ public class MissionService {
     private ObjectDetection objectDetection = new ObjectDetection();
 
     // TODO : 구현
-    public PostObjectRecognitionRes recognizeObject(String object) {
-        try{
-            objectDetection.detectObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BaseException(Status.INTERNAL_SERVER_ERROR);
+//    public PostObjectRecognitionRes recognizeObject(String object) {
+    public boolean recognizeObject(String object, MultipartFile missionImage) {
+        // 일치 여부 확인
+        boolean isConsistent = false;
+        for(String objectDetected : objectDetection.detectObject(missionImage)){
+            if(objectDetected.equals(object))
+                isConsistent = true;
         }
 
-        return new PostObjectRecognitionRes();
+        // 일치하지 않으면
+        if(!isConsistent)
+            throw new BaseException(Status.MISSION_UNCOMPLETE);
+        else
+            return isConsistent;
+
+//        return new PostObjectRecognitionRes();
     }
 }
+

@@ -14,6 +14,9 @@ public enum Status {
     // 공통
     SUCCESS(HttpStatus.OK, "요청에 성공하였습니다."),
     SUCCESS_CREATED(HttpStatus.CREATED, "생성 되었습니다."),
+    // Mission
+    MISSION_UNCOMPLETE(HttpStatus.OK, "미션을 성공하지 못했습니다."),
+    MISSION_COMPLETE(HttpStatus.OK, "미션을 성공했습니다."),
 
     /**
      * 300번대(리다이렉트)
@@ -44,7 +47,7 @@ public enum Status {
     // File
     FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 파일을 찾을 수 없습니다."),
     ACCOUNT_DOESNT_EXISTS(HttpStatus.NOT_FOUND,"계정이 존재하지 않습니다."),
-    // files
+
 
     /**
      * 500번대(서버 에러)
