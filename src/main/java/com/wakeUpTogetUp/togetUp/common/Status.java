@@ -15,8 +15,8 @@ public enum Status {
     SUCCESS(HttpStatus.OK, "요청에 성공하였습니다."),
     SUCCESS_CREATED(HttpStatus.CREATED, "생성 되었습니다."),
     // Mission
-    MISSION_UNCOMPLETE(HttpStatus.OK, "미션을 성공하지 못했습니다."),
-    MISSION_COMPLETE(HttpStatus.OK, "미션을 성공했습니다."),
+    MISSION_UNSUCCESS(HttpStatus.OK, "미션을 성공하지 못했습니다."),
+    MISSION_SUCCESS(HttpStatus.OK, "미션을 성공했습니다."),
 
     /**
      * 300번대(리다이렉트)

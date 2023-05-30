@@ -2,6 +2,7 @@ package com.wakeUpTogetUp.togetUp.missions;
 
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
+import com.wakeUpTogetUp.togetUp.files.FileService;
 import com.wakeUpTogetUp.togetUp.missions.dto.response.GetMissionRes;
 import com.wakeUpTogetUp.togetUp.missions.dto.response.PostObjectRecognitionRes;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 public class MissionController {
     private final MissionProvider missionProvider;
     private final MissionService missionService;
+    private final FileService fileService;
 
     /**
      * 미션 목록 가져오기
@@ -30,19 +32,37 @@ public class MissionController {
         return new BaseResponse(Status.SUCCESS, missionProvider.getMissions(isActivated));
     }
 
-    // 사물 인식 미션
+    /**
+     * 사물 인식 미션
+     * @param missionImage
+     * @param object
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/detection/object/{object}")
     @ResponseStatus(HttpStatus.CREATED)
-//    BaseResponse<PostObjectRecognitionRes> recognizeObject(
-    BaseResponse recognizeObject(
+    BaseResponse<PostObjectRecognitionRes> recognizeObject(
             @RequestPart MultipartFile missionImage,
             @PathVariable String object
-            // TODO : rendering 하는거 추가
+            // TODO : rendering 추가
 //            @RequestParam String rendering
-    ){
-        missionService.recognizeObject(object, missionImage);
-        // TODO : 렌더링해서 파일에 저장하기
+    ) throws Exception {
 
-        return new BaseResponse(Status.MISSION_COMPLETE);
+        missionService.recognizeObject(object, missionImage);
+        // TODO : 렌더링
+
+        String filePath = fileService.uploadFile(missionImage, "mission");
+
+        return new BaseResponse(Status.MISSION_SUCCESS, new PostObjectRecognitionRes(filePath));
     }
+
+    // 미션 성공 기록
+//    @PostMapping("/complete")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    BaseResponse missionComplete(
+//            @RequestBody PostMissionCompleteHistory postMissionCompleteHistory
+//    ){
+//
+//        return new BaseResponse(Status.SUCCESS_CREATED)
+//    }
 }

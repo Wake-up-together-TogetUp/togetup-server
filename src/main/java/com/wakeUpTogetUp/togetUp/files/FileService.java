@@ -24,49 +24,77 @@ public class FileService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final AmazonS3Client amazonS3Client;
 
+    /**
+     * 파일 업로드
+     * @param file
+     * @param fileType
+     * @return
+     * @throws Exception
+     */
     @Transactional
-    public PostFileRes uploadFiles(MultipartFile[] fileList, String fileType) throws Exception {
-        // avatar, group, mission
-        if(fileType.equals("avatar") || fileType.equals("group") || fileType.equals("mission") ) {
-            List<String> imagePathList = new ArrayList<>();
-            String uploadFilePath = fileType;
+    public String uploadFile(MultipartFile file, String fileType) throws Exception{
+        if(fileType.equals("mission")) {
+            String uploadFilePath = ("mission/" + getFolderName());
+            String filePath = uploadToBucket(file, uploadFilePath);
 
-            // mission 일 때
-            if(fileType.equals("mission")) {
-                // 날짜 폴더 붙이기
-                uploadFilePath += ("/" + getFolderName());
-                // TODO : 그룹 이름 붙이기
-            }
-
-            for(MultipartFile file: fileList) {
-                // 파일 이름
-                String originalName = file.getOriginalFilename();
-                String uploadFileName = getUuidFileName(originalName);
-
-                // 파일 크기
-                long size = file.getSize();
-
-                ObjectMetadata objectMetaData = new ObjectMetadata();
-                objectMetaData.setContentType(file.getContentType());
-                objectMetaData.setContentLength(size);
-
-                String keyName = uploadFilePath + "/" + uploadFileName;
-
-                // S3에 업로드
-                amazonS3Client.putObject(
-                        new PutObjectRequest(S3Bucket, keyName, file.getInputStream(), objectMetaData)
-                                .withCannedAcl(CannedAccessControlList.PublicRead)
-                );
-
-                String imagePath = amazonS3Client.getUrl(S3Bucket, keyName).toString(); // 접근가능한 URL 가져오기
-                imagePathList.add(imagePath);
-            }
-
-            return new PostFileRes(imagePathList);
+            return filePath;
         } else
             throw new BaseException(Status.BAD_REQUEST_PARAM);
     }
 
+    /**
+     * 파일 리스트 업로드
+     * @param fileList
+     * @param fileType
+     * @return
+     * @throws Exception
+     */
+    @Transactional
+    public List<String> uploadFiles(MultipartFile[] fileList, String fileType) throws Exception {
+        // avatar, group, mission
+        if(fileType.equals("avatar") || fileType.equals("group")) {
+            List<String> filePathList = new ArrayList<>();
+            String uploadFilePath = fileType;
+
+            for(MultipartFile file: fileList)
+                filePathList.add(uploadToBucket(file, uploadFilePath));
+
+            return filePathList;
+        } else
+            throw new BaseException(Status.BAD_REQUEST_PARAM);
+    }
+
+    /**
+     * 파일 업로드
+     * @param file
+     * @param uploadFilePath
+     * @return
+     * @throws Exception
+     */
+    public String uploadToBucket(MultipartFile file, String uploadFilePath) throws Exception{
+        // 파일 이름
+        String uploadFileName = getUuidFileName(file.getOriginalFilename());
+
+        // 파일 크기
+        long size = file.getSize();
+
+        ObjectMetadata objectMetaData = new ObjectMetadata();
+        objectMetaData.setContentType(file.getContentType());
+        objectMetaData.setContentLength(size);
+
+        String keyName = uploadFilePath + "/" + uploadFileName;
+
+        // S3에 업로드
+        amazonS3Client.putObject(
+                new PutObjectRequest(S3Bucket, keyName, file.getInputStream(), objectMetaData)
+                        .withCannedAcl(CannedAccessControlList.PublicRead)
+        );
+
+        String filePath = amazonS3Client.getUrl(S3Bucket, keyName).toString(); // 접근가능한 URL 가져오기
+
+        return filePath;
+    }
+    
     /**
      * S3에 업로드된 파일 삭제
      */

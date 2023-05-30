@@ -12,8 +12,6 @@ public class MissionService {
 
     private ObjectDetection objectDetection = new ObjectDetection();
 
-    // TODO : 구현
-//    public PostObjectRecognitionRes recognizeObject(String object) {
     public boolean recognizeObject(String object, MultipartFile missionImage) {
         // 일치 여부 확인
         boolean isConsistent = false;
@@ -24,11 +22,9 @@ public class MissionService {
 
         // 일치하지 않으면
         if(!isConsistent)
-            throw new BaseException(Status.MISSION_UNCOMPLETE);
+            throw new BaseException(Status.MISSION_UNSUCCESS);
         else
             return isConsistent;
-
-//        return new PostObjectRecognitionRes();
     }
 }
 

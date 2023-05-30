@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.missions.dto.response;
+package com.wakeUpTogetUp.togetUp.missions.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class PostObjectRecognitionRes {
-    private String filePath;
+@NoArgsConstructor
+public class PostMissionCompleteHistoryReq {
+
 }
