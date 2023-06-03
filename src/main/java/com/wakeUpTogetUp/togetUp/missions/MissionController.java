@@ -3,6 +3,7 @@ package com.wakeUpTogetUp.togetUp.missions;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.files.FileService;
+import com.wakeUpTogetUp.togetUp.missions.dto.request.PostMissionCompleteLogReq;
 import com.wakeUpTogetUp.togetUp.missions.dto.response.GetMissionRes;
 import com.wakeUpTogetUp.togetUp.missions.dto.response.PostObjectRecognitionRes;
 import lombok.RequiredArgsConstructor;
@@ -52,17 +53,17 @@ public class MissionController {
         // TODO : 렌더링
 
         String filePath = fileService.uploadFile(missionImage, "mission");
-
         return new BaseResponse(Status.MISSION_SUCCESS, new PostObjectRecognitionRes(filePath));
     }
 
     // 미션 성공 기록
-//    @PostMapping("/complete")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    BaseResponse missionComplete(
-//            @RequestBody PostMissionCompleteHistory postMissionCompleteHistory
-//    ){
-//
-//        return new BaseResponse(Status.SUCCESS_CREATED)
-//    }
+    @PostMapping("/complete")
+    @ResponseStatus(HttpStatus.CREATED)
+    BaseResponse missionComplete(
+            @RequestBody PostMissionCompleteLogReq postMissionCompleteHistoryReq
+    ){
+        // 기록
+
+        return new BaseResponse(Status.SUCCESS_CREATED);
+    }
 }

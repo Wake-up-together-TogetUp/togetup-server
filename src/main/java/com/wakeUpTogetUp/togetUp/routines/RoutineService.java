@@ -1,15 +1,13 @@
 package com.wakeUpTogetUp.togetUp.routines;
 
+import com.wakeUpTogetUp.togetUp.alarms.AlarmRepository;
+import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.Status;
-import com.wakeUpTogetUp.togetUp.missions.MissionRepository;
-import com.wakeUpTogetUp.togetUp.missions.model.Mission;
-import com.wakeUpTogetUp.togetUp.routines.dto.request.PatchRoutineReq;
 import com.wakeUpTogetUp.togetUp.routines.dto.request.PostRoutineReq;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
-import com.wakeUpTogetUp.togetUp.users.model.User;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,61 +18,23 @@ import javax.transaction.Transactional;
 @RequiredArgsConstructor
 public class RoutineService {
     private final RoutineRepository routineRepository;
-    private final UserRepository userRepository;
-    private final MissionRepository missionRepository;
 
     // 루틴 생성
     @Transactional
-    public RoutineRes createRoutine(Integer userId, PostRoutineReq postRoutineReq) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new BaseException(Status.INVALID_USER_ID)
-        );
-
-        Mission mission = missionRepository.findById(postRoutineReq.getMissionId()).orElseThrow(
-                () -> new BaseException(Status.INVALID_MISSION_ID)
-        );
-
+    public RoutineRes createRoutine(PostRoutineReq postRoutineReq, Alarm alarmCreated) {
         Routine routine = Routine.builder()
-                .user(user)
-                .mission(mission)
-                .name(postRoutineReq.getName())
+                .alarm(alarmCreated)
+                .color(postRoutineReq.getColor())
                 .estimatedTime(postRoutineReq.getEstimatedTime())
                 .icon(postRoutineReq.getIcon())
-                .color(postRoutineReq.getColor())
+                .name(postRoutineReq.getName())
+                .order(postRoutineReq.getOrder())
                 .build();
+        routineRepository.save(routine);
 
         Routine routineCreated = routineRepository.save(routine);
-
         RoutineRes postRoutineRes = EntityDtoMapper.INSTANCE.toRoutineRes(routineCreated);
 
         return postRoutineRes;
-    }
-
-    // 루틴 수정
-    public RoutineRes updateRoutine(Integer routineId, PatchRoutineReq patchRoutineReq) {
-        Routine routine = routineRepository.findById(routineId).orElseThrow(
-                () -> new BaseException(Status.INVALID_ROUTINE_ID)
-        );
-
-        routine.modifyProperties(
-                missionRepository.findById(patchRoutineReq.getMissionId()).orElseThrow(
-                        () -> new BaseException(Status.INVALID_MISSION_ID)
-                ),
-                patchRoutineReq.getName(),
-                patchRoutineReq.getEstimatedTime(),
-                patchRoutineReq.getIcon(),
-                patchRoutineReq.getColor()
-        );
-
-        Routine routineModified = routineRepository.save(routine);
-
-        RoutineRes patchRoutineRes = EntityDtoMapper.INSTANCE.toRoutineRes(routineModified);
-
-        return patchRoutineRes;
-    }
-
-    // 루틴 삭제
-    public void deleteRoutine(Integer routineId) {
-        routineRepository.deleteById(routineId);
     }
 }

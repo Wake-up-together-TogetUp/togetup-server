@@ -1,12 +1,12 @@
 package com.wakeUpTogetUp.togetUp.alarms.dto.request;
 
+import com.wakeUpTogetUp.togetUp.routines.dto.request.PostRoutineReq;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
+import java.sql.Time;
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @Setter
@@ -26,9 +26,7 @@ public class PostAlarmReq {
     private Integer snoozeInterval;
     private Integer snoozeCnt;
     @NotNull(message = "알람 시작시는 공백일 수 없습니다.")
-    private Integer startHour;
-    @NotNull(message = "알람 시작분은 공백일 수 없습니다.")
-    private Integer startMinute;
+    private Time alarmTime;
     private Boolean monday;
     private Boolean tuesday;
     private Boolean wednesday;
@@ -37,5 +35,5 @@ public class PostAlarmReq {
     private Boolean saturday;
     private Boolean sunday;
     private Boolean isActivated;
-    private List<Integer> routineIdList;        // 알람에 등록할 루틴 리스트
+    private List<PostRoutineReq> routineList;        // 알람에 등록할 루틴 리스트
 }

@@ -16,7 +16,7 @@ public class FileController {
 
     /**
      * upload 메소드
-     * @param files
+     * @param fileType
      * @return
      * @throws Exception
      */
@@ -24,9 +24,9 @@ public class FileController {
     @ResponseStatus(HttpStatus.CREATED)
     public BaseResponse<PostFileRes> uploadFiles(
             @RequestPart final MultipartFile[] files,
-            @RequestParam final String type
+            @RequestParam final String fileType
     ) throws Exception {
-        return new BaseResponse<>(Status.SUCCESS, fileService.uploadFiles(files, type));
+        return new BaseResponse(Status.SUCCESS, fileService.uploadFiles(files, fileType));
     }
 
     /**
@@ -38,7 +38,6 @@ public class FileController {
     @ResponseStatus(HttpStatus.OK)
     public BaseResponse<Object> deleteFile(@RequestParam final String name) {
         fileService.deleteFile(name);
-
         return new BaseResponse<>(Status.SUCCESS);
     }
 }

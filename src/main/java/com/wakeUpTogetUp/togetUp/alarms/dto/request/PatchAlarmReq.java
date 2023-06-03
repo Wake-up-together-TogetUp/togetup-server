@@ -1,10 +1,10 @@
 package com.wakeUpTogetUp.togetUp.alarms.dto.request;
 
+import com.wakeUpTogetUp.togetUp.routines.dto.request.PostRoutineReq;
 import lombok.*;
 
-import javax.validation.constraints.Null;
+import java.sql.Time;
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @Setter
@@ -20,8 +20,7 @@ public class PatchAlarmReq {
     private Boolean isRoutineOn;
     private Integer snoozeInterval;
     private Integer snoozeCnt;
-    private Integer startHour;
-    private Integer startMinute;
+    private Time alarmTime;
     private Boolean monday;
     private Boolean tuesday;
     private Boolean wednesday;
@@ -30,5 +29,5 @@ public class PatchAlarmReq {
     private Boolean saturday;
     private Boolean sunday;
     private Boolean isActivated;
-    private List<Integer> routineIdList;
+    private List<PostRoutineReq> routineList;
 }

@@ -2,6 +2,8 @@ package com.wakeUpTogetUp.togetUp.alarms.dto.response;
 
 import lombok.*;
 
+import java.sql.Time;
+
 @Getter
 @Setter
 @Builder
@@ -18,8 +20,7 @@ public class AlarmsRes {
     private Boolean isRoutineOn;
     private Integer snoozeInterval;
     private Integer snoozeCnt;
-    private Integer startHour;
-    private Integer startMinute;
+    private Time alarmTime;
     private Boolean monday;
     private Boolean tuesday;
     private Boolean wednesday;

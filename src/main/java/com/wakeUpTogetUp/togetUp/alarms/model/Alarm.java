@@ -1,14 +1,12 @@
 package com.wakeUpTogetUp.togetUp.alarms.model;
 
 import com.wakeUpTogetUp.togetUp.missions.model.Mission;
-import com.wakeUpTogetUp.togetUp.routines.model.Routine;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Time;
 
 @Entity
 @Table(name = "alarm")
@@ -19,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Alarm {
     @Builder
-    public Alarm(User user, Mission mission, String name, String icon, String sound, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, Boolean isActivated) {
+    public Alarm(User user, Mission mission, String name, String icon, String sound, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Time alarmTime, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, Boolean isActivated) {
         this.user = user;
         this.mission = mission;
         this.name = name;
@@ -29,8 +27,7 @@ public class Alarm {
         this.isRoutineOn = isRoutineOn;
         this.snoozeInterval = snoozeInterval;
         this.snoozeCnt = snoozeCnt;
-        this.startHour = startHour;
-        this.startMinute = startMinute;
+        this.alarmTime = alarmTime;
         this.monday = monday;
         this.tuesday = tuesday;
         this.wednesday = wednesday;
@@ -41,7 +38,7 @@ public class Alarm {
         this.isActivated = isActivated;
     }
 
-    public void modifyProperties(Mission mission, String name, String icon, String sound, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, Boolean isActivated) {
+    public void modifyProperties(Mission mission, String name, String icon, String sound, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Time alarmTime, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, Boolean isActivated) {
         setMission(mission);
         setName(name);
         setIcon(icon);
@@ -50,8 +47,7 @@ public class Alarm {
         setIsRoutineOn(isRoutineOn);
         setSnoozeInterval(snoozeInterval);
         setSnoozeCnt(snoozeCnt);
-        setStartHour(startHour);
-        setStartMinute(startMinute);
+        setAlarmTime(alarmTime);
         setMonday(monday);
         setTuesday(tuesday);
         setWednesday(wednesday);
@@ -77,8 +73,7 @@ public class Alarm {
     private Boolean isRoutineOn;
     private Integer snoozeInterval;
     private Integer snoozeCnt;
-    private Integer startHour;
-    private Integer startMinute;
+    private Time alarmTime;
     private Boolean monday;
     private Boolean tuesday;
     private Boolean wednesday;

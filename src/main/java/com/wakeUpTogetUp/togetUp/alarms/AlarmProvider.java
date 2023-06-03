@@ -58,7 +58,7 @@ public class AlarmProvider {
 
         // 루틴 리스트 가져오기
         // 하나도 존재하지 않아도 됨
-        List<RoutineRes> routineResList = routineProvider.getRoutineResByAlarmId(alarmId);
+        List<RoutineRes> routineResList = routineProvider.getRoutinesByAlarmId(alarmId);
 
         AlarmRes alarmRes = EntityDtoMapper.INSTANCE.toAlarmRes(alarm);
         alarmRes.setRoutineResList(routineResList);

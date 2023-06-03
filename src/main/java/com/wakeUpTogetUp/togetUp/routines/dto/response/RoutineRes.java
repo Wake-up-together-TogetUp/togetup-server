@@ -8,11 +8,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoutineRes {
-    private Integer id;
-    private Integer userId;
-    private Integer missionId;
+    private int id;
+    private int alarmId;
     private String name;
-    private Integer estimatedTime;
+    private int estimatedTime;
     private String icon;
     private String color;
+    private int order;
 }
