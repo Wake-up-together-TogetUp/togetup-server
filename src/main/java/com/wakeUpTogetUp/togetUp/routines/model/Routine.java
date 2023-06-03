@@ -4,26 +4,33 @@ import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
 import com.wakeUpTogetUp.togetUp.missions.model.Mission;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "routine")
-@DynamicInsert
+//@DynamicInsert
+//@DynamicUpdate
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Routine {
+    @PrePersist
+    public void prePersist() {
+        this.color = this.color == null ? "#E0EBFF" : this.color;
+    }
+
     @Builder
-    public Routine(Alarm alarm, String name, int estimatedTime, String icon, String color, int order) {
+    public Routine(Alarm alarm, String name, int estimatedTime, String icon, int routineOrder) {
         this.alarm = alarm;
         this.name = name;
         this.estimatedTime = estimatedTime;
         this.icon = icon;
-        this.color = color;
-        this.order = order;
+        this.routineOrder = routineOrder;
     }
 
     @Id
@@ -35,6 +42,9 @@ public class Routine {
     private String name;
     private int estimatedTime;
     private String icon;
+    @Column(name = "color")
+    @ColumnDefault("#E0EBFF")
     private String color;
-    private int order;
+    @Column(columnDefinition = "Tinyint")
+    private int routineOrder;
 }

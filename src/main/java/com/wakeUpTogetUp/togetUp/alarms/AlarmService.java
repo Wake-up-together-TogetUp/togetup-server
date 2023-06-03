@@ -115,6 +115,9 @@ public class AlarmService {
         Alarm alarmModified = alarmRepository.save(alarm);
         AlarmRes alarmRes = EntityDtoMapper.INSTANCE.toAlarmRes(alarmModified);
 
+        // 연관 루틴 삭제
+        routineService.deleteRoutinesByAlarmId(alarmId);
+
         // 루틴 리스트 재생성
         if(!Objects.isNull(patchAlarmReq.getRoutineList())) {
             // 루틴 리스트 생성

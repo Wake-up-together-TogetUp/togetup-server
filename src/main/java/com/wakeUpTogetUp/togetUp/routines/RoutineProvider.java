@@ -25,7 +25,7 @@ public class RoutineProvider {
     }
 
     public List<RoutineRes> getRoutinesByAlarmId(Integer alarmId){
-        List<Routine> routineList = routineRepository.findAllByAlarmId(alarmId, Sort.by("order"));
+        List<Routine> routineList = routineRepository.findAllByAlarmId(alarmId, Sort.by("routineOrder"));
 
         return EntityDtoMapper.INSTANCE.toRoutineResList(routineList);
     }

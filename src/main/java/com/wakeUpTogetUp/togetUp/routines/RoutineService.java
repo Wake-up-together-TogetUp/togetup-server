@@ -24,11 +24,11 @@ public class RoutineService {
     public RoutineRes createRoutine(PostRoutineReq postRoutineReq, Alarm alarmCreated) {
         Routine routine = Routine.builder()
                 .alarm(alarmCreated)
-                .color(postRoutineReq.getColor())
+//                .color(postRoutineReq.getColor())
                 .estimatedTime(postRoutineReq.getEstimatedTime())
                 .icon(postRoutineReq.getIcon())
                 .name(postRoutineReq.getName())
-                .order(postRoutineReq.getOrder())
+                .routineOrder(postRoutineReq.getRoutineOrder())
                 .build();
         routineRepository.save(routine);
 
@@ -36,5 +36,11 @@ public class RoutineService {
         RoutineRes postRoutineRes = EntityDtoMapper.INSTANCE.toRoutineRes(routineCreated);
 
         return postRoutineRes;
+    }
+
+    // 알람 id로 루틴 리스트 삭제
+    @Transactional
+    public void deleteRoutinesByAlarmId(int alarmId){
+        routineRepository.deleteAllByAlarmId(alarmId);
     }
 }

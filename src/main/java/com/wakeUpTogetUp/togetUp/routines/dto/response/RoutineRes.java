@@ -14,5 +14,5 @@ public class RoutineRes {
     private int estimatedTime;
     private String icon;
     private String color;
-    private int order;
+    private int routineOrder;
 }
