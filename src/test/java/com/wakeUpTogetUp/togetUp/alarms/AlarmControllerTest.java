@@ -84,8 +84,7 @@ class AlarmControllerTest {
                 .isRoutineOn(true)
                 .snoozeInterval(5)
                 .snoozeCnt(3)
-                .startHour(6)
-                .startMinute(0)
+                .alarmTime("06:30:00")
                 .monday(true)
                 .tuesday(true)
                 .wednesday(true)
@@ -96,8 +95,8 @@ class AlarmControllerTest {
                 .isActivated(true)
                 .routineResList(
                         Arrays.asList(
-                                new RoutineRes(5,9,1,"기상",10,"⏰","#000000"),
-                                new RoutineRes(7,9,2,"샤워",15,"🚿","#000000")
+                                new RoutineRes(5,9,"기상",10,"⏰","#000000",1),
+                                new RoutineRes(7,9,"샤워",15,"🚿","#000000",2)
                         )
                 )
                 .build();
@@ -159,8 +158,7 @@ class AlarmControllerTest {
                                         fieldWithPath("result.isRoutineOn").description("루틴 활성 여부"),
                                         fieldWithPath("result.snoozeInterval").description("다시울림 간격(분)"),
                                         fieldWithPath("result.snoozeCnt").description("다시울림 횟수"),
-                                        fieldWithPath("result.startHour").description("시작 시"),
-                                        fieldWithPath("result.startMinute").description("시작 분"),
+                                        fieldWithPath("result.alarmTime").description("알람 시간"),
                                         fieldWithPath("result.monday").description("월요일 알림 여부"),
                                         fieldWithPath("result.tuesday").description("화요일 알림 여부"),
                                         fieldWithPath("result.wednesday").description("수요일 알림 여부"),
@@ -173,10 +171,7 @@ class AlarmControllerTest {
                                                 .attributes(key("optional").value("true")),
                                         fieldWithPath("result.routineResList[].id").description("루틴 Id")
                                                 .attributes(key("optional").value("true")),
-
-                                        fieldWithPath("result.routineResList[].userId").description("사용자 Id")
-                                                .attributes(key("optional").value("true")),
-                                        fieldWithPath("result.routineResList[].missionId").description("미션 Id")
+                                        fieldWithPath("result.routineResList[].alarmId").description("알람 Id")
                                                 .attributes(key("optional").value("true")),
                                         fieldWithPath("result.routineResList[].name").description("루틴 이름")
                                                 .attributes(key("optional").value("true")),
@@ -185,6 +180,8 @@ class AlarmControllerTest {
                                         fieldWithPath("result.routineResList[].icon").description("아이콘")
                                                 .attributes(key("optional").value("true")),
                                         fieldWithPath("result.routineResList[].color").description("색상")
+                                                .attributes(key("optional").value("true")),
+                                        fieldWithPath("result.routineResList[].routineOrder").description("루틴 순서")
                                                 .attributes(key("optional").value("true"))
                                 )
                         )

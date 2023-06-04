@@ -28,6 +28,5 @@ public class PatchAlarmReq {
     private Boolean friday;
     private Boolean saturday;
     private Boolean sunday;
-    private Boolean isActivated;
     private List<PostRoutineReq> routineList;
 }

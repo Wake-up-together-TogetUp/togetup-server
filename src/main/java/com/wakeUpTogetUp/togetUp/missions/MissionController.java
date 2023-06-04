@@ -11,7 +11,6 @@ import com.wakeUpTogetUp.togetUp.missions.dto.response.PostObjectRecognitionRes;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,20 +40,19 @@ public class MissionController {
     /**
      * 사물 인식 미션
      * @param missionImage
-     * @param object
+     * @param objectName
      * @return
      * @throws Exception
      */
-    @PostMapping("/detection/object/{object}")
+    @PostMapping("/detection/object/{objectName}")
     @ResponseStatus(HttpStatus.CREATED)
     public BaseResponse<PostObjectRecognitionRes> recognizeObject(
             @RequestPart MultipartFile missionImage,
-            @PathVariable String object
+            @PathVariable String objectName
             // TODO : rendering 추가
 //            @RequestParam String rendering
     ) throws Exception {
-
-        missionService.recognizeObject(object, missionImage);
+        missionService.recognizeObject(objectName, missionImage);
         // TODO : 렌더링
 
         String filePath = fileService.uploadFile(missionImage, "mission");
@@ -62,6 +60,8 @@ public class MissionController {
     }
 
     // 미션 성공 기록 가져오기
+    // TODO : 달별 검색
+    // TODO : 일별 검색
     @GetMapping("/logs")
     @ResponseStatus(HttpStatus.OK)
     public BaseResponse<List<MissionCompleteLogRes>> getMissionCompleteLogsByUserId(

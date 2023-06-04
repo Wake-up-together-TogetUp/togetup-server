@@ -28,11 +28,12 @@ public class Mission {
     private int id;
     private String name;
     private String object;
-    private boolean isActivated;
     @Column(columnDefinition = "Timestamp")
     private String createdAt;
     @Column(columnDefinition = "Timestamp")
     private String updatedAt;
+    @Column(name = "isActivated")
+    private Boolean isActivated;
 
     @OneToMany(mappedBy = "mission")
     private List<MappingGroupMission> mappingGroupMissions= new ArrayList<>();

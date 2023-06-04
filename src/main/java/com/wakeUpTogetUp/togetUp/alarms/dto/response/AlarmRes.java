@@ -22,7 +22,7 @@ public class AlarmRes {
     private Boolean isRoutineOn;
     private Integer snoozeInterval;
     private Integer snoozeCnt;
-    private Time alarmTime;
+    private String alarmTime;
     private Boolean monday;
     private Boolean tuesday;
     private Boolean wednesday;

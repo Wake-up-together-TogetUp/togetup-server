@@ -34,6 +34,5 @@ public class PostAlarmReq {
     private Boolean friday;
     private Boolean saturday;
     private Boolean sunday;
-    private Boolean isActivated;
     private List<PostRoutineReq> routineList;        // 알람에 등록할 루틴 리스트
 }

@@ -15,8 +15,7 @@ public class GetMissionRes {
     private int id;
     private String name;
     private String object;
-    @Column(columnDefinition = "Tinyint")
-    private boolean isActivated;
     private String createdAt;
     private String updatedAt;
+    private Boolean isActivated;
 }

@@ -27,13 +27,13 @@ public class FileService {
     /**
      * 파일 업로드
      * @param file
-     * @param fileType
+     * @param type
      * @return
      * @throws Exception
      */
     @Transactional
-    public String uploadFile(MultipartFile file, String fileType) throws Exception{
-        if(fileType.equals("mission")) {
+    public String uploadFile(MultipartFile file, String type) throws Exception{
+        if(type.equals("mission")) {
             String uploadFilePath = ("mission/" + getFolderName());
             String filePath = uploadToBucket(file, uploadFilePath);
 
@@ -45,16 +45,16 @@ public class FileService {
     /**
      * 파일 리스트 업로드
      * @param fileList
-     * @param fileType
+     * @param type
      * @return
      * @throws Exception
      */
     @Transactional
-    public List<String> uploadFiles(MultipartFile[] fileList, String fileType) throws Exception {
+    public List<String> uploadFiles(MultipartFile[] fileList, String type) throws Exception {
         // avatar, group, mission
-        if(fileType.equals("avatar") || fileType.equals("group")) {
+        if(type.equals("avatar") || type.equals("group")) {
             List<String> filePathList = new ArrayList<>();
-            String uploadFilePath = fileType;
+            String uploadFilePath = type;
 
             for(MultipartFile file: fileList)
                 filePathList.add(uploadToBucket(file, uploadFilePath));

@@ -632,15 +632,9 @@ Host: togetup.shop</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>result.startHour</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">시작 시</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>result.startMinute</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">시작 분</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>result.alarmTime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">알람 시간</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
@@ -704,15 +698,9 @@ Host: togetup.shop</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>result.routineResList[].userId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>result.routineResList[].alarmId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 Id</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>result.routineResList[].missionId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">미션 Id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">알람 Id</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 </tr>
 <tr>
@@ -739,6 +727,12 @@ Host: togetup.shop</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">색상</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>result.routineResList[].routineOrder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">루틴 순서</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -751,7 +745,7 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json;charset=UTF-8
-Content-Length: 994
+Content-Length: 987
 
 {
   "httpStatusCode" : 200,
@@ -768,8 +762,7 @@ Content-Length: 994
     "isRoutineOn" : true,
     "snoozeInterval" : 5,
     "snoozeCnt" : 3,
-    "startHour" : 6,
-    "startMinute" : 0,
+    "alarmTime" : "06:30:00",
     "monday" : true,
     "tuesday" : true,
     "wednesday" : true,
@@ -780,20 +773,20 @@ Content-Length: 994
     "isActivated" : true,
     "routineResList" : [ {
       "id" : 5,
-      "userId" : 9,
-      "missionId" : 1,
+      "alarmId" : 9,
       "name" : "기상",
       "estimatedTime" : 10,
       "icon" : "⏰",
-      "color" : "#000000"
+      "color" : "#000000",
+      "routineOrder" : 1
     }, {
       "id" : 7,
-      "userId" : 9,
-      "missionId" : 2,
+      "alarmId" : 9,
       "name" : "샤워",
       "estimatedTime" : 15,
       "icon" : "\uD83D\uDEBF",
-      "color" : "#000000"
+      "color" : "#000000",
+      "routineOrder" : 2
     } ]
   }
 }</code></pre>

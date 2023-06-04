@@ -108,9 +108,8 @@ public class AlarmService {
                 patchAlarmReq.getThursday(),
                 patchAlarmReq.getFriday(),
                 patchAlarmReq.getSaturday(),
-                patchAlarmReq.getSunday(),
-                patchAlarmReq.getIsActivated()
-        );
+                patchAlarmReq.getSunday());
+
         Alarm alarmModified = alarmRepository.save(alarm);
         AlarmRes alarmRes = EntityDtoMapper.INSTANCE.toAlarmRes(alarmModified);
 

@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/app/files")
+@RequestMapping("/app/file")
 @RequiredArgsConstructor
 public class FileController {
     private final FileService fileService;
 
     /**
      * upload 메소드
-     * @param fileType
+     * @param type
      * @return
      * @throws Exception
      */
@@ -24,9 +24,9 @@ public class FileController {
     @ResponseStatus(HttpStatus.CREATED)
     public BaseResponse<PostFileRes> uploadFiles(
             @RequestPart final MultipartFile[] files,
-            @RequestParam final String fileType
+            @RequestParam final String type
     ) throws Exception {
-        return new BaseResponse(Status.SUCCESS, fileService.uploadFiles(files, fileType));
+        return new BaseResponse(Status.SUCCESS, fileService.uploadFiles(files, type));
     }
 
     /**
