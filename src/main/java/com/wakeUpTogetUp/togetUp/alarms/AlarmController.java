@@ -79,11 +79,9 @@ public class AlarmController {
     ) {
         Integer userId = patchAlarmReq.getUserId();
 
-        if(jwtService.validateByUserId(userId)) {
-            AlarmRes patchAlarmRes = alarmService.updateAlarm(userId, alarmId, patchAlarmReq);
-
-            return new BaseResponse<>(Status.SUCCESS, patchAlarmRes);
-        } else
+        if(jwtService.validateByUserId(userId))
+            return new BaseResponse<>(Status.SUCCESS, alarmService.updateAlarm(userId, alarmId, patchAlarmReq));
+        else
             throw new BaseException(Status.JWT_MISMATCH);
     }
 
@@ -103,9 +101,8 @@ public class AlarmController {
             alarmService.deleteAlarm(alarmId);
 
             return new BaseResponse<>(Status.SUCCESS);
-        } else {
+        } else
             throw new BaseException(Status.JWT_MISMATCH);
-        }
     }
 
     /**

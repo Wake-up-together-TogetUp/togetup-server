@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "alarm")
@@ -16,8 +17,12 @@ import java.sql.Time;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Alarm {
+    @PrePersist
+    public void prePersist() {
+        this.isActivated = this.isActivated == null ? Boolean.TRUE : this.isActivated;
+    }
     @Builder
-    public Alarm(User user, Mission mission, String name, String icon, String sound, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Time alarmTime, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, Boolean isActivated) {
+    public Alarm(User user, Mission mission, String name, String icon, String sound, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Time alarmTime, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
         this.user = user;
         this.mission = mission;
         this.name = name;
@@ -35,7 +40,6 @@ public class Alarm {
         this.friday = friday;
         this.saturday = saturday;
         this.sunday = sunday;
-        this.isActivated = isActivated;
     }
 
     public void modifyProperties(Mission mission, String name, String icon, String sound, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Time alarmTime, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday, Boolean isActivated) {

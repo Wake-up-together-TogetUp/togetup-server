@@ -61,7 +61,6 @@ public class AlarmService {
                 .friday(postAlarmReq.getFriday())
                 .saturday(postAlarmReq.getSaturday())
                 .sunday(postAlarmReq.getSunday())
-                .isActivated(postAlarmReq.getIsActivated())
                 .build();
 
         // 영속성 컨텍스트의 특성으로 default 값으로 넣은 속성은 값이 null 로 나오는 것 같다.

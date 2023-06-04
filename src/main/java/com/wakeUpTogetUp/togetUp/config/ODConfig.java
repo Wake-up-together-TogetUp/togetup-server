@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public final class ODConfig {
     public static final String modelPath = "src\\main\\resources\\model\\yolov7-d6.onnx";
-    public static final String savePicPath = "src\\images\\result\\img_test.png";
+//    public static final String savePicPath = "src\\images\\result\\img_test.png";
     public static final Integer lineThicknessRatio = 333;
     public static final Double fontSizeRatio = 1145.14;
     private static final List<String> names = new ArrayList<>(Arrays.asList(

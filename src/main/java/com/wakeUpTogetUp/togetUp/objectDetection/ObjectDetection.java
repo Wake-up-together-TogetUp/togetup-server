@@ -11,12 +11,10 @@ import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.objectDetection.domain.ODResult;
 import org.opencv.core.*;
 import org.opencv.core.Point;
-import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -111,7 +109,7 @@ public class ObjectDetection {
             Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGR);
 
             // 그림 저장
-            Imgcodecs.imwrite(ODConfig.savePicPath, img);
+//            Imgcodecs.imwrite(ODConfig.savePicPath, img);
 
 //            if (!GraphicsEnvironment.isHeadless()) {
 //                HighGui.imshow("Display Image", img);
