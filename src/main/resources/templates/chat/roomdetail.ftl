@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Websocket ChatRoom</title>
+    <title>TogetUp ChatRoom</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -22,13 +22,18 @@
             </div>
             <div class="col-md-6 text-right">
                 <a class="btn btn-primary btn-sm" href="/logout">로그아웃</a>
-                <a class="btn btn-info btn-sm" href="/chat/room">채팅방 나가기</a>
+                <a class="btn btn-info btn-sm" href="/app/chat/room">채팅방 나가기</a>
             </div>
         </div>
         <div class="input-group">
             <div class="input-group-prepend">
+                <label class="input-group-text">이름</label>
+                <input type="text" class="form-control" v-model="sender" >
+            </div>
+            <div class="input-group-prepend">
                 <label class="input-group-text">내용</label>
             </div>
+
             <input type="text" class="form-control" v-model="message" v-on:keypress.enter="sendMessage('TALK')">
             <div class="input-group-append">
                 <button class="btn btn-primary" type="button" @click="sendMessage('TALK')">보내기</button>
@@ -58,13 +63,14 @@
                 message: '',
                 messages: [],
                 token: '',
-                userCount: 0
+                userCount: 0,
+                sender:''
             },
             created() {
                 this.roomId = localStorage.getItem('wschat.roomId');
                 this.roomName = localStorage.getItem('wschat.roomName');
                 var _this = this;
-                axios.get('/chat/user').then(response => {
+                axios.get('user').then(response => {
                     _this.token = response.data.token;
                     ws.connect({"token":_this.token}, function(frame) {
                         ws.subscribe("/sub/chat/room/"+_this.roomId, function(message) {
@@ -73,13 +79,13 @@
                         });
                     }, function(error) {
                         alert("서버 연결에 실패 하였습니다. 다시 접속해 주십시요.");
-                        location.href="/chat/room";
+                        location.href="app/chat/room";
                     });
                 });
             },
             methods: {
                 sendMessage: function(type) {
-                    ws.send("/pub/chat/message", {"token":this.token}, JSON.stringify({type:type, roomId:this.roomId, message:this.message}));
+                    ws.send("/pub/chat/message", {"token":this.token},JSON.stringify({type:type, roomId:this.roomId, message:this.message,sender:this.sender}));
                     this.message = '';
                 },
                 recvMessage: function(recv) {

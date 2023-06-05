@@ -25,7 +25,7 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
 //SockJs Fallback을 이용해 노출할 STOMP endpoint를 설정
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-stomp").setAllowedOrigins("*")
+        registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("*")//setAllowedOrigins("*")
                 .withSockJS(); // sock.js를 통하여 낮은 버전의 브라우저에서도 websocket이 동작할수 있게 합니다.
     }
 

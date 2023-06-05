@@ -24,9 +24,11 @@ public class ChatController {
      */
     @MessageMapping("/chat/message")
     public void message(ChatMessage message, @Header("token") String token) {
-        String nickname = jwtTokenProvider.getUserNameFromJwt(token);
+        //TODO : jwt
+       // String nickname = "혜민";//jwtTokenProvider.getUserNameFromJwt(token);
+
         // 로그인 회원 정보로 대화명 설정
-        message.setSender(nickname);
+        //message.setSender(nick);
         // 채팅방 인원수 세팅
         message.setUserCount(chatRoomRepository.getUserCount(message.getRoomId()));
         // Websocket에 발행된 메시지를 redis로 발행(publish)
