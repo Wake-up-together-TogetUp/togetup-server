@@ -1,6 +1,6 @@
-package com.wakeUpTogetUp.togetUp.common.exception;
+package com.wakeUpTogetUp.togetUp.exception;
 
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,5 +10,5 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class BaseException extends RuntimeException {
-    private ResponseStatus status;
+    private Status status;
 }

@@ -1,10 +1,7 @@
 package com.wakeUpTogetUp.togetUp.users;
 
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
-import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.group.dto.response.GroupRes;
-import com.wakeUpTogetUp.togetUp.group.model.Group;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.users.dto.request.LoginReq;
 import com.wakeUpTogetUp.togetUp.users.dto.request.PatchUserReq;
 import com.wakeUpTogetUp.togetUp.users.dto.request.SocialLoginReq;
@@ -14,8 +11,7 @@ import com.wakeUpTogetUp.togetUp.users.dto.response.UserRes;
 import com.wakeUpTogetUp.togetUp.users.dto.response.UserTokenRes;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
-import com.wakeUpTogetUp.togetUp.users.LoginType;
-import com.wakeUpTogetUp.togetUp.utils.mappers.UserMapper;
+import com.wakeUpTogetUp.togetUp.utils.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -58,7 +54,7 @@ public class UserService {
         if(userRepository.countByEmail(userReq.getEmail())!=0)//db에 저장되어 있으면
         {
             System.out.println(userReq.getLoginType());
-            new BaseException(ResponseStatus.BAD_REQUEST); //다른 메시지로 해야하나?
+            new BaseException(Status.BAD_REQUEST); //다른 메시지로 해야하나?
         }
         System.out.println(userReq.getLoginType());
         //일반회원가입
@@ -141,7 +137,7 @@ public class UserService {
         // 유저 수정
         Optional<User> user = Optional.ofNullable(userRepository.findById(userId)
                 .orElseThrow(
-                        () -> new BaseException(ResponseStatus.INVALID_USER_ID)
+                        () -> new BaseException(Status.INVALID_USER_ID)
                 ));
         user.get().setUserName(patchUserReq.getUsername());
         user.get().setStatusMessage(patchUserReq.getStatusMessage());

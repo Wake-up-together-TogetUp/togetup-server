@@ -4,15 +4,15 @@ import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class RoutineRes {
-    private Integer id;
-    private Integer userId;
-    private Integer missionId;
+    private int id;
+    private int alarmId;
     private String name;
-    private Integer estimatedTime;
+    private int estimatedTime;
     private String icon;
     private String color;
+    private int routineOrder;
 }

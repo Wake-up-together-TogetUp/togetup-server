@@ -1,14 +1,14 @@
 package com.wakeUpTogetUp.togetUp.routines;
 
-import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routines.model.Routine;
-import com.wakeUpTogetUp.togetUp.utils.mappers.RoutineMapper;
+import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,25 +18,15 @@ public class RoutineProvider {
     public RoutineRes getRoutine(Integer routineId) {
         Routine routine = routineRepository.findById(routineId)
                 .orElseThrow(
-                        () -> new BaseException(ResponseStatus.INVALID_ROUTINE_ID)
+                        () -> new BaseException(Status.INVALID_ROUTINE_ID)
                 );
 
-        RoutineRes routineRes = RoutineMapper.INSTANCE.toRoutineRes(routine);
-
-        return routineRes;
+        return EntityDtoMapper.INSTANCE.toRoutineRes(routine);
     }
 
-    public List<RoutineRes> getRoutinesByUserId(Integer userId) {
-        List<Routine> routineList = routineRepository.findByUserId(userId)
-                .orElseThrow(
-                        () -> new BaseException(ResponseStatus.ROUTINE_NOT_FOUND)
-                );
+    public List<RoutineRes> getRoutinesByAlarmId(Integer alarmId){
+        List<Routine> routineList = routineRepository.findAllByAlarmId(alarmId, Sort.by("routineOrder"));
 
-        ArrayList<RoutineRes> routineResList = new ArrayList<>();
-        for(Routine routine : routineList) {
-            routineResList.add(RoutineMapper.INSTANCE.toRoutineRes(routine));
-        }
-
-        return routineResList;
+        return EntityDtoMapper.INSTANCE.toRoutineResList(routineList);
     }
 }

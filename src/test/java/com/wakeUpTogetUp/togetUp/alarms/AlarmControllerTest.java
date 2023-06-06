@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.alarms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmRes;
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
+import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
@@ -17,7 +17,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.constraints.ConstraintDescriptions;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,10 +26,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.mockito.BDDMockito.*;
-import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -83,13 +80,11 @@ class AlarmControllerTest {
                 .name("기상알람")
                 .icon("⏰")
                 .sound("default")
-                .volume(80)
                 .isVibrate(true)
                 .isRoutineOn(true)
                 .snoozeInterval(5)
                 .snoozeCnt(3)
-                .startHour(6)
-                .startMinute(0)
+                .alarmTime("06:30:00")
                 .monday(true)
                 .tuesday(true)
                 .wednesday(true)
@@ -100,8 +95,8 @@ class AlarmControllerTest {
                 .isActivated(true)
                 .routineResList(
                         Arrays.asList(
-                                new RoutineRes(5,9,1,"기상",10,"⏰","#000000"),
-                                new RoutineRes(7,9,2,"샤워",15,"🚿","#000000")
+                                new RoutineRes(5,9,"기상",10,"⏰","#000000",1),
+                                new RoutineRes(7,9,"샤워",15,"🚿","#000000",2)
                         )
                 )
                 .build();
@@ -111,14 +106,14 @@ class AlarmControllerTest {
         Integer alarmId = 42;
         //when
         ResultActions action = mockMvc.perform(
-                        RestDocumentationRequestBuilders.get("/app/alarms/{alarmId}", alarmId)
+                        RestDocumentationRequestBuilders.get("/app/alarm/{alarmId}", alarmId)
                         .accept(MediaType.APPLICATION_JSON)
                         .with(oauth2Login())
                 )
                 .andDo(print());
 
         //then
-        BaseResponse<AlarmRes> responseData = new BaseResponse<>(ResponseStatus.SUCCESS, response);
+        BaseResponse<AlarmRes> responseData = new BaseResponse<>(Status.SUCCESS, response);
 
         action.andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(responseData)))
@@ -159,13 +154,11 @@ class AlarmControllerTest {
                                         fieldWithPath("result.name").description("알람 이름"),
                                         fieldWithPath("result.icon").description("아이콘"),
                                         fieldWithPath("result.sound").description("알람 벨소리"),
-                                        fieldWithPath("result.volume").description("볼륨"),
                                         fieldWithPath("result.isVibrate").description("진동 여부"),
                                         fieldWithPath("result.isRoutineOn").description("루틴 활성 여부"),
                                         fieldWithPath("result.snoozeInterval").description("다시울림 간격(분)"),
                                         fieldWithPath("result.snoozeCnt").description("다시울림 횟수"),
-                                        fieldWithPath("result.startHour").description("시작 시"),
-                                        fieldWithPath("result.startMinute").description("시작 분"),
+                                        fieldWithPath("result.alarmTime").description("알람 시간"),
                                         fieldWithPath("result.monday").description("월요일 알림 여부"),
                                         fieldWithPath("result.tuesday").description("화요일 알림 여부"),
                                         fieldWithPath("result.wednesday").description("수요일 알림 여부"),
@@ -178,10 +171,7 @@ class AlarmControllerTest {
                                                 .attributes(key("optional").value("true")),
                                         fieldWithPath("result.routineResList[].id").description("루틴 Id")
                                                 .attributes(key("optional").value("true")),
-
-                                        fieldWithPath("result.routineResList[].userId").description("사용자 Id")
-                                                .attributes(key("optional").value("true")),
-                                        fieldWithPath("result.routineResList[].missionId").description("미션 Id")
+                                        fieldWithPath("result.routineResList[].alarmId").description("알람 Id")
                                                 .attributes(key("optional").value("true")),
                                         fieldWithPath("result.routineResList[].name").description("루틴 이름")
                                                 .attributes(key("optional").value("true")),
@@ -190,6 +180,8 @@ class AlarmControllerTest {
                                         fieldWithPath("result.routineResList[].icon").description("아이콘")
                                                 .attributes(key("optional").value("true")),
                                         fieldWithPath("result.routineResList[].color").description("색상")
+                                                .attributes(key("optional").value("true")),
+                                        fieldWithPath("result.routineResList[].routineOrder").description("루틴 순서")
                                                 .attributes(key("optional").value("true"))
                                 )
                         )

@@ -1,11 +1,11 @@
 package com.wakeUpTogetUp.togetUp.group;
 
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
-import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.group.dto.request.GroupReq;
 import com.wakeUpTogetUp.togetUp.group.dto.response.GroupRes;
 import com.wakeUpTogetUp.togetUp.group.model.Group;
-import com.wakeUpTogetUp.togetUp.utils.mappers.GroupMapper;
+import com.wakeUpTogetUp.togetUp.utils.mapper.GroupMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -52,7 +52,7 @@ public class GroupService {
     // 그룹수정 이름, 인트로
         Optional<Group> group = Optional.ofNullable(groupRepository.findById(groupId)
                 .orElseThrow(
-                        () -> new BaseException(ResponseStatus.INVALID_GROUP_ID)
+                        () -> new BaseException(Status.INVALID_GROUP_ID)
                 ));
         group.get().setName(groupReq.getName());
         group.get().setIntro(groupReq.getIntro());

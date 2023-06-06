@@ -8,16 +8,15 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "mission")
 @DynamicInsert
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 public class Mission {
     @Builder
     public Mission(String name, String object) {
@@ -29,7 +28,12 @@ public class Mission {
     private int id;
     private String name;
     private String object;
-    private boolean isActivated;
+    @Column(columnDefinition = "Timestamp")
+    private String createdAt;
+    @Column(columnDefinition = "Timestamp")
+    private String updatedAt;
+    @Column(name = "isActivated")
+    private Boolean isActivated;
 
     @OneToMany(mappedBy = "mission")
     private List<MappingGroupMission> mappingGroupMissions= new ArrayList<>();
