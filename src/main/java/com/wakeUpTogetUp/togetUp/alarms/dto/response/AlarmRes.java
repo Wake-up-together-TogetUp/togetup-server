@@ -1,9 +1,8 @@
 package com.wakeUpTogetUp.togetUp.alarms.dto.response;
 
-import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
+import com.wakeUpTogetUp.togetUp.routine.dto.response.RoutineRes;
 import lombok.*;
 
-import java.sql.Time;
 import java.util.List;
 
 @Getter

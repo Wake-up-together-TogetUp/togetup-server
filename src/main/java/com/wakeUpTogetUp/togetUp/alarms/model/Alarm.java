@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.alarms.model;
 
-import com.wakeUpTogetUp.togetUp.missions.model.Mission;
+import com.wakeUpTogetUp.togetUp.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
