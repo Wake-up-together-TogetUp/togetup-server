@@ -2,8 +2,7 @@ package com.wakeUpTogetUp.togetUp.mappingGroupMission.model;
 
 
 import com.wakeUpTogetUp.togetUp.group.model.Group;
-import com.wakeUpTogetUp.togetUp.missions.model.Mission;
-import com.wakeUpTogetUp.togetUp.users.model.User;
+import com.wakeUpTogetUp.togetUp.mission.model.Mission;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

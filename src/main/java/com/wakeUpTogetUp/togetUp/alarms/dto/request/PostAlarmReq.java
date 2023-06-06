@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.alarms.dto.request;
 
-import com.wakeUpTogetUp.togetUp.routines.dto.request.PostRoutineReq;
+import com.wakeUpTogetUp.togetUp.routine.dto.request.PostRoutineReq;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;

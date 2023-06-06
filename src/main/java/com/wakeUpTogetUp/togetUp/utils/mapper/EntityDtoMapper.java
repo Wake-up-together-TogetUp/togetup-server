@@ -3,12 +3,12 @@ package com.wakeUpTogetUp.togetUp.utils.mapper;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmRes;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmsRes;
 import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
-import com.wakeUpTogetUp.togetUp.missions.dto.response.GetMissionRes;
-import com.wakeUpTogetUp.togetUp.missions.dto.response.MissionCompleteLogRes;
-import com.wakeUpTogetUp.togetUp.missions.model.Mission;
-import com.wakeUpTogetUp.togetUp.missions.model.MissionCompleteLog;
-import com.wakeUpTogetUp.togetUp.routines.dto.response.RoutineRes;
-import com.wakeUpTogetUp.togetUp.routines.model.Routine;
+import com.wakeUpTogetUp.togetUp.mission.dto.response.GetMissionRes;
+import com.wakeUpTogetUp.togetUp.mission.dto.response.MissionCompleteLogRes;
+import com.wakeUpTogetUp.togetUp.mission.model.Mission;
+import com.wakeUpTogetUp.togetUp.mission.model.MissionCompleteLog;
+import com.wakeUpTogetUp.togetUp.routine.dto.response.RoutineRes;
+import com.wakeUpTogetUp.togetUp.routine.model.Routine;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
