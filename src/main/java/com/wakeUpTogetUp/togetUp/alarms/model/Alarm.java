@@ -1,33 +1,37 @@
 package com.wakeUpTogetUp.togetUp.alarms.model;
 
-import com.wakeUpTogetUp.togetUp.missions.model.Mission;
+import com.wakeUpTogetUp.togetUp.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.sql.Time;
 
 @Entity
 @Table(name = "alarm")
+@DynamicInsert          // insert 시 값이 null인 필드 제외
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
-@DynamicInsert          // insert 시 값이 null인 필드 제외
 public class Alarm {
+    @PrePersist
+    public void prePersist() {
+        this.isActivated = this.isActivated == null ? Boolean.TRUE : this.isActivated;
+    }
     @Builder
-    public Alarm(User user, Mission mission, String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
+    public Alarm(User user, Mission mission, String name, String icon, String sound, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Time alarmTime, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
         this.user = user;
         this.mission = mission;
         this.name = name;
         this.icon = icon;
         this.sound = sound;
-        this.volume = volume;
         this.isVibrate = isVibrate;
         this.isRoutineOn = isRoutineOn;
         this.snoozeInterval = snoozeInterval;
         this.snoozeCnt = snoozeCnt;
-        this.startHour = startHour;
-        this.startMinute = startMinute;
+        this.alarmTime = alarmTime;
         this.monday = monday;
         this.tuesday = tuesday;
         this.wednesday = wednesday;
@@ -37,19 +41,16 @@ public class Alarm {
         this.sunday = sunday;
     }
 
-    // TODO : 접근제어자를 public으로 두는게 맞나?
-    public void modifyProperties(Mission mission, String name, String icon, String sound, Integer volume, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Integer startHour, Integer startMinute, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
+    public void modifyProperties(Mission mission, String name, String icon, String sound, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Time alarmTime, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
         setMission(mission);
         setName(name);
         setIcon(icon);
         setSound(sound);
-        setVolume(volume);
         setIsVibrate(isVibrate);
         setIsRoutineOn(isRoutineOn);
         setSnoozeInterval(snoozeInterval);
         setSnoozeCnt(snoozeCnt);
-        setStartHour(startHour);
-        setStartMinute(startMinute);
+        setAlarmTime(alarmTime);
         setMonday(monday);
         setTuesday(tuesday);
         setWednesday(wednesday);
@@ -70,13 +71,11 @@ public class Alarm {
     private String name;
     private String icon;
     private String sound;
-    private Integer volume;
     private Boolean isVibrate;
     private Boolean isRoutineOn;
     private Integer snoozeInterval;
     private Integer snoozeCnt;
-    private Integer startHour;
-    private Integer startMinute;
+    private Time alarmTime;
     private Boolean monday;
     private Boolean tuesday;
     private Boolean wednesday;

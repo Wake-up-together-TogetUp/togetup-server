@@ -6,17 +6,18 @@ import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmRes;
 import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmsRes;
 import com.wakeUpTogetUp.togetUp.alarms.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
-import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/app/alarms")
+@RequestMapping("/app/alarm")
 @RequiredArgsConstructor
 public class AlarmController {
     private final AlarmService alarmService;
@@ -32,7 +33,7 @@ public class AlarmController {
     public BaseResponse<AlarmRes> GetAlarm(@PathVariable Integer alarmId){
         AlarmRes alarmRes = alarmProvider.getAlarm(alarmId);
 
-        return new BaseResponse<>(ResponseStatus.SUCCESS, alarmRes);
+        return new BaseResponse<>(Status.SUCCESS, alarmRes);
     }
 
     /**
@@ -44,7 +45,7 @@ public class AlarmController {
     public BaseResponse<List<AlarmsRes>> GetAlarmsByUserId(@RequestParam Integer userId){
         List<AlarmsRes> alarmsResList = alarmProvider.getAlarmsByUserId(userId);
 
-        return new BaseResponse<>(ResponseStatus.SUCCESS, alarmsResList);
+        return new BaseResponse<>(Status.SUCCESS, alarmsResList);
     }
 
     /**
@@ -53,19 +54,16 @@ public class AlarmController {
      * @return
      */
     @PostMapping("")
-    public BaseResponse createAlarm(
+    @ResponseStatus(HttpStatus.CREATED)
+    public BaseResponse<AlarmRes> createAlarm(
             @RequestBody @Valid PostAlarmReq postAlarmReq
     ){
         Integer userId = postAlarmReq.getUserId();
 
-        if(jwtService.validateByUserId(userId)) {
-            Integer createdAlarmId = alarmService.createAlarm(userId, postAlarmReq);
-
-            return new BaseResponse(ResponseStatus.SUCCESS, createdAlarmId);
-        }
-        else {
-            throw new BaseException(ResponseStatus.JWT_MISMATCH);
-        }
+        if(jwtService.validateByUserId(userId))
+            return new BaseResponse(Status.SUCCESS_CREATED, alarmService.createAlarm(userId, postAlarmReq));
+        else
+            throw new BaseException(Status.JWT_MISMATCH);
     }
 
     /**
@@ -81,13 +79,10 @@ public class AlarmController {
     ) {
         Integer userId = patchAlarmReq.getUserId();
 
-        if(jwtService.validateByUserId(userId)) {
-            AlarmRes patchAlarmRes = alarmService.updateAlarm(userId, alarmId, patchAlarmReq);
-
-            return new BaseResponse<>(ResponseStatus.SUCCESS, patchAlarmRes);
-        } else {
-            throw new BaseException(ResponseStatus.JWT_MISMATCH);
-        }
+        if(jwtService.validateByUserId(userId))
+            return new BaseResponse<>(Status.SUCCESS, alarmService.updateAlarm(userId, alarmId, patchAlarmReq));
+        else
+            throw new BaseException(Status.JWT_MISMATCH);
     }
 
     /**
@@ -105,9 +100,17 @@ public class AlarmController {
         if(jwtService.validateByUserId(userId)) {
             alarmService.deleteAlarm(alarmId);
 
-            return new BaseResponse<>(ResponseStatus.SUCCESS);
-        } else {
-            throw new BaseException(ResponseStatus.JWT_MISMATCH);
-        }
+            return new BaseResponse<>(Status.SUCCESS);
+        } else
+            throw new BaseException(Status.JWT_MISMATCH);
+    }
+
+    /**
+     * test
+     * @return
+     */
+    @GetMapping("/test")
+    public String test(){
+        return "success";
     }
 }

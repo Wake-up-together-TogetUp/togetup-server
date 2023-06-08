@@ -1,9 +1,8 @@
 package com.wakeUpTogetUp.togetUp.utils;
 
-import com.wakeUpTogetUp.togetUp.common.ResponseStatus;
-import com.wakeUpTogetUp.togetUp.common.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -16,7 +15,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 
 @RequiredArgsConstructor
@@ -34,13 +32,10 @@ public class JwtService {
         String accessToken = getJwt();
 
         if(accessToken == null || accessToken.length() == 0){
-            throw new BaseException(ResponseStatus.EMPTY_JWT);
+            throw new BaseException(Status.EMPTY_JWT);
         }
 
         Integer userIdInToken = getUserId(accessToken);
-
-        System.out.println(userIdInToken.equals(userId));
-        System.out.println(isTokenExpired(accessToken, key));
 
         return userIdInToken.equals(userId) && !isTokenExpired(accessToken, key);
     }
@@ -51,9 +46,6 @@ public class JwtService {
     }
 
     public Integer getUserId(String accessToken) {
-        System.out.println(accessToken);
-        System.out.println(key);
-
         Claims claims;
         try{
             claims = Jwts.parserBuilder()
@@ -63,7 +55,7 @@ public class JwtService {
                     .getBody();
         } catch(Exception e) {
             System.out.println(e.getMessage());
-            throw new BaseException(ResponseStatus.INVALID_JWT);
+            throw new BaseException(Status.INVALID_JWT);
         }
 
         return claims.get("userId", Integer.class);
@@ -79,7 +71,7 @@ public class JwtService {
         //1. JWT 추출
         String accessToken = getJwt();
         if(accessToken == null || accessToken.length() == 0){
-            throw new BaseException(ResponseStatus.EMPTY_JWT);
+            throw new BaseException(Status.EMPTY_JWT);
         }
 
         // 2. JWT parsing
@@ -91,7 +83,7 @@ public class JwtService {
                     .parseClaimsJws(accessToken)
                     .getBody();
         } catch (Exception ignored) {
-            throw new BaseException(ResponseStatus.INVALID_JWT);
+            throw new BaseException(Status.INVALID_JWT);
         }
 
         // 3. userId 추출
