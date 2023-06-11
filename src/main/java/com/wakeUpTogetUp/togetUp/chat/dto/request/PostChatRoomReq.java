@@ -8,10 +8,14 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor()
+@AllArgsConstructor
+@Builder
+@Data
 public class PostChatRoomReq {
 
     private String name;
+    private String intro;
+    private String password;
 
 }
 

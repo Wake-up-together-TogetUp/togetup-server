@@ -1,9 +1,12 @@
 package com.wakeUpTogetUp.togetUp.chat;
 
+import com.wakeUpTogetUp.togetUp.chat.dto.request.PostChatRoomReq;
 import com.wakeUpTogetUp.togetUp.chat.model.ChatRoom;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,6 +20,8 @@ public class ChatRoomRepository {
     private static final String CHAT_ROOMS = "CHAT_ROOM"; // 채팅룸 저장
     public static final String USER_COUNT = "USER_COUNT"; // 채팅룸에 입장한 클라이언트수 저장
     public static final String ENTER_INFO = "ENTER_INFO"; // 채팅룸에 입장한 클라이언트의 sessionId와 채팅룸 id를 맵핑한 정보 저장
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Resource(name = "redisTemplate")
     private HashOperations<String, String, ChatRoom> hashOpsChatRoom;
@@ -36,8 +41,10 @@ public class ChatRoomRepository {
     }
 
     // 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다.
-    public ChatRoom createChatRoom(String name) {
-        ChatRoom chatRoom = ChatRoom.create(name);
+    public ChatRoom createChatRoom(PostChatRoomReq postChatRoomReq) {
+        System.out.println(postChatRoomReq.getPassword());
+        postChatRoomReq.setPassword(bCryptPasswordEncoder.encode(postChatRoomReq.getPassword()));
+        ChatRoom chatRoom = ChatRoom.create(postChatRoomReq.getName(),postChatRoomReq.getIntro(),postChatRoomReq.getPassword());
         hashOpsChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
         return chatRoom;
     }

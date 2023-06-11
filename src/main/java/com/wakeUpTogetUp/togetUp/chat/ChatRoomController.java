@@ -1,14 +1,21 @@
 package com.wakeUpTogetUp.togetUp.chat;
 
+import com.wakeUpTogetUp.togetUp.chat.dto.request.PostChatRoomReq;
 import com.wakeUpTogetUp.togetUp.chat.model.ChatRoom;
 import com.wakeUpTogetUp.togetUp.chat.model.LoginInfo;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
+import com.wakeUpTogetUp.togetUp.file.FileService;
+import com.wakeUpTogetUp.togetUp.group.dto.response.GroupRes;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
+import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/app/chat")
@@ -17,10 +24,10 @@ public class ChatRoomController {
     private final ChatRoomRepository chatRoomRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final ChatRoomRepository2 chatRoomRepository2;
-
+    private final FileService fileService;
     @GetMapping("/room")
     public String rooms() {
-        System.out.println("채팅");
+
         return "chat/room";
     }
 
@@ -29,16 +36,24 @@ public class ChatRoomController {
     public List<ChatRoom> room() {
         List<ChatRoom> chatRooms = chatRoomRepository.findAllRoom();
         chatRooms.stream().forEach(room -> room.setUserCount(chatRoomRepository.getUserCount(room.getRoomId())));
-        System.out.println("채팅방 불렀음");
+
         return chatRooms;
     }
 
+    /**
+     *
+     * @param postChatRoomReq
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/room")
     @ResponseBody
-    public ChatRoom createRoom(@RequestParam() String name) {
-        System.out.println("채팅룸");
-        ChatRoom chatRoom = ChatRoom.create(name);
-        return  chatRoomRepository.createChatRoom(name);//save(chatRoom);//;createChatRoom(name);
+    @ResponseStatus(HttpStatus.CREATED)
+    public BaseResponse<List<ChatRoom>> createRoom(@RequestBody PostChatRoomReq postChatRoomReq) throws Exception {
+       // String fils = fileService.uploadFile(files, "mission");
+        ChatRoom chatRoom= chatRoomRepository.createChatRoom(postChatRoomReq);
+      //  chatRoom.setGroupProfileImgLink(fils);
+        return  new BaseResponse(Status.SUCCESS,chatRoom);//save(chatRoom);//;createChatRoom(name);
     }
 
     @GetMapping("/room/enter/{roomId}")

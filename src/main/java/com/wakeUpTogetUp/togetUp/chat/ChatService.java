@@ -4,6 +4,7 @@ import com.wakeUpTogetUp.togetUp.chat.model.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -13,6 +14,7 @@ public class ChatService {
     private final ChannelTopic channelTopic;
     private final RedisTemplate redisTemplate;
     private final ChatRoomRepository chatRoomRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * destination정보에서 roomId 추출
