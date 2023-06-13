@@ -85,7 +85,7 @@
             },
             methods: {
                 sendMessage: function(type) {
-                    type="MISSION";
+
                     ws.send("/pub/chat/message", {"token":this.token},JSON.stringify({type:type, roomId:this.roomId, message:this.message,sender:this.sender}));
                     this.message = '';
                 }
