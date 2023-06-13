@@ -79,18 +79,22 @@
                         });
                     }, function(error) {
                         alert("서버 연결에 실패 하였습니다. 다시 접속해 주십시요.");
-                        location.href="app/chat/room";
+                        location.href="/app/chat/room";
                     });
                 });
             },
             methods: {
                 sendMessage: function(type) {
+
                     ws.send("/pub/chat/message", {"token":this.token},JSON.stringify({type:type, roomId:this.roomId, message:this.message,sender:this.sender}));
                     this.message = '';
-                },
+                }
+
+                ,
                 recvMessage: function(recv) {
                     this.userCount = recv.userCount;
                     this.messages.unshift({"type":recv.type,"sender":recv.sender,"message":recv.message})
+                    console.log("타입"+recv.type);
                 }
             }
         });

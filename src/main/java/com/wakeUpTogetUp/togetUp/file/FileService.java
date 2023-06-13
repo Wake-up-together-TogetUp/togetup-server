@@ -37,7 +37,16 @@ public class FileService {
             String filePath = uploadToBucket(file, uploadFilePath);
 
             return filePath;
-        } else
+        }
+        else if(type.equals("group")) {
+            //String uploadFilePath = ("group/" + getFolderName());
+            //그룹프로필 사진 한 장
+            String filePath = uploadToBucket(file, type);
+
+            return filePath;
+        }
+
+        else
             throw new BaseException(Status.BAD_REQUEST_PARAM);
     }
 
