@@ -39,8 +39,9 @@ public class FileService {
             return filePath;
         }
         else if(type.equals("group")) {
-            String uploadFilePath = ("group/" + getFolderName());
-            String filePath = uploadToBucket(file, uploadFilePath);
+            //String uploadFilePath = ("group/" + getFolderName());
+            //그룹프로필 사진 한 장
+            String filePath = uploadToBucket(file, type);
 
             return filePath;
         }

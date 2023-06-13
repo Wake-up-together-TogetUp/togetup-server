@@ -42,7 +42,7 @@ public class ChatRoomRepository {
 
     // 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다.
     public ChatRoom createChatRoom(PostChatRoomReq postChatRoomReq) {
-        System.out.println(postChatRoomReq.getPassword());
+
         postChatRoomReq.setPassword(bCryptPasswordEncoder.encode(postChatRoomReq.getPassword()));
         ChatRoom chatRoom = ChatRoom.create(postChatRoomReq.getName(),postChatRoomReq.getIntro(),postChatRoomReq.getPassword());
         hashOpsChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);

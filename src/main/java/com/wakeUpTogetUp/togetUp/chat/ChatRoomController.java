@@ -49,10 +49,10 @@ public class ChatRoomController {
     @PostMapping("/room")
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponse<List<ChatRoom>> createRoom(@RequestBody PostChatRoomReq postChatRoomReq) throws Exception {
-       // String fils = fileService.uploadFile(files, "mission");
+    public BaseResponse<List<ChatRoom>> createRoom(@RequestPart("dto") PostChatRoomReq postChatRoomReq,@RequestPart("file")MultipartFile file) throws Exception {
+        String filePath = fileService.uploadFile(file, "group");
         ChatRoom chatRoom= chatRoomRepository.createChatRoom(postChatRoomReq);
-      //  chatRoom.setGroupProfileImgLink(fils);
+        chatRoom.setGroupProfileImgLink(filePath);
         return  new BaseResponse(Status.SUCCESS,chatRoom);//save(chatRoom);//;createChatRoom(name);
     }
 
