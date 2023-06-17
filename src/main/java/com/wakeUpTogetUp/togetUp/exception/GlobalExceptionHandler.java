@@ -22,6 +22,10 @@ public class GlobalExceptionHandler {
     // Catch Custom Exception(BaseException)
     @ExceptionHandler({ BaseException.class })
     protected BaseResponse handleCustomException(BaseException exception) {
+        logger.debug("BaseResponse exception occurred: {}",
+                exception.getMessage(),
+                exception);
+
         return new BaseResponse<>(exception.getStatus());
     }
 

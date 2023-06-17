@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.routine.model;
 
-import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
+import com.wakeUpTogetUp.togetUp.alarm.model.Alarm;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 

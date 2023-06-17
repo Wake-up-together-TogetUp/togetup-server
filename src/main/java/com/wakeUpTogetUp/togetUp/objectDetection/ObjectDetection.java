@@ -13,6 +13,7 @@ import org.opencv.core.*;
 import org.opencv.core.Point;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.FloatBuffer;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-// TODO : 의존성 주입으로 바꾸기
+@Component
 public class ObjectDetection {
     public ArrayList<String> detectObject(MultipartFile missionImage) {
         try{

@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.alarms.dto.response;
+package com.wakeUpTogetUp.togetUp.alarm.dto.response;
 
 import com.wakeUpTogetUp.togetUp.routine.dto.response.RoutineRes;
 import lombok.*;

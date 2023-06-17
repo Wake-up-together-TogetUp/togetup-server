@@ -1,11 +1,10 @@
 package com.wakeUpTogetUp.togetUp.mission;
 
-import com.wakeUpTogetUp.togetUp.alarms.AlarmRepository;
-import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
+import com.wakeUpTogetUp.togetUp.alarm.AlarmRepository;
+import com.wakeUpTogetUp.togetUp.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.mission.dto.request.PostMissionCompleteLogReq;
-import com.wakeUpTogetUp.togetUp.mission.dto.response.MissionCompleteLogRes;
 import com.wakeUpTogetUp.togetUp.mission.model.MissionCompleteLog;
 import com.wakeUpTogetUp.togetUp.objectDetection.ObjectDetection;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
@@ -18,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class MissionService {
-    private ObjectDetection objectDetection = new ObjectDetection();
+    private final ObjectDetection objectDetection;
     private final MissionCompleteLogRepository missionCompleteLogRepository;
     private final UserRepository userRepository;
     private final AlarmRepository alarmRepository;
@@ -27,9 +26,6 @@ public class MissionService {
         // 일치 여부 확인
         boolean isConsistent = false;
         for(String objectDetected : objectDetection.detectObject(missionImage)){
-            //TODO : 지우기
-            System.out.println(objectDetected);
-
             if(objectDetected.equals(object))
                 isConsistent = true;
         }

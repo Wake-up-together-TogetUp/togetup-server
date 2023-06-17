@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.alarms.dto.request;
+package com.wakeUpTogetUp.togetUp.alarm.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

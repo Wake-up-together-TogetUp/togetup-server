@@ -1,8 +1,8 @@
 package com.wakeUpTogetUp.togetUp.utils.mapper;
 
-import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmRes;
-import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmsRes;
-import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
+import com.wakeUpTogetUp.togetUp.alarm.dto.response.AlarmRes;
+import com.wakeUpTogetUp.togetUp.alarm.dto.response.AlarmsRes;
+import com.wakeUpTogetUp.togetUp.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.mission.dto.response.GetMissionRes;
 import com.wakeUpTogetUp.togetUp.mission.dto.response.MissionCompleteLogRes;
 import com.wakeUpTogetUp.togetUp.mission.model.Mission;

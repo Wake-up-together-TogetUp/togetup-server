@@ -1,0 +1,102 @@
+server:
+  port: 9010
+spring:
+  config:
+    import: application-local.yml
+  banner:
+    location: banner-local.txt
+  application:
+    name: togetUp
+  mvc:
+    hidden-method:
+      filter:
+        enabled: true
+  servlet:
+    multipart:
+      max-request-size: 30MB
+      max-file-size: 30MB
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: false
+  #view 관련 설정
+  freemarker:
+    cache: false
+    template-loader-path: classpath:/templates
+    suffix: .ftl
+  #내장 레디스
+  redis:
+    host: 13.209.206.139
+    port: 6379
+    password: togetup
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+  
+  datasource:
+    url: jdbc:mysql://togetup.cq0eqrcd38cr.ap-northeast-2.rds.amazonaws.com/togetUp_dev_firebase?autoReconnect=true&useSSL=true
+    username: admin
+    password: 2GEJcAjnkLeYAnh
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      pool-name: jpa-hikari-pool
+      maximum-pool-size: 5
+      jdbc-url: ${spring.datasource.url}
+      username: ${spring.datasource.username}
+      password: ${spring.datasource.password}
+      driver-class-name: ${spring.datasource.driver-class-name}
+      data-source-properties:
+        rewriteBatchedStatements: true
+  sql:
+    init:
+      platform: mysql
+  # Security OAuth
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 159371456438-eqntm0r7ano7jo6vp39eo4u7qfmca56d.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: http://togetup.shop/app/users/auth/google/callback
+            scope: email%20profile
+            #https://www.googleapis.com/auth/userinfo.email
+            #https://www.googleapis.com/auth/userinfo.email
+            #"https://www.googleapis.com/auth/calendar.readonly%2Bhttps://www.googleapis.com/auth/drive.appdata"
+
+cloud:
+  aws:
+    s3:
+      bucket: togetup
+    credentials:
+      access-key : AKIAV54WGIQ3UMK7NPO5
+      secret-key : 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
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+
+jwt:
+  secret-key: mission-community-alarm-to-getup_secret_key
+  # 30 days
+  token.expired-time-ms: 2592000000
+
+my:
+  file:
+    firebase-configuration-file: togetup-26b96-firebase-adminsdk-3l3ah-3164ed8f18.json
+  path:
+    model-path: model/yolov7-d6.onnx
+    save-pic-path: src/images/result/img_test.png

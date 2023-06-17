@@ -1,16 +1,16 @@
-package com.wakeUpTogetUp.togetUp.alarms.dto.request;
+package com.wakeUpTogetUp.togetUp.alarm.dto.response;
 
-import com.wakeUpTogetUp.togetUp.routine.dto.request.PostRoutineReq;
 import lombok.*;
 
 import java.sql.Time;
-import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class PatchAlarmReq {
+@AllArgsConstructor
+public class AlarmsRes {
+    private Integer id;
     private Integer userId;
     private Integer missionId;
     private String name;
@@ -28,5 +28,5 @@ public class PatchAlarmReq {
     private Boolean friday;
     private Boolean saturday;
     private Boolean sunday;
-    private List<PostRoutineReq> routineList;
+    private Boolean isActivated;
 }

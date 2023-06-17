@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.routine;
 
-import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
+import com.wakeUpTogetUp.togetUp.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.routine.dto.request.PostRoutineReq;
 import com.wakeUpTogetUp.togetUp.routine.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routine.model.Routine;

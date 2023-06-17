@@ -1,10 +1,10 @@
-package com.wakeUpTogetUp.togetUp.alarms;
+package com.wakeUpTogetUp.togetUp.alarm;
 
-import com.wakeUpTogetUp.togetUp.alarms.dto.request.DeleteAlarmReq;
-import com.wakeUpTogetUp.togetUp.alarms.dto.request.PatchAlarmReq;
-import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmRes;
-import com.wakeUpTogetUp.togetUp.alarms.dto.response.AlarmsRes;
-import com.wakeUpTogetUp.togetUp.alarms.dto.request.PostAlarmReq;
+import com.wakeUpTogetUp.togetUp.alarm.dto.request.DeleteAlarmReq;
+import com.wakeUpTogetUp.togetUp.alarm.dto.request.PatchAlarmReq;
+import com.wakeUpTogetUp.togetUp.alarm.dto.response.AlarmRes;
+import com.wakeUpTogetUp.togetUp.alarm.dto.response.AlarmsRes;
+import com.wakeUpTogetUp.togetUp.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;

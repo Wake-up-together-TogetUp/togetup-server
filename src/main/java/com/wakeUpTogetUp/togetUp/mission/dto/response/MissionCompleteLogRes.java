@@ -1,7 +1,5 @@
 package com.wakeUpTogetUp.togetUp.mission.dto.response;
 
-import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
-import com.wakeUpTogetUp.togetUp.users.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
