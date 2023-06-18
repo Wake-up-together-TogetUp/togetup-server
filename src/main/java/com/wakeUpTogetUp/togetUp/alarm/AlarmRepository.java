@@ -1,6 +1,6 @@
-package com.wakeUpTogetUp.togetUp.alarms;
+package com.wakeUpTogetUp.togetUp.alarm;
 
-import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
+import com.wakeUpTogetUp.togetUp.alarm.model.Alarm;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.mission.model;
 
-import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
+import com.wakeUpTogetUp.togetUp.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import com.wakeUpTogetUp.togetUp.utils.TimestampFormatter;
 import lombok.Builder;
@@ -21,9 +21,7 @@ import java.sql.Timestamp;
 public class MissionCompleteLog {
     @PrePersist
     public void prePersist() {
-        this.createdAt = this.createdAt == null ?
-                TimestampFormatter.format(new Timestamp(System.currentTimeMillis()))
-                : this.createdAt;
+        this.createdAt = TimestampFormatter.format(new Timestamp(System.currentTimeMillis()));
         this.isActivated = this.isActivated == null ? Boolean.TRUE : this.isActivated;
     }
 
@@ -52,5 +50,6 @@ public class MissionCompleteLog {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "alarmId")
     private Alarm alarm;
+    @Column(columnDefinition = "tinyint")
     private Boolean isActivated;
 }

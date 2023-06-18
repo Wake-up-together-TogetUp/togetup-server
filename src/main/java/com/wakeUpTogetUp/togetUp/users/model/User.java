@@ -61,12 +61,22 @@ public class User {
     @NotNull
     private LoginType loginType ;
 
+
+    /**
+     * fcm 추가된 부분
+     */
+    private String fcmToken;
+    private Timestamp tokenUpdated;
+
+
+
     @OneToMany(mappedBy = "user")
     private List<MappingGroupUser> mappingGroupUsers = new ArrayList<>();
 
     @PrePersist
     void registeredAt() {
         this.createdAt = Timestamp.from(Instant.now());
+        this.tokenUpdated = Timestamp.from(Instant.now());
     }
 
     @PreUpdate
@@ -84,4 +94,14 @@ public class User {
         this.loginType=loginType;
     }
 
+    // TODO : 추가한 builder 이후 하나로 통일 부탁해!
+    @Builder
+    public User(Integer id, String password, String username, String email, LoginType loginType, String fcmToken) {
+        this.id = id;
+        this.password=password;
+        this.userName = username;
+        this.email = email;
+        this.loginType=loginType;
+        this.fcmToken=fcmToken;
+    }
 }

@@ -17,7 +17,6 @@ public class RoutineController {
     private final RoutineProvider routineProvider;
     private final JwtService jwtService;
 
-    // TODO : 필요없어 보임
     /**
      * 루틴 1개 가져오기
      * @param routineId

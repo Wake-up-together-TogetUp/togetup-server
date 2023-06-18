@@ -4,6 +4,7 @@ package com.wakeUpTogetUp.togetUp.mappingGroupUser;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.Status;
 
+import com.wakeUpTogetUp.togetUp.fcmNotification.FcmService;
 import com.wakeUpTogetUp.togetUp.mappingGroupUser.dto.request.MappingGroupUserReq;
 import com.wakeUpTogetUp.togetUp.group.GroupRepository;
 import com.wakeUpTogetUp.togetUp.group.model.Group;
@@ -27,8 +28,10 @@ public class MappingGroupUserService {
     private final MappingGroupUserRepository mappingGroupUserRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final FcmService fcmService;
+
     @Transactional
-    public  Integer createGroupUser(Integer userId, Integer groupId,MappingGroupUserReq mappingGroupUserReq){
+    public Integer createGroupUser(Integer userId, Integer groupId,MappingGroupUserReq mappingGroupUserReq){
 
         //조회
         User user = userRepository.findById(userId)
@@ -41,6 +44,10 @@ public class MappingGroupUserService {
         MappingGroupUser groupUser =mappingGroupUserReq.toEntity(user,group);
         //저장
         mappingGroupUserRepository.save(groupUser);
+
+        // topic 구독
+        fcmService.subscribe(List.of(user.getFcmToken()), group.getTopic());
+
         return groupUser.getId();
     }
 
@@ -118,8 +125,17 @@ public class MappingGroupUserService {
     @Transactional
     public void deleteMappingGroupUser(Integer userId,Integer groupId) {
         // TODO : 없으면 예외처리
-
         Integer cnt=mappingGroupUserRepository.deleteByUserIdAndGroupId(userId,groupId);
+        //조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(Status.INVALID_USER_ID)
+                );
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new BaseException(Status.INVALID_GROUP_ID)
+                );
+        
+        // 토픽 구독 취소
+        fcmService.unSubscribe(List.of(user.getFcmToken()), group.getTopic());
 
         if(cnt==0)
         {

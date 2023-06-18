@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.alarms.model;
+package com.wakeUpTogetUp.togetUp.alarm.model;
 
 import com.wakeUpTogetUp.togetUp.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.users.model.User;
@@ -19,6 +19,7 @@ public class Alarm {
     @PrePersist
     public void prePersist() {
         this.isActivated = this.isActivated == null ? Boolean.TRUE : this.isActivated;
+        this.icon = this.icon == null ? "⏰" : this.icon;
     }
     @Builder
     public Alarm(User user, Mission mission, String name, String icon, String sound, Boolean isVibrate, Boolean isRoutineOn, Integer snoozeInterval, Integer snoozeCnt, Time alarmTime, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
@@ -71,17 +72,27 @@ public class Alarm {
     private String name;
     private String icon;
     private String sound;
+    @Column(columnDefinition = "tinyint")
     private Boolean isVibrate;
+    @Column(columnDefinition = "tinyint")
     private Boolean isRoutineOn;
     private Integer snoozeInterval;
     private Integer snoozeCnt;
     private Time alarmTime;
+    @Column(columnDefinition = "tinyint")
     private Boolean monday;
+    @Column(columnDefinition = "tinyint")
     private Boolean tuesday;
+    @Column(columnDefinition = "tinyint")
     private Boolean wednesday;
+    @Column(columnDefinition = "tinyint")
     private Boolean thursday;
+    @Column(columnDefinition = "tinyint")
     private Boolean friday;
+    @Column(columnDefinition = "tinyint")
     private Boolean saturday;
+    @Column(columnDefinition = "tinyint")
     private Boolean sunday;
+    @Column(columnDefinition = "tinyint")
     private Boolean isActivated;
 }

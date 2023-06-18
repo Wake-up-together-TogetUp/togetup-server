@@ -1,14 +1,13 @@
 package com.wakeUpTogetUp.togetUp.routine;
 
-import com.wakeUpTogetUp.togetUp.alarms.model.Alarm;
+import com.wakeUpTogetUp.togetUp.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.routine.dto.request.PostRoutineReq;
 import com.wakeUpTogetUp.togetUp.routine.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.routine.model.Routine;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
