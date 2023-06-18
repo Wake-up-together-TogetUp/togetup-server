@@ -28,30 +28,6 @@ public class NotificationService {
     private final UserRepository userRepository;
 
     // 그룹 채팅 알림 보내기
-//    public void sendMessageToGroup(int groupId, PushNotificationReq request) throws ExecutionException, InterruptedException {
-//        // group 조회
-//        Group group = groupRepository.findById(groupId)
-//                .orElseThrow(
-//                        () -> new BaseException(Status.INVALID_GROUP_ID)
-//                );
-//        request.setTopic(group.getTopic());
-//
-//        // 알림 보내기
-//        fcmService.sendMessageToTopic(request);
-//
-//        // TODO : 리팩토링?
-//        // user list 조회
-//        List<User> userList = List.of();
-//        for(MappingGroupUser mgu : group.getMappingGroupUsers()){
-//            userList.add(mgu.getUser());
-//        }
-//
-//        // pushLog 생성
-//        for(User user : userList)
-//            pushLogService.createPushLog(user, request);
-//    }
-
-    // 그룹 채팅 알림 보내기 arrange ver
     @Transactional
     public PushNotificationRes sendMessageToGroup(int groupId, PushNotificationReq request)
             throws ExecutionException, InterruptedException {

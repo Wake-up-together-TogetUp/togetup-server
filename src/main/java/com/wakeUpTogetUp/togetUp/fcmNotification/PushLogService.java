@@ -16,12 +16,12 @@ public class PushLogService {
 
     // pushLog 생성
     @Transactional
-    public void createPushLog(User reciever, PushNotificationReq request){
+    public void createPushLog(User receiver, PushNotificationReq request){
         pushLogRepository.save(
                 PushLog.builder()
                         .title(request.getTitle())
                         .message(request.getMessage())
-                        .reciever(reciever)
+                        .receiver(receiver)
                         .build()
         );
     }

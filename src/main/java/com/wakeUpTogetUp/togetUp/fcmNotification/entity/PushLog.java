@@ -17,10 +17,10 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class PushLog {
     @Builder
-    public PushLog(String title, String message, User reciever) {
+    public PushLog(String title, String message, User receiver) {
         this.title = title;
         this.message = message;
-        this.reciever = reciever;
+        this.receiver = receiver;
     }
 
     @PrePersist
@@ -38,6 +38,6 @@ public class PushLog {
     private String sendAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receiverId")
-    private User reciever;
+    @JoinColumn(name = "receiverId", columnDefinition = "int unsigned")
+    private User receiver;
 }
