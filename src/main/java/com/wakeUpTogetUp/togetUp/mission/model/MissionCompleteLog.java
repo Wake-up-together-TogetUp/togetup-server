@@ -21,9 +21,7 @@ import java.sql.Timestamp;
 public class MissionCompleteLog {
     @PrePersist
     public void prePersist() {
-        this.createdAt = this.createdAt == null ?
-                TimestampFormatter.format(new Timestamp(System.currentTimeMillis()))
-                : this.createdAt;
+        this.createdAt = TimestampFormatter.format(new Timestamp(System.currentTimeMillis()));
         this.isActivated = this.isActivated == null ? Boolean.TRUE : this.isActivated;
     }
 

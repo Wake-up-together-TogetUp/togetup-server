@@ -38,6 +38,8 @@ public class Group {
     @Column(name = "groupProfileImgLink",columnDefinition = "TEXT")
     private String groupProfileImgLink;
 
+    private String topic;
+
 
 
     @OneToMany(mappedBy = "group",cascade = CascadeType.ALL)
@@ -66,13 +68,14 @@ public class Group {
 
 
     @Builder
-    public Group(Integer id, String name, String password,String intro,String groupProfileImgLink) {
+    public Group(Integer id, String name, String password,String intro,String groupProfileImgLink, String topic) {
 
         this.id = id;
         this.name=name;
         this.password=password;
         this.intro = intro;
         this.groupProfileImgLink = groupProfileImgLink;
+        this.topic = topic;
 
     }
 

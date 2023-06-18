@@ -1,9 +1,9 @@
 package com.wakeUpTogetUp.togetUp.fcmNotification;
 
-import com.google.firebase.messaging.FirebaseMessagingException;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.fcmNotification.dto.request.PushNotificationReq;
+import com.wakeUpTogetUp.togetUp.fcmNotification.dto.response.PushNotificationRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,23 +13,32 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 @RequestMapping("/app/push")
 public class FcmController {
-    private final FirebaseService firebaseService;
+    private final FcmService fcmService;
+    private final NotificationService notificationService;
+
     @GetMapping("/token")
-    BaseResponse<String> sendPushAlarmToToken(
+    BaseResponse<PushNotificationRes> sendPushAlarmToToken(
             @RequestBody PushNotificationReq request
     ) throws ExecutionException, InterruptedException {
-        return new BaseResponse<>(Status.SUCCESS, firebaseService.sendMessageToToken(request));
+        return new BaseResponse<>(Status.SUCCESS, fcmService.sendMessageToToken(request));
     }
     @GetMapping("/tokens")
-    BaseResponse<String> sendPushAlarmToTokens(
+    BaseResponse<PushNotificationRes> sendPushAlarmToTokens(
             @RequestBody PushNotificationReq request
     ) throws ExecutionException, InterruptedException {
-        return new BaseResponse<>(Status.SUCCESS, firebaseService.sendMessageToTokens(request));
+        return new BaseResponse<>(Status.SUCCESS, fcmService.sendMessageToTokens(request));
     }
     @GetMapping("/topic")
-    BaseResponse<String> sendPushAlarmToTopic(
+    BaseResponse<PushNotificationRes> sendPushAlarmToTopic(
             @RequestBody PushNotificationReq request
     ) throws ExecutionException, InterruptedException {
-        return new BaseResponse<>(Status.SUCCESS, firebaseService.sendMessageToTopic(request));
+        return new BaseResponse<>(Status.SUCCESS, fcmService.sendMessageToTopic(request));
+    }
+    @PostMapping("/group/{groupId}")
+    BaseResponse<PushNotificationRes> sendPushAlarmToGroup(
+            @PathVariable Integer groupId,
+            @RequestBody PushNotificationReq request
+    ) throws ExecutionException, InterruptedException {
+        return new BaseResponse<>(Status.SUCCESS, notificationService.sendMessageToGroup(groupId, request));
     }
 }

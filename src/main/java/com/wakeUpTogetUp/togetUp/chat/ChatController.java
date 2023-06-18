@@ -4,6 +4,8 @@ import com.wakeUpTogetUp.togetUp.chat.model.ChatMessage;
 import com.wakeUpTogetUp.togetUp.chat.ChatRoomRepository;
 import com.wakeUpTogetUp.togetUp.chat.ChatService;
 import com.wakeUpTogetUp.togetUp.chat.JwtTokenProvider;
+import com.wakeUpTogetUp.togetUp.fcmNotification.FcmService;
+import com.wakeUpTogetUp.togetUp.fcmNotification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.Header;
@@ -18,6 +20,7 @@ public class ChatController {
     private final JwtTokenProvider jwtTokenProvider;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatService chatService;
+    private final NotificationService notificationService;
 
     /**
      * websocket "/pub/chat/message"로 들어오는 메시징을 처리한다.
@@ -33,5 +36,7 @@ public class ChatController {
         message.setUserCount(chatRoomRepository.getUserCount(message.getRoomId()));
         // Websocket에 발행된 메시지를 redis로 발행(publish)
         chatService.sendChatMessage(message);
+
+        // TODO : 알림 발송
     }
 }

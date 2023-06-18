@@ -7,8 +7,7 @@ import com.wakeUpTogetUp.togetUp.routine.model.Routine;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

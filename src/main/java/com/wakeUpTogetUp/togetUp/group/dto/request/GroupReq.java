@@ -21,13 +21,14 @@ public class GroupReq {
     private String password;
 
 
-    public Group toEntity(){
+    public Group toEntity(String topic){
         return Group.builder()
                 .id(id)
                 .name(name)
                 .password(password)
                 .intro(intro)
                 .groupProfileImgLink(groupProfileImgLink)
+                .topic(topic)
                 .build();
     }
 

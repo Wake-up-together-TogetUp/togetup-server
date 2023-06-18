@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,8 +30,10 @@ public class GroupService {
     @Transactional
     public  Integer createGroup(GroupReq dto){
         dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
-        Group group =dto.toEntity();
+        String topic = UUID.randomUUID().toString();
+        Group group =dto.toEntity(topic);
         groupRepository.save(group);
+
         return group.getId();
     }
     public List<GroupRes> getGroup() {
@@ -76,7 +79,7 @@ public class GroupService {
 
         groupRepository.deleteById(groupId);
 
-
+        // TODO : topic 삭제
     }
 
 

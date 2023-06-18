@@ -2,61 +2,59 @@ package com.wakeUpTogetUp.togetUp.fcmNotification;
 
 import com.google.firebase.messaging.*;
 import com.wakeUpTogetUp.togetUp.fcmNotification.dto.request.PushNotificationReq;
-import com.wakeUpTogetUp.togetUp.fcmNotification.dto.request.SubscribeReq;
-import com.wakeUpTogetUp.togetUp.fcmNotification.dto.request.UnsubscribeReq;
+import com.wakeUpTogetUp.togetUp.fcmNotification.dto.response.PushNotificationRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Service
 @RequiredArgsConstructor
-public class FirebaseService {
+public class FcmService {
     private final FirebaseMessaging firebaseMessaging;
 
-    public String sendMessageToToken(PushNotificationReq request)
+    @Transactional
+    public PushNotificationRes sendMessageToToken(PushNotificationReq request)
             throws InterruptedException, ExecutionException {
         // message 만들기
         Message message = getPreconfiguredMessageToToken(request);
         String response = sendAndGetResponse(message);
 
-        // TODO : pushLog 생성
-
-        // TODO : response 생성
-        return "Sent message to token.\n" +
-                "Category: " + request.getCategory() + ",\n" +
-                "Response: " + response;
+        return PushNotificationRes.builder()
+                .message("Sent message to token.")
+                .category(request.getCategory())
+                .response(response)
+                .build();
     }
-
-    public String sendMessageToTokens(PushNotificationReq request)
+    @Transactional
+    public PushNotificationRes sendMessageToTokens(PushNotificationReq request)
             throws ExecutionException, InterruptedException {
         // message 만들기
         MulticastMessage message = getPreconfiguredMessageToTokens(request);
-        int failureCnt = sendAndGetResponse(message);
+        Integer failureCnt = sendAndGetResponse(message);
 
-        // TODO : pushLog 생성
-
-        // TODO : response 생성
-
-        return "Sent message to tokens.\n" +
-                "Category: " + request.getCategory() + ",\n" +
-                "FailureCnt : " + failureCnt;
+        return PushNotificationRes.builder()
+                .message("Sent message to tokens")
+                .category(request.getCategory())
+                .response(failureCnt.toString())
+                .build();
     }
 
-    public String sendMessageToTopic (PushNotificationReq request)
+    @Transactional
+    public PushNotificationRes sendMessageToTopic (PushNotificationReq request)
             throws ExecutionException, InterruptedException {
         // message 만들기
         Message message = getPreconfiguredMessageToTopic(request);
         String response = sendAndGetResponse(message);
 
-        // TODO : pushLog 생성
-
-        // TODO : response 생성
-
-        return "Sent message to tokens.\n" +
-                "Category: " + request.getCategory() + ",\n" +
-                "Topic: " + request.getTopic() + ",\n" +
-                "Response: " + response;
+        return PushNotificationRes.builder()
+                .message("Sent message to tokens.")
+                .category(request.getCategory())
+                .topic(request.getTopic())
+                .response(response)
+                .build();
     }
 
     private String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
@@ -116,18 +114,23 @@ public class FirebaseService {
     }
 
     // 구독 요청
-    public void subscribe(SubscribeReq request) {
+    public void subscribe(List<String> memberTokenList, String topicName) {
         firebaseMessaging.subscribeToTopicAsync(
-                request.getUserTokenList(),
-                request.getTopic()
+                memberTokenList,
+                topicName
         );
     }
 
     // 구독 취소
-    public void unSubscribe(UnsubscribeReq request) {
+    public void unSubscribe(List<String> memberTokenList, String topicName) {
         firebaseMessaging.unsubscribeFromTopicAsync(
-                request.getUserTokenList(),
-                request.getTopic()
+                memberTokenList,
+                topicName
         );
+    }
+
+    // TODO : 토픽 삭제
+    public void deleteTopic(String topicName){
+
     }
 }
