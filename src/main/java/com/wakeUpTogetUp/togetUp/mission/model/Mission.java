@@ -32,7 +32,6 @@ public class Mission {
     private String createdAt;
     @Column(columnDefinition = "Timestamp")
     private String updatedAt;
-    @Column(name = "isActivated", columnDefinition = "tinyint")
     private Boolean isActivated;
 
     @OneToMany(mappedBy = "mission")

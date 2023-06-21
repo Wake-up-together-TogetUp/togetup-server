@@ -1,5 +1,12 @@
 package com.wakeUpTogetUp.togetUp.config;
 
+import ai.onnxruntime.OrtEnvironment;
+import ai.onnxruntime.OrtException;
+import ai.onnxruntime.OrtSession;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.PostConstruct;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,9 +14,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-public final class ODConfig {
-    public static final String modelPath = "src\\main\\resources\\model\\yolov7-d6.onnx";
-//    public static final String savePicPath = "src\\images\\result\\img_test.png";
+@Configuration
+public class ODConfig {
+    @PostConstruct
+    public void init() throws OrtException {
+        // ONNX 모델 로드
+        environment = OrtEnvironment.getEnvironment();
+        sessionOptions = new OrtSession.SessionOptions();
+        session = environment.createSession(modelPath, sessionOptions);
+    }
+    public static OrtSession session;
+    public static OrtEnvironment environment;
+    public static OrtSession.SessionOptions sessionOptions;
+
+    @Value("${my.path.model-path}")
+    public String modelPath;
+
     public static final Integer lineThicknessRatio = 333;
     public static final Double fontSizeRatio = 1145.14;
     private static final List<String> names = new ArrayList<>(Arrays.asList(

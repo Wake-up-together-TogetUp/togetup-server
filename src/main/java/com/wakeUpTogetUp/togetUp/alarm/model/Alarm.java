@@ -72,27 +72,17 @@ public class Alarm {
     private String name;
     private String icon;
     private String sound;
-    @Column(columnDefinition = "tinyint")
     private Boolean isVibrate;
-    @Column(columnDefinition = "tinyint")
     private Boolean isRoutineOn;
     private Integer snoozeInterval;
     private Integer snoozeCnt;
     private Time alarmTime;
-    @Column(columnDefinition = "tinyint")
     private Boolean monday;
-    @Column(columnDefinition = "tinyint")
     private Boolean tuesday;
-    @Column(columnDefinition = "tinyint")
     private Boolean wednesday;
-    @Column(columnDefinition = "tinyint")
     private Boolean thursday;
-    @Column(columnDefinition = "tinyint")
     private Boolean friday;
-    @Column(columnDefinition = "tinyint")
     private Boolean saturday;
-    @Column(columnDefinition = "tinyint")
     private Boolean sunday;
-    @Column(columnDefinition = "tinyint")
     private Boolean isActivated;
 }
