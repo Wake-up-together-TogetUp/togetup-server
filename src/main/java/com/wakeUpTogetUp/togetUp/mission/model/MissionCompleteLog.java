@@ -36,6 +36,7 @@ public class MissionCompleteLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "INT UNSIGNED")
     private Integer id;
     // TODO : ENUM 처리하기
     private String type;

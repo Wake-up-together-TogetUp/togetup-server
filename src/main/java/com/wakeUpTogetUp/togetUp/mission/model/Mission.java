@@ -25,6 +25,7 @@ public class Mission {
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "INT UNSIGNED")
     private int id;
     private String name;
     private String object;

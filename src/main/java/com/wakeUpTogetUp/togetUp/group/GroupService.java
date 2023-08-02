@@ -29,7 +29,7 @@ public class GroupService {
 
     @Transactional
     public  Integer createGroup(GroupReq dto){
-        dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
+      //  dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
         String topic = UUID.randomUUID().toString();
         Group group =dto.toEntity(topic);
         groupRepository.save(group);

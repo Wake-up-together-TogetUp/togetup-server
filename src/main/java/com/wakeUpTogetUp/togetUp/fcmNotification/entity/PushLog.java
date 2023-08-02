@@ -30,6 +30,7 @@ public class PushLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column( columnDefinition = "INT UNSIGNED")
     private Integer id;
 
     private String title;
@@ -38,6 +39,6 @@ public class PushLog {
     private String sendAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receiverId", columnDefinition = "int unsigned")
+    @JoinColumn(name = "receiverId",columnDefinition = "INT UNSIGNED")
     private User receiver;
 }

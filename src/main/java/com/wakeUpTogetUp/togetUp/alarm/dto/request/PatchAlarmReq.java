@@ -1,6 +1,5 @@
 package com.wakeUpTogetUp.togetUp.alarm.dto.request;
 
-import com.wakeUpTogetUp.togetUp.routine.dto.request.PostRoutineReq;
 import lombok.*;
 
 import java.sql.Time;
@@ -28,5 +27,4 @@ public class PatchAlarmReq {
     private Boolean friday;
     private Boolean saturday;
     private Boolean sunday;
-    private List<PostRoutineReq> routineList;
 }
