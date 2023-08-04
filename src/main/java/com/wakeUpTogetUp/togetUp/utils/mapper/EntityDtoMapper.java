@@ -9,8 +9,6 @@ import com.wakeUpTogetUp.togetUp.mission.dto.response.GetMissionRes;
 import com.wakeUpTogetUp.togetUp.mission.dto.response.MissionCompleteLogRes;
 import com.wakeUpTogetUp.togetUp.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.mission.model.MissionCompleteLog;
-import com.wakeUpTogetUp.togetUp.routine.dto.response.RoutineRes;
-import com.wakeUpTogetUp.togetUp.routine.model.Routine;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
@@ -33,10 +31,8 @@ public interface EntityDtoMapper {
     GetMissionRes toGetMissionRes(Mission mission);
     List<GetMissionRes> toGetMissionResList(List<Mission> missionList);
 
-    // Routine
-    @Mapping(target = "alarmId", source = "alarm.id")
-    RoutineRes toRoutineRes(Routine routine);
-    List<RoutineRes> toRoutineResList(List<Routine> routineList);
+
+
 
     // MissionCompleteLog
     @Mapping(target = "userId", source = "user.id")

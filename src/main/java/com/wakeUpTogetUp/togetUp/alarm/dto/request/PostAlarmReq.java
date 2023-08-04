@@ -1,6 +1,5 @@
 package com.wakeUpTogetUp.togetUp.alarm.dto.request;
 
-import com.wakeUpTogetUp.togetUp.routine.dto.request.PostRoutineReq;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -34,5 +33,4 @@ public class PostAlarmReq {
     private Boolean friday;
     private Boolean saturday;
     private Boolean sunday;
-    private List<PostRoutineReq> routineList;        // 알람에 등록할 루틴 리스트
 }
