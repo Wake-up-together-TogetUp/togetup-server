@@ -69,7 +69,6 @@ public class User {
     private Timestamp tokenUpdated;
 
 
-
     @OneToMany(mappedBy = "user")
     private List<MappingGroupUser> mappingGroupUsers = new ArrayList<>();
 

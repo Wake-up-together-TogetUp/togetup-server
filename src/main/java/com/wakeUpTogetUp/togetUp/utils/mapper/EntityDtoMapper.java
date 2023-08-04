@@ -33,7 +33,6 @@ public interface EntityDtoMapper {
     GetMissionRes toGetMissionRes(Mission mission);
     List<GetMissionRes> toGetMissionResList(List<Mission> missionList);
 
-
     // Routine
     @Mapping(target = "alarmId", source = "alarm.id")
     RoutineRes toRoutineRes(Routine routine);
