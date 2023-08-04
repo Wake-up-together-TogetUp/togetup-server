@@ -30,7 +30,7 @@ public class MappingGroupUserController {
 
     @ResponseBody
     @PostMapping("/{userId}/{groupId}/registration")
-    public BaseResponse create(@PathVariable("userId") Integer userId,@PathVariable("groupId")Integer groupId,@RequestBody MappingGroupUserReq mappingGroupUserReq) {
+    public BaseResponse create(@PathVariable("userId") Integer userId, @PathVariable("groupId")Integer groupId,@RequestBody MappingGroupUserReq mappingGroupUserReq) {
         try {
 
             //TODO : 그 그룹에 Host 유저가 있는지. (host는 한명)

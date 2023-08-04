@@ -16,7 +16,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // Catch Custom Exception(BaseException)

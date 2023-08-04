@@ -25,15 +25,11 @@ import java.util.HashMap;
 public class ObjectDetection {
     public ArrayList<String> detectObject(MultipartFile missionImage) {
         try{
-            // ONNX 모델 로드
-            OrtEnvironment environment = OrtEnvironment.getEnvironment();
-            OrtSession.SessionOptions sessionOptions = new OrtSession.SessionOptions();
-            OrtSession session = environment.createSession(ODConfig.modelPath, sessionOptions);
             // 기본 정보 출력
-            session.getInputInfo().keySet().forEach(x-> {
+            ODConfig.session.getInputInfo().keySet().forEach(x-> {
                 try {
                     System.out.println("input name = " + x);
-                    System.out.println(session.getInputInfo().get(x).getInfo().toString());
+                    System.out.println(ODConfig.session.getInputInfo().get(x).getInfo().toString());
                 } catch (OrtException e) {
                     throw new RuntimeException(e);
                 }
@@ -78,12 +74,12 @@ public class ObjectDetection {
 
             // OnnxTensor 개체 만들기
             long[] shape = { 1L, (long)channels, (long)rows, (long)cols };
-            OnnxTensor tensor = OnnxTensor.createTensor(environment, FloatBuffer.wrap(pixels), shape);
+            OnnxTensor tensor = OnnxTensor.createTensor(ODConfig.environment, FloatBuffer.wrap(pixels), shape);
             HashMap<String, OnnxTensor> stringOnnxTensorHashMap = new HashMap<>();
-            stringOnnxTensorHashMap.put(session.getInputInfo().keySet().iterator().next(), tensor);
+            stringOnnxTensorHashMap.put(ODConfig.session.getInputInfo().keySet().iterator().next(), tensor);
 
             // 실행 모델
-            OrtSession.Result output = session.run(stringOnnxTensorHashMap);
+            OrtSession.Result output = ODConfig.session.run(stringOnnxTensorHashMap);
 
             // 결과를 얻다
             float[][] outputData = (float[][]) output.get(0).getValue();

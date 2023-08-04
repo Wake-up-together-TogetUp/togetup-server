@@ -51,6 +51,5 @@ public class MissionCompleteLog {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "alarmId")
     private Alarm alarm;
-    @Column(columnDefinition = "tinyint")
     private Boolean isActivated;
 }
