@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.alarm.dto.response;
 
-import com.wakeUpTogetUp.togetUp.routine.dto.response.RoutineRes;
+
 import lombok.*;
 
 import java.util.List;
@@ -30,5 +30,4 @@ public class AlarmRes {
     private Boolean saturday;
     private Boolean sunday;
     private Boolean isActivated;
-    private List<RoutineRes> routineResList;
 }

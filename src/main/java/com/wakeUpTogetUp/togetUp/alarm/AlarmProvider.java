@@ -5,8 +5,6 @@ import com.wakeUpTogetUp.togetUp.alarm.dto.response.AlarmRes;
 import com.wakeUpTogetUp.togetUp.alarm.dto.response.AlarmsRes;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.Status;
-import com.wakeUpTogetUp.togetUp.routine.RoutineProvider;
-import com.wakeUpTogetUp.togetUp.routine.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AlarmProvider {
-    private final RoutineProvider routineProvider;
     private final UserRepository userRepository;
     private final AlarmRepository alarmRepository;
 
@@ -56,12 +53,8 @@ public class AlarmProvider {
                         () -> new BaseException(Status.INVALID_ALARM_ID)
                 );
 
-        // 루틴 리스트 가져오기
-        // 하나도 존재하지 않아도 됨
-        List<RoutineRes> routineResList = routineProvider.getRoutinesByAlarmId(alarmId);
 
         AlarmRes alarmRes = EntityDtoMapper.INSTANCE.toAlarmRes(alarm);
-        alarmRes.setRoutineResList(routineResList);
 
         return alarmRes;
     }

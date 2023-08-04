@@ -20,6 +20,7 @@ public class MappingGroupUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column( columnDefinition = "INT UNSIGNED")
     private Integer id = null;
 
 

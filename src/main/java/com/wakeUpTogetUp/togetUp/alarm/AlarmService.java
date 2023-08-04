@@ -8,9 +8,6 @@ import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.mission.MissionRepository;
 import com.wakeUpTogetUp.togetUp.mission.model.Mission;
-import com.wakeUpTogetUp.togetUp.routine.RoutineProvider;
-import com.wakeUpTogetUp.togetUp.routine.RoutineService;
-import com.wakeUpTogetUp.togetUp.routine.dto.request.PostRoutineReq;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
@@ -23,8 +20,6 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class AlarmService {
-    private final RoutineProvider routineProvider;
-    private final RoutineService routineService;
     private final AlarmRepository alarmRepository;
     private final UserRepository userRepository;
     private final MissionRepository missionRepository;
@@ -67,14 +62,8 @@ public class AlarmService {
         Alarm alarmCreated = alarmRepository.save(alarm);
         AlarmRes alarmRes = EntityDtoMapper.INSTANCE.toAlarmRes(alarmCreated);
 
-        // 루틴 리스트가 있으면
-        if(!Objects.isNull(postAlarmReq.getRoutineList())) {
-            // 루틴 리스트 생성
-            for(PostRoutineReq routineReq : postAlarmReq.getRoutineList()) {
-                routineService.createRoutine(routineReq, alarmCreated);
-            }
-            alarmRes.setRoutineResList(routineProvider.getRoutinesByAlarmId(alarmCreated.getId()));
-        }
+
+
         return alarmRes;
     }
 
@@ -113,17 +102,7 @@ public class AlarmService {
         Alarm alarmModified = alarmRepository.save(alarm);
         AlarmRes alarmRes = EntityDtoMapper.INSTANCE.toAlarmRes(alarmModified);
 
-        // 연관 루틴 삭제
-        routineService.deleteRoutinesByAlarmId(alarmId);
 
-        // 루틴 리스트 재생성
-        if(!Objects.isNull(patchAlarmReq.getRoutineList())) {
-            // 루틴 리스트 생성
-            for(PostRoutineReq routineReq : patchAlarmReq.getRoutineList()) {
-                routineService.createRoutine(routineReq, alarmModified);
-            }
-            alarmRes.setRoutineResList(routineProvider.getRoutinesByAlarmId(alarmModified.getId()));
-        }
 
         return alarmRes;
     }

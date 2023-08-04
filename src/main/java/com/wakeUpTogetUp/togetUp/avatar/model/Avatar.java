@@ -19,20 +19,9 @@ public class Avatar {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "INT UNSIGNED")
     private Integer id = null;
 
-//    @Column(name = "avatarPicLink",columnDefinition = "TEXT")
-//    private String avatarPicLink;
-
-    @Column(name = "hair",length = 30)
-    private String hair;
-    @Column(name = "top",length = 30)
-    private String top;
-
-    @Column(name = "bottom",length = 30)
-    private String bottom;
-    @Column(name = "effect",length = 30)
-    private String effect;
 
     @Column(name = "createdAt")
     private Timestamp createdAt;
@@ -42,12 +31,10 @@ public class Avatar {
 
 
     @OneToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "userId",columnDefinition = "INT UNSIGNED")
     private User user;
 
-    @Column(name="isActivated",columnDefinition = "TINYINT", length=1)
-    @ColumnDefault("1")
-    private int isActivated;
+
 
     @PrePersist
     void createdAt() {
