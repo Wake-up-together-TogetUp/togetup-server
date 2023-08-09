@@ -1,0 +1,136 @@
+CREATE TABLE `user` (
+                        `id`	                INT UNSIGNED    NOT NULL    AUTO_INCREMENT PRIMARY KEY,
+                        `name`     	            VARCHAR(10)	    NULL,
+                        `password`	            VARCHAR(255)	NULL,
+                        `login_type`            VARCHAR(20)	    NOT NULL,
+                        `social_id`	            VARCHAR(30)	    NOT NULL,
+                        `profile_image_link`	TEXT	        NULL,
+                        `created_at`	        TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
+                        `updated_at`	        TIMESTAMP	    NOT NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
+                        `deleted_at`	        TIMESTAMP	    NULL
+);
+
+CREATE TABLE `mission` (
+                           `id`	        INT UNSIGNED        NOT NULL    AUTO_INCREMENT PRIMARY KEY,
+                           `name`	    VARCHAR(10)	        NOT NULL,
+                           `object`	    VARCHAR(20)	        NOT NULL,
+                           `created_at`	TIMESTAMP	        NOT NULL	DEFAULT current_timestamp,
+                           `updated_at`	TIMESTAMP	        NOT NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
+                           `is_activated`	TINYINT(1)	    NOT NULL	DEFAULT TRUE
+);
+
+CREATE TABLE room (
+                         `id`	                        INT UNSIGNED    NOT NULL    AUTO_INCREMENT  PRIMARY KEY,
+                         `name`	                        VARCHAR(10)	    NOT NULL,
+                         `intro`	                    VARCHAR(30)	    NULL,
+                         `room_mission_intro`	        VARCHAR(20)	    NULL,
+                         `room_profile_image_link`	    TEXT	        NULL,
+                         `created_at`	                TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
+                         `updated_at`	                TIMESTAMP	    NOT NULL	DEFAULT current_timestamp ON UPDATE current_timestamp,
+                         `deleted_at`	                TIMESTAMP	    NULL
+
+);
+
+CREATE TABLE `room_user` (
+                              `id`	        INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
+                              `created_at`	TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
+                              `room_id`	    INT UNSIGNED	NULL,
+                              `user_id`	    INT UNSIGNED	NOT NULL,
+                              FOREIGN KEY (room_id)         REFERENCES room (id),
+                              FOREIGN KEY (user_id)         REFERENCES user(id)
+
+);
+
+CREATE TABLE `room_mission_log` (
+                                     `id`	                    INT UNSIGNED	NOT NULL    AUTO_INCREMENT  PRIMARY KEY,
+                                     `alarm_name`	            VARCHAR(20)	    NOT NULL,
+                                     `mission_picture_link`	    TEXT	        NOT NULL,
+                                     `created_at`	            TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
+                                     `user_id`	                INT UNSIGNED	NOT NULL,
+                                     `room_id` 	                INT UNSIGNED	NULL,
+                                     `mission_id`	            INT UNSIGNED	NOT NULL,
+                                     `deleted_at`	            TIMESTAMP	    NULL,
+                                     FOREIGN KEY (user_id) REFERENCES user(id),
+                                     FOREIGN KEY (room_id) REFERENCES room(id),
+                                     FOREIGN KEY (mission_id) REFERENCES mission(id)
+
+
+);
+
+CREATE TABLE `notification` (
+                                `id`	            INT UNSIGNED	    NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
+                                `title`	            VARCHAR(20)	        NULL,
+                                `content`	        VARCHAR(30)	        NULL,
+                                `created_at`	    TIMESTAMP	        NOT NULL    DEFAULT current_timestamp,
+                                `room_id`	        INT UNSIGNED	    NULL,
+                                `device_token_id`	INT UNSIGNED	    NULL,
+                                FOREIGN KEY (room_id) REFERENCES room(id)
+
+);
+
+CREATE TABLE `alarm` (
+                         `id`	            INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
+                         `name`	            VARCHAR(20)	    NOT NULL,
+                         `icon`	            VARCHAR(30)	    NOT NULL,
+                         `snooze_interval`	TINYINT	        NOT NULL	DEFAULT 5,
+                         `snooze_cnt`	    TINYINT	        NOT NULL	DEFAULT 3,
+                         `alarm_time`	    TIME	        NOT NULL,
+                         `monday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
+                         `tuesday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
+                         `wednesday`	    TINYINT(1)	    NOT NULL	DEFAULT FALSE,
+                         `thursday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
+                         `friday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
+                         `saturday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
+                         `sunday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
+                         `is_vibrate`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
+                         `is_activated`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
+                         `deleted_at`	    TIMESTAMP	    NULL,
+                         `user_id`	        INT UNSIGNED	NOT NULL,
+                         `mission_id`	    INT UNSIGNED	NULL,
+                         `room_id`	        INT UNSIGNED	NULL,
+                         FOREIGN KEY (user_id) REFERENCES user(id),
+                         FOREIGN KEY (room_id) REFERENCES room(id),
+                         FOREIGN KEY (mission_id) REFERENCES mission(id)
+
+
+
+);
+
+CREATE TABLE `avatar` (
+                          `id`	            INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
+                          `theme`	        VARCHAR(20)	    NOT NULL,
+                          `phase`	        VARCHAR(20) 	NOT NULL,
+                          `avatar_img_link`	TEXT	        NOT NULL,
+                          `price`	        INT UNSIGNED	NOT NULL
+
+);
+CREATE TABLE `user_avatar_log` (
+                                   `id`	        INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
+                                   `created_at`	TIMESTAMP	    NOT NULL    DEFAULT current_timestamp,
+                                   `user_id`	INT UNSIGNED	NOT NULL,
+                                   `avatar_id`	INT UNSIGNED	NOT NULL,
+                                   FOREIGN KEY (user_id) REFERENCES user(id),
+                                   FOREIGN KEY (avatar_id) REFERENCES avatar(id)
+
+
+);
+
+
+
+CREATE TABLE `device_token` (
+                                `id`	        INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
+                                `value`	        VARCHAR	        NOT NULL,
+                                `user_id`	    INT UNSIGNED	NOT NULL,
+                                FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+CREATE TABLE `user_avatar` (
+                               `id`	        INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
+                               `user_id`	INT UNSIGNED	NOT NULL,
+                               `avatar_id`	INT UNSIGNED	NOT NULL,
+                               FOREIGN KEY (user_id) REFERENCES user(id),
+                               FOREIGN KEY (avatar_id) REFERENCES avatar(id)
+
+
+);
+
