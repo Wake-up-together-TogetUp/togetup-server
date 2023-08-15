@@ -1,15 +1,17 @@
-package com.wakeUpTogetUp.togetUp.objectDetection;
+package com.wakeUpTogetUp.togetUp.objectDetection.domain;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Letterbox {
 
     private Size newShape = new Size(1280, 1280);
-    private final double[] color = new double[]{114,114,114};
-    private final Boolean auto = false;
-    private final Boolean scaleUp = true;
+    private double[] color = new double[]{114,114,114};
+    private Boolean auto = false;
+    private Boolean scaleUp = true;
     private Integer stride = 32;
 
     private double ratio;

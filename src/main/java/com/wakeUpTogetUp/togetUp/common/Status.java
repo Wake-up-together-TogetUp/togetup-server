@@ -47,6 +47,8 @@ public enum Status {
     // File
     FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 파일을 찾을 수 없습니다."),
     ACCOUNT_DOESNT_EXISTS(HttpStatus.NOT_FOUND,"계정이 존재하지 않습니다."),
+    OBJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "객체를 찾을 수 없습니다."),
+
 
 
     /**

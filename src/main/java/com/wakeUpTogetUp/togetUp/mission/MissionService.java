@@ -6,7 +6,7 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.mission.dto.request.PostMissionCompleteLogReq;
 import com.wakeUpTogetUp.togetUp.mission.model.MissionCompleteLog;
-import com.wakeUpTogetUp.togetUp.objectDetection.ObjectDetection;
+import com.wakeUpTogetUp.togetUp.objectDetection.ObjectDetectionService;
 import com.wakeUpTogetUp.togetUp.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.users.model.User;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class MissionService {
-    private final ObjectDetection objectDetection;
+    private final ObjectDetectionService objectDetectionService;
     private final MissionCompleteLogRepository missionCompleteLogRepository;
     private final UserRepository userRepository;
     private final AlarmRepository alarmRepository;
@@ -25,7 +25,7 @@ public class MissionService {
     public boolean recognizeObject(String object, MultipartFile missionImage) {
         // 일치 여부 확인
         boolean isConsistent = false;
-        for(String objectDetected : objectDetection.detectObject(missionImage)){
+        for(String objectDetected : objectDetectionService.detectObject(missionImage)){
             if(objectDetected.equals(object))
                 isConsistent = true;
         }
