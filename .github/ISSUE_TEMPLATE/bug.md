@@ -1,13 +1,13 @@
 ---
-name: 'Issue : Bug'
+name: BUG
 about: Create a report to help us improve
-title: "[BUG]"
-labels: bug
-assignees: 05AM, hye-on
+title: ''
+labels: BUG
+assignees: ''
 
 ---
 
-## 설명
+## ☀️설명
 > 한줄요약
 
 ### 발생 상황
@@ -16,6 +16,6 @@ assignees: 05AM, hye-on
 
 ### 현재 결과
 
-### Screenshots
-
-## 참고 사항
+## ☀️참고 사항
+- 스크린샷
+- Issue number : #
