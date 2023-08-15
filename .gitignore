@@ -46,4 +46,4 @@ application-oauth.properties
 togetup-26b96-firebase-adminsdk-3l3ah-3164ed8f18.json
 
 ### log files ###
-/logs
+logs
