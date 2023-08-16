@@ -39,6 +39,10 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "login_type", length = 20)
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private LoginType loginType ;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -49,12 +53,6 @@ public class User {
     @Column(name = "deleted_at")
     private Timestamp deletedAt;
 
-
-    //추가
-    @Column(name = "login_type", length = 20)
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private LoginType loginType ;
 
     @OneToMany(mappedBy = "user")
     @Column(name = "fcm_token")

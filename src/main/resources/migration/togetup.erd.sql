@@ -4,7 +4,6 @@ CREATE TABLE `user` (
                         `password`	            VARCHAR(255)	NULL,
                         `login_type`            VARCHAR(20)	    NOT NULL,
                         `social_id`	            VARCHAR(30)	    NOT NULL,
-                        `profile_image_link`	TEXT	        NULL,
                         `created_at`	        TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
                         `updated_at`	        TIMESTAMP	    NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
                         `deleted_at`	        TIMESTAMP	    NULL
