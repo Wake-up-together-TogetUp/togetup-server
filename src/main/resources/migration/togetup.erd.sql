@@ -6,7 +6,7 @@ CREATE TABLE `user` (
                         `social_id`	            VARCHAR(30)	    NOT NULL,
                         `profile_image_link`	TEXT	        NULL,
                         `created_at`	        TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
-                        `updated_at`	        TIMESTAMP	    NOT NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
+                        `updated_at`	        TIMESTAMP	    NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
                         `deleted_at`	        TIMESTAMP	    NULL
 );
 
@@ -63,7 +63,7 @@ CREATE TABLE `notification` (
                                 `content`	        VARCHAR(30)	        NULL,
                                 `created_at`	    TIMESTAMP	        NOT NULL    DEFAULT current_timestamp,
                                 `room_id`	        INT UNSIGNED	    NULL,
-                                `device_token_id`	INT UNSIGNED	    NULL,
+                                `fcm_token_id`	INT UNSIGNED	    NULL,
                                 FOREIGN KEY (room_id) REFERENCES room(id)
 
 );
@@ -117,9 +117,9 @@ CREATE TABLE `user_avatar_log` (
 
 
 
-CREATE TABLE `device_token` (
+CREATE TABLE `fcm_token` (
                                 `id`	        INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
-                                `value`	        VARCHAR	        NOT NULL,
+                                `value`	        VARCHAR(80)	        NOT NULL,
                                 `user_id`	    INT UNSIGNED	NOT NULL,
                                 FOREIGN KEY (user_id) REFERENCES user(id)
 );

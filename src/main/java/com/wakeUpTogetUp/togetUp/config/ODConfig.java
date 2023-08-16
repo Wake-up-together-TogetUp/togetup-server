@@ -19,16 +19,16 @@ public class ODConfig {
     @PostConstruct
     public void init() throws OrtException {
         // ONNX 모델 로드
-        environment = OrtEnvironment.getEnvironment();
-        sessionOptions = new OrtSession.SessionOptions();
-        session = environment.createSession(modelPath, sessionOptions);
+      //  environment = OrtEnvironment.getEnvironment();
+        //sessionOptions = new OrtSession.SessionOptions();
+        //session = environment.createSession(modelPath, sessionOptions);
     }
     public static OrtSession session;
     public static OrtEnvironment environment;
     public static OrtSession.SessionOptions sessionOptions;
 
-    @Value("${my.path.model-path}")
-    public String modelPath;
+    //@Value("${my.path.model-path}")
+    public String modelPath="temp";
 
     public static final Integer lineThicknessRatio = 333;
     public static final Double fontSizeRatio = 1145.14;

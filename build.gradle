@@ -96,11 +96,21 @@ dependencies {
 	implementation 'org.openpnp:opencv:4.6.0-0'
 	implementation group: 'com.microsoft.onnxruntime', name: 'onnxruntime', version: '1.12.1'
 	implementation 'com.google.firebase:firebase-admin:8.0.0'
-}
 
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+}
 ext {
 	snippetsDir = file('build/generated-snippets')
+	set('springCloudVersion', "2021.0.1")
 }
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+	}
+}
+
+
 
 test {
 	outputs.dir snippetsDir
