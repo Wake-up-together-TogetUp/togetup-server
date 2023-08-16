@@ -23,7 +23,7 @@ CREATE TABLE room (
                          `name`	                        VARCHAR(10)	    NOT NULL,
                          `intro`	                    VARCHAR(30)	    NULL,
                          `room_mission_intro`	        VARCHAR(20)	    NULL,
-                         `room_profile_image_link`	    TEXT	        NULL,
+                         `group_icon`	            VARCHAR(30)	    NOT NULL,
                          `created_at`	                TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
                          `updated_at`	                TIMESTAMP	    NOT NULL	DEFAULT current_timestamp ON UPDATE current_timestamp,
                          `deleted_at`	                TIMESTAMP	    NULL
