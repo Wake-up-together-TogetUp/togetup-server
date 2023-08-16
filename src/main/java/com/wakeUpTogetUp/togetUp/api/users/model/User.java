@@ -44,6 +44,9 @@ public class User {
     @NotNull
     private LoginType loginType ;
 
+    @Column(name = "agree_push")
+    private boolean agreePush;
+
     @Column(name = "created_at")
     private Timestamp createdAt;
 
