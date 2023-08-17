@@ -7,7 +7,7 @@ CREATE TABLE `user` (
                         'agree_push'            TINYINT(1)      NOT NULL    DEFAULT 1,
                         `created_at`	        TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
                         `updated_at`	        TIMESTAMP	    NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
-                        `deleted_at`	        TIMESTAMP	    NULL
+                        `is_deleted`	        TIMESTAMP	    NOT NULL    DEFAULT 0,
 );
 
 CREATE TABLE `mission` (
