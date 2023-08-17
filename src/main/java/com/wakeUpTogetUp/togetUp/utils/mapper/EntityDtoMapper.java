@@ -1,14 +1,14 @@
 package com.wakeUpTogetUp.togetUp.utils.mapper;
 
-import com.wakeUpTogetUp.togetUp.alarm.dto.response.AlarmRes;
-import com.wakeUpTogetUp.togetUp.alarm.dto.response.AlarmsRes;
-import com.wakeUpTogetUp.togetUp.alarm.model.Alarm;
-import com.wakeUpTogetUp.togetUp.fcmNotification.dto.response.PushLogRes;
-import com.wakeUpTogetUp.togetUp.fcmNotification.entity.PushLog;
-import com.wakeUpTogetUp.togetUp.mission.dto.response.GetMissionRes;
-import com.wakeUpTogetUp.togetUp.mission.dto.response.MissionCompleteLogRes;
-import com.wakeUpTogetUp.togetUp.mission.model.Mission;
-import com.wakeUpTogetUp.togetUp.mission.model.MissionCompleteLog;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmsRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.response.PushLogRes;
+import com.wakeUpTogetUp.togetUp.api.fcmNotification.entity.PushLog;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteLogRes;
+import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionCompleteLog;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
