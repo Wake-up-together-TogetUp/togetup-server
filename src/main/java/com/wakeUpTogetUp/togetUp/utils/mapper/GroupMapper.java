@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.utils.mapper;
 
 import com.wakeUpTogetUp.togetUp.api.group.dto.response.GroupRes;
-import com.wakeUpTogetUp.togetUp.api.group.model.Group;
+import com.wakeUpTogetUp.togetUp.api.group.model.Room;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -9,5 +9,5 @@ import org.mapstruct.factory.Mappers;
 public interface GroupMapper {
    GroupMapper INSTANCE = Mappers.getMapper(GroupMapper.class);
 
-   GroupRes toGroupRes(Group group);
+   GroupRes toGroupRes(Room room);
 }

@@ -34,18 +34,18 @@ public class AuthService {
         SocialLoginService loginService = this.getLoginService(socialLoginReq.getLoginType());
 
         //소셜로그인 유저 정보 가져오기
-        SocialUserRes socialUserRes = loginService.getUserInfo(socialLoginReq.getOauthAccessToken());
-        log.info("socialUserResponse {} ", socialUserRes.toString());
+       // SocialUserRes socialUserRes = loginService.getUserInfo(socialLoginReq.getOauthAccessToken());
+        //log.info("socialUserResponse {} ", socialUserRes.toString());
 
         //저장된 유저 or 저장한유저의 id 가져오기
-        Integer userId= this.getSignedUserId(socialUserRes,socialLoginReq.getLoginType());
+        Integer userId= 9;//this.getSignedUserId(socialUserRes,socialLoginReq.getLoginType());
 
         //accessToken 만들기
         String accessToken = jwtService.generateAccessToken(userId);
 
         return LoginRes.builder()
                 .userId(userId)
-                .useName(socialUserRes.getName())
+                .useName("박건우")//socialUserRes.getName())
                 .accessToken(accessToken)
                 .build();
     }

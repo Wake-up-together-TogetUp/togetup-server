@@ -25,22 +25,22 @@
                 <a class="btn btn-info btn-sm" href="/app/chat/room">채팅방 나가기</a>
             </div>
         </div>
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <label class="input-group-text">이름</label>
+        <div class="input-room">
+            <div class="input-room-prepend">
+                <label class="input-room-text">이름</label>
                 <input type="text" class="form-control" v-model="sender" >
             </div>
-            <div class="input-group-prepend">
-                <label class="input-group-text">내용</label>
+            <div class="input-room-prepend">
+                <label class="input-room-text">내용</label>
             </div>
 
             <input type="text" class="form-control" v-model="message" v-on:keypress.enter="sendMessage('TALK')">
-            <div class="input-group-append">
+            <div class="input-room-append">
                 <button class="btn btn-primary" type="button" @click="sendMessage('TALK')">보내기</button>
             </div>
         </div>
-        <ul class="list-group">
-            <li class="list-group-item" v-for="message in messages">
+        <ul class="list-room">
+            <li class="list-room-item" v-for="message in messages">
                 {{message.sender}} - {{message.message}}</a>
             </li>
         </ul>

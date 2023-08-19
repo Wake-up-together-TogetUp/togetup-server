@@ -1,14 +1,15 @@
 package com.wakeUpTogetUp.togetUp.api.users.model;
 
-import com.wakeUpTogetUp.togetUp.api.mappingGroupUser.model.MappingGroupUser;
+import com.wakeUpTogetUp.togetUp.api.group.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
-import javax.annotation.PreDestroy;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
@@ -20,6 +21,8 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 @Table(name="user")
 @NoArgsConstructor
 public class User {
@@ -39,6 +42,13 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "login_type", length = 20)
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private LoginType loginType ;
+
+    @Column(name = "agree_push")
+    private boolean agreePush;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -46,15 +56,9 @@ public class User {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @Column(name = "deleted_at")
-    private Timestamp deletedAt;
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 
-
-    //추가
-    @Column(name = "login_type", length = 20)
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private LoginType loginType ;
 
     @OneToMany(mappedBy = "user")
     @Column(name = "fcm_token")
@@ -62,7 +66,7 @@ public class User {
 
 
     @OneToMany(mappedBy = "user")
-    private List<MappingGroupUser> mappingGroupUsers = new ArrayList<>();
+    private List<RoomUser> roomUsers = new ArrayList<>();
 
     @PrePersist
     void registeredAt() {
@@ -73,11 +77,6 @@ public class User {
     @PreUpdate
     void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
-    }
-
-    @PreDestroy
-    void deletedAt() {
-        this.deletedAt = Timestamp.from(Instant.now());
     }
 
 

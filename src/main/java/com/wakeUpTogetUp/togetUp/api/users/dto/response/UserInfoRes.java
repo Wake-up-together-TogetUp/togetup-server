@@ -1,7 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.users.dto.response;
 
 
-import com.wakeUpTogetUp.togetUp.api.users.LoginType;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -17,5 +16,5 @@ public class UserInfoRes {
     private String statusMessage;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    private LoginType loginType ;
+
 }
