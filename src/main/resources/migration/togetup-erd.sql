@@ -4,10 +4,10 @@ CREATE TABLE `user` (
                         `password`	            VARCHAR(255)	NULL,
                         `login_type`            VARCHAR(20)	    NOT NULL,
                         `social_id`	            VARCHAR(30)	    NOT NULL,
-                        `profile_image_link`	TEXT	        NULL,
+                        `agree_push`	        TINYINT(1)	    NOT NULL	DEFAULT TRUE,
                         `created_at`	        TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
-                        `updated_at`	        TIMESTAMP	    NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
-                        `deleted_at`	        TIMESTAMP	    NULL
+                        `updated_at`	        TIMESTAMP	    NULL        DEFAULT current_timestamp ON UPDATE current_timestamp,
+                        `is_deleted`	        TINYINT(1)	    NOT NULL    DEFAULT FALSE
 );
 
 CREATE TABLE `mission` (
@@ -16,18 +16,30 @@ CREATE TABLE `mission` (
                            `object`	    VARCHAR(20)	        NOT NULL,
                            `created_at`	TIMESTAMP	        NOT NULL	DEFAULT current_timestamp,
                            `updated_at`	TIMESTAMP	        NOT NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
-                           `is_activated`	TINYINT(1)	    NOT NULL	DEFAULT TRUE
+                           `is_active`	TINYINT(1)	    NOT NULL	DEFAULT TRUE
 );
 
 CREATE TABLE room (
                          `id`	                        INT UNSIGNED    NOT NULL    AUTO_INCREMENT  PRIMARY KEY,
                          `name`	                        VARCHAR(10)	    NOT NULL,
                          `intro`	                    VARCHAR(30)	    NULL,
-                         `room_mission_intro`	        VARCHAR(20)	    NULL,
-                         `room_profile_image_link`	    TEXT	        NULL,
+                         `mission`          	        VARCHAR(20)	    NULL,
+                         `group_icon`	                VARCHAR(30)	    NOT NULL,
+                         `topic`                        VARCHAR(100)    NULL,
+                         `invitation_code`              VARCHAR(100)    NULL,
                          `created_at`	                TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
                          `updated_at`	                TIMESTAMP	    NOT NULL	DEFAULT current_timestamp ON UPDATE current_timestamp,
-                         `deleted_at`	                TIMESTAMP	    NULL
+                         `is_deleted`	                TINYINT(1)	    NOT NULL    DEFAULT FALSE
+);
+
+CREATE TABLE `room_user` (
+                              `id`	        INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
+                              `created_at`	TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
+                              `room_id`	    INT UNSIGNED	NULL,
+                              `user_id`	    INT UNSIGNED	NOT NULL,
+                              FOREIGN KEY (room_id)         REFERENCES room (id),
+                              FOREIGN KEY (user_id)         REFERENCES user(id)
+
 );
 
 CREATE TABLE `mission_log` (
@@ -42,15 +54,6 @@ CREATE TABLE `mission_log` (
                                FOREIGN KEY (user_id) REFERENCES user(id),
                                FOREIGN KEY (room_id) REFERENCES room(id),
                                FOREIGN KEY (mission_id) REFERENCES mission(id)
-);
-
-CREATE TABLE `room_user` (
-                              `id`	        INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
-                              `created_at`	TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
-                              `room_id`	    INT UNSIGNED	NULL,
-                              `user_id`	    INT UNSIGNED	NOT NULL,
-                              FOREIGN KEY (room_id)         REFERENCES room (id),
-                              FOREIGN KEY (user_id)         REFERENCES user(id)
 );
 
 CREATE TABLE `notification` (
@@ -79,7 +82,7 @@ CREATE TABLE `alarm` (
                          `saturday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
                          `sunday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
                          `is_vibrate`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
-                         `is_activated`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
+                         `is_active`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
                          `user_id`	        INT UNSIGNED	NOT NULL,
                          `mission_id`	    INT UNSIGNED	NULL,
                          `room_id`	        INT UNSIGNED	NULL,
@@ -119,8 +122,10 @@ CREATE TABLE `user_avatar` (
 );
 
 CREATE TABLE `fcm_token` (
-                                `id`	        INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
+                                `id`	        INT UNSIGNED	    NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
                                 `value`	        VARCHAR(80)	        NOT NULL,
-                                `user_id`	    INT UNSIGNED	NOT NULL,
+                                `user_id`	    INT UNSIGNED	    NOT NULL,
+                                `updated_at`	        TIMESTAMP	NOT NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
                                 FOREIGN KEY (user_id) REFERENCES user(id)
 );
+
