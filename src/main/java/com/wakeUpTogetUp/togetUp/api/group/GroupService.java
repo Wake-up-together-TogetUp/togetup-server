@@ -1,10 +1,10 @@
 package com.wakeUpTogetUp.togetUp.api.group;
 
+import com.wakeUpTogetUp.togetUp.api.group.model.Room;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.api.group.dto.request.GroupReq;
 import com.wakeUpTogetUp.togetUp.api.group.dto.response.GroupRes;
-import com.wakeUpTogetUp.togetUp.api.group.model.Group;
 import com.wakeUpTogetUp.togetUp.utils.mapper.GroupMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,20 +31,20 @@ public class GroupService {
     public  Integer createGroup(GroupReq dto){
       //  dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
         String topic = UUID.randomUUID().toString();
-        Group group =dto.toEntity(topic);
-        groupRepository.save(group);
+        Room room =dto.toEntity(topic);
+        groupRepository.save(room);
 
-        return group.getId();
+        return room.getId();
     }
     public List<GroupRes> getGroup() {
 
         //모든 그룹 가져오기
-        List<Group> groupList= groupRepository.findAll();
+        List<Room> roomList = groupRepository.findAll();
 
         // dto 매핑
         ArrayList<GroupRes> groupResList = new ArrayList<>();
-        for(Group group : groupList) {
-            groupResList.add(GroupMapper.INSTANCE.toGroupRes(group));
+        for(Room room : roomList) {
+            groupResList.add(GroupMapper.INSTANCE.toGroupRes(room));
         }
 
         return groupResList;
@@ -53,7 +53,7 @@ public class GroupService {
     @Transactional
     public GroupRes editGroup(Integer groupId , GroupReq groupReq){
     // 그룹수정 이름, 인트로
-        Optional<Group> group = Optional.ofNullable(groupRepository.findById(groupId)
+        Optional<Room> group = Optional.ofNullable(groupRepository.findById(groupId)
                 .orElseThrow(
                         () -> new BaseException(Status.INVALID_GROUP_ID)
                 ));
@@ -61,11 +61,11 @@ public class GroupService {
         group.get().setIntro(groupReq.getIntro());
 
     //저장
-        Group modifiedGroup =groupRepository.save(group.get());
+        Room modifiedRoom =groupRepository.save(group.get());
 
 
     //반환
-        GroupRes groupRes = GroupMapper.INSTANCE.toGroupRes(modifiedGroup);
+        GroupRes groupRes = GroupMapper.INSTANCE.toGroupRes(modifiedRoom);
 
         return groupRes;
     }

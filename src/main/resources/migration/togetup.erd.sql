@@ -4,10 +4,10 @@ CREATE TABLE `user` (
                         `password`	            VARCHAR(255)	NULL,
                         `login_type`            VARCHAR(20)	    NOT NULL,
                         `social_id`	            VARCHAR(30)	    NOT NULL,
-                        `profile_image_link`	TEXT	        NULL,
+                        `agree_push`	        TINYINT(1)	    NOT NULL	DEFAULT TRUE,
                         `created_at`	        TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
-                        `updated_at`	        TIMESTAMP	    NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
-                        `deleted_at`	        TIMESTAMP	    NULL
+                        `updated_at`	        TIMESTAMP	    NULL        DEFAULT current_timestamp ON UPDATE current_timestamp,
+                        `is_deleted`	        TINYINT(1)	    NOT NULL    DEFAULT FALSE
 );
 
 CREATE TABLE `mission` (
@@ -23,11 +23,13 @@ CREATE TABLE room (
                          `id`	                        INT UNSIGNED    NOT NULL    AUTO_INCREMENT  PRIMARY KEY,
                          `name`	                        VARCHAR(10)	    NOT NULL,
                          `intro`	                    VARCHAR(30)	    NULL,
-                         `room_mission_intro`	        VARCHAR(20)	    NULL,
-                         `room_profile_image_link`	    TEXT	        NULL,
+                         `mission`          	        VARCHAR(20)	    NULL,
+                         `group_icon`	                VARCHAR(30)	    NOT NULL,
+                         `topic`                        VARCHAR(100)    NULL,
+                         `invitation_code`              VARCHAR(100)    NULL,
                          `created_at`	                TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
                          `updated_at`	                TIMESTAMP	    NOT NULL	DEFAULT current_timestamp ON UPDATE current_timestamp,
-                         `deleted_at`	                TIMESTAMP	    NULL
+                         `is_deleted`	                TINYINT(1)	    NOT NULL    DEFAULT FALSE
 
 );
 
@@ -118,9 +120,10 @@ CREATE TABLE `user_avatar_log` (
 
 
 CREATE TABLE `fcm_token` (
-                                `id`	        INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
+                                `id`	        INT UNSIGNED	    NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
                                 `value`	        VARCHAR(80)	        NOT NULL,
-                                `user_id`	    INT UNSIGNED	NOT NULL,
+                                `user_id`	    INT UNSIGNED	    NOT NULL,
+                                `updated_at`	        TIMESTAMP	NOT NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
                                 FOREIGN KEY (user_id) REFERENCES user(id)
 );
 

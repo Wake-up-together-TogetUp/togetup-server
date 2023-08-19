@@ -113,8 +113,8 @@ table tr.even,table tr.alt{background:#f8f8f7}
 table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
 h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
-.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
-.clearfix::after,.float-group::after{clear:both}
+.clearfix::before,.clearfix::after,.float-room::before,.float-room::after{content:" ";display:table}
+.clearfix::after,.float-room::after{clear:both}
 :not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
 :not(pre)>code.nobreak{word-wrap:normal}
 :not(pre)>code.nowrap{white-space:nowrap}
@@ -408,7 +408,7 @@ a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
 a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
 abbr[title]::after{content:" (" attr(title) ")"}
 pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
-thead{display:table-header-group}
+thead{display:table-header-room}
 svg{max-width:100%}
 p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
 h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}

@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.group.dto.request;
 
 
-import com.wakeUpTogetUp.togetUp.api.group.model.Group;
+import com.wakeUpTogetUp.togetUp.api.group.model.Room;
 import lombok.*;
 
 
@@ -21,12 +21,11 @@ public class GroupReq {
 
 
 
-    public Group toEntity(String topic){
-        return Group.builder()
+    public Room toEntity(String topic){
+        return Room.builder()
                 .id(id)
                 .name(name)
                 .intro(intro)
-                .groupProfileImgLink(groupProfileImgLink)
                 .topic(topic)
                 .build();
     }

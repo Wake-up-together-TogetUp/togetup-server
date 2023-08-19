@@ -22,17 +22,17 @@
                 <a class="btn btn-primary btn-sm" href="/logout">로그아웃</a>
             </div>
         </div>
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <label class="input-group-text">방제목</label>
+        <div class="input-room">
+            <div class="input-room-prepend">
+                <label class="input-room-text">방제목</label>
             </div>
             <input type="text" class="form-control" v-model="room_name" v-on:keyup.enter="createRoom">
-            <div class="input-group-append">
+            <div class="input-room-append">
                 <button class="btn btn-primary" type="button" @click="createRoom">채팅방 개설</button>
             </div>
         </div>
-        <ul class="list-group">
-            <li class="list-group-item list-group-item-action" v-for="item in chatrooms" v-bind:key="item.roomId" v-on:click="enterRoom(item.roomId, item.name)">
+        <ul class="list-room">
+            <li class="list-room-item list-room-item-action" v-for="item in chatrooms" v-bind:key="item.roomId" v-on:click="enterRoom(item.roomId, item.name)">
                 <h6>{{item.name}} <span class="badge badge-info badge-pill">{{item.userCount}}</span></h6>
             </li>
         </ul>

@@ -28,7 +28,7 @@ public class ODConfig {
     public static OrtSession.SessionOptions sessionOptions;
 
     @Value("${my.path.model-path}")
-    public String modelPath="temp";
+    public String modelPath;
 
     public static final Integer lineThicknessRatio = 333;
     public static final Double fontSizeRatio = 1145.14;

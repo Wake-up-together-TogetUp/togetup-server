@@ -49,8 +49,9 @@ public class JwtService {
         return request.getHeader("X-ACCESS-TOKEN");
     }
 
-    public Integer getUserId(String accessToken) {
+    public Integer getUserId(String headerToken) {
         Claims claims;
+        String accessToken = headerToken.replace("Bearer", "").trim();
         try{
             claims = Jwts.parserBuilder()
                     .setSigningKey(getSigningKey(key))
@@ -61,7 +62,6 @@ public class JwtService {
             System.out.println(e.getMessage());
             throw new BaseException(Status.INVALID_JWT);
         }
-
         return claims.get("userId", Integer.class);
     }
 

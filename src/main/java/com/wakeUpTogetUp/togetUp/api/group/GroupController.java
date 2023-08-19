@@ -5,8 +5,6 @@ import com.wakeUpTogetUp.togetUp.api.group.dto.response.GroupRes;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.Status;
-import com.wakeUpTogetUp.togetUp.config.annotation.NoAuth;
-
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
@@ -52,19 +50,7 @@ public class GroupController {
         return new BaseResponse<>(Status.SUCCESS, GroupResList);
     }
 
-    /**
-     *
-     * @param name
-     * @param intro
-     * @return
-     */
-//    @ResponseBody
-//    @GetMapping()
-//    public BaseResponse<List<GroupRes>> GetGroupBySearch(@RequestParam String name,@RequestParam String intro){
-//
-//
-//        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
-//    }
+
 
 
     /**
@@ -91,7 +77,7 @@ public class GroupController {
      * @param groupId
      * @return
      */
-    @NoAuth
+
     @DeleteMapping("{groupId}")
     @ResponseBody
     public BaseResponse<Status> deleteGroup(

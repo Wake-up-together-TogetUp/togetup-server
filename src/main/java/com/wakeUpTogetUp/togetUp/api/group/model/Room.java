@@ -1,69 +1,59 @@
 package com.wakeUpTogetUp.togetUp.api.group.model;
 
 
-import com.wakeUpTogetUp.togetUp.api.mappingGroupUser.model.MappingGroupUser;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Table(name = "group2")//예약어를 피해서 작성해야함. group은 예약어임.
+@Table(name = "room")//예약어를 피해서 작성해야함. group은 예약어임.
 @Getter
 @Setter
-@NoArgsConstructor() //access = AccessLevel.PROTECTED)
+@NoArgsConstructor()
 @DynamicInsert
-public class Group {
+public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column( columnDefinition = "INT UNSIGNED")
     private Integer id=null;
 
 
-    @Column(name = "name",length = 20)
+    @Column(name = "name",length = 10)
     private String name;
 
-
-    @Column(name = "intro",length = 50)
-    @ColumnDefault("'ToGetup 그룹방입니다.'")
+    @Column(name = "intro",length = 30)
     private String intro;
 
-    @Column(name ="groupMission",length = 30)
-    private String groupMission;
+    @Column(name ="mission",length = 20)
+    private String mission;
 
-    @Column(name = "groupProfileImgLink",columnDefinition = "TEXT")
-    private String groupProfileImgLink;
+    @Column(name = "group_icon")
+    private String group_icon;
 
 
     private String topic;
     /**
      * todo uuid
      */
-    @Column(name = "invitationCode",length = 50)
+    @Column(name = "invitation_code",length = 50)
     private String invitationCode;
 
-    @OneToMany(mappedBy = "group",cascade = CascadeType.ALL)
-    private List<MappingGroupUser> mappingGroupUsers= new ArrayList<>();
+//    @OneToMany(mappedBy = "Room")
+//    private List<MappingGroupUser> mappingGroupUsers= new ArrayList<>();
 
-
-    /**
-     * 어디다 쓰는거였지
-     */
-    @Column(name="state",columnDefinition = "TINYINT", length=1)
-    @ColumnDefault("1")
-    private int state;
 
     @Column(name = "createdAt")
     private Timestamp createdAt;
 
     @Column(name = "updatedAt")
     private Timestamp updatedAt;
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
+
     @PrePersist
     void createdAt() {
         this.createdAt = Timestamp.from(Instant.now());
@@ -75,14 +65,14 @@ public class Group {
     }
 
     @Builder
-    public Group(Integer id, String name, String intro, String groupMission, String topic, String invitationCode,String groupProfileImgLink) {
+    public Room(Integer id, String name, String intro, String mission, String topic, String invitationCode, String groupIcon) {
         this.id = id;
         this.name = name;
         this.intro = intro;
-        this.groupMission = groupMission;
+        this.mission = mission;
         this.topic = topic;
         this.invitationCode = invitationCode;
-        this.groupProfileImgLink=groupProfileImgLink;
+        this.group_icon=groupIcon;
     }
 
 //    @Builder
