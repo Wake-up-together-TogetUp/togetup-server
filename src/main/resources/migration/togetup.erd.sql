@@ -4,10 +4,10 @@ CREATE TABLE `user` (
                         `password`	            VARCHAR(255)	NULL,
                         `login_type`            VARCHAR(20)	    NOT NULL,
                         `social_id`	            VARCHAR(30)	    NOT NULL,
-                        'agree_push'            TINYINT(1)      NOT NULL    DEFAULT 1,
+                        `agree_push`	        TINYINT(1)	    NOT NULL	DEFAULT TRUE,
                         `created_at`	        TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
-                        `updated_at`	        TIMESTAMP	    NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
-                        `is_deleted`	        TIMESTAMP	    NOT NULL    DEFAULT 0,
+                        `updated_at`	        TIMESTAMP	    NULL        DEFAULT current_timestamp ON UPDATE current_timestamp,
+                        `is_deleted`	        TINYINT(1)	    NOT NULL    DEFAULT FALSE
 );
 
 CREATE TABLE `mission` (
@@ -118,9 +118,10 @@ CREATE TABLE `user_avatar_log` (
 
 
 CREATE TABLE `fcm_token` (
-                                `id`	        INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
+                                `id`	        INT UNSIGNED	    NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
                                 `value`	        VARCHAR(80)	        NOT NULL,
-                                `user_id`	    INT UNSIGNED	NOT NULL,
+                                `user_id`	    INT UNSIGNED	    NOT NULL,
+                                `updated_at`	        TIMESTAMP	NOT NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
                                 FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
