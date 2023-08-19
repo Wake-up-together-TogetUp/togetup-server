@@ -26,7 +26,7 @@ public class GroupUserDto {
                 .id(id)
                .user(user)
                 .room(room)
-                .isHostUser(isHostUser)
+//                .isHostUser(isHostUser)
                 .build();
     }
 

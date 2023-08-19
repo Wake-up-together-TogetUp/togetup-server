@@ -27,9 +27,9 @@ public class MappingGroupUserReq {
                 .id(id)
                 .user(user)
                 .room(room)
-                .isPersonalNotice(isPersonalNotice)
-                .isNotice(isNotice)
-                .isHostUser(isHostUser)
+//                .isPersonalNotice(isPersonalNotice)
+//                .isNotice(isNotice)
+//                .isHostUser(isHostUser)
                 .build();
     }
 

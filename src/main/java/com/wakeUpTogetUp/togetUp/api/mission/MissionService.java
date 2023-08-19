@@ -1,14 +1,15 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
-import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+import com.wakeUpTogetUp.togetUp.api.group.GroupRepository;
+import com.wakeUpTogetUp.togetUp.api.group.model.Room;
+import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.request.PostMissionCompleteLogReq;
-import com.wakeUpTogetUp.togetUp.api.mission.model.MissionCompleteLog;
-import com.wakeUpTogetUp.togetUp.objectDetection.ObjectDetection;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.request.PostMissionLogReq;
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.objectDetection.ObjectDetectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,15 +18,16 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class MissionService {
-    private final ObjectDetection objectDetection;
-    private final MissionCompleteLogRepository missionCompleteLogRepository;
+    private final ObjectDetectionService objectDetectionService;
+    private final MissionRepository missionRepository;
+    private final MissionLogRepository missionLogRepository;
     private final UserRepository userRepository;
-    private final AlarmRepository alarmRepository;
+    private final GroupRepository groupRepository;
 
     public boolean recognizeObject(String object, MultipartFile missionImage) {
         // 일치 여부 확인
         boolean isConsistent = false;
-        for(String objectDetected : objectDetection.detectObject(missionImage)){
+        for(String objectDetected : objectDetectionService.detectObject(missionImage)){
             if(objectDetected.equals(object))
                 isConsistent = true;
         }
@@ -39,26 +41,30 @@ public class MissionService {
 
     // 미션 수행 기록하기
     @Transactional
-    public Integer createMissionCompleteLog(PostMissionCompleteLogReq req){
+    public Integer createMissionCompleteLog(PostMissionLogReq req){
         User user = userRepository.findById(req.getUserId())
                 .orElseThrow(
                         () -> new BaseException(Status.INVALID_USER_ID));
 
-        Alarm alarm = alarmRepository.findById(req.getAlarmId())
+        Room room = groupRepository.findById(req.getRoomId())
                 .orElseThrow(
                         () -> new BaseException(Status.INVALID_ALARM_ID));
 
-        MissionCompleteLog missionCompleteLog = MissionCompleteLog.builder()
+        Mission mission = missionRepository.findById(req.getMissionId())
+                .orElseThrow(
+                        () -> new BaseException(Status.INVALID_MISSION_ID));
+
+        MissionLog missionLog = MissionLog.builder()
+                .alarmName(req.getAlarmName())
+                .missionPicLink(req.getMissionPicLink())
                 .user(user)
-                .alarm(alarm)
-                .title(req.getTitle())
-                .picLink(req.getPicLink())
-                .type(req.getType())
+                .room(room)
+                .mission(mission)
                 .build();
 
-        MissionCompleteLog missionCompleteLogCreated = missionCompleteLogRepository.save(missionCompleteLog);
+        MissionLog missionLogCreated = missionLogRepository.save(missionLog);
 
-        return missionCompleteLogCreated.getId();
+        return missionLogCreated.getId();
     }
 }
 

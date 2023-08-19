@@ -21,7 +21,6 @@ public class PostAlarmReq {
     private String icon;
     private String sound;
     private Boolean isVibrate;
-    private Boolean isRoutineOn;
     private Integer snoozeInterval;
     private Integer snoozeCnt;
     @NotNull(message = "알람 시작시는 공백일 수 없습니다.")

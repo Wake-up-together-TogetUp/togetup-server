@@ -1,8 +1,8 @@
-package com.wakeUpTogetUp.togetUp.file;
+package com.wakeUpTogetUp.togetUp.api.file;
 
+import com.wakeUpTogetUp.togetUp.api.file.dto.response.PostFileRes;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.Status;
-import com.wakeUpTogetUp.togetUp.file.dto.response.PostFileRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

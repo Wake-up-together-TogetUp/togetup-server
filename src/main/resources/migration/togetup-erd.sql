@@ -16,7 +16,7 @@ CREATE TABLE `mission` (
                            `object`	    VARCHAR(20)	        NOT NULL,
                            `created_at`	TIMESTAMP	        NOT NULL	DEFAULT current_timestamp,
                            `updated_at`	TIMESTAMP	        NOT NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
-                           `is_activated`	TINYINT(1)	    NOT NULL	DEFAULT TRUE
+                           `is_active`	TINYINT(1)	    NOT NULL	DEFAULT TRUE
 );
 
 CREATE TABLE room (
@@ -30,7 +30,6 @@ CREATE TABLE room (
                          `created_at`	                TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
                          `updated_at`	                TIMESTAMP	    NOT NULL	DEFAULT current_timestamp ON UPDATE current_timestamp,
                          `is_deleted`	                TINYINT(1)	    NOT NULL    DEFAULT FALSE
-
 );
 
 CREATE TABLE `room_user` (
@@ -43,20 +42,18 @@ CREATE TABLE `room_user` (
 
 );
 
-CREATE TABLE `room_mission_log` (
-                                     `id`	                    INT UNSIGNED	NOT NULL    AUTO_INCREMENT  PRIMARY KEY,
-                                     `alarm_name`	            VARCHAR(20)	    NOT NULL,
-                                     `mission_picture_link`	    TEXT	        NOT NULL,
-                                     `created_at`	            TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
-                                     `user_id`	                INT UNSIGNED	NOT NULL,
-                                     `room_id` 	                INT UNSIGNED	NULL,
-                                     `mission_id`	            INT UNSIGNED	NOT NULL,
-                                     `deleted_at`	            TIMESTAMP	    NULL,
-                                     FOREIGN KEY (user_id) REFERENCES user(id),
-                                     FOREIGN KEY (room_id) REFERENCES room(id),
-                                     FOREIGN KEY (mission_id) REFERENCES mission(id)
-
-
+CREATE TABLE `mission_log` (
+                               `id`	                    INT UNSIGNED	NOT NULL    AUTO_INCREMENT  PRIMARY KEY,
+                               `alarm_name`	            VARCHAR(20)	    NOT NULL,
+                               `mission_pic_link` 	    TEXT	        NOT NULL,
+                               `created_at`	            TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
+                               `is_deleted`	            TINYINT(1)	    NULL,
+                               `user_id`	            INT UNSIGNED	NOT NULL,
+                               `room_id` 	            INT UNSIGNED	NULL,
+                               `mission_id`	            INT UNSIGNED	NOT NULL,
+                               FOREIGN KEY (user_id) REFERENCES user(id),
+                               FOREIGN KEY (room_id) REFERENCES room(id),
+                               FOREIGN KEY (mission_id) REFERENCES mission(id)
 );
 
 CREATE TABLE `notification` (
@@ -85,17 +82,13 @@ CREATE TABLE `alarm` (
                          `saturday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
                          `sunday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
                          `is_vibrate`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
-                         `is_activated`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
-                         `deleted_at`	    TIMESTAMP	    NULL,
+                         `is_active`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
                          `user_id`	        INT UNSIGNED	NOT NULL,
                          `mission_id`	    INT UNSIGNED	NULL,
                          `room_id`	        INT UNSIGNED	NULL,
                          FOREIGN KEY (user_id) REFERENCES user(id),
                          FOREIGN KEY (room_id) REFERENCES room(id),
                          FOREIGN KEY (mission_id) REFERENCES mission(id)
-
-
-
 );
 
 CREATE TABLE `avatar` (
@@ -103,10 +96,11 @@ CREATE TABLE `avatar` (
                           `theme`	        VARCHAR(20)	    NOT NULL,
                           `phase`	        VARCHAR(20) 	NOT NULL,
                           `avatar_img_link`	TEXT	        NOT NULL,
-                          `price`	        INT UNSIGNED	NOT NULL
-
+                          `price`	        INT UNSIGNED	NOT NULL,
+                          `created_at`	TIMESTAMP	    NOT NULL    DEFAULT current_timestamp
 );
-CREATE TABLE `user_avatar_log` (
+
+CREATE TABLE `user_avatar_purchase_log` (
                                    `id`	        INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
                                    `created_at`	TIMESTAMP	    NOT NULL    DEFAULT current_timestamp,
                                    `user_id`	INT UNSIGNED	NOT NULL,
@@ -117,16 +111,6 @@ CREATE TABLE `user_avatar_log` (
 
 );
 
-
-
-CREATE TABLE `fcm_token` (
-                                `id`	        INT UNSIGNED	    NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
-                                `value`	        VARCHAR(80)	        NOT NULL,
-                                `user_id`	    INT UNSIGNED	    NOT NULL,
-                                `updated_at`	        TIMESTAMP	NOT NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
-                                FOREIGN KEY (user_id) REFERENCES user(id)
-);
-
 CREATE TABLE `user_avatar` (
                                `id`	        INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
                                `user_id`	INT UNSIGNED	NOT NULL,
@@ -135,5 +119,13 @@ CREATE TABLE `user_avatar` (
                                FOREIGN KEY (avatar_id) REFERENCES avatar(id)
 
 
+);
+
+CREATE TABLE `fcm_token` (
+                                `id`	        INT UNSIGNED	    NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
+                                `value`	        VARCHAR(80)	        NOT NULL,
+                                `user_id`	    INT UNSIGNED	    NOT NULL,
+                                `updated_at`	        TIMESTAMP	NOT NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
+                                FOREIGN KEY (user_id) REFERENCES user(id)
 );
 

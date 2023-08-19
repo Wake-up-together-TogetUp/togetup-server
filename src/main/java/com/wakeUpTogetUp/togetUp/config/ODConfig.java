@@ -1,38 +1,22 @@
 package com.wakeUpTogetUp.togetUp.config;
 
-import ai.onnxruntime.OrtEnvironment;
-import ai.onnxruntime.OrtException;
-import ai.onnxruntime.OrtSession;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import lombok.Getter;
 
-import javax.annotation.PostConstruct;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
+@Getter
 public class ODConfig {
-    @PostConstruct
-    public void init() throws OrtException {
-        // ONNX 모델 로드
-        environment = OrtEnvironment.getEnvironment();
-        sessionOptions = new OrtSession.SessionOptions();
-        session = environment.createSession(modelPath, sessionOptions);
-    }
-    public static OrtSession session;
-    public static OrtEnvironment environment;
-    public static OrtSession.SessionOptions sessionOptions;
 
-    @Value("${my.path.model-path}")
-    public String modelPath;
-
-    public static final Integer lineThicknessRatio = 333;
-    public static final Double fontSizeRatio = 1145.14;
-    private static final List<String> names = new ArrayList<>(Arrays.asList(
+    private final Integer lineThicknessRatio = 333;
+    private final Double fontSizeRatio = 1145.14;
+    private final List<String> names = new ArrayList<>(Arrays.asList(
             "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train",
             "truck", "boat", "traffic light", "fire hydrant", "stop sign", "parking meter",
             "bench", "bird", "cat", "dog", "horse", "sheep", "cow", "elephant", "bear",
@@ -46,7 +30,7 @@ public class ODConfig {
             "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors",
             "teddy bear", "hair drier", "toothbrush"));
 
-    private final Map<String, double[]> colors;
+    private Map<String, double[]> colors;
 
     public ODConfig() {
         this.colors = new HashMap<>();

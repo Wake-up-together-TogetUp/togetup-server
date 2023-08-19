@@ -57,7 +57,7 @@ public class User {
     private Timestamp updatedAt;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private boolean isDeleted = false;
 
 
     @OneToMany(mappedBy = "user")
@@ -71,7 +71,6 @@ public class User {
     @PrePersist
     void registeredAt() {
         this.createdAt = Timestamp.from(Instant.now());
-
     }
 
     @PreUpdate

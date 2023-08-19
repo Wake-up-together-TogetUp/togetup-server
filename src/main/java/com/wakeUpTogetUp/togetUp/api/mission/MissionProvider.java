@@ -1,11 +1,11 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionRes;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteLogRes;
-import com.wakeUpTogetUp.togetUp.api.mission.model.MissionCompleteLog;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogRes;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MissionProvider {
     private final MissionRepository missionRepository;
-    private final MissionCompleteLogRepository missionCompleteLogRepository;
+    private final MissionLogRepository missionLogRepository;
 
     public List<GetMissionRes> getMissions(Boolean isActivated) {
         List<Mission> missionList;
@@ -30,17 +30,17 @@ public class MissionProvider {
         return EntityDtoMapper.INSTANCE.toGetMissionResList(missionList);
     }
 
-    public MissionCompleteLogRes getMissionCompleteLog(Integer missionCompleteLogId){
-        MissionCompleteLog missionCompleteLog = missionCompleteLogRepository.findById(missionCompleteLogId)
+    public MissionLogRes getMissionCompleteLog(Integer missionCompleteLogId){
+        MissionLog missionLog = missionLogRepository.findById(missionCompleteLogId)
                 .orElseThrow(
                         () -> new BaseException(Status.INTERNAL_SERVER_ERROR));
 
-        return EntityDtoMapper.INSTANCE.toMissionCompleteLogRes(missionCompleteLog);
+        return EntityDtoMapper.INSTANCE.toMissionLogRes(missionLog);
     }
 
-    public List<MissionCompleteLogRes> getMissionCompleteLogsByUserId(Integer userId) {
-        List<MissionCompleteLog> missionCompleteLogList = missionCompleteLogRepository.findAllByUserId(userId);
+    public List<MissionLogRes> getMissionCompleteLogsByUserId(Integer userId) {
+        List<MissionLog> missionLogList = missionLogRepository.findAllByUserId(userId);
 
-        return EntityDtoMapper.INSTANCE.toMissionCompleteLogResList(missionCompleteLogList);
+        return EntityDtoMapper.INSTANCE.toMissionLogResList(missionLogList);
     }
 }

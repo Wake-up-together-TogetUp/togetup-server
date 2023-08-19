@@ -7,13 +7,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MissionCompleteLogRes {
+public class MissionLogRes {
     private Integer id;
-    private String type;
-    private String title;
-    private String picLink;
+    private String alarmName;
+    private String missionPicLink;
     private String createdAt;
     private Integer userId;
-    private Integer alarmId;
+    private Integer roomId;
+    private Integer missionId;
     private Boolean isActivated;
 }

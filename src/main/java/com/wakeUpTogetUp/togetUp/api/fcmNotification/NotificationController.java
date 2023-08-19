@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.fcmNotification;
 
 import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.request.PushNotificationReq;
-import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.response.PushLogRes;
+import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.response.NotificationRes;
 import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.response.PushNotificationRes;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
@@ -49,7 +49,7 @@ public class NotificationController {
 
     // 유저 알림 목록 가져오기
     @GetMapping("/user/{userId}")
-    BaseResponse<List<PushLogRes>> getUserPushLogList(
+    BaseResponse<List<NotificationRes>> getUserPushLogList(
             @PathVariable Integer userId
     ){
         return new BaseResponse<>(Status.SUCCESS, notificationProvider.getUserPushLogList(userId));

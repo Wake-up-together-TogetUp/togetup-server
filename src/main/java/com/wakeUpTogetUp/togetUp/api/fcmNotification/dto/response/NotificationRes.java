@@ -7,9 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PushLogRes {
-    private Integer receiverId;
+public class NotificationRes {
     private String title;
-    private String message;
+    private String content;
     private String sendAt;
+    private String createdAt;
 }
