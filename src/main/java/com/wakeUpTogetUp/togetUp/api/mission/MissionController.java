@@ -4,9 +4,9 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.api.file.FileService;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.request.PostMissionCompleteLogReq;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.request.PostMissionLogReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionRes;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteLogRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.PostObjectRecognitionRes;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +64,7 @@ public class MissionController {
     // TODO : 일별 검색
     @GetMapping("/logs")
     @ResponseStatus(HttpStatus.OK)
-    public BaseResponse<List<MissionCompleteLogRes>> getMissionCompleteLogsByUserId(
+    public BaseResponse<List<MissionLogRes>> getMissionCompleteLogsByUserId(
             @RequestParam Integer userId
     ) {
         return new BaseResponse(Status.SUCCESS, missionProvider.getMissionCompleteLogsByUserId(userId));
@@ -73,8 +73,8 @@ public class MissionController {
     // 미션 성공 기록 생성
     @PostMapping("/complete")
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponse<MissionCompleteLogRes> missionComplete(
-            @RequestBody PostMissionCompleteLogReq postMissionCompleteHistoryReq
+    public BaseResponse<MissionLogRes> missionComplete(
+            @RequestBody PostMissionLogReq postMissionCompleteHistoryReq
     ){
         Integer userId = postMissionCompleteHistoryReq.getUserId();
 

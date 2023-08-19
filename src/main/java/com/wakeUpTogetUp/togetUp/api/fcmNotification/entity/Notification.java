@@ -1,8 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.fcmNotification.entity;
 
-import com.wakeUpTogetUp.togetUp.api.group.model.Group;
+import com.wakeUpTogetUp.togetUp.api.group.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.utils.TimestampFormatter;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,10 +24,10 @@ public class Notification {
 //    }
 
     @Builder
-    public Notification(String title, String content, Group group, FcmToken fcmToken) {
+    public Notification(String title, String content, Room room, FcmToken fcmToken) {
         this.title = title;
         this.content = content;
-        this.group = group;
+        this.room = room;
         this.fcmToken = fcmToken;
     }
 
@@ -46,7 +45,7 @@ public class Notification {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomId",columnDefinition = "INT UNSIGNED")
-    private Group group;
+    private Room room;
 
     // TODO : 맞는지 확인!
     @ManyToOne(fetch = FetchType.LAZY)

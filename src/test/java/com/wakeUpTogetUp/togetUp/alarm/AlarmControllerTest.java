@@ -80,9 +80,7 @@ class AlarmControllerTest {
                 .missionId(1)
                 .name("기상알람")
                 .icon("⏰")
-                .sound("default")
                 .isVibrate(true)
-                .isRoutineOn(true)
                 .snoozeInterval(5)
                 .snoozeCnt(3)
                 .alarmTime("06:30:00")
@@ -148,9 +146,7 @@ class AlarmControllerTest {
                                         fieldWithPath("result.missionId").description("미션 Id"),
                                         fieldWithPath("result.name").description("알람 이름"),
                                         fieldWithPath("result.icon").description("아이콘"),
-                                        fieldWithPath("result.sound").description("알람 벨소리"),
                                         fieldWithPath("result.isVibrate").description("진동 여부"),
-                                        fieldWithPath("result.isRoutineOn").description("루틴 활성 여부"),
                                         fieldWithPath("result.snoozeInterval").description("다시울림 간격(분)"),
                                         fieldWithPath("result.snoozeCnt").description("다시울림 횟수"),
                                         fieldWithPath("result.alarmTime").description("알람 시간"),

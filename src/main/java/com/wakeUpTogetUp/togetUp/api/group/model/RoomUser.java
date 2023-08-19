@@ -27,47 +27,44 @@ public class RoomUser {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "groupId")
+    @JoinColumn(name = "roomId")
     @NonNull
     private Room room;
 
     //개인미션 성공 알림여부
 
-    @Column(name="isPersonalNotice",columnDefinition = "TINYINT", length=1)
-    @ColumnDefault("1")
-    private Integer isPersonalNotice;
+//    @Column(name="isPersonalNotice",columnDefinition = "TINYINT", length=1)
+//    @ColumnDefault("1")
+//    private Integer isPersonalNotice;
+//
+//    //채팅방 알림여부
+//    @Column(name="isNotice", columnDefinition = "TINYINT", length=1)
+//    @ColumnDefault("1")
+//    private Integer isNotice;
+//
+//    @Column(name="isHostUser", columnDefinition = "TINYINT", length=1)
+//    @ColumnDefault("0")
+//    private Integer isHostUser;
 
-    //채팅방 알림여부
-    @Column(name="isNotice", columnDefinition = "TINYINT", length=1)
-    @ColumnDefault("1")
-    private Integer isNotice;
-
-    @Column(name="isHostUser", columnDefinition = "TINYINT", length=1)
-    @ColumnDefault("0")
-    private Integer isHostUser;
-
-    @Column(name="isActivated",columnDefinition = "TINYINT", length=1)
-    @ColumnDefault("1")
-    private Integer isActivated;
+//    @Column(name="isActive",columnDefinition = "TINYINT", length=1)
+//    @ColumnDefault("1")
+//    private Integer isActive;
 
     @Column(name = "createdAt")
     private Timestamp createdAt;
 
-    @Column(name = "updatedAt")
-    private Timestamp updatedAt;
-
-
-
+//    @Column(name = "updatedAt")
+//    private Timestamp updatedAt;
 
     @PrePersist
     void createdAt() {
         this.createdAt = Timestamp.from(Instant.now());
     }
 
-    @PreUpdate
-    void updatedAt() {
-        this.updatedAt = Timestamp.from(Instant.now());
-    }
+//    @PreUpdate
+//    void updatedAt() {
+//        this.updatedAt = Timestamp.from(Instant.now());
+//    }
 
 
 
@@ -82,16 +79,24 @@ public class RoomUser {
 //
 //    }
 
+//    @Builder
+//    private RoomUser(Integer id , User user, Room room, Integer isPersonalNotice, Integer isNotice, Integer isHostUser) {
+//        this.id=id;
+//        this.user=user;
+//        this.room = room;
+//        this.isPersonalNotice=isPersonalNotice;
+//        this.isNotice=isNotice;
+//        this.isHostUser=isHostUser;
+//
+//    }
+
     @Builder
-    private RoomUser(Integer id , User user, Room room, Integer isPersonalNotice, Integer isNotice, Integer isHostUser) {
+    private RoomUser(Integer id , User user, Room room) {
         this.id=id;
         this.user=user;
         this.room = room;
-        this.isPersonalNotice=isPersonalNotice;
-        this.isNotice=isNotice;
-        this.isHostUser=isHostUser;
-
     }
+
     public void setUser(User user) {
         this.user = user;
         user.getRoomUsers().add(this);

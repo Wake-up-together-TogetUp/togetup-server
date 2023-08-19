@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.alarm.model;
 
-import com.wakeUpTogetUp.togetUp.api.group.model.Group;
+import com.wakeUpTogetUp.togetUp.api.group.model.Room;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import lombok.*;
@@ -38,15 +38,18 @@ public class Alarm {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomId")
-    private Group group;
+    private Room room;
 
     private String name;
-
     private String icon = "⏰";
-
     private Boolean isVibrate;
+
+    @Column(columnDefinition = "TINYINT")
     private Integer snoozeInterval = 5;
+
+    @Column(columnDefinition = "TINYINT")
     private Integer snoozeCnt = 3;
+
     private Time alarmTime;
     private Boolean monday;
     private Boolean tuesday;
@@ -55,7 +58,7 @@ public class Alarm {
     private Boolean friday;
     private Boolean saturday;
     private Boolean sunday;
-    private Boolean isActivated = true;
+    private Boolean isActive = true;
 
     @Builder
     public Alarm(User user, Mission mission, String name, String icon, Boolean isVibrate, Integer snoozeInterval, Integer snoozeCnt, Time alarmTime, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {

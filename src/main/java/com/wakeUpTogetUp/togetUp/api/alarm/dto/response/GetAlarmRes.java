@@ -14,7 +14,6 @@ public class GetAlarmRes {
     private Integer missionId;
     private String name;
     private String icon;
-    private String sound;
     private Boolean isVibrate;
     private Integer snoozeInterval;
     private Integer snoozeCnt;

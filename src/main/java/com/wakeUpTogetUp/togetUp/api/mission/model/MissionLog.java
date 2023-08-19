@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.mission.model;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+import com.wakeUpTogetUp.togetUp.api.group.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.utils.TimestampFormatter;
 import lombok.Builder;
@@ -38,19 +38,27 @@ public class MissionLog {
     @Column(columnDefinition = "Timestamp")
     private String createdAt = TimestampFormatter.format(new Timestamp(System.currentTimeMillis()));
 
-    private Boolean isDeleted = true;
-
-
+    private Boolean isDeleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "alarmId")
-    private Alarm alarm;
+    @JoinColumn(name = "roomId")
+    private Room room;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "missionId")
     private Mission mission;
+
+    @Builder
+    public MissionLog(String alarmName, String missionPicLink, User user, Room room,
+            Mission mission) {
+        this.alarmName = alarmName;
+        this.missionPicLink = missionPicLink;
+        this.user = user;
+        this.room = room;
+        this.mission = mission;
+    }
 }

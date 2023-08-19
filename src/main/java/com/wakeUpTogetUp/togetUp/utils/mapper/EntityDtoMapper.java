@@ -5,7 +5,7 @@ import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.response.NotificationRes;
 import com.wakeUpTogetUp.togetUp.api.fcmNotification.entity.Notification;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionRes;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteLogRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import org.mapstruct.Mapping;
@@ -34,9 +34,10 @@ public interface EntityDtoMapper {
 
     // MissionCompleteLog
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "alarmId", source = "alarm.id")
-    MissionCompleteLogRes toMissionCompleteLogRes(MissionLog missionLog);
-    List<MissionCompleteLogRes> toMissionCompleteLogResList(List<MissionLog> missionLogList);
+    @Mapping(target = "roomId", source = "room.id")
+    @Mapping(target = "missionId", source = "mission.id")
+    MissionLogRes toMissionLogRes(MissionLog missionLog);
+    List<MissionLogRes> toMissionLogResList(List<MissionLog> missionLogList);
 
     // PushLog
     NotificationRes toNotificationRes(Notification notification);

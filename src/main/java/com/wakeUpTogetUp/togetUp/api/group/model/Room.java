@@ -52,7 +52,7 @@ public class Room {
     private Timestamp updatedAt;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private boolean isDeleted = false;
 
     @PrePersist
     void createdAt() {

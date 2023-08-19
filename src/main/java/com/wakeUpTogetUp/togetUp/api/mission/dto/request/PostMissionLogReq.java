@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostMissionCompleteLogReq {
+public class PostMissionLogReq {
+    private String alarmName;
+    private String missionPicLink;
     private Integer userId;
-    private Integer alarmId;
-    private String type;
-    private String title;
-    private String picLink;
+    private Integer roomId;
+    private Integer missionId;
 }
