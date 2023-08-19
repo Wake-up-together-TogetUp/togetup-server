@@ -1,6 +1,5 @@
-package com.wakeUpTogetUp.togetUp.api.mappingGroupUser.model;
+package com.wakeUpTogetUp.togetUp.api.group.model;
 
-import com.wakeUpTogetUp.togetUp.api.group.model.Group;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -10,11 +9,11 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
-@Table(name = "mappingGroupUser")
+@Table(name = "room_user")
 @Getter
 @Setter
 @NoArgsConstructor(force = true)
-public class MappingGroupUser {
+public class RoomUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +29,7 @@ public class MappingGroupUser {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "groupId")
     @NonNull
-    private Group group;
+    private Room room;
 
     //개인미션 성공 알림여부
 
@@ -84,10 +83,10 @@ public class MappingGroupUser {
 //    }
 
     @Builder
-    private MappingGroupUser ( Integer id ,User user,Group group,Integer isPersonalNotice,Integer isNotice,Integer isHostUser) {
+    private RoomUser(Integer id , User user, Room room, Integer isPersonalNotice, Integer isNotice, Integer isHostUser) {
         this.id=id;
         this.user=user;
-        this.group=group;
+        this.room = room;
         this.isPersonalNotice=isPersonalNotice;
         this.isNotice=isNotice;
         this.isHostUser=isHostUser;
@@ -95,11 +94,11 @@ public class MappingGroupUser {
     }
     public void setUser(User user) {
         this.user = user;
-        user.getMappingGroupUsers().add(this);
+        user.getRoomUsers().add(this);
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
-        group.getMappingGroupUsers().add(this);
-    }
+//    public void setRoom(Room room) {
+//        this.room = room;
+//        room.getMappingRoomUsers().add(this);
+//    }
 }

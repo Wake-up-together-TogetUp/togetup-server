@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.users.model;
 
-import com.wakeUpTogetUp.togetUp.api.mappingGroupUser.model.MappingGroupUser;
+import com.wakeUpTogetUp.togetUp.api.group.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import lombok.Builder;
@@ -10,7 +10,6 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import javax.annotation.PreDestroy;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
@@ -67,7 +66,7 @@ public class User {
 
 
     @OneToMany(mappedBy = "user")
-    private List<MappingGroupUser> mappingGroupUsers = new ArrayList<>();
+    private List<RoomUser> roomUsers = new ArrayList<>();
 
     @PrePersist
     void registeredAt() {

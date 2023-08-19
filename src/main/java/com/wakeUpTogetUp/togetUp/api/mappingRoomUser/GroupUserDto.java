@@ -1,7 +1,7 @@
-package com.wakeUpTogetUp.togetUp.api.mappingGroupUser;
+package com.wakeUpTogetUp.togetUp.api.mappingRoomUser;
 
-import com.wakeUpTogetUp.togetUp.api.group.model.Group;
-import com.wakeUpTogetUp.togetUp.api.mappingGroupUser.model.MappingGroupUser;
+import com.wakeUpTogetUp.togetUp.api.group.model.Room;
+import com.wakeUpTogetUp.togetUp.api.group.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import lombok.*;
 
@@ -17,15 +17,15 @@ public class GroupUserDto {
 
     private Integer id;
     private User user;
-    private Group group;
+    private Room room;
     private Integer isHostUser;
 
 
-    public MappingGroupUser toEntity(){
-        return MappingGroupUser.builder()
+    public RoomUser toEntity(){
+        return RoomUser.builder()
                 .id(id)
                .user(user)
-                .group(group)
+                .room(room)
                 .isHostUser(isHostUser)
                 .build();
     }

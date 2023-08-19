@@ -1,8 +1,8 @@
-package com.wakeUpTogetUp.togetUp.api.mappingGroupUser.dto.request;
+package com.wakeUpTogetUp.togetUp.api.mappingRoomUser.dto.request;
 
 
-import com.wakeUpTogetUp.togetUp.api.group.model.Group;
-import com.wakeUpTogetUp.togetUp.api.mappingGroupUser.model.MappingGroupUser;
+import com.wakeUpTogetUp.togetUp.api.group.model.Room;
+import com.wakeUpTogetUp.togetUp.api.group.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import lombok.*;
 
@@ -22,11 +22,11 @@ public class MappingGroupUserReq {
     private Integer isHostUser;
 
 
-    public MappingGroupUser toEntity(User user, Group group){
-        return MappingGroupUser.builder()
+    public RoomUser toEntity(User user, Room room){
+        return RoomUser.builder()
                 .id(id)
                 .user(user)
-                .group(group)
+                .room(room)
                 .isPersonalNotice(isPersonalNotice)
                 .isNotice(isNotice)
                 .isHostUser(isHostUser)

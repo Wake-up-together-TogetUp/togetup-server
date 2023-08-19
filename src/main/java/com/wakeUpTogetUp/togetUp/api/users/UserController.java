@@ -15,17 +15,7 @@ public class UserController  {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @PatchMapping("/fcm-token/{fcmTokenId}")
-    public BaseResponse<Status> updateFcmToken(@AuthUser Integer userId,@RequestBody String fcmToken){
 
-        return new BaseResponse<>(Status.SUCCESS);
-    }
-
-    @GetMapping("/notification")
-    public BaseResponse<Status> updateAgreeNotification(@AuthUser Integer userId,@RequestBody boolean agreeNotification){
-
-        return new BaseResponse<>(Status.SUCCESS);
-    }
 
 
 
