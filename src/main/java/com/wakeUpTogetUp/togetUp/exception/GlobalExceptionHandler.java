@@ -5,6 +5,7 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
@@ -20,12 +21,13 @@ public class GlobalExceptionHandler {
 
     // Catch Custom Exception(BaseException)
     @ExceptionHandler({ BaseException.class })
-    protected BaseResponse handleCustomException(BaseException exception) {
-        logger.debug("BaseResponse exception occurred: {}",
-                exception.getMessage(),
-                exception);
+    protected ResponseEntity<BaseResponse<Status>> handleCustomException(BaseException exception) {
+        logger.debug("BaseResponse exception occurred: {}", exception.getMessage(), exception);
 
-        return new BaseResponse<>(exception.getStatus());
+        Status status = exception.getStatus();
+        ResponseEntity<BaseResponse<Status>> responseEntity = ResponseEntity.status(status.getHttpStatus())
+                .body(new BaseResponse<>(status));
+        return responseEntity;
     }
 
     // Catch Bad Request Exception
