@@ -1,10 +1,9 @@
-package com.wakeUpTogetUp.togetUp.alarm;
+package com.wakeUpTogetUp.togetUp.api.alarm;
 
-import com.wakeUpTogetUp.togetUp.alarm.dto.request.DeleteAlarmReq;
-import com.wakeUpTogetUp.togetUp.alarm.dto.request.PatchAlarmReq;
-import com.wakeUpTogetUp.togetUp.alarm.dto.response.AlarmRes;
-import com.wakeUpTogetUp.togetUp.alarm.dto.response.AlarmsRes;
-import com.wakeUpTogetUp.togetUp.alarm.dto.request.PostAlarmReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.DeleteAlarmReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PatchAlarmReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
@@ -30,32 +29,32 @@ public class AlarmController {
      * @return
      */
     @GetMapping("/{alarmId}")
-    public BaseResponse<AlarmRes> GetAlarm(@PathVariable Integer alarmId){
-        AlarmRes alarmRes = alarmProvider.getAlarm(alarmId);
+    public BaseResponse<GetAlarmRes> GetAlarm(@PathVariable Integer alarmId){
+        GetAlarmRes getAlarmRes = alarmProvider.getAlarm(alarmId);
 
-        return new BaseResponse<>(Status.SUCCESS, alarmRes);
+        return new BaseResponse<>(Status.SUCCESS, getAlarmRes);
     }
 
     /**
-     * 사용자 알람, 루틴 목록 불러오기
+     * 사용자 알람 불러오기
      * @param userId
      * @return
      */
     @GetMapping("")
-    public BaseResponse<List<AlarmsRes>> GetAlarmsByUserId(@RequestParam Integer userId){
-        List<AlarmsRes> alarmsResList = alarmProvider.getAlarmsByUserId(userId);
+    public BaseResponse<List<GetAlarmRes>> GetAlarmsByUserId(@RequestParam Integer userId){
+        List<GetAlarmRes> alarmsResList = alarmProvider.getAlarmsByUserId(userId);
 
         return new BaseResponse<>(Status.SUCCESS, alarmsResList);
     }
 
     /**
-     * 알람 생성(알람, 알람-루틴 매핑)
+     * 알람 생성
      * @param postAlarmReq
      * @return
      */
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponse<AlarmRes> createAlarm(
+    public BaseResponse<GetAlarmRes> createAlarm(
             @RequestBody @Valid PostAlarmReq postAlarmReq
     ){
         Integer userId = postAlarmReq.getUserId();
@@ -73,7 +72,7 @@ public class AlarmController {
      * @return
      */
     @PatchMapping("/{alarmId}")
-    public BaseResponse<AlarmRes> updateAlarm(
+    public BaseResponse<GetAlarmRes> updateAlarm(
             @PathVariable Integer alarmId,
             @RequestBody @Valid PatchAlarmReq patchAlarmReq
     ) {

@@ -1,16 +1,14 @@
-package com.wakeUpTogetUp.togetUp.alarm;
+package com.wakeUpTogetUp.togetUp.api.alarm;
 
-import com.wakeUpTogetUp.togetUp.alarm.model.Alarm;
-import com.wakeUpTogetUp.togetUp.alarm.dto.response.AlarmRes;
-import com.wakeUpTogetUp.togetUp.alarm.dto.response.AlarmsRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.Status;
-import com.wakeUpTogetUp.togetUp.users.UserRepository;
+import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,21 +22,14 @@ public class AlarmProvider {
      * @param userId
      * @return
      */
-    public List<AlarmsRes> getAlarmsByUserId(Integer userId) {
+    public List<GetAlarmRes> getAlarmsByUserId(Integer userId) {
         // 유저 id 유무 확인
         userRepository.findById(userId).orElseThrow(
-                () -> new BaseException(Status.INVALID_USER_ID)
-        );
+                () -> new BaseException(Status.INVALID_USER_ID));
 
         List<Alarm> alarmList = alarmRepository.findByUserId(userId);
 
-        // dto 매핑
-        ArrayList<AlarmsRes> alarmsResList = new ArrayList<>();
-        for(Alarm alarm : alarmList) {
-            alarmsResList.add(EntityDtoMapper.INSTANCE.toAlarmsRes(alarm));
-        }
-
-        return alarmsResList;
+        return EntityDtoMapper.INSTANCE.toAlarmResList(alarmList);
     }
 
     /**
@@ -46,16 +37,12 @@ public class AlarmProvider {
      * @param alarmId
      * @return
      */
-    public AlarmRes getAlarm(Integer alarmId) {
+    public GetAlarmRes getAlarm(Integer alarmId) {
         // 알람 가져오기
         Alarm alarm = alarmRepository.findById(alarmId)
                 .orElseThrow(
-                        () -> new BaseException(Status.INVALID_ALARM_ID)
-                );
+                        () -> new BaseException(Status.INVALID_ALARM_ID));
 
-
-        AlarmRes alarmRes = EntityDtoMapper.INSTANCE.toAlarmRes(alarm);
-
-        return alarmRes;
+        return EntityDtoMapper.INSTANCE.toAlarmRes(alarm);
     }
 }

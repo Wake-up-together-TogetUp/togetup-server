@@ -1,10 +1,12 @@
 package com.wakeUpTogetUp.togetUp.alarm;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wakeUpTogetUp.togetUp.alarm.dto.response.AlarmRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.AlarmController;
+import com.wakeUpTogetUp.togetUp.api.alarm.AlarmProvider;
+import com.wakeUpTogetUp.togetUp.api.alarm.AlarmService;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import com.wakeUpTogetUp.togetUp.routine.dto.response.RoutineRes;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,8 +27,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.util.Arrays;
-
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -44,6 +44,7 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 class AlarmControllerTest {
 //    ConstraintDescriptions simpleRequestConstraints = new ConstraintDescriptions(.class);
 //    List<String> nameDescription = simpleRequestConstraints.descriptionsForProperty("name");
+
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -73,7 +74,7 @@ class AlarmControllerTest {
     @DisplayName("getAlarm - [Get] /alarm/{alarmId}")
     void getAlarm() throws Exception{
         //given
-        AlarmRes response = AlarmRes.builder()
+        GetAlarmRes response = GetAlarmRes.builder()
                 .id(42)
                 .userId(9)
                 .missionId(1)
@@ -93,12 +94,6 @@ class AlarmControllerTest {
                 .saturday(true)
                 .sunday(false)
                 .isActivated(true)
-                .routineResList(
-                        Arrays.asList(
-                                new RoutineRes(5,9,"기상",10,"⏰","#000000",1),
-                                new RoutineRes(7,9,"샤워",15,"🚿","#000000",2)
-                        )
-                )
                 .build();
 
         given(alarmProvider.getAlarm(42)).willReturn(response);
@@ -113,7 +108,7 @@ class AlarmControllerTest {
                 .andDo(print());
 
         //then
-        BaseResponse<AlarmRes> responseData = new BaseResponse<>(Status.SUCCESS, response);
+        BaseResponse<GetAlarmRes> responseData = new BaseResponse<>(Status.SUCCESS, response);
 
         action.andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(responseData)))
@@ -166,23 +161,7 @@ class AlarmControllerTest {
                                         fieldWithPath("result.friday").description("금요일 알림 여부"),
                                         fieldWithPath("result.saturday").description("토요일 알림 여부"),
                                         fieldWithPath("result.sunday").description("일요일 알림 여부"),
-                                        fieldWithPath("result.isActivated").description("알람 활성 여부"),
-                                        subsectionWithPath("result.routineResList[]").description("루틴 리스트")
-                                                .attributes(key("optional").value("true")),
-                                        fieldWithPath("result.routineResList[].id").description("루틴 Id")
-                                                .attributes(key("optional").value("true")),
-                                        fieldWithPath("result.routineResList[].alarmId").description("알람 Id")
-                                                .attributes(key("optional").value("true")),
-                                        fieldWithPath("result.routineResList[].name").description("루틴 이름")
-                                                .attributes(key("optional").value("true")),
-                                        fieldWithPath("result.routineResList[].estimatedTime").description("예상 소요 시간")
-                                                .attributes(key("optional").value("true")),
-                                        fieldWithPath("result.routineResList[].icon").description("아이콘")
-                                                .attributes(key("optional").value("true")),
-                                        fieldWithPath("result.routineResList[].color").description("색상")
-                                                .attributes(key("optional").value("true")),
-                                        fieldWithPath("result.routineResList[].routineOrder").description("루틴 순서")
-                                                .attributes(key("optional").value("true"))
+                                        fieldWithPath("result.isActivated").description("알람 활성 여부")
                                 )
                         )
                 );
