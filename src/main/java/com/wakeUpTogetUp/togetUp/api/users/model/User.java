@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.annotation.PreDestroy;
 import javax.persistence.*;
@@ -20,6 +22,8 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 @Table(name="user")
 @NoArgsConstructor
 public class User {
@@ -53,8 +57,8 @@ public class User {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @Column(name = "deleted_at")
-    private Timestamp deletedAt;
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 
 
     @OneToMany(mappedBy = "user")
@@ -74,11 +78,6 @@ public class User {
     @PreUpdate
     void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
-    }
-
-    @PreDestroy
-    void deletedAt() {
-        this.deletedAt = Timestamp.from(Instant.now());
     }
 
 

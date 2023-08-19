@@ -2,15 +2,12 @@ package com.wakeUpTogetUp.togetUp.api.auth;
 
 import com.wakeUpTogetUp.togetUp.api.auth.dto.request.SocialLoginReq;
 import com.wakeUpTogetUp.togetUp.api.auth.service.AuthService;
-import com.wakeUpTogetUp.togetUp.api.users.dto.response.UserRes;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.LoginRes;
-
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import com.wakeUpTogetUp.togetUp.config.annotation.NoAuth;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 
 
 @RestController
@@ -22,7 +19,6 @@ public class AuthController {
     /**
      *
      */
-    @NoAuth
     @ResponseBody
     @PostMapping("/login")
     public BaseResponse<LoginRes> join(@RequestBody SocialLoginReq loginReq) {
@@ -32,6 +28,9 @@ public class AuthController {
             return new BaseResponse<>(Status.SUCCESS,loginRes);
 
     }
+
+
+
 }
 
 

@@ -1,22 +1,27 @@
 package com.wakeUpTogetUp.togetUp.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wakeUpTogetUp.togetUp.config.interceptor.AuthenticationInterceptor;
+import com.wakeUpTogetUp.togetUp.api.auth.AuthUserResolver;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.List;
+
 @Configuration
-//@EnableWebMvc
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
     private final JwtService jwtService;
     private final ObjectMapper objectMapper;
+    private final AuthUserResolver authUserResolver;
 
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(authUserResolver);
+    }
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         // 모든 경로에 앞으로 만들 모든 CORS 정보를 적용한다
@@ -34,18 +39,5 @@ public class WebConfig implements WebMvcConfigurer {
                 //.allowCredentials(true);
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry reg){
-        reg.addInterceptor(new AuthenticationInterceptor(jwtService,objectMapper))
-                .order(1)
-                .addPathPatterns("/app/users")
-                .excludePathPatterns("/app/group")
-                .excludePathPatterns("/app/chat");
-
-       //         .addPathPatterns("/**"); //interceptor 작업이 필요한 path를 모두 추가한다.
-
-        //.excludePathPatterns("app/accounts","/app/accounts/auth","app/videos/**");
-        // 인가작업에서 제외할 API 경로를 따로 추가할수도 있으나, 일일히 따로 추가하기 어려우므로 어노테이션을 따로 만들어 해결한다.
-    }
 
 }
