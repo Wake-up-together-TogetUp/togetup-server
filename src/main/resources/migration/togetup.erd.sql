@@ -24,7 +24,9 @@ CREATE TABLE room (
                          `name`	                        VARCHAR(10)	    NOT NULL,
                          `intro`	                    VARCHAR(30)	    NULL,
                          `room_mission_intro`	        VARCHAR(20)	    NULL,
-                         `group_icon`	            VARCHAR(30)	    NOT NULL,
+                         `group_icon`	                VARCHAR(30)	    NOT NULL,
+                         `topic`                        VARCHAR(100)    NULL,
+                         `invite_code`                  VARCHAR(100)    NULL,
                          `created_at`	                TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
                          `updated_at`	                TIMESTAMP	    NOT NULL	DEFAULT current_timestamp ON UPDATE current_timestamp,
                          `deleted_at`	                TIMESTAMP	    NULL
