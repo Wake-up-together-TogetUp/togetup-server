@@ -21,9 +21,13 @@ import java.util.Date;
 @Component
 public class JwtService {
     @Value("${jwt.secret-key}")
-    private String key;
+    private  String key;
+    @Value("${jwt.token-expired-time}")
+    private  Long expiredTimeMs;
 
-    public static Boolean validate(String token, String userEmail, String key) {
+
+
+    public Boolean validate(String token, String userEmail, String key) {
         String useremailByToken = getUseremail(token, key);
         return useremailByToken.equals(userEmail) && !isTokenExpired(token, key);
     }
@@ -90,7 +94,7 @@ public class JwtService {
         return claims.get("userId",Integer.class);
     }
 
-    public static Claims extractAllClaims(String token, String key) {
+    public Claims extractAllClaims(String token, String key) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey(key))
                 .build()
@@ -98,25 +102,29 @@ public class JwtService {
                 .getBody();
     }
 
-    public static String getUseremail(String token, String key) {
+    public String getUseremail(String token, String key) {
         return extractAllClaims(token, key).get("username", String.class);
     }
 
-    private static Key getSigningKey(String secretKey) {
+    private  Key getSigningKey(String secretKey) {
         byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public static Boolean isTokenExpired(String token, String key) {
+    public Boolean isTokenExpired(String token, String key) {
         Date expiration = extractAllClaims(token, key).getExpiration();
         return expiration.before(new Date());
     }
 
-    public static String generateAccessToken(Integer userId, String key, long expiredTimeMs) {
+//    public static String generateAccessToken(Integer userId, String key, long expiredTimeMs) {
+//        return doGenerateToken(userId, expiredTimeMs, key);
+//    }
+
+    public  String generateAccessToken(Integer userId) {
         return doGenerateToken(userId, expiredTimeMs, key);
     }
 
-    private static String doGenerateToken(Integer userId, long expireTime, String key) {
+    private String doGenerateToken(Integer userId, long expireTime, String key) {
         Claims claims = Jwts.claims();
         claims.put("userId", userId);
 

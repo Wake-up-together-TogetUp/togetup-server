@@ -1,0 +1,146 @@
+package com.wakeUpTogetUp.togetUp.api.mappingGroupUser;
+
+
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.common.Status;
+
+import com.wakeUpTogetUp.togetUp.api.fcmNotification.FcmService;
+import com.wakeUpTogetUp.togetUp.api.mappingGroupUser.dto.request.MappingGroupUserReq;
+import com.wakeUpTogetUp.togetUp.api.group.GroupRepository;
+import com.wakeUpTogetUp.togetUp.api.group.model.Group;
+import com.wakeUpTogetUp.togetUp.api.mappingGroupUser.dto.response.MappingGroupUserRes;
+import com.wakeUpTogetUp.togetUp.api.mappingGroupUser.model.MappingGroupUser;
+import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
+import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.utils.mapper.MappingGroupUserMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+public class MappingGroupUserService {
+    private final MappingGroupUserRepository mappingGroupUserRepository;
+    private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
+    private final FcmService fcmService;
+
+    @Transactional
+    public Integer createGroupUser(Integer userId, Integer groupId,MappingGroupUserReq mappingGroupUserReq){
+
+        //조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(Status.INVALID_USER_ID)
+                );
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new BaseException(Status.INVALID_GROUP_ID)
+                );
+        //dto->entitiy
+        MappingGroupUser groupUser =mappingGroupUserReq.toEntity(user,group);
+        //저장
+        mappingGroupUserRepository.save(groupUser);
+
+        // topic 구독
+       // fcmService.subscribe(List.of(user.getFcmToken()), group.getTopic());
+
+        return groupUser.getId();
+    }
+
+    /**
+     * 그룹아이디로 그룹유저 가져오기
+     * @param groupId
+     * @return
+     */
+    public List<MappingGroupUserRes> getUserByGroupId(Integer groupId) {
+        // 유저 가져오기
+        List<MappingGroupUser> mappingGroupUserList= mappingGroupUserRepository.findByGroupId(groupId);
+        System.out.println("매핑"+mappingGroupUserList);
+
+       // MappingGroupUserRes  mappingGroupUserRes= MappingGroupUserMapper.INSTANCE.toMappingGroupUserRes(mappingGroupUser);
+        // dto 매핑
+        ArrayList<MappingGroupUserRes> mappingGroupUserResList = new ArrayList<>();
+        for(MappingGroupUser mappingGroupUser : mappingGroupUserList) {
+            mappingGroupUserResList.add(MappingGroupUserMapper.INSTANCE.toMappingGroupUserRes(mappingGroupUser));
+        }
+
+        return mappingGroupUserResList;
+    }
+    /**
+     * 유저아이디로 그룹유저 가져오기
+     * @param userId
+     * @return
+     */
+    public List<MappingGroupUserRes> getGroupByUserId(Integer userId) {
+        // 유저 가져오기
+        List<MappingGroupUser> mappingGroupUserList= mappingGroupUserRepository.findByUserId(userId);
+
+
+        // dto 매핑
+        ArrayList<MappingGroupUserRes> mappingGroupUserResList = new ArrayList<>();
+        for(MappingGroupUser mappingGroupUser : mappingGroupUserList) {
+            mappingGroupUserResList.add(MappingGroupUserMapper.INSTANCE.toMappingGroupUserRes(mappingGroupUser));
+        }
+
+        return mappingGroupUserResList;
+    }
+
+
+    /**
+     * 그룹유저 수정  : ex) 알림여부, 미션여부
+     * @param userId
+     * @param groupId
+     * @param mappingGroupUserReq
+     * @return
+     */
+
+    @Transactional
+    public MappingGroupUserRes editMappingGroupUser(Integer userId, Integer groupId, MappingGroupUserReq mappingGroupUserReq) {
+
+
+        // 그룹유저 수정  ex) 알림을 키던가, 개인미션알림 설정
+        MappingGroupUser mappingGroupUser= mappingGroupUserRepository.findByUserIdAndGroupId(userId,groupId);
+        mappingGroupUser.setIsPersonalNotice(mappingGroupUserReq.getIsPersonalNotice());
+        mappingGroupUser.setIsNotice(mappingGroupUserReq.getIsNotice());
+        mappingGroupUser.setIsHostUser(mappingGroupUserReq.getIsHostUser());
+
+
+        //저장
+        MappingGroupUser mappingGroupUserModified = mappingGroupUserRepository.save(mappingGroupUser);
+
+
+        MappingGroupUserRes mappingGroupUserRes = MappingGroupUserMapper.INSTANCE.toMappingGroupUserRes(mappingGroupUserModified);
+
+        // return
+        return mappingGroupUserRes;
+    }
+
+    /**
+     *  그룹 탈퇴
+     */
+    @Transactional
+    public void deleteMappingGroupUser(Integer userId,Integer groupId) {
+        // TODO : 없으면 예외처리
+        Integer cnt=mappingGroupUserRepository.deleteByUserIdAndGroupId(userId,groupId);
+        //조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(Status.INVALID_USER_ID)
+                );
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new BaseException(Status.INVALID_GROUP_ID)
+                );
+        
+        // 토픽 구독 취소
+//        fcmService.unSubscribe(List.of(user.getFcmToken()), group.getTopic());
+
+        if(cnt==0)
+        {
+            new BaseException(Status.BAD_REQUEST);
+        }
+    }
+
+}
