@@ -15,5 +15,5 @@ public class GetMissionRes {
     private String object;
     private String createdAt;
     private String updatedAt;
-    private Boolean isActivated;
+    private Boolean isActive;
 }

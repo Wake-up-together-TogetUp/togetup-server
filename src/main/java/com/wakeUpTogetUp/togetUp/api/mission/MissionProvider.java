@@ -30,7 +30,7 @@ public class MissionProvider {
         return EntityDtoMapper.INSTANCE.toGetMissionResList(missionList);
     }
 
-    public MissionLogRes getMissionCompleteLog(Integer missionCompleteLogId){
+    public MissionLogRes getMissionLog(Integer missionCompleteLogId){
         MissionLog missionLog = missionLogRepository.findById(missionCompleteLogId)
                 .orElseThrow(
                         () -> new BaseException(Status.INTERNAL_SERVER_ERROR));
