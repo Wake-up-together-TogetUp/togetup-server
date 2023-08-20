@@ -82,7 +82,7 @@ CREATE TABLE `alarm` (
                          `saturday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
                          `sunday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
                          `is_vibrate`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
-                         `is_active`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
+                         `is_activated`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
                          `user_id`	        INT UNSIGNED	NOT NULL,
                          `mission_id`	    INT UNSIGNED	NULL,
                          `room_id`	        INT UNSIGNED	NULL,
