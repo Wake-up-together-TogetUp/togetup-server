@@ -3,11 +3,13 @@ package com.wakeUpTogetUp.togetUp.api.file;
 import com.wakeUpTogetUp.togetUp.api.file.dto.response.PostFileRes;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.Status;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+@Tag(name = "파일(File)")
 @RestController
 @RequestMapping("/app/file")
 @RequiredArgsConstructor
