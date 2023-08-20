@@ -1,10 +1,10 @@
-package com.wakeUpTogetUp.togetUp.api.group;
+package com.wakeUpTogetUp.togetUp.api.room;
 
-import com.wakeUpTogetUp.togetUp.api.group.model.Room;
+import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.api.group.dto.request.GroupReq;
-import com.wakeUpTogetUp.togetUp.api.group.dto.response.GroupRes;
+import com.wakeUpTogetUp.togetUp.api.room.dto.request.GroupReq;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.GroupRes;
 import com.wakeUpTogetUp.togetUp.utils.mapper.GroupMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

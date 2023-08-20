@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.users.model;
 
-import com.wakeUpTogetUp.togetUp.api.group.model.RoomUser;
+import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import lombok.Builder;
@@ -22,7 +22,7 @@ import java.util.List;
 @Getter
 @Entity
 @SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE id = ?")
-@Where(clause = "deleted = false")
+@Where(clause = "is_deleted = false")
 @Table(name="user")
 @NoArgsConstructor
 public class User {

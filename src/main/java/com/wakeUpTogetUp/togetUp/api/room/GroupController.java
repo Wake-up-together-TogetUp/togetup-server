@@ -1,7 +1,7 @@
-package com.wakeUpTogetUp.togetUp.api.group;
+package com.wakeUpTogetUp.togetUp.api.room;
 
-import com.wakeUpTogetUp.togetUp.api.group.dto.request.GroupReq;
-import com.wakeUpTogetUp.togetUp.api.group.dto.response.GroupRes;
+import com.wakeUpTogetUp.togetUp.api.room.dto.request.GroupReq;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.GroupRes;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.Status;

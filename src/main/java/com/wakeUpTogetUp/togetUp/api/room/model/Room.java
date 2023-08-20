@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.group.model;
+package com.wakeUpTogetUp.togetUp.api.room.model;
 
 
 import lombok.*;

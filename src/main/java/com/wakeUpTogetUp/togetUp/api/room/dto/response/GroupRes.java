@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.group.dto.response;
+package com.wakeUpTogetUp.togetUp.api.room.dto.response;
 
 import lombok.*;
 
