@@ -5,20 +5,17 @@ import com.wakeUpTogetUp.togetUp.api.auth.service.AuthService;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.LoginRes;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
-
-
+@Tag(name = "Auth(로그인)",description = "로그인 및 유저의 권한 인증")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app/auth")
 public class AuthController {
     private final AuthService authService;
 
-    /**
-     *
-     */
+
     @ResponseBody
     @PostMapping("/login")
     public BaseResponse<LoginRes> join(@RequestBody SocialLoginReq loginReq) {

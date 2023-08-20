@@ -5,14 +5,14 @@ import com.wakeUpTogetUp.togetUp.api.room.dto.response.GroupRes;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.Status;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-
-
+@Tag(name = "그룹")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app/group")
