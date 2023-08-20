@@ -3,6 +3,7 @@ package com.wakeUpTogetUp.togetUp.utils;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -25,23 +26,9 @@ public class JwtService {
     @Value("${jwt.token-expired-time}")
     private  Long expiredTimeMs;
 
-
-
     public Boolean validate(String token, String userEmail, String key) {
         String useremailByToken = getUseremail(token, key);
         return useremailByToken.equals(userEmail) && !isTokenExpired(token, key);
-    }
-
-    public Boolean validateByUserId(Integer userId) {
-        String accessToken = getJwt();
-
-        if(accessToken == null || accessToken.length() == 0){
-            throw new BaseException(Status.EMPTY_JWT);
-        }
-
-        Integer userIdInToken = getUserId(accessToken);
-
-        return userIdInToken.equals(userId) && !isTokenExpired(accessToken, key);
     }
 
     public String getJwt(){
@@ -53,7 +40,7 @@ public class JwtService {
         Claims claims;
         try{
             claims = Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey(key))
+                    .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(accessToken)
                     .getBody();
@@ -81,7 +68,7 @@ public class JwtService {
         Claims claims;
         try{
             claims = Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey(key))
+                    .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(accessToken)
                     .getBody();
@@ -95,7 +82,7 @@ public class JwtService {
 
     public Claims extractAllClaims(String token, String key) {
         return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey(key))
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -105,9 +92,29 @@ public class JwtService {
         return extractAllClaims(token, key).get("username", String.class);
     }
 
-    private  Key getSigningKey(String secretKey) {
-        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+    private  Key getSigningKey() {
+        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private Claims getBody(final String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public Boolean verifyToken(String token) {
+        try {
+            final Claims claims = getBody(token);
+            return true;
+        } catch (RuntimeException e) {
+            if (e instanceof ExpiredJwtException) {
+                throw new BaseException(Status.INVALID_JWT);
+            }
+            return false;
+        }
     }
 
     public Boolean isTokenExpired(String token, String key) {
@@ -131,7 +138,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expireTime))
-                .signWith(getSigningKey(key), SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 }

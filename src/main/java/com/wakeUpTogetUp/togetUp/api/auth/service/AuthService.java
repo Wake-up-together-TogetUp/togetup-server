@@ -45,7 +45,7 @@ public class AuthService {
 
         return LoginRes.builder()
                 .userId(userId)
-                .useName("박건우")//socialUserRes.getName())
+                .useName(socialUserRes.getName())   //socialUserRes.getName())
                 .accessToken(accessToken)
                 .build();
     }
