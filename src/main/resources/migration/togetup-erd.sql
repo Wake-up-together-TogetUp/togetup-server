@@ -12,7 +12,7 @@ CREATE TABLE `user` (
 
 CREATE TABLE `mission` (
                            `id`	        INT UNSIGNED        NOT NULL    AUTO_INCREMENT PRIMARY KEY,
-                           `name`	    VARCHAR(10)	        NOT NULL,
+                           `name`	    VARCHAR(20)	        NOT NULL,
                            `object`	    VARCHAR(20)	        NOT NULL,
                            `created_at`	TIMESTAMP	        NOT NULL	DEFAULT current_timestamp,
                            `updated_at`	TIMESTAMP	        NOT NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
