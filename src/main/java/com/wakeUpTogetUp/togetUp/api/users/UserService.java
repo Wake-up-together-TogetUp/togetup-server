@@ -1,42 +1,57 @@
 package com.wakeUpTogetUp.togetUp.api.users;
 
-import com.wakeUpTogetUp.togetUp.api.users.dto.request.LoginReq;
-import com.wakeUpTogetUp.togetUp.api.users.dto.request.PatchUserReq;
-import com.wakeUpTogetUp.togetUp.api.users.dto.request.SocialLoginReq;
-import com.wakeUpTogetUp.togetUp.api.users.dto.request.UserReq;
+import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
+import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
+import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.api.users.dto.response.UserInfoRes;
-import com.wakeUpTogetUp.togetUp.api.users.dto.response.UserRes;
-import com.wakeUpTogetUp.togetUp.api.users.dto.response.UserTokenRes;
-import com.wakeUpTogetUp.togetUp.utils.JwtService;
-import com.wakeUpTogetUp.togetUp.utils.mapper.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.apache.ibatis.jdbc.Null;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-    private final JwtService jwtService;
+    private final FcmTokenRepository fcmTokenRepository;
 
 
+    public Integer updateFcmToken(Integer userId, Integer fcmTokenId, String fcmToken) {
 
+        User user = userRepository.findById(userId).orElse(null);
+        FcmToken fcmTokenObject;
+        if (Objects.isNull(user))
+            new BaseException(Status.INVALID_USER_ID);
+        if(fcmTokenId==null)
+        {
+             fcmTokenObject =  FcmToken.builder()
+                    .value(fcmToken)
+                    .user(user)
+                    .build();
+        }else {
+             fcmTokenObject = fcmTokenRepository.findById(fcmTokenId).orElse(
+                    FcmToken.builder()
+                            .value(fcmToken)
+                            .user(user)
+                            .build());
+            fcmTokenObject.updateFcmToken(fcmToken);
+        }
 
+      return fcmTokenRepository.save(fcmTokenObject).getId();
 
+    }
+
+    public void updateAgreePush(Integer userId, boolean agreePush){
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
+        user.setAgreePush(agreePush);
+        userRepository.save(user);
+    }
 
 }

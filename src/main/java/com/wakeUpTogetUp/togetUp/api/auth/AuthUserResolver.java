@@ -14,6 +14,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -29,10 +31,13 @@ public class AuthUserResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String jwt = webRequest.getHeader("Authorization");
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory)  {
+        if(webRequest.getHeader("Authorization")==null)
+          throw  new BaseException(Status.UNAUTHORIZED);
+        String jwt = webRequest.getHeader("Authorization").replace("Bearer", "").trim();
         if(jwt.isEmpty())
-            new BaseException(Status.UNAUTHORIZED);
+            throw  new BaseException(Status.UNAUTHORIZED);
+
         return jwtService.getUserId(jwt);
     }
 

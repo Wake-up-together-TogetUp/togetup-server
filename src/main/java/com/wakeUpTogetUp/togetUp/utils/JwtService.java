@@ -49,9 +49,8 @@ public class JwtService {
         return request.getHeader("X-ACCESS-TOKEN");
     }
 
-    public Integer getUserId(String headerToken) {
+    public Integer getUserId(String accessToken) {
         Claims claims;
-        String accessToken = headerToken.replace("Bearer", "").trim();
         try{
             claims = Jwts.parserBuilder()
                     .setSigningKey(getSigningKey(key))

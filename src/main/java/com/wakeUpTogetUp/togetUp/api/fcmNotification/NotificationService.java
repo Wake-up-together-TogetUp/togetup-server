@@ -2,10 +2,10 @@ package com.wakeUpTogetUp.togetUp.api.fcmNotification;
 
 import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.request.PushNotificationReq;
 import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.response.PushNotificationRes;
-import com.wakeUpTogetUp.togetUp.api.group.model.Room;
+import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.api.group.GroupRepository;
+import com.wakeUpTogetUp.togetUp.api.room.GroupRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

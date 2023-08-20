@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
-import com.wakeUpTogetUp.togetUp.api.group.GroupRepository;
-import com.wakeUpTogetUp.togetUp.api.group.model.Room;
+import com.wakeUpTogetUp.togetUp.api.room.GroupRepository;
+import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;

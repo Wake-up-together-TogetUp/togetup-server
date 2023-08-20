@@ -9,13 +9,14 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.PostObjectRecognitionRes;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
+@Tag(name = "미션")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app/mission")

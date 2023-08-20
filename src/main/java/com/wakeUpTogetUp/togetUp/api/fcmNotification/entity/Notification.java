@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.fcmNotification.entity;
 
-import com.wakeUpTogetUp.togetUp.api.group.model.Room;
+import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.utils.TimestampFormatter;
 import lombok.Builder;

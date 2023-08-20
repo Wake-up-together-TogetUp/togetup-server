@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.mission.model;
 
-import com.wakeUpTogetUp.togetUp.api.group.model.Room;
+import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.utils.TimestampFormatter;
 import lombok.Builder;

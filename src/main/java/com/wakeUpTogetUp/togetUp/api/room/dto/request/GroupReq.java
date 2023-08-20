@@ -1,7 +1,7 @@
-package com.wakeUpTogetUp.togetUp.api.group.dto.request;
+package com.wakeUpTogetUp.togetUp.api.room.dto.request;
 
 
-import com.wakeUpTogetUp.togetUp.api.group.model.Room;
+import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import lombok.*;
 
 
