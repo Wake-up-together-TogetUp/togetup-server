@@ -11,17 +11,12 @@ import java.sql.Time;
 
 @Entity
 @Table(name = "alarm")
-@DynamicInsert          // insert 시 값이 null인 필드 제외
+@DynamicInsert
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Alarm {
-//    @PrePersist
-//    public void prePersist() {
-//        this.isActivated = this.isActivated == null ? Boolean.TRUE : this.isActivated;
-//        this.icon = this.icon == null ? "⏰" : this.icon;
-//    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,28 +24,30 @@ public class Alarm {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId",columnDefinition = "INT UNSIGNED")
+    @JoinColumn(name = "user_id", columnDefinition = "INT UNSIGNED")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "missionId")
+    @JoinColumn(name = "mission_id")
     private Mission mission;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "roomId")
+    @JoinColumn(name = "room_id")
     private Room room;
 
     private String name;
-    private String icon = "⏰";
+    private String icon;
     private Boolean isVibrate;
 
     @Column(columnDefinition = "TINYINT")
-    private Integer snoozeInterval = 5;
+    private Integer snoozeInterval;
 
     @Column(columnDefinition = "TINYINT")
-    private Integer snoozeCnt = 3;
+    private Integer snoozeCnt;
 
-    private Time alarmTime;
+    @Column(columnDefinition = "TIME")
+    private String alarmTime;
+
     private Boolean monday;
     private Boolean tuesday;
     private Boolean wednesday;
@@ -58,10 +55,13 @@ public class Alarm {
     private Boolean friday;
     private Boolean saturday;
     private Boolean sunday;
-    private Boolean isActive = true;
+    private Boolean isActivated;
 
     @Builder
-    public Alarm(User user, Mission mission, String name, String icon, Boolean isVibrate, Integer snoozeInterval, Integer snoozeCnt, Time alarmTime, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
+    public Alarm(User user, Mission mission, String name, String icon, Boolean isVibrate,
+            Integer snoozeInterval, Integer snoozeCnt, String alarmTime, Boolean monday,
+            Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday,
+            Boolean sunday) {
         this.user = user;
         this.mission = mission;
         this.name = name;
@@ -79,7 +79,10 @@ public class Alarm {
         this.sunday = sunday;
     }
 
-    public void modifyProperties(Mission mission, String name, String icon, Boolean isVibrate, Integer snoozeInterval, Integer snoozeCnt, Time alarmTime, Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday) {
+    public void modifyProperties(Mission mission, String name, String icon, Boolean isVibrate,
+            Integer snoozeInterval, Integer snoozeCnt, String alarmTime, Boolean monday,
+            Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday,
+            Boolean sunday, Boolean isActivated) {
         setMission(mission);
         setName(name);
         setIcon(icon);
@@ -94,5 +97,6 @@ public class Alarm {
         setFriday(friday);
         setSaturday(saturday);
         setSunday(sunday);
+        setIsActivated(isActivated);
     }
 }
