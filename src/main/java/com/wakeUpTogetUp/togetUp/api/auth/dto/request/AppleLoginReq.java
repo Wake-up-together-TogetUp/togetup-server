@@ -10,15 +10,13 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Getter
 @NoArgsConstructor
-public class SocialLoginReq {
+public class AppleLoginReq {
 
     @NotNull
-    private String oauthAccessToken;
+    private String idToken;
     @NotNull
     private LoginType loginType;
 
     private String userName;
-
-
 }
 

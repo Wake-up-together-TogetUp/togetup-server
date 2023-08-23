@@ -37,6 +37,10 @@ public class AuthService {
         SocialUserRes socialUserRes = loginService.getUserInfo(socialLoginReq.getOauthAccessToken());
         log.info("socialUserResponse {} ", socialUserRes.toString());
 
+
+        if(socialLoginReq.getLoginType().equals(LoginType.APPLE))
+            socialUserRes.setName(socialLoginReq.getUserName());
+
         //저장된 유저 or 저장한유저의 id 가져오기
         Integer userId = this.getSignedUserId(socialUserRes,socialLoginReq.getLoginType());
 
@@ -45,7 +49,7 @@ public class AuthService {
 
         return LoginRes.builder()
                 .userId(userId)
-                .useName(socialUserRes.getName())   //socialUserRes.getName())
+                .userName(socialUserRes.getName())
                 .accessToken(accessToken)
                 .build();
     }
@@ -56,7 +60,8 @@ public class AuthService {
                 return loginService;
             }
         }
-        return new LoginServiceImpl();
+        //todo 수정
+        return loginServices.get(0);
     }
     private Integer getSignedUserId(SocialUserRes socialUserRes,LoginType loginType ) {
         User savedUser =userRepository.findBySocialId(socialUserRes.getId()).orElse(null);

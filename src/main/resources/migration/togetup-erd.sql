@@ -1,9 +1,8 @@
 CREATE TABLE `user` (
                         `id`	                INT UNSIGNED    NOT NULL    AUTO_INCREMENT PRIMARY KEY,
                         `name`     	            VARCHAR(10)	    NULL,
-                        `password`	            VARCHAR(255)	NULL,
                         `login_type`            VARCHAR(20)	    NOT NULL,
-                        `social_id`	            VARCHAR(30)	    NOT NULL,
+                        `social_id`	            VARCHAR(80)	    NOT NULL,
                         `agree_push`	        TINYINT(1)	    NOT NULL	DEFAULT TRUE,
                         `created_at`	        TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
                         `updated_at`	        TIMESTAMP	    NULL        DEFAULT current_timestamp ON UPDATE current_timestamp,

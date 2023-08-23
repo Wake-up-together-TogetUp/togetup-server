@@ -40,6 +40,7 @@ public enum Status {
     INVALID_MISSION_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 미션 id 입니다."),
     INVALID_ALARM_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 알람 id 입니다."),
     INVALID_ROUTINE_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 루틴 id 입니다."),
+    Invalid_APPLE_Token(HttpStatus.BAD_REQUEST,"Apple OAuth Claims 값이 올바르지 않습니다."),
     // USER
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 유저입니다."),
@@ -52,6 +53,7 @@ public enum Status {
     FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 파일을 찾을 수 없습니다."),
     ACCOUNT_DOESNT_EXISTS(HttpStatus.NOT_FOUND,"계정이 존재하지 않습니다."),
     OBJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "객체를 찾을 수 없습니다."),
+
 
 
 

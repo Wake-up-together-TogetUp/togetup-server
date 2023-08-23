@@ -10,7 +10,7 @@ import lombok.*;
 public class LoginRes {
 
     private Integer userId;
-    private String  useName;
+    private String userName;
     private String  accessToken;
 
 }
