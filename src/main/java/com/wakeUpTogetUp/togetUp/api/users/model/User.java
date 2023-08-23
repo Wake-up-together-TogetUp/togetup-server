@@ -39,9 +39,6 @@ public class User {
     private String socialId;
 
 
-    @Column(name = "password")
-    private String password;
-
     @Column(name = "login_type", length = 20)
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -80,10 +77,9 @@ public class User {
 
 
     @Builder
-    public User(Integer id, String socialId,String password, String name, LoginType loginType) {
+    public User(Integer id, String socialId, String name, LoginType loginType) {
         this.id = id;
         this.socialId=socialId;
-        this.password=password;
         this.name = name;
         this.loginType=loginType;
     }

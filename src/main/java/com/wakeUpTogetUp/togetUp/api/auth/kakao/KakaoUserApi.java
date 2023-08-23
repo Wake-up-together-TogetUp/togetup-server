@@ -1,7 +1,5 @@
 package com.wakeUpTogetUp.togetUp.api.auth.kakao;
 
-import com.wakeUpTogetUp.togetUp.api.auth.dto.response.KakaoLoginRes;
-import com.wakeUpTogetUp.togetUp.api.auth.dto.response.SocialUserRes;
 import com.wakeUpTogetUp.togetUp.config.FeignConfiguration;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

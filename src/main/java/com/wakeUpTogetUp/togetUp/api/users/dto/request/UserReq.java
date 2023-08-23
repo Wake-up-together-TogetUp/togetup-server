@@ -43,7 +43,6 @@ public class UserReq {
     public User toEntity(){
         return User.builder()
              //   .id(id)
-                .password(password)
                 .name(username)
                 .build();
     }
