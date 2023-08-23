@@ -10,6 +10,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.objectDetection.ObjectDetectionService;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,18 +42,20 @@ public class MissionService {
 
     // 미션 수행 기록하기
     @Transactional
-    public Integer createMissionCompleteLog(PostMissionLogReq req){
-        User user = userRepository.findById(req.getUserId())
+    public Integer createMissionLog(int userId, PostMissionLogReq req){
+        User user = userRepository.findById(userId)
                 .orElseThrow(
                         () -> new BaseException(Status.INVALID_USER_ID));
-
-        Room room = groupRepository.findById(req.getRoomId())
-                .orElseThrow(
-                        () -> new BaseException(Status.INVALID_ALARM_ID));
 
         Mission mission = missionRepository.findById(req.getMissionId())
                 .orElseThrow(
                         () -> new BaseException(Status.INVALID_MISSION_ID));
+
+        Room room = Objects.isNull(req.getRoomId())
+                ? null
+                : groupRepository.findById(req.getRoomId())
+                        .orElseThrow(
+                                () -> new BaseException(Status.INVALID_ALARM_ID));
 
         MissionLog missionLog = MissionLog.builder()
                 .alarmName(req.getAlarmName())

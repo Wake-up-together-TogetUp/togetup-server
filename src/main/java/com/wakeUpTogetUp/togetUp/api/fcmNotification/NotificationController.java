@@ -5,6 +5,7 @@ import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.response.NotificationRe
 import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.response.PushNotificationRes;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+@Tag(name = "알림(Notification)")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app/notification")

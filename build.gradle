@@ -33,6 +33,9 @@ dependencies {
 	implementation 'org.apache.httpcomponents:httpcore:4.4.15'
 	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
 
+	// health check
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 	//implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -78,7 +81,6 @@ dependencies {
 	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
 	//chat
-
 	implementation 'org.webjars:sockjs-client:1.1.2'
 	implementation 'org.webjars:stomp-websocket:2.3.3-1'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'

@@ -12,7 +12,7 @@ CREATE TABLE `user` (
 
 CREATE TABLE `mission` (
                            `id`	        INT UNSIGNED        NOT NULL    AUTO_INCREMENT PRIMARY KEY,
-                           `name`	    VARCHAR(10)	        NOT NULL,
+                           `name`	    VARCHAR(20)	        NOT NULL,
                            `object`	    VARCHAR(20)	        NOT NULL,
                            `created_at`	TIMESTAMP	        NOT NULL	DEFAULT current_timestamp,
                            `updated_at`	TIMESTAMP	        NOT NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
@@ -70,7 +70,7 @@ CREATE TABLE `notification` (
 CREATE TABLE `alarm` (
                          `id`	            INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
                          `name`	            VARCHAR(20)	    NOT NULL,
-                         `icon`	            VARCHAR(30)	    NOT NULL,
+                         `icon`	            VARCHAR(30)	    NOT NULL    DEFAULT "⏰",
                          `snooze_interval`	TINYINT	        NOT NULL	DEFAULT 5,
                          `snooze_cnt`	    TINYINT	        NOT NULL	DEFAULT 3,
                          `alarm_time`	    TIME	        NOT NULL,
@@ -82,7 +82,7 @@ CREATE TABLE `alarm` (
                          `saturday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
                          `sunday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
                          `is_vibrate`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
-                         `is_active`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
+                         `is_activated`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
                          `user_id`	        INT UNSIGNED	NOT NULL,
                          `mission_id`	    INT UNSIGNED	NULL,
                          `room_id`	        INT UNSIGNED	NULL,

@@ -1,7 +1,5 @@
 package com.wakeUpTogetUp.togetUp.api.auth;
 
-import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
@@ -36,7 +34,7 @@ public class AuthUserResolver implements HandlerMethodArgumentResolver {
           throw  new BaseException(Status.UNAUTHORIZED);
         String jwt = webRequest.getHeader("Authorization").replace("Bearer", "").trim();
         if(jwt.isEmpty())
-            throw  new BaseException(Status.UNAUTHORIZED);
+            throw new BaseException(Status.UNAUTHORIZED);
 
         return jwtService.getUserId(jwt);
     }

@@ -45,7 +45,6 @@ public class FileService {
 
             return filePath;
         }
-
         else
             throw new BaseException(Status.BAD_REQUEST_PARAM);
     }
