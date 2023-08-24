@@ -5,7 +5,7 @@ import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.response.PushNotificati
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.api.room.GroupRepository;
+import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 public class NotificationService {
     private final FcmService fcmService;
     private final PushLogService pushLogService;
-    private final GroupRepository groupRepository;
+    private final RoomRepository roomRepository;
     private final UserRepository userRepository;
 
     // 그룹 채팅 알림 보내기
@@ -26,7 +26,7 @@ public class NotificationService {
     public PushNotificationRes sendMessageToGroup(int groupId, PushNotificationReq request)
             throws ExecutionException, InterruptedException {
         // group 조회
-        Room room = groupRepository.findById(groupId)
+        Room room = roomRepository.findById(groupId)
                 .orElseThrow(
                         () -> new BaseException(Status.INVALID_GROUP_ID)
                 );

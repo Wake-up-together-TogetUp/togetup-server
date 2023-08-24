@@ -8,4 +8,5 @@ public class Constant {
     public static final String BEARER= "jwt";
     public static final String JWT_PREFIX= "Bearer";
 
+    public static final Integer INVITATION_CODE_LENGTH =5;
 }
