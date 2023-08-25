@@ -28,7 +28,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElse(null);
         FcmToken fcmTokenObject;
         if (Objects.isNull(user))
-            new BaseException(Status.INVALID_USER_ID);
+            new BaseException(Status.USER_NOT_FOUND);
         if(fcmTokenId==null)
         {
              fcmTokenObject =  FcmToken.builder()

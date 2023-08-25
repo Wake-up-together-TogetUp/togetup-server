@@ -1,7 +1,7 @@
-package com.wakeUpTogetUp.togetUp.api.fcmNotification;
+package com.wakeUpTogetUp.togetUp.api.notification;
 
-import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.request.PushNotificationReq;
-import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.response.PushNotificationRes;
+import com.wakeUpTogetUp.togetUp.api.notification.dto.request.PushNotificationReq;
+import com.wakeUpTogetUp.togetUp.api.notification.dto.response.PushNotificationRes;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;

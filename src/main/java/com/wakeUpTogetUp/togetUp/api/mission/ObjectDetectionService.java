@@ -1,11 +1,11 @@
-package com.wakeUpTogetUp.togetUp.api.objectDetection;
+package com.wakeUpTogetUp.togetUp.api.mission;
 
 import ai.onnxruntime.OnnxTensor;
 import ai.onnxruntime.OrtException;
 import ai.onnxruntime.OrtSession;
-import com.wakeUpTogetUp.togetUp.api.objectDetection.domain.Letterbox;
-import com.wakeUpTogetUp.togetUp.api.objectDetection.domain.ODResult;
-import com.wakeUpTogetUp.togetUp.api.objectDetection.domain.ObjectDetectionModel;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.Letterbox;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.ODResult;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.ObjectDetectionModel;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.config.ODConfig;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;

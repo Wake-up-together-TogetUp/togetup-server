@@ -9,7 +9,6 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.request.PostMissionLogReq;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
-import com.wakeUpTogetUp.togetUp.api.objectDetection.ObjectDetectionService;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,7 +44,7 @@ public class MissionService {
     public Integer createMissionLog(int userId, PostMissionLogReq req){
         User user = userRepository.findById(userId)
                 .orElseThrow(
-                        () -> new BaseException(Status.INVALID_USER_ID));
+                        () -> new BaseException(Status.USER_NOT_FOUND));
 
         Mission mission = missionRepository.findById(req.getMissionId())
                 .orElseThrow(
@@ -55,7 +54,7 @@ public class MissionService {
                 ? null
                 : roomRepository.findById(req.getRoomId())
                         .orElseThrow(
-                                () -> new BaseException(Status.INVALID_ALARM_ID));
+                                () -> new BaseException(Status.ALARM_NOT_FOUND));
 
         MissionLog missionLog = MissionLog.builder()
                 .alarmName(req.getAlarmName())

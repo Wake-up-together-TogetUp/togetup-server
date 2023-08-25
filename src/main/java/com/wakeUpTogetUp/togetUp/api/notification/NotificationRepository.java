@@ -1,6 +1,6 @@
-package com.wakeUpTogetUp.togetUp.api.fcmNotification;
+package com.wakeUpTogetUp.togetUp.api.notification;
 
-import com.wakeUpTogetUp.togetUp.api.fcmNotification.entity.Notification;
+import com.wakeUpTogetUp.togetUp.api.notification.entity.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

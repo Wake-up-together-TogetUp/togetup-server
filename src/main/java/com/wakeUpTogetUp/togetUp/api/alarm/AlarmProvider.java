@@ -25,7 +25,7 @@ public class AlarmProvider {
     public List<GetAlarmRes> getAlarmsByUserId(Integer userId) {
         // 유저 id 유무 확인
         userRepository.findById(userId).orElseThrow(
-                () -> new BaseException(Status.INVALID_USER_ID));
+                () -> new BaseException(Status.USER_NOT_FOUND));
 
         List<Alarm> alarmList = alarmRepository.findByUserId(userId);
 
@@ -41,7 +41,7 @@ public class AlarmProvider {
         // 알람 가져오기
         Alarm alarm = alarmRepository.findById(alarmId)
                 .orElseThrow(
-                        () -> new BaseException(Status.INVALID_ALARM_ID));
+                        () -> new BaseException(Status.ALARM_NOT_FOUND));
 
         return EntityDtoMapper.INSTANCE.toAlarmRes(alarm);
     }

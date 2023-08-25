@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.request;
+package com.wakeUpTogetUp.togetUp.api.notification.dto.request;
 
 import lombok.*;
 
