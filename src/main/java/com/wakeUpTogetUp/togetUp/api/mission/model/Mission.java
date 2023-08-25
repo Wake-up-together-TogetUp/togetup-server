@@ -29,10 +29,11 @@ public class Mission {
     private int id;
     private String name;
     private String object;
-    @Column(columnDefinition = "Timestamp")
+    @Column(name ="created_at",columnDefinition = "Timestamp")
     private String createdAt;
-    @Column(columnDefinition = "Timestamp")
+    @Column(name = "updated_at" ,columnDefinition = "Timestamp")
     private String updatedAt;
+    @Column(name = "is_active")
     private Boolean isActive = true;
 
 //    @OneToMany(mappedBy = "mission")

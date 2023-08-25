@@ -37,15 +37,16 @@ public class Alarm {
 
     private String name;
     private String icon;
+    @Column(name = "is_vibrate")
     private Boolean isVibrate;
 
-    @Column(columnDefinition = "TINYINT")
+    @Column(name = "snooze_interval",columnDefinition = "TINYINT")
     private Integer snoozeInterval;
 
-    @Column(columnDefinition = "TINYINT")
+    @Column(name = "snooze_cnt" ,columnDefinition = "TINYINT")
     private Integer snoozeCnt;
 
-    @Column(columnDefinition = "TIME")
+    @Column(name = "alarm_time" ,columnDefinition = "TIME")
     private String alarmTime;
 
     private Boolean monday;
@@ -55,6 +56,8 @@ public class Alarm {
     private Boolean friday;
     private Boolean saturday;
     private Boolean sunday;
+
+    @Column(name = "is_activated")
     private Boolean isActivated;
 
     @Builder

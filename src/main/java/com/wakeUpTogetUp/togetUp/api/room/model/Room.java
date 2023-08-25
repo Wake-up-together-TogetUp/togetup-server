@@ -1,20 +1,26 @@
 package com.wakeUpTogetUp.togetUp.api.room.model;
 
 
+import com.wakeUpTogetUp.togetUp.common.Constant;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
-@Table(name = "room")//예약어를 피해서 작성해야함. group은 예약어임.
+@Table(name = "room")
 @Getter
 @Setter
 @NoArgsConstructor()
 @DynamicInsert
 public class Room {
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,13 +33,8 @@ public class Room {
     @Column(name = "intro",length = 30)
     private String intro;
 
-    @Column(name ="mission",length = 20)
-    private String mission;
 
-    @Column(name = "group_icon")
-    private String group_icon;
-
-
+    @Column(name = "topic")
     private String topic;
     /**
      * todo uuid
@@ -41,14 +42,14 @@ public class Room {
     @Column(name = "invitation_code",length = 50)
     private String invitationCode;
 
-//    @OneToMany(mappedBy = "Room")
-//    private List<MappingGroupUser> mappingGroupUsers= new ArrayList<>();
+    @OneToMany(mappedBy = "room")
+    private List<RoomUser> roomUsers= new ArrayList<>();
 
 
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private Timestamp createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "updated_at")
     private Timestamp updatedAt;
 
     @Column(name = "is_deleted")
@@ -65,27 +66,15 @@ public class Room {
     }
 
     @Builder
-    public Room(Integer id, String name, String intro, String mission, String topic, String invitationCode, String groupIcon) {
+    public Room(Integer id, String name, String intro) {
         this.id = id;
         this.name = name;
         this.intro = intro;
-        this.mission = mission;
-        this.topic = topic;
-        this.invitationCode = invitationCode;
-        this.group_icon=groupIcon;
+        this.topic = UUID.randomUUID().toString();;
+        this.invitationCode = UUID.randomUUID().toString().substring(0,Constant.INVITATION_CODE_LENGTH);
     }
 
-//    @Builder
-//    public Group(Integer id, String name,String intro,String groupProfileImgLink, String topic) {
-//
-//        this.id = id;
-//        this.name=name;
-//
-//        this.intro = intro;
-//        this.groupProfileImgLink = groupProfileImgLink;
-//        this.topic = topic;
-//
-//    }
+
 
 }
 
