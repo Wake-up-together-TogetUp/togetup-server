@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.objectDetection.domain;
+package com.wakeUpTogetUp.togetUp.api.mission.domain;
 import java.text.DecimalFormat;
 
 public class ODResult {

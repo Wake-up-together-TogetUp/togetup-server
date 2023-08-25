@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.objectDetection.domain;
+package com.wakeUpTogetUp.togetUp.api.mission.domain;
 
 import ai.onnxruntime.OrtEnvironment;
 import ai.onnxruntime.OrtException;

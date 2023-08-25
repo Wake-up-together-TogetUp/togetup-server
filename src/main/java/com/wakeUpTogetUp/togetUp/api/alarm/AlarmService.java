@@ -28,7 +28,7 @@ public class AlarmService {
     public GetAlarmRes createAlarm(Integer userId, PostAlarmReq postAlarmReq) {
         // alarm 생성
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(Status.INVALID_USER_ID));
+                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
 
         Mission mission = missionRepository.findById(postAlarmReq.getMissionId())
                 .orElseThrow(() -> new BaseException(Status.INVALID_MISSION_ID));
@@ -62,7 +62,7 @@ public class AlarmService {
     public GetAlarmRes updateAlarm(Integer userId, Integer alarmId, PatchAlarmReq patchAlarmReq) {
         // 알람 수정
         Alarm alarm = alarmRepository.findById(alarmId, userId)
-                .orElseThrow(() -> new BaseException(Status.INVALID_ALARM_ID));
+                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
         Mission mission = missionRepository.findById(patchAlarmReq.getMissionId())
                 .orElseThrow(() -> new BaseException(Status.INVALID_MISSION_ID));
@@ -92,7 +92,7 @@ public class AlarmService {
     @Transactional
     public void deleteAlarm(Integer alarmId) {
         Alarm alarm = alarmRepository.findById(alarmId)
-                .orElseThrow(() -> new BaseException(Status.INVALID_ALARM_ID));
+                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
         alarmRepository.delete(alarm);
     }

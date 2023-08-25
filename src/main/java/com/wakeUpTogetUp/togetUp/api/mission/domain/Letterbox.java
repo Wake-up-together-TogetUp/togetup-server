@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.objectDetection.domain;
+package com.wakeUpTogetUp.togetUp.api.mission.domain;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;

@@ -1,8 +1,8 @@
-package com.wakeUpTogetUp.togetUp.api.fcmNotification;
+package com.wakeUpTogetUp.togetUp.api.notification;
 
-import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.request.PushNotificationReq;
-import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.response.NotificationRes;
-import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.response.PushNotificationRes;
+import com.wakeUpTogetUp.togetUp.api.notification.dto.request.PushNotificationReq;
+import com.wakeUpTogetUp.togetUp.api.notification.dto.response.NotificationRes;
+import com.wakeUpTogetUp.togetUp.api.notification.dto.response.PushNotificationRes;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
