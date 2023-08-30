@@ -34,6 +34,15 @@ public class UserController  {
         return new BaseResponse<>(Status.SUCCESS);
     }
 
+    @Operation(summary="유저 탈퇴")
+    @DeleteMapping()
+    public BaseResponse<Status> deleteUser(@Parameter(hidden = true) @AuthUser Integer userId){
+        userService.deleteById(userId);
+        return new BaseResponse<>(Status.SUCCESS);
+    }
+
+
+
 
 
 }

@@ -1,6 +1,8 @@
 package com.wakeUpTogetUp.togetUp.api.users;
 
+import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
+import com.wakeUpTogetUp.togetUp.api.room.RoomUserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
@@ -21,6 +23,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final FcmTokenRepository fcmTokenRepository;
+    private final RoomUserRepository roomUserRepository;
+    private final AlarmRepository alarmRepository;
 
 
     public Integer updateFcmToken(Integer userId, Integer fcmTokenId, String fcmToken) {
@@ -52,6 +56,24 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
         user.setAgreePush(agreePush);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteById(Integer userId){
+        userRepository.findById(userId).orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
+        userRepository.deleteById(userId);
+
+        //roomUser 삭제
+        Integer roomUserNumber = roomUserRepository.countByUserId(userId);
+
+        if(roomUserNumber>0)
+            roomUserRepository.deleteByUserId(userId);
+
+        //알람 삭제
+        Integer alarmNumber =alarmRepository.countByUserId(userId);
+
+        if(alarmNumber>0)
+            alarmRepository.deleteByUserIdAndRoomIdIsNull(userId);
     }
 
 }
