@@ -9,11 +9,10 @@ import lombok.*;
 @AllArgsConstructor
 public class RoomRes {
 
-
-    private Integer id;
+    private Integer roomId;
+    private String roomIcon;
     private String name;
-    private String intro;
-    private String groupProfileImgLink;
-    private String password;
-    private int state;
+    private String mission;
+    private String recentlyMissionLog;
+    //private boolean isRead;
 }

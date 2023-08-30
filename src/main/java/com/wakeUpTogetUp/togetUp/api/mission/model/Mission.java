@@ -1,16 +1,14 @@
 package com.wakeUpTogetUp.togetUp.api.mission.model;
 
 //import com.wakeUpTogetUp.togetUp.api.mappingGroupMission.model.MappingGroupMission;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 //import java.util.ArrayList;
 //import java.util.List;
 
+@ToString
 @Entity
 @Table(name = "mission")
 @DynamicInsert

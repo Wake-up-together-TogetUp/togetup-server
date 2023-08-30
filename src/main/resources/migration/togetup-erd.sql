@@ -26,6 +26,7 @@ CREATE TABLE room (
                          `invitation_code`              VARCHAR(100)    NULL,
                          `created_at`	                TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
                          `updated_at`	                TIMESTAMP	    NOT NULL	DEFAULT current_timestamp ON UPDATE current_timestamp,
+                         `latest_completion_time`       TIMESTAMP       ,
                          `is_deleted`	                TINYINT(1)	    NOT NULL    DEFAULT FALSE
 );
 

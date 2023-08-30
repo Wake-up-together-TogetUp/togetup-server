@@ -2,6 +2,11 @@ package com.wakeUpTogetUp.togetUp.api.room;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmService;
+import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
+import com.wakeUpTogetUp.togetUp.api.mission.MissionRepository;
+import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
@@ -18,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,7 +35,8 @@ public class RoomService {
     private final UserRepository userRepository;
     private final RoomUserRepository roomUserRepository;
     private final AlarmRepository alarmRepository;
-
+    private final MissionRepository missionRepository;
+    private final MissionLogRepository missionLogRepository;
     @Transactional
     public  void createRoom(Integer userId, RoomReq roomReq){
 
@@ -60,18 +67,40 @@ public class RoomService {
         alarmRepository.updateRoomIdByAlarmId(alarmId,room.getId());
 
     }
-    public List<RoomRes> getGroup() {
+    public void getRoomList(Integer userId) {
 
-        //모든 그룹 가져오기
-        List<Room> roomList = roomRepository.findAll();
+        //모든 룸아이디 가져오기
+        List<RoomUser> roomList = roomUserRepository.findByUserId(userId);
 
+        System.out.println("룸리스트  "+roomList.toString());
+        List<Integer> roomIds = roomList.stream()
+                .map(roomUser -> roomUser.getRoom().getId())
+                .collect(Collectors.toList());
+        //모든 알람 가져오기
+        List<Alarm> alarmList = alarmRepository.findAllByRoomIds(roomIds);
+        System.out.println("알람  "+alarmList.toString());
+
+
+        //알람의 미션 가져오기
+
+        List<Integer> missionIds = alarmList.stream()
+                .map(Alarm -> Alarm.getMission().getId())
+                .collect(Collectors.toList());
+
+        List<Mission> missionList = missionRepository.findAllById(missionIds);
+        System.out.println("미션  "+ missionList.toString());
+
+
+        //미션 로그 가져오기
+
+        List<MissionLog>  missionLogs= missionLogRepository.findMostRecentMissionLogsByRoomIds(roomIds);
         // dto 매핑
-        ArrayList<RoomRes> roomResList = new ArrayList<>();
+       /* ArrayList<RoomRes> roomResList = new ArrayList<>();
         for(Room room : roomList) {
             roomResList.add(GroupMapper.INSTANCE.toGroupRes(room));
-        }
+        }*/
 
-        return roomResList;
+       // return roomResList;
     }
 
     @Transactional
