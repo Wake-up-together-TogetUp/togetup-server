@@ -19,10 +19,10 @@ public class ObjectDetectionModel {
     @Value("${my.path.model-path}")
     private String modelPath;
 
-    @PostConstruct
-    public void init() throws OrtException {
-        environment = OrtEnvironment.getEnvironment();
-        sessionOptions = new OrtSession.SessionOptions();
-        session = environment.createSession(modelPath, sessionOptions);
-    }
+//    @PostConstruct
+//    public void init() throws OrtException {
+//        environment = OrtEnvironment.getEnvironment();
+//        sessionOptions = new OrtSession.SessionOptions();
+//        session = environment.createSession(modelPath, sessionOptions);
+//    }
 }
