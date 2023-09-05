@@ -10,6 +10,6 @@ import lombok.Setter;
 public class NotificationRes {
     private String title;
     private String content;
-    private String sendAt;
     private String createdAt;
+    private int roomId;
 }
