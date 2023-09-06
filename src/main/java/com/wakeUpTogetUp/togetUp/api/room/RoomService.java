@@ -79,16 +79,17 @@ public class RoomService {
         //모든 알람 가져오기
         List<Alarm> alarmList = alarmRepository.findAllByRoomIds(roomIds);
         System.out.println("알람  "+alarmList.toString());
-
-
-        //알람의 미션 가져오기
-
-        List<Integer> missionIds = alarmList.stream()
-                .map(Alarm -> Alarm.getMission().getId())
-                .collect(Collectors.toList());
-
-        List<Mission> missionList = missionRepository.findAllById(missionIds);
-        System.out.println("미션  "+ missionList.toString());
+//       RoomRes roomRes= RoomRes.builder()
+//               .roomId(roomList.get(0).getId())
+//               .roomIcon(alarmList.get())
+//        //알람의 미션 가져오기
+//
+//        List<Integer> missionIds = alarmList.stream()
+//                .map(Alarm -> Alarm.getMission().getId())
+//                .collect(Collectors.toList());
+//
+//        List<Mission> missionList = missionRepository.findAllById(missionIds);
+ //       System.out.println("미션  "+ missionList.toString());
 
 
         //미션 로그 가져오기
