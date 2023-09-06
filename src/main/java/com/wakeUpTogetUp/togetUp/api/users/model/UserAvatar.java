@@ -11,26 +11,21 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Setter
-@Getter
 @Entity
-@Table(name="user_avatar")
-@NoArgsConstructor
+@Table(name = "user_avatar")
 public class UserAvatar {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED")
+    @Column(name = "id", columnDefinition = "INT UNSIGNED", nullable = false, updatable = false)
     private Integer id;
 
-    @OneToOne
-    @JoinColumn(name = "userId",columnDefinition = "INT UNSIGNED")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "avatarId")
+    @JoinColumn(name = "avatar_id", nullable = false)
     private Avatar avatar;
 }

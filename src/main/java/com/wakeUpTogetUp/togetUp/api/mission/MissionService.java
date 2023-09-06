@@ -1,5 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
+import com.wakeUpTogetUp.togetUp.api.mission.objectDetection.NaverObjectDetectionService;
+import com.wakeUpTogetUp.togetUp.api.mission.objectDetection.ObjectDetectionService;
 import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
@@ -19,22 +21,32 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class MissionService {
     private final ObjectDetectionService objectDetectionService;
+    private final NaverObjectDetectionService naverObjectDetectionService;
     private final MissionRepository missionRepository;
     private final MissionLogRepository missionLogRepository;
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
 
+    // 객체 인식
     public boolean recognizeObject(String object, MultipartFile missionImage) {
         // 일치 여부 확인
         boolean isConsistent = false;
-        for(String objectDetected : objectDetectionService.detectObject(missionImage)){
-            if(objectDetected.equals(object))
+        for(String objectDetected : naverObjectDetectionService.detectObject(missionImage)
+                .getPredictions().get(0)
+                .getDetection_names()){
+//        for(String objectDetected : objectDetectionService.detectObject(missionImage)){
+
+            System.out.println("objectDetected = " + objectDetected);
+
+            if (objectDetected.equals(object)) {
                 isConsistent = true;
+                break;
+            }
         }
 
         // 일치하지 않으면
         if(!isConsistent)
-            throw new BaseException(Status.MISSION_UNSUCCESS);
+            throw new BaseException(Status.MISSION_FAILURE);
         else
             return isConsistent;
     }
