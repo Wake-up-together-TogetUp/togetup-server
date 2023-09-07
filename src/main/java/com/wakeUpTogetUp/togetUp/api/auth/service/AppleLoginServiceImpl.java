@@ -142,13 +142,6 @@ public class AppleLoginServiceImpl implements SocialLoginService {
     }
     }
 
-//    @Transactional
-//    public void appleTest(String authCode) throws IOException {
-//
-//        AppleTokenRes appleToken = this.getAppleToken(authCode);
-//
-//        this.revoke(appleToken.getAccessToken());
-//    }
 
 
 }

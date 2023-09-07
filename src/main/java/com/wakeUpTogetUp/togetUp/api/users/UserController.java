@@ -50,7 +50,7 @@ public class UserController  {
     }
 
     @Operation(summary="애플 유저 탈퇴")
-    @DeleteMapping("test")
+    @DeleteMapping("apple")
     public BaseResponse<Status> deleteAppleUser(@Parameter(hidden = true) @AuthUser Integer userId,@RequestParam() String authorizationCode ) throws IOException{
         userService.deleteAppleUser(userId,authorizationCode);
         return new BaseResponse<>(Status.SUCCESS);
