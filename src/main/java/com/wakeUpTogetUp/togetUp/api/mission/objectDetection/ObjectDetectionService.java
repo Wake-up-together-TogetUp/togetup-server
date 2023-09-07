@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.mission;
+package com.wakeUpTogetUp.togetUp.api.mission.objectDetection;
 
 import ai.onnxruntime.OnnxTensor;
 import ai.onnxruntime.OrtException;
@@ -9,9 +9,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.domain.ObjectDetectionModel;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.config.ODConfig;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.MemoryUsage;
+import com.wakeUpTogetUp.togetUp.utils.ImageCompressor;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,8 +17,6 @@ import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.springframework.stereotype.Service;
@@ -33,8 +29,11 @@ public class ObjectDetectionService {
     private final ObjectDetectionModel odm;
     private final ODConfig odConfig;
     private final Letterbox letterbox;
+    private final ImageCompressor imageCompressor;
 
     public ArrayList<String> detectObject(MultipartFile missionImage) {
+        long startTime = System.currentTimeMillis();
+
         try {
             // 기본 정보 출력
             odm.getSession().getInputInfo().keySet().forEach(x -> {
@@ -45,19 +44,27 @@ public class ObjectDetectionService {
                     throw new RuntimeException(e);
                 }
             });
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BaseException(Status.LOAD_MODEL_FAILURE);
+        }
 
+        try {
             // image 읽기
-            Mat img = Imgcodecs.imdecode(new MatOfByte(missionImage.getBytes()),
+//            Mat img = Imgcodecs.imdecode(new MatOfByte(missionImage.getBytes()),
+//                    Imgcodecs.IMREAD_COLOR);
+            Mat img = Imgcodecs.imdecode(
+                    new MatOfByte(imageCompressor.compressImage(missionImage, 0.5f)),
                     Imgcodecs.IMREAD_COLOR);
             Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2RGB);
             Mat image = img.clone();
 
             // 아래 상자의 굵기, 글자의 크기, 글자의 종류, 글자의 색을 먼저 정의합니다. (비례에 따라 굵기를 설정하는 것이 좋습니다.)
-            int minDwDh = Math.min(img.width(), img.height());
-            int thickness = minDwDh / odConfig.getLineThicknessRatio();
-            double fontSize = minDwDh / odConfig.getFontSizeRatio();
-            int fontFace = Imgproc.FONT_HERSHEY_SIMPLEX;
-            Scalar fontColor = new Scalar(0, 0, 0);
+//            int minDwDh = Math.min(img.width(), img.height());
+//            int thickness = minDwDh / odConfig.getLineThicknessRatio();
+//            double fontSize = minDwDh / odConfig.getFontSizeRatio();
+//            int fontFace = Imgproc.FONT_HERSHEY_SIMPLEX;
+//            Scalar fontColor = new Scalar(0, 0, 0);
 
             // image 크기 변경
             image = letterbox.letterbox(image);
@@ -92,54 +99,49 @@ public class ObjectDetectionService {
             OrtSession.Result output = odm.getSession().run(stringOnnxTensorHashMap);
 
             // 결과를 얻기
-            String info = output.get(0).getInfo().toString();
-
             // 디버깅
-            System.out.println("info = " + info);
-            System.out.println("Number of object detected = " + info.charAt(info.length() - 6));
-
-            // 탐지된 객체가 없으면 에러 발생
-            if(info.charAt(info.length() - 6) == '0')
-                throw new BaseException(Status.OBJECT_NOT_FOUND);
-
+            System.out.println("info = " + output.get(0).getInfo().toString());
             float[][] outputData = (float[][]) output.get(0).getValue();
 
-            ArrayList<String> detectedObejectsList = new ArrayList<String>();
+            ArrayList<String> detectedObejectList = new ArrayList<String>();
             Arrays.stream(outputData).iterator().forEachRemaining(x -> {
                 ODResult odResult = new ODResult(x);
-                System.out.println(odResult);
+                System.out.println("odResult : " + odResult);
 
-                // 그림틀
-                Point topLeft = new Point((odResult.getX0() - dw) / ratio,
-                        (odResult.getY0() - dh) / ratio);
-                Point bottomRight = new Point((odResult.getX1() - dw) / ratio,
-                        (odResult.getY1() - dh) / ratio);
-                Scalar color = new Scalar(odConfig.getColor(odResult.getClsId()));
-                Imgproc.rectangle(img, topLeft, bottomRight, color, thickness);
-
-                // 틀에 글을 쓰다
-                String boxName = odConfig.getName(odResult.getClsId()) + ": " + odResult.getScore();
-                Point boxNameLoc = new Point((odResult.getX0() - dw) / ratio,
-                        (odResult.getY0() - dh) / ratio - 3);
-
-                Imgproc.putText(img, boxName, boxNameLoc, fontFace, fontSize, fontColor, thickness);
+//                // 그림틀
+//                Point topLeft = new Point((odResult.getX0() - dw) / ratio,
+//                        (odResult.getY0() - dh) / ratio);
+//                Point bottomRight = new Point((odResult.getX1() - dw) / ratio,
+//                        (odResult.getY1() - dh) / ratio);
+//                Scalar color = new Scalar(odConfig.getColor(odResult.getClsId()));
+//                Imgproc.rectangle(img, topLeft, bottomRight, color, thickness);
+//
+//                // 틀에 글을 쓰다
+//                String boxName = odConfig.getName(odResult.getClsId()) + ": " + odResult.getScore();
+//                Point boxNameLoc = new Point((odResult.getX0() - dw) / ratio,
+//                        (odResult.getY0() - dh) / ratio - 3);
+//
+//                Imgproc.putText(img, boxName, boxNameLoc, fontFace, fontSize, fontColor, thickness);
 
                 // 감지된 클래스 리스트 생성
-                detectedObejectsList.add(odConfig.getName(odResult.getClsId()));
+                detectedObejectList.add(odConfig.getName(odResult.getClsId()));
             });
-            Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGR);
 
-            MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
-            MemoryUsage heapMemoryUsage = memoryMXBean.getHeapMemoryUsage();
-            MemoryUsage nonHeapMemoryUsage = memoryMXBean.getNonHeapMemoryUsage();
+//            // 그림 저장
+//            Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGR);
+//            Imgcodecs.imwrite(savePicPath, img);
 
-            // 그림 저장
-//            Imgcodecs.imwrite(ODConfig.savePicPath, img);
+            // 걸린 시간 계산
+            long endTime = System.currentTimeMillis();
 
-            return detectedObejectsList;
+            long timeElapsed = endTime - startTime;
+            System.out.println("Execution time in milliseconds: " + timeElapsed);
+
+            return detectedObejectList;
+
         } catch (Exception e) {
             e.printStackTrace();
-            throw new BaseException(Status.MISSION_UNSUCCESS);
+            throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
         }
     }
 }

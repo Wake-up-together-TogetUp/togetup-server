@@ -1,47 +1,28 @@
 package com.wakeUpTogetUp.togetUp.api.users.model;
 
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
-import java.sql.Timestamp;
-import java.time.Instant;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import org.hibernate.annotations.DynamicInsert;
 
-@Setter
-@Getter
 @Entity
-@Table(name="user_avatar_purchase_log")
-@NoArgsConstructor
+@Table(name = "user_avatar_purchase_log")
+@DynamicInsert
 public class UserAvatarPurchaseLog {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED")
+    @Column(name = "id", columnDefinition = "INT UNSIGNED", nullable = false, updatable = false)
     private Integer id;
 
-    @OneToOne
-    @JoinColumn(name = "userId",columnDefinition = "INT UNSIGNED")
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "avatarId")
+    @JoinColumn(name = "avatar_id", nullable = false)
     private Avatar avatar;
-
-    @Column(name = "createdAt")
-    private Timestamp createdAt;
-
-    @PrePersist
-    void createdAt() {
-        this.createdAt = Timestamp.from(Instant.now());
-    }
 }

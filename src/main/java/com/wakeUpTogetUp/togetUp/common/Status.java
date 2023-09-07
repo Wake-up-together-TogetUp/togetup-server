@@ -14,8 +14,10 @@ public enum Status {
     // 공통
     SUCCESS(HttpStatus.OK, "요청에 성공하였습니다."),
     SUCCESS_CREATED(HttpStatus.CREATED, "생성 되었습니다."),
+
     // Mission
-    MISSION_UNSUCCESS(HttpStatus.OK, "미션을 성공하지 못했습니다."),
+    MISSION_OBJECT_NOT_FOUND(HttpStatus.OK, "탐지된 객체가 없습니다."),
+    MISSION_FAILURE(HttpStatus.OK, "미션을 성공하지 못했습니다."),
     MISSION_SUCCESS(HttpStatus.OK, "미션을 성공했습니다."),
 
     /**
@@ -45,8 +47,7 @@ public enum Status {
     FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 파일을 찾을 수 없습니다."),
     ACCOUNT_DOESNT_EXISTS(HttpStatus.NOT_FOUND,"계정이 존재하지 않습니다."),
     OBJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "객체를 찾을 수 없습니다."),
-
-
+    UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "지원하지 않는 파일 확장자 입니다."),
 
 
     /**
@@ -54,6 +55,7 @@ public enum Status {
      */
     // 공통
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 서버 에러입니다. 제보 부탁드립니다."),
+    LOAD_MODEL_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "모델 객체 정보 불러오기를 실패했습니다."),
 
     ;
 

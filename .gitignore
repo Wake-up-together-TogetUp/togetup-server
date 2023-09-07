@@ -50,5 +50,8 @@ togetup-26b96-firebase-adminsdk-3l3ah-3164ed8f18.json
 ### log files ###
 logs
 
+### result image file ###
+**/src/main/**/images/
+
 ###apple
 AuthKey_M992KTZK9V.p8

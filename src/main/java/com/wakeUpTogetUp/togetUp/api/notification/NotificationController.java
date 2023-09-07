@@ -5,6 +5,7 @@ import com.wakeUpTogetUp.togetUp.api.notification.dto.response.NotificationRes;
 import com.wakeUpTogetUp.togetUp.api.notification.dto.response.PushNotificationRes;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,24 +23,28 @@ public class NotificationController {
     private final NotificationService notificationService;
     private final NotificationProvider notificationProvider;
 
-    @GetMapping("/token")
+    @Operation(summary = "토큰으로 알림 보내기")
+    @PostMapping("/token")
     BaseResponse<PushNotificationRes> sendPushAlarmToToken(
             @RequestBody PushNotificationReq request
     ) throws ExecutionException, InterruptedException {
         return new BaseResponse<>(Status.SUCCESS, fcmService.sendMessageToToken(request));
     }
-    @GetMapping("/tokens")
+
+    @PostMapping("/tokens")
     BaseResponse<PushNotificationRes> sendPushAlarmToTokens(
             @RequestBody PushNotificationReq request
     ) throws ExecutionException, InterruptedException {
         return new BaseResponse<>(Status.SUCCESS, fcmService.sendMessageToTokens(request));
     }
-    @GetMapping("/topic")
+
+    @PostMapping("/topic")
     BaseResponse<PushNotificationRes> sendPushAlarmToTopic(
             @RequestBody PushNotificationReq request
     ) throws ExecutionException, InterruptedException {
         return new BaseResponse<>(Status.SUCCESS, fcmService.sendMessageToTopic(request));
     }
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/group/{groupId}")
     BaseResponse<PushNotificationRes> sendPushAlarmToGroup(
