@@ -35,6 +35,7 @@ public enum Status {
     INVALID_JWT(HttpStatus.BAD_REQUEST, "유효하지 않은 jwt 입니다."),
     JWT_MISMATCH(HttpStatus.BAD_REQUEST, "jwt 정보가 일치하지 않습니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"로그인이 필요합니다."),
+    UNAUTHORIZED_KAKAO_TOKEN(HttpStatus.UNAUTHORIZED,"유효하지않은 카카오 엑세스토큰입니다."),
 
     // 유효하지 않은 요청
     INVALID_GROUP_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 그룹 id 입니다."),

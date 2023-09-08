@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.auth.service;
 
+import com.wakeUpTogetUp.togetUp.api.auth.dto.response.AppleTokenRes;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.LoginRes;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.request.SocialLoginReq;
@@ -9,6 +10,8 @@ import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +27,7 @@ public class AuthService {
     private final List<SocialLoginService> loginServices;
     private final JwtService jwtService;
     private final UserRepository userRepository;
-
+    private final AppleLoginServiceImpl appleLoginService;
 
 
     @Transactional
@@ -82,7 +85,13 @@ public class AuthService {
     }
 
 
+    @Transactional
+    public void disconnectApple(String authCode) throws IOException {
 
+
+        AppleTokenRes appleToken = appleLoginService.getAppleToken(authCode);
+        appleLoginService.revoke(appleToken.getAccessToken());
+    }
 
 
 }
