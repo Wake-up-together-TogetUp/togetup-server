@@ -4,11 +4,10 @@ import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogRes;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,13 +18,8 @@ public class MissionProvider {
     private final MissionRepository missionRepository;
     private final MissionLogRepository missionLogRepository;
 
-    public GetMissionRes getObjectDetectionMissions() {
-        Mission mission = missionRepository.findAllByIdAndIsActive(2, true);
-        return EntityDtoMapper.INSTANCE.toGetMissionRes(mission);
-    }
-
-    public GetMissionRes getFaceRecognitionMissions() {
-        Mission mission = missionRepository.findAllByIdAndIsActive(3, true);
+    public GetMissionWithObjectListRes getMission(int missionId) {
+        Mission mission = missionRepository.findAllByIdAndIsActive(missionId, true);
         return EntityDtoMapper.INSTANCE.toGetMissionRes(mission);
     }
 

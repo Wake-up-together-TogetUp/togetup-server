@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetMissionObjectRes {
-    private Integer id;
+    private int id;
     private String name;
     private String kr;
     private String icon;

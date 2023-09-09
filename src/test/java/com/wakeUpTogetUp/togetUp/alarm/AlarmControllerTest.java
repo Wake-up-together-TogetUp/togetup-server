@@ -94,7 +94,7 @@ class AlarmControllerTest {
                 .isActivated(true)
                 .build();
 
-        given(alarmProvider.getAlarm(42)).willReturn(response);
+        given(alarmProvider.getAlarmById(42)).willReturn(response);
 
         Integer alarmId = 42;
         //when

@@ -5,7 +5,7 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.api.file.FileService;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.request.PostMissionLogReq;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.PostObjectRecognitionRes;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,16 +30,12 @@ public class MissionController {
     private final MissionService missionService;
     private final FileService fileService;
 
-    @Operation(summary = "객체 인식 미션 목록 가져오기")
-    @GetMapping("/object-detection")
-    BaseResponse<GetMissionRes> getObjectDetectionMissions() {
-        return new BaseResponse(Status.SUCCESS, missionProvider.getObjectDetectionMissions());
-    }
-
-    @Operation(summary = "표정 인식 미션 목록 가져오기")
-    @GetMapping("/face-recognition")
-    BaseResponse<GetMissionRes> getFaceRecognitionMissions() {
-        return new BaseResponse(Status.SUCCESS, missionProvider.getFaceRecognitionMissions());
+    @Operation(summary = "미션 목록 가져오기", description = "missionId\n- 객체인식 : 2\n- 표정인식 : 3")
+    @GetMapping("/{missionId}")
+    BaseResponse<GetMissionWithObjectListRes> getObjectDetectionMissions(
+            @PathVariable(value = "missionId") int missionId
+    ) {
+        return new BaseResponse(Status.SUCCESS, missionProvider.getMission(missionId));
     }
 
     @Operation(summary = "객체 탐지 미션")

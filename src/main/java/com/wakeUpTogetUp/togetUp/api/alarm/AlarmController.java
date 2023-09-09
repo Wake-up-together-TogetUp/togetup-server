@@ -34,7 +34,7 @@ public class AlarmController {
             content = @Content(schema = @Schema(implementation = GetAlarmRes.class)))
     @GetMapping("/{alarmId}")
     public BaseResponse<GetAlarmRes> GetAlarm(@PathVariable Integer alarmId){
-        return new BaseResponse<>(Status.SUCCESS, alarmProvider.getAlarm(alarmId));
+        return new BaseResponse<>(Status.SUCCESS, alarmProvider.getAlarmById(alarmId));
     }
 
     @Operation(summary = "유저 알람 목록 불러오기")
@@ -43,7 +43,9 @@ public class AlarmController {
             description = "요청에 성공하였습니다.",
             content = @Content(schema = @Schema(implementation = GetAlarmRes.class)))
     @GetMapping
-    public BaseResponse<List<GetAlarmRes>> GetAlarmsByUserId(@AuthUser Integer userId){
+    public BaseResponse<List<GetAlarmRes>> GetAlarmsByUserId(
+            @Parameter(hidden = true) @AuthUser Integer userId
+    ){
         return new BaseResponse<>(Status.SUCCESS, alarmProvider.getAlarmsByUserId(userId));
     }
 

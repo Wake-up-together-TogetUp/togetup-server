@@ -37,11 +37,10 @@ public class AlarmProvider {
      * @param alarmId
      * @return
      */
-    public GetAlarmRes getAlarm(Integer alarmId) {
+    public GetAlarmRes getAlarmById(Integer alarmId) {
         // 알람 가져오기
         Alarm alarm = alarmRepository.findById(alarmId)
-                .orElseThrow(
-                        () -> new BaseException(Status.ALARM_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
         return EntityDtoMapper.INSTANCE.toAlarmRes(alarm);
     }
