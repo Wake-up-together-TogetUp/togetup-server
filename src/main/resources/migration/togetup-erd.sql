@@ -9,13 +9,12 @@ CREATE TABLE `user` (
                         `is_deleted`	        TINYINT(1)	    NOT NULL    DEFAULT FALSE
 );
 
-CREATE TABLE `mission` (
-                           `id`	        INT UNSIGNED        NOT NULL    AUTO_INCREMENT PRIMARY KEY,
-                           `name`	    VARCHAR(20)	        NOT NULL,
-                           `object`	    VARCHAR(20)	        NOT NULL,
-                           `created_at`	TIMESTAMP	        NOT NULL	DEFAULT current_timestamp,
-                           `updated_at`	TIMESTAMP	        NOT NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
-                           `is_active`	TINYINT(1)	    NOT NULL	DEFAULT TRUE
+create table mission
+(
+    id         int unsigned auto_increment  primary key,
+    name       varchar(30)                          not null,
+    created_at timestamp  default CURRENT_TIMESTAMP not null,
+    is_active  tinyint(1) default 1                 not null
 );
 
 CREATE TABLE room (
@@ -37,6 +36,17 @@ CREATE TABLE `room_user` (
                               FOREIGN KEY (room_id)         REFERENCES room (id),
                               FOREIGN KEY (user_id)         REFERENCES user(id)
 
+);
+
+create table mission_object
+(
+    id         int unsigned auto_increment  primary key,
+    name       varchar(20)          not null,
+    kr         varchar(20)          not null,
+    icon       varchar(30)          not null,
+    is_active  tinyint(1) default 1 not null,
+    mission_id int unsigned         not null,
+    constraint mission_object_mission_id_fk foreign key (mission_id) references mission (id)
 );
 
 CREATE TABLE `mission_log` (
