@@ -18,18 +18,23 @@ public class AlarmProvider {
     private final AlarmRepository alarmRepository;
 
     /**
-     * 유저 아이디로 알람 리스트 가져오기
+     * 유저 아이디로 개인 알람 리스트 가져오기
      * @param userId
      * @return
      */
-    public List<GetAlarmRes> getAlarmsByUserId(Integer userId) {
+    public List<GetAlarmRes> getAlarmsByUserId(Integer userId, String type) {
         // 유저 id 유무 확인
         userRepository.findById(userId).orElseThrow(
                 () -> new BaseException(Status.USER_NOT_FOUND));
 
-        List<Alarm> alarmList = alarmRepository.findByUserId(userId);
-
-        return EntityDtoMapper.INSTANCE.toAlarmResList(alarmList);
+        if (type.equals("personal")) {
+            List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNull(userId);
+            return EntityDtoMapper.INSTANCE.toAlarmResList(alarmList);
+        } else if (type.equals("group")) {
+            List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNotNull(userId);
+            return EntityDtoMapper.INSTANCE.toAlarmResList(alarmList);
+        } else
+            throw new BaseException(Status.BAD_REQUEST_PARAM);
     }
 
     /**

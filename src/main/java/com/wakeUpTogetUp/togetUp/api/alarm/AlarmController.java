@@ -27,6 +27,17 @@ public class AlarmController {
     private final AlarmService alarmService;
     private final AlarmProvider alarmProvider;
 
+    @Operation(summary = "알람 생성")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public BaseResponse createAlarm(
+            @Parameter(hidden = true) @AuthUser Integer userId,
+            @RequestBody @Valid PostAlarmReq postAlarmReq
+    ){
+        alarmService.createAlarm(userId, postAlarmReq);
+        return new BaseResponse(Status.SUCCESS_CREATED);
+    }
+
     @Operation(summary = "알람 1개 불러오기")
     @ApiResponse(
             responseCode = "200",
@@ -37,27 +48,17 @@ public class AlarmController {
         return new BaseResponse<>(Status.SUCCESS, alarmProvider.getAlarmById(alarmId));
     }
 
-    @Operation(summary = "유저 알람 목록 불러오기")
+    @Operation(summary = "유저 알람 목록 불러오기", description = "개인/그룹 알람 가져오기")
     @ApiResponse(
             responseCode = "200",
             description = "요청에 성공하였습니다.",
             content = @Content(schema = @Schema(implementation = GetAlarmRes.class)))
     @GetMapping
     public BaseResponse<List<GetAlarmRes>> GetAlarmsByUserId(
+            @Parameter(description = "- 개인 : personal\n- 그룹 : group", example = "personal") String type,
             @Parameter(hidden = true) @AuthUser Integer userId
     ){
-        return new BaseResponse<>(Status.SUCCESS, alarmProvider.getAlarmsByUserId(userId));
-    }
-
-    @Operation(summary = "알람 생성")
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponse createAlarm(
-            @Parameter(hidden = true) @AuthUser Integer userId,
-            @RequestBody @Valid PostAlarmReq postAlarmReq
-    ){
-        alarmService.createAlarm(userId, postAlarmReq);
-        return new BaseResponse(Status.SUCCESS_CREATED);
+        return new BaseResponse<>(Status.SUCCESS, alarmProvider.getAlarmsByUserId(userId, type));
     }
 
     @Operation(summary = "알람 수정")
