@@ -19,15 +19,14 @@ public class MissionProvider {
     private final MissionRepository missionRepository;
     private final MissionLogRepository missionLogRepository;
 
-    public List<GetMissionRes> getMissions(Boolean isActivated) {
-        List<Mission> missionList;
+    public GetMissionRes getObjectDetectionMissions() {
+        Mission mission = missionRepository.findAllByIdAndIsActive(2, true);
+        return EntityDtoMapper.INSTANCE.toGetMissionRes(mission);
+    }
 
-        if(isActivated)
-            missionList = missionRepository.findAllTrue(Sort.by("id"));
-        else
-            missionList = missionRepository.findAll(Sort.by("id"));
-
-        return EntityDtoMapper.INSTANCE.toGetMissionResList(missionList);
+    public GetMissionRes getFaceRecognitionMissions() {
+        Mission mission = missionRepository.findAllByIdAndIsActive(3, true);
+        return EntityDtoMapper.INSTANCE.toGetMissionRes(mission);
     }
 
     public MissionLogRes getMissionLog(Integer missionCompleteLogId){

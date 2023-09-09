@@ -8,8 +8,6 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.request.PostMissionLogReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.PostObjectRecognitionRes;
-import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.utils.ImageCompressor;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,18 +29,21 @@ public class MissionController {
     private final MissionProvider missionProvider;
     private final MissionService missionService;
     private final FileService fileService;
-    private final ImageCompressor imageCompressor;
 
-    @Operation(summary = "미션 목록 가져오기")
-    @GetMapping("")
-    BaseResponse<List<GetMissionRes>> getMissions(
-            @RequestParam(required = false) boolean isActive
-    ) {
-        return new BaseResponse(Status.SUCCESS, missionProvider.getMissions(isActive));
+    @Operation(summary = "객체 인식 미션 목록 가져오기")
+    @GetMapping("/object-detection")
+    BaseResponse<GetMissionRes> getObjectDetectionMissions() {
+        return new BaseResponse(Status.SUCCESS, missionProvider.getObjectDetectionMissions());
+    }
+
+    @Operation(summary = "표정 인식 미션 목록 가져오기")
+    @GetMapping("/face-recognition")
+    BaseResponse<GetMissionRes> getFaceRecognitionMissions() {
+        return new BaseResponse(Status.SUCCESS, missionProvider.getFaceRecognitionMissions());
     }
 
     @Operation(summary = "객체 탐지 미션")
-    @PostMapping(value = "/detection/object/{objectName}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/object-detection/{objectName}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public BaseResponse<PostObjectRecognitionRes> recognizeObject(
             @Parameter(hidden = true) @AuthUser Integer userId,

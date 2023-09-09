@@ -34,7 +34,25 @@ public class MissionService {
         for(String objectDetected : naverObjectDetectionService.detectObject(missionImage)
                 .getPredictions().get(0)
                 .getDetection_names()){
-//        for(String objectDetected : objectDetectionService.detectObject(missionImage)){
+            System.out.println("objectDetected = " + objectDetected);
+
+            if (objectDetected.equals(object)) {
+                isConsistent = true;
+                break;
+            }
+        }
+
+        // 일치하지 않으면
+        if(!isConsistent)
+            throw new BaseException(Status.MISSION_FAILURE);
+        else
+            return isConsistent;
+    }
+
+    public boolean recognizeObjectByModel(String object, MultipartFile missionImage) {
+        // 일치 여부 확인
+        boolean isConsistent = false;
+        for(String objectDetected : objectDetectionService.detectObject(missionImage)){
 
             System.out.println("objectDetected = " + objectDetected);
 
