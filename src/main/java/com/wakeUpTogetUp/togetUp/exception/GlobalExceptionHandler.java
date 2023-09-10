@@ -1,12 +1,13 @@
 package com.wakeUpTogetUp.togetUp.exception;
 
-//import org.hibernate.TypeMismatchException;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
+import org.hibernate.TypeMismatchException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -36,7 +37,7 @@ public class GlobalExceptionHandler {
             MissingRequestHeaderException.class,
             IllegalStateException.class,
             IllegalArgumentException.class,
-//            TypeMismatchException.class,
+            TypeMismatchException.class,
             HttpMessageNotReadableException.class,
             MissingServletRequestParameterException.class,
             MultipartException.class,
@@ -48,6 +49,15 @@ public class GlobalExceptionHandler {
                 exception);
 
         return new BaseResponse<>(Status.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    protected BaseResponse handleNotSupportedMediaTypeException(HttpMediaTypeNotSupportedException exception) {
+        logger.debug("Bad request exception occurred: {}",
+                exception.getMessage(),
+                exception);
+
+        return new BaseResponse<>(Status.UNSUPPORTED_MEDIA_TYPE);
     }
 
     // vallidation

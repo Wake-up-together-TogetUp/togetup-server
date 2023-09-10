@@ -21,8 +21,8 @@ import java.util.List;
 
 @Tag(name = "알람(Alarm)")
 @RestController
-@RequestMapping("/app/alarm")
 @RequiredArgsConstructor
+@RequestMapping("/app/alarm")
 public class AlarmController {
     private final AlarmService alarmService;
     private final AlarmProvider alarmProvider;
@@ -42,15 +42,15 @@ public class AlarmController {
             responseCode = "200",
             description = "요청에 성공하였습니다.",
             content = @Content(schema = @Schema(implementation = GetAlarmRes.class)))
-    @GetMapping("")
+    @GetMapping
     public BaseResponse<List<GetAlarmRes>> GetAlarmsByUserId(@AuthUser Integer userId){
         return new BaseResponse<>(Status.SUCCESS, alarmProvider.getAlarmsByUserId(userId));
     }
 
     @Operation(summary = "알람 생성")
-    @PostMapping("")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponse<GetAlarmRes> createAlarm(
+    public BaseResponse createAlarm(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @RequestBody @Valid PostAlarmReq postAlarmReq
     ){
@@ -60,7 +60,7 @@ public class AlarmController {
 
     @Operation(summary = "알람 수정")
     @PatchMapping("/{alarmId}")
-    public BaseResponse<GetAlarmRes> updateAlarm(
+    public BaseResponse updateAlarm(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @PathVariable Integer alarmId,
             @RequestBody @Valid PatchAlarmReq patchAlarmReq
@@ -71,7 +71,7 @@ public class AlarmController {
 
     @Operation(summary = "알람 삭제")
     @DeleteMapping("/{alarmId}")
-    public BaseResponse<Integer> deleteAlarm(
+    public BaseResponse deleteAlarm(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @PathVariable Integer alarmId
     ) {
@@ -79,3 +79,4 @@ public class AlarmController {
         return new BaseResponse<>(Status.SUCCESS);
     }
 }
+

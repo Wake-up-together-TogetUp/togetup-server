@@ -1,8 +1,8 @@
-package com.wakeUpTogetUp.togetUp.api.fcmNotification;
+package com.wakeUpTogetUp.togetUp.api.notification;
 
 import com.google.firebase.messaging.*;
-import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.request.PushNotificationReq;
-import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.response.PushNotificationRes;
+import com.wakeUpTogetUp.togetUp.api.notification.dto.request.PushNotificationReq;
+import com.wakeUpTogetUp.togetUp.api.notification.dto.response.PushNotificationRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

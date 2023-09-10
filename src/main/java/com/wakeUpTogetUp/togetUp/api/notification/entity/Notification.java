@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.fcmNotification.entity;
+package com.wakeUpTogetUp.togetUp.api.notification.entity;
 
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;

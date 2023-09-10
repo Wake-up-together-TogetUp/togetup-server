@@ -52,3 +52,9 @@ logs
 
 ### apple
 AuthKey_M992KTZK9V.p8
+
+### result image file ###
+**/src/main/**/images/
+
+###apple
+AuthKey_M992KTZK9V.p8

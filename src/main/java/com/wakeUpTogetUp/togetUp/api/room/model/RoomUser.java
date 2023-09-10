@@ -2,6 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.room.model;
 
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import lombok.*;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.sql.Timestamp;

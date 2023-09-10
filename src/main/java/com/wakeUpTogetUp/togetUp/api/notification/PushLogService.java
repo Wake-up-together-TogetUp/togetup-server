@@ -1,7 +1,6 @@
-package com.wakeUpTogetUp.togetUp.api.fcmNotification;
+package com.wakeUpTogetUp.togetUp.api.notification;
 
-import com.wakeUpTogetUp.togetUp.api.fcmNotification.dto.request.PushNotificationReq;
-import com.wakeUpTogetUp.togetUp.api.fcmNotification.entity.Notification;
+import com.wakeUpTogetUp.togetUp.api.notification.dto.request.PushNotificationReq;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import lombok.RequiredArgsConstructor;

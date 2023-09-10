@@ -6,6 +6,8 @@ import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.KakaoLoginRes;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.SocialUserRes;
 import com.wakeUpTogetUp.togetUp.api.auth.kakao.KakaoUserApi;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,10 +35,13 @@ public class KakaoLoginServiceImpl implements SocialLoginService {
     public SocialUserRes getUserInfo(String accessToken) {
         Map<String ,String> headerMap = new HashMap<>();
         headerMap.put("authorization", "Bearer " + accessToken);
-        ResponseEntity<?> response  = kakaoUserApi.getUserInfo(headerMap);
-        log.info("kakao user response");
-        log.info(response.toString());
 
+        ResponseEntity<?> response  =null;
+        try {
+            response = kakaoUserApi.getUserInfo(headerMap);
+        }catch (Exception e){
+            throw new BaseException(Status.UNAUTHORIZED_KAKAO_TOKEN);
+        }
         String jsonString = response.getBody().toString();
 
         Gson gson = new GsonBuilder()

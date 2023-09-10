@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Getter
 public class ODConfig {
-
+    
     private final Integer lineThicknessRatio = 333;
     private final Double fontSizeRatio = 1145.14;
     private final List<String> names = new ArrayList<>(Arrays.asList(

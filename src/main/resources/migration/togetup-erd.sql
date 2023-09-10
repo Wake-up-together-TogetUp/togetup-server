@@ -68,7 +68,7 @@ CREATE TABLE `notification` (
 CREATE TABLE `alarm` (
                          `id`	            INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
                          `name`	            VARCHAR(20)	    NOT NULL,
-                         `icon`	            VARCHAR(30)	    NOT NULL    DEFAULT "⏰",
+                         `icon`	            VARCHAR(30)	    NOT NULL    DEFAULT '⏰',
                          `snooze_interval`	TINYINT	        NOT NULL	DEFAULT 5,
                          `snooze_cnt`	    TINYINT	        NOT NULL	DEFAULT 3,
                          `alarm_time`	    TIME	        NOT NULL,
