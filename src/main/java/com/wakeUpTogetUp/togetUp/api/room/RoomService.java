@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 
 @Service
 @Transactional(readOnly = true)
@@ -102,6 +103,11 @@ public class RoomService {
         }*/
 
        // return roomResList;
+    }
+
+    public List<RoomRes> getRoomList2(Integer userId) {
+        List<Alarm> alarmList =  alarmRepository.findAllByUser_IdAndRoom_IdIsNotNull(userId);
+        return EntityDtoMapper.INSTANCE.toRoomRes(alarmList);
     }
 
     @Transactional

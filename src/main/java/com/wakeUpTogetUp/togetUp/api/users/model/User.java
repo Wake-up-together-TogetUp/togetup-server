@@ -54,7 +54,7 @@ public class User {
     private Timestamp updatedAt;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted = false;
+    private boolean isDeleted ;
 
 
     @OneToMany(mappedBy = "user")

@@ -16,17 +16,25 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class Mission {
-    @Builder
-    public Mission(String name, String object) {
-        this.name = name;
-        this.object = object;
-    }
+//    @Builder
+//    public Mission(String name, String object) {
+//        this.name = name;
+//        this.object = object;
+//    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "INT UNSIGNED")
     private int id;
     private String name;
     private String object;
+
+    @Builder
+    public Mission(int id, String name, String object) {
+        this.id = id;
+        this.name = name;
+        this.object = object;
+    }
+
     @Column(name ="created_at",columnDefinition = "Timestamp")
     private String createdAt;
     @Column(name = "updated_at" ,columnDefinition = "Timestamp")

@@ -8,6 +8,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
@@ -43,4 +44,13 @@ public interface EntityDtoMapper {
     @Mapping(target = "roomId", source = "room.id")
     NotificationRes toNotificationRes(Notification notification);
     List<NotificationRes> toNotificationResList(List<Notification> notificationList);
+
+    //Room
+    @Mapping(target = "roomId",source = "room.id")
+    @Mapping(target = "roomIcon",source = "icon")
+    @Mapping(target = "name",source = "room.name")
+  //  @Mapping(target = "mission",source = "room.intro")
+    List<RoomRes> toRoomRes(List<Alarm> alarmList);
+
+
 }

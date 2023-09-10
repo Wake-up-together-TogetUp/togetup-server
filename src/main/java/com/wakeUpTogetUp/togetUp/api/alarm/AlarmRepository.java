@@ -36,4 +36,7 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
 
     @Query("select a from Alarm a where a.room.id IN :roomIds")
     List<Alarm> findAllByRoomIds(@Param("roomIds") List<Integer> roomIds);
+
+    List<Alarm> findAllByUser_IdAndRoom_IdIsNotNull(Integer userId);
+
 }
