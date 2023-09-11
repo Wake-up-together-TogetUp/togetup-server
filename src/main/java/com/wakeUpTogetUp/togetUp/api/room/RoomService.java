@@ -68,46 +68,12 @@ public class RoomService {
         alarmRepository.updateRoomIdByAlarmId(alarmId,room.getId());
 
     }
-    public void getRoomList(Integer userId) {
-
-        //모든 룸아이디 가져오기
-        List<RoomUser> roomList = roomUserRepository.findByUserId(userId);
-
-        System.out.println("룸리스트  "+roomList.toString());
-        List<Integer> roomIds = roomList.stream()
-                .map(roomUser -> roomUser.getRoom().getId())
-                .collect(Collectors.toList());
-        //모든 알람 가져오기
-        List<Alarm> alarmList = alarmRepository.findAllByRoomIds(roomIds);
-        System.out.println("알람  "+alarmList.toString());
-//       RoomRes roomRes= RoomRes.builder()
-//               .roomId(roomList.get(0).getId())
-//               .roomIcon(alarmList.get())
-//        //알람의 미션 가져오기
-//
-//        List<Integer> missionIds = alarmList.stream()
-//                .map(Alarm -> Alarm.getMission().getId())
-//                .collect(Collectors.toList());
-//
-//        List<Mission> missionList = missionRepository.findAllById(missionIds);
- //       System.out.println("미션  "+ missionList.toString());
 
 
-        //미션 로그 가져오기
-
-        List<MissionLog>  missionLogs= missionLogRepository.findMostRecentMissionLogsByRoomIds(roomIds);
-        // dto 매핑
-       /* ArrayList<RoomRes> roomResList = new ArrayList<>();
-        for(Room room : roomList) {
-            roomResList.add(GroupMapper.INSTANCE.toGroupRes(room));
-        }*/
-
-       // return roomResList;
-    }
-
-    public List<RoomRes> getRoomList2(Integer userId) {
+    public List<RoomRes> getRoomList(Integer userId) {
         List<Alarm> alarmList =  alarmRepository.findAllByUser_IdAndRoom_IdIsNotNull(userId);
-        return EntityDtoMapper.INSTANCE.toRoomRes(alarmList);
+
+        return EntityDtoMapper.INSTANCE.toRoomResList(alarmList);
     }
 
     @Transactional

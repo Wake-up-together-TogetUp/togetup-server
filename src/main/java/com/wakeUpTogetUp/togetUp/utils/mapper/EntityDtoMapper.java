@@ -9,12 +9,14 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
+import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@org.mapstruct.Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring")
 public interface EntityDtoMapper {
     EntityDtoMapper INSTANCE = Mappers.getMapper(EntityDtoMapper.class);
 
@@ -45,12 +47,21 @@ public interface EntityDtoMapper {
     NotificationRes toNotificationRes(Notification notification);
     List<NotificationRes> toNotificationResList(List<Notification> notificationList);
 
-    //Room
+
     @Mapping(target = "roomId",source = "room.id")
-    @Mapping(target = "roomIcon",source = "icon")
+    @Mapping(target = "icon",source = "icon")
     @Mapping(target = "name",source = "room.name")
-  //  @Mapping(target = "mission",source = "room.intro")
-    List<RoomRes> toRoomRes(List<Alarm> alarmList);
+    @Mapping(target = "mission",source = "mission.name")
+    RoomRes toRoomRes(Alarm alarm);
+
+    //Room
+    @Mapping(target = "id",source = "room")
+    @Mapping(target = "icon",source = "icon")
+    @Mapping(target = ".",source = "room")
+    @Mapping(target = "mission",source = "mission.name")
+    List<RoomRes> toRoomResList(List<Alarm> alarmList);
+
+
 
 
 }

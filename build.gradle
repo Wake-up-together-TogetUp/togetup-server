@@ -43,7 +43,8 @@ dependencies {
 	// model struct
 	implementation 'org.mapstruct:mapstruct:1.5.4.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.4.Final'
-
+	testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
+	implementation("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 	// security
 	implementation('org.springframework.boot:spring-boot-starter-security')
 

@@ -48,16 +48,8 @@ public class RoomController {
 
     public BaseResponse<List<RoomRes>> test(@AuthUser Integer userId ) {
 
-       // List<Integer> roomIds= new ArrayList<>();
-       // roomIds.add(6);
-        //roomIds.add(7);
-        //System.out.println("룸아이디" + roomIds.get(0).toString());
-       // List<MissionLog> missionLogs =missionLogRepository.findMostRecentMissionLogsByRoomIds(roomIds);
-        //List<MissionLog> missionLogs =missionLogRepository.findMostRecentMissionLogsByRoomIds(roomIds);
 
-      //  System.out.println(missionLogs.toString() +" 여기");
-
-        return new BaseResponse(Status.SUCCESS,roomService.getRoomList2(userId));
+        return new BaseResponse(Status.SUCCESS,roomService.getRoomList(userId));
 
     }
 
