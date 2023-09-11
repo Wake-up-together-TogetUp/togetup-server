@@ -2,9 +2,11 @@ package com.wakeUpTogetUp.togetUp.utils.mapper;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionObjectRes;
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.notification.dto.response.NotificationRes;
 import com.wakeUpTogetUp.togetUp.api.notification.entity.Notification;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
@@ -19,17 +21,21 @@ public interface EntityDtoMapper {
 
     // Alarm
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "missionId", source = "mission.id")
+    @Mapping(target = "getMissionRes", source = "mission")
+    @Mapping(target = "getMissionObjectRes", source = "missionObject")
+    @Mapping(target = "roomRes", source = "room")
     GetAlarmRes toAlarmRes(Alarm alarm);
 
-    @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "missionId", source = "mission.id")
     List<GetAlarmRes> toAlarmResList(List<Alarm> alarmList);
 
 
     // Mission
-    GetMissionRes toGetMissionRes(Mission mission);
-    List<GetMissionRes> toGetMissionResList(List<Mission> missionList);
+    GetMissionObjectRes toGetMissionObjectRes(MissionObject missionObject);
+    List<GetMissionObjectRes> toGetMissionObjectResList(List<MissionObject> missionObjectList);
+
+    @Mapping(target = "missionObjectResList", source = "mission.missionObjectList")
+    GetMissionWithObjectListRes toGetMissionRes(Mission mission);
+    List<GetMissionWithObjectListRes> toGetMissionResList(List<Mission> missionList);
 
 
     // MissionCompleteLog

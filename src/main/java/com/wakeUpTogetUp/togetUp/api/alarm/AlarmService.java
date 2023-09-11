@@ -4,6 +4,10 @@ import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PatchAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
+import com.wakeUpTogetUp.togetUp.api.mission.MissionObjectRepository;
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
+import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
+import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionRepository;
@@ -22,23 +26,36 @@ public class AlarmService {
     private final AlarmRepository alarmRepository;
     private final UserRepository userRepository;
     private final MissionRepository missionRepository;
+    private final MissionObjectRepository missionObjectRepository;
+    private final RoomRepository roomRepository;
 
     // 알람 생성
     @Transactional
-    public GetAlarmRes createAlarm(Integer userId, PostAlarmReq postAlarmReq) {
-        // alarm 생성
+    public Alarm createAlarm(Integer userId, PostAlarmReq postAlarmReq) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
+        Room room = postAlarmReq.getRoomId() != null
+                ? roomRepository.findById(postAlarmReq.getRoomId()).orElseThrow(() -> new BaseException(Status.INVALID_GROUP_ID))
+                : null;
+        Mission mission = null;
+        MissionObject missionObject = null;
 
-        Mission mission = missionRepository.findById(postAlarmReq.getMissionId())
-                .orElseThrow(() -> new BaseException(Status.INVALID_MISSION_ID));
+        if(postAlarmReq.getMissionId() != null) {
+            mission= missionRepository.findById(postAlarmReq.getMissionId())
+                    .orElseThrow(() -> new BaseException(Status.INVALID_MISSION_ID));
+
+            if(postAlarmReq.getMissionObjectId() != null) {
+                missionObject = missionObjectRepository.findById(postAlarmReq.getMissionObjectId())
+                        .orElseThrow(() -> new BaseException(Status.INVALID_MISSION_OBJECT_ID));
+
+                if(missionObject.getMission().getId() != mission.getId())
+                    throw new BaseException(Status.MISSION_ID_NOT_MATCH);
+            }
+        }
 
         Alarm alarm = Alarm.builder()
-                .user(user)
-                .mission(mission)
                 .name(postAlarmReq.getName())
                 .icon(postAlarmReq.getIcon())
-                .isVibrate(postAlarmReq.getIsVibrate())
                 .snoozeInterval(postAlarmReq.getSnoozeInterval())
                 .snoozeCnt(postAlarmReq.getSnoozeCnt())
                 .alarmTime(postAlarmReq.getAlarmTime())
@@ -49,29 +66,42 @@ public class AlarmService {
                 .friday(postAlarmReq.getFriday())
                 .saturday(postAlarmReq.getSaturday())
                 .sunday(postAlarmReq.getSunday())
+                .isSnoozeActivated(postAlarmReq.getIsSnoozeActivated())
+                .isVibrate(postAlarmReq.getIsVibrate())
+                .user(user)
+                .mission(mission)
+                .missionObject(missionObject)
+                .room(room)
                 .build();
 
-        // 영속성 컨텍스트의 특성으로 default 값으로 넣은 속성은 값이 null 로 나오는 것 같다.
-        Alarm alarmCreated = alarmRepository.save(alarm);
-
-        return EntityDtoMapper.INSTANCE.toAlarmRes(alarmCreated);
+        return alarmRepository.save(alarm);
     }
 
     // 알람 수정
     @Transactional
-    public GetAlarmRes updateAlarm(Integer userId, Integer alarmId, PatchAlarmReq patchAlarmReq) {
+    public Alarm updateAlarm(Integer userId, Integer alarmId, PatchAlarmReq patchAlarmReq) {
         // 알람 수정
         Alarm alarm = alarmRepository.findById(alarmId, userId)
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
+        Mission mission = null;
+        MissionObject missionObject = null;
 
-        Mission mission = missionRepository.findById(patchAlarmReq.getMissionId())
-                .orElseThrow(() -> new BaseException(Status.INVALID_MISSION_ID));
+        if(patchAlarmReq.getMissionId() != null) {
+            mission = missionRepository.findById(patchAlarmReq.getMissionId())
+                    .orElseThrow(() -> new BaseException(Status.INVALID_MISSION_ID));
+
+            if (patchAlarmReq.getMissionObjectId() != null) {
+                missionObject = missionObjectRepository.findById(patchAlarmReq.getMissionObjectId())
+                        .orElseThrow(() -> new BaseException(Status.INVALID_MISSION_OBJECT_ID));
+
+                if (missionObject.getMission().getId() != mission.getId())
+                    throw new BaseException(Status.MISSION_ID_NOT_MATCH);
+            }
+        }
 
         alarm.modifyProperties(
-                mission,
                 patchAlarmReq.getName(),
                 patchAlarmReq.getIcon(),
-                patchAlarmReq.getIsVibrate(),
                 patchAlarmReq.getSnoozeInterval(),
                 patchAlarmReq.getSnoozeCnt(),
                 patchAlarmReq.getAlarmTime(),
@@ -82,10 +112,14 @@ public class AlarmService {
                 patchAlarmReq.getFriday(),
                 patchAlarmReq.getSaturday(),
                 patchAlarmReq.getSunday(),
-                patchAlarmReq.getIsActivated());
-        Alarm alarmModified = alarmRepository.save(alarm);
+                patchAlarmReq.getIsVibrate(),
+                patchAlarmReq.getIsSnoozeActivated(),
+                patchAlarmReq.getIsActivated(),
+                mission,
+                missionObject
+        );
 
-        return EntityDtoMapper.INSTANCE.toAlarmRes(alarmModified);
+        return alarmRepository.save(alarm);
     }
 
     // 알람 삭제

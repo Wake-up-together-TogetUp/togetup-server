@@ -12,4 +12,6 @@ import java.util.List;
 public interface MissionRepository extends JpaRepository<Mission, Integer> {
     @Query("select m from Mission m where m.isActive = true")
     List<Mission> findAllTrue(Sort sort);
+
+    Mission findAllByIdAndIsActive(Integer id, Boolean isActive);
 }

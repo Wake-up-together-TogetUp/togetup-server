@@ -9,13 +9,13 @@ CREATE TABLE `user` (
                         `is_deleted`	        TINYINT(1)	    NOT NULL    DEFAULT FALSE
 );
 
-CREATE TABLE `mission` (
-                           `id`	        INT UNSIGNED        NOT NULL    AUTO_INCREMENT PRIMARY KEY,
-                           `name`	    VARCHAR(20)	        NOT NULL,
-                           `object`	    VARCHAR(20)	        NOT NULL,
-                           `created_at`	TIMESTAMP	        NOT NULL	DEFAULT current_timestamp,
-                           `updated_at`	TIMESTAMP	        NOT NULL    DEFAULT current_timestamp ON UPDATE current_timestamp,
-                           `is_active`	TINYINT(1)	    NOT NULL	DEFAULT TRUE
+create table mission
+(
+    id         int unsigned auto_increment
+        primary key,
+    name       varchar(30)                          not null,
+    created_at timestamp  default CURRENT_TIMESTAMP not null,
+    is_active  tinyint(1) default 1                 not null
 );
 
 CREATE TABLE room (
@@ -37,6 +37,19 @@ CREATE TABLE `room_user` (
                               FOREIGN KEY (room_id)         REFERENCES room (id),
                               FOREIGN KEY (user_id)         REFERENCES user(id)
 
+);
+
+create table mission_object
+(
+    id         int unsigned auto_increment
+        primary key,
+    name       varchar(20)          not null,
+    kr         varchar(20)          not null,
+    icon       varchar(30)          not null,
+    is_active  tinyint(1) default 1 not null,
+    mission_id int unsigned         not null,
+    constraint mission_object_mission_id_fk
+        foreign key (mission_id) references mission (id)
 );
 
 CREATE TABLE `mission_log` (
@@ -64,28 +77,37 @@ CREATE TABLE `notification` (
 
 );
 
-CREATE TABLE `alarm` (
-                         `id`	            INT UNSIGNED	NOT NULL	AUTO_INCREMENT  PRIMARY KEY,
-                         `name`	            VARCHAR(20)	    NOT NULL,
-                         `icon`	            VARCHAR(30)	    NOT NULL    DEFAULT '⏰',
-                         `snooze_interval`	TINYINT	        NOT NULL	DEFAULT 5,
-                         `snooze_cnt`	    TINYINT	        NOT NULL	DEFAULT 3,
-                         `alarm_time`	    TIME	        NOT NULL,
-                         `monday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
-                         `tuesday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
-                         `wednesday`	    TINYINT(1)	    NOT NULL	DEFAULT FALSE,
-                         `thursday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
-                         `friday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
-                         `saturday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
-                         `sunday`	        TINYINT(1)	    NOT NULL	DEFAULT FALSE,
-                         `is_vibrate`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
-                         `is_activated`	    TINYINT(1)	    NOT NULL	DEFAULT TRUE,
-                         `user_id`	        INT UNSIGNED	NOT NULL,
-                         `mission_id`	    INT UNSIGNED	NULL,
-                         `room_id`	        INT UNSIGNED	NULL,
-                         FOREIGN KEY (user_id) REFERENCES user(id),
-                         FOREIGN KEY (room_id) REFERENCES room(id),
-                         FOREIGN KEY (mission_id) REFERENCES mission(id)
+create table alarm
+(
+    id                  int unsigned auto_increment
+        primary key,
+    name                varchar(20)             not null,
+    icon                varchar(30) default '⏰' not null,
+    snooze_interval     tinyint     default 5   not null,
+    snooze_cnt          tinyint     default 3   not null,
+    alarm_time          time                    not null,
+    monday              tinyint(1)  default 0   not null,
+    tuesday             tinyint(1)  default 0   not null,
+    wednesday           tinyint(1)  default 0   not null,
+    thursday            tinyint(1)  default 0   not null,
+    friday              tinyint(1)  default 0   not null,
+    saturday            tinyint(1)  default 0   not null,
+    sunday              tinyint(1)  default 0   not null,
+    is_snooze_activated tinyint(1)  default 1   not null,
+    is_vibrate          tinyint(1)  default 1   not null,
+    is_activated        tinyint(1)  default 1   not null,
+    user_id             int unsigned            not null,
+    mission_id          int unsigned            null,
+    mission_object_id   int unsigned            null,
+    room_id             int unsigned            null,
+    constraint alarm_ibfk_1
+        foreign key (user_id) references user (id),
+    constraint alarm_ibfk_2
+        foreign key (room_id) references room (id),
+    constraint alarm_ibfk_3
+        foreign key (mission_id) references mission (id),
+    constraint alarm_mission_object_id_fk
+        foreign key (mission_object_id) references mission_object (id)
 );
 
 CREATE TABLE `avatar` (
