@@ -7,8 +7,8 @@ public class Constant {
     public static final String API_DESCRIPTION = "TOGEPUP API DESCRIPTION";
     public static final String BEARER= "jwt";
     public static final String JWT_PREFIX= "Bearer";
-
     public static final Integer INVITATION_CODE_LENGTH =5;
-
     public static final String AUTHORIZATION_CODE= "authorization_code" ;
+    public static final String GET_ALARM_MODE_PERSONAL = "personal";
+    public static final String GET_ALARM_MODE_GROUP = "group";
 }
