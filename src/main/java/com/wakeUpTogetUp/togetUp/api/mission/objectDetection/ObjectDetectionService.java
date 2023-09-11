@@ -17,8 +17,11 @@ import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +33,9 @@ public class ObjectDetectionService {
     private final ODConfig odConfig;
     private final Letterbox letterbox;
     private final ImageCompressor imageCompressor;
+
+//    @Value("${my.path.save-pic-path}")
+//    private String savePicPath;
 
     public ArrayList<String> detectObject(MultipartFile missionImage) {
         long startTime = System.currentTimeMillis();
@@ -51,20 +57,20 @@ public class ObjectDetectionService {
 
         try {
             // image 읽기
-//            Mat img = Imgcodecs.imdecode(new MatOfByte(missionImage.getBytes()),
-//                    Imgcodecs.IMREAD_COLOR);
-            Mat img = Imgcodecs.imdecode(
-                    new MatOfByte(imageCompressor.compressImage(missionImage, 0.5f)),
+            Mat img = Imgcodecs.imdecode(new MatOfByte(missionImage.getBytes()),
                     Imgcodecs.IMREAD_COLOR);
+//            Mat img = Imgcodecs.imdecode(
+//                    new MatOfByte(imageCompressor.compressImage(missionImage, 0.5f)),
+//                    Imgcodecs.IMREAD_COLOR);
             Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2RGB);
             Mat image = img.clone();
 
             // 아래 상자의 굵기, 글자의 크기, 글자의 종류, 글자의 색을 먼저 정의합니다. (비례에 따라 굵기를 설정하는 것이 좋습니다.)
-//            int minDwDh = Math.min(img.width(), img.height());
-//            int thickness = minDwDh / odConfig.getLineThicknessRatio();
-//            double fontSize = minDwDh / odConfig.getFontSizeRatio();
-//            int fontFace = Imgproc.FONT_HERSHEY_SIMPLEX;
-//            Scalar fontColor = new Scalar(0, 0, 0);
+            int minDwDh = Math.min(img.width(), img.height());
+            int thickness = minDwDh / odConfig.getLineThicknessRatio();
+            double fontSize = minDwDh / odConfig.getFontSizeRatio();
+            int fontFace = Imgproc.FONT_HERSHEY_SIMPLEX;
+            Scalar fontColor = new Scalar(0, 0, 0);
 
             // image 크기 변경
             image = letterbox.letterbox(image);
@@ -109,26 +115,26 @@ public class ObjectDetectionService {
                 System.out.println("odResult : " + odResult);
 
 //                // 그림틀
-//                Point topLeft = new Point((odResult.getX0() - dw) / ratio,
-//                        (odResult.getY0() - dh) / ratio);
-//                Point bottomRight = new Point((odResult.getX1() - dw) / ratio,
-//                        (odResult.getY1() - dh) / ratio);
-//                Scalar color = new Scalar(odConfig.getColor(odResult.getClsId()));
-//                Imgproc.rectangle(img, topLeft, bottomRight, color, thickness);
-//
-//                // 틀에 글을 쓰다
-//                String boxName = odConfig.getName(odResult.getClsId()) + ": " + odResult.getScore();
-//                Point boxNameLoc = new Point((odResult.getX0() - dw) / ratio,
-//                        (odResult.getY0() - dh) / ratio - 3);
-//
-//                Imgproc.putText(img, boxName, boxNameLoc, fontFace, fontSize, fontColor, thickness);
+                Point topLeft = new Point((odResult.getX0() - dw) / ratio,
+                        (odResult.getY0() - dh) / ratio);
+                Point bottomRight = new Point((odResult.getX1() - dw) / ratio,
+                        (odResult.getY1() - dh) / ratio);
+                Scalar color = new Scalar(odConfig.getColor(odResult.getClsId()));
+                Imgproc.rectangle(img, topLeft, bottomRight, color, thickness);
+
+                // 틀에 글을 쓰다
+                String boxName = odConfig.getName(odResult.getClsId()) + ": " + odResult.getScore();
+                Point boxNameLoc = new Point((odResult.getX0() - dw) / ratio,
+                        (odResult.getY0() - dh) / ratio - 3);
+
+                Imgproc.putText(img, boxName, boxNameLoc, fontFace, fontSize, fontColor, thickness);
 
                 // 감지된 클래스 리스트 생성
                 detectedObejectList.add(odConfig.getName(odResult.getClsId()));
             });
 
 //            // 그림 저장
-//            Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGR);
+            Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGR);
 //            Imgcodecs.imwrite(savePicPath, img);
 
             // 걸린 시간 계산

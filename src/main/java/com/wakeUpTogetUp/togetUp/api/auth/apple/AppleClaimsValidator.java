@@ -16,7 +16,7 @@ public class AppleClaimsValidator {
     private final String nonce;
 
     public AppleClaimsValidator(
-            @Value("${oauth.apple.iss}") String iss,
+            @Value("${oauth.apple.iss-validation}") String iss,
             @Value("${oauth.apple.client-id}") String clientId,
             @Value("${oauth.apple.nonce}") String nonce
     ) {

@@ -20,25 +20,5 @@ public class RoomReq {
     private String name;
     @Schema( example = "설여대 소융이들의 방입니다.")
     private String intro;
-    @Schema(example = "{\n" +
-            "    \"missionId\": 1,\n" +
-            "    \"roomId\": 0,\n" +
-            "    \"name\": \"test\",\n" +
-            "    \"icon\": \"⏰\",\n" +
-            "    \"isVibrate\": true,\n" +
-            "    \"snoozeInterval\": 5,\n" +
-            "    \"snoozeCnt\": 3,\n" +
-            "    \"alarmTime\": \"06:00\",\n" +
-            "    \"monday\": false,\n" +
-            "    \"tuesday\": false,\n" +
-            "    \"wednesday\": false,\n" +
-            "    \"thursday\": false,\n" +
-            "    \"friday\": false,\n" +
-            "    \"saturday\": false,\n" +
-            "    \"sunday\": false,\n" +
-            "    \"isActivated\": true\n" +
-            "  }")
     private PostAlarmReq postAlarmReq;
-
-
 }

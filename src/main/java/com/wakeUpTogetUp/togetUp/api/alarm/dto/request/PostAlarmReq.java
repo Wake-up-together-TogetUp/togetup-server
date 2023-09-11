@@ -13,20 +13,12 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostAlarmReq {
-    @Schema(description = "미션 id", example = "1")
-    @NotNull(message = "미션 아이디를 넣어주세요.")
-    private Integer missionId;
-
-    private Integer roomId;
-
+    @Schema(description = "알람 이름", example = "기상")
     @NotBlank(message = "알람 이름은 공백일 수 없습니다.")
     private String name;
 
     @Schema(description = "아이콘", example = "⏰")
     private String icon;
-
-    @Schema(description = "진동 여부", example = "true")
-    private Boolean isVibrate;
 
     @Schema(description = "다시울림 간격", example = "5")
     private Integer snoozeInterval;
@@ -60,6 +52,18 @@ public class PostAlarmReq {
     @Schema(description = "일요일 울림 여부", example = "false")
     private Boolean sunday;
 
-    @Schema(description = "알람 활성화 여부", example = "true")
-    private Boolean isActivated;
+    @Schema(description = "다시울림 활성화 여부", example = "true", defaultValue = "true")
+    private Boolean isSnoozeActivated;
+
+    @Schema(description = "진동 활성화 여부", example = "true")
+    private Boolean isVibrate;
+    
+    @Schema(description = "미션 id", example = "2")
+    private Integer missionId;
+
+    @Schema(description = "미션 객체 id", example = "1")
+    private Integer missionObjectId;
+
+    @Schema(description = "그룹 id", example = "1")
+    private Integer roomId;
 }

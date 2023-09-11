@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.alarm.model;
 
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
@@ -23,30 +24,17 @@ public class Alarm {
     @Column(columnDefinition = "INT UNSIGNED")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", columnDefinition = "INT UNSIGNED")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mission_id")
-    private Mission mission;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
-    private Room room;
-
     private String name;
-    private String icon;
-    @Column(name = "is_vibrate")
-    private Boolean isVibrate;
 
-    @Column(name = "snooze_interval",columnDefinition = "TINYINT")
+    private String icon;
+
+    @Column(name = "snooze_interval", columnDefinition = "TINYINT")
     private Integer snoozeInterval;
 
-    @Column(name = "snooze_cnt" ,columnDefinition = "TINYINT")
+    @Column(name = "snooze_cnt", columnDefinition = "TINYINT")
     private Integer snoozeCnt;
 
-    @Column(name = "alarm_time" ,columnDefinition = "TIME")
+    @Column(name = "alarm_time", columnDefinition = "TIME")
     private String alarmTime;
 
     private Boolean monday;
@@ -57,19 +45,34 @@ public class Alarm {
     private Boolean saturday;
     private Boolean sunday;
 
-    @Column(name = "is_activated")
+    private Boolean isSnoozeActivated;
+    private Boolean isVibrate;
     private Boolean isActivated;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", columnDefinition = "INT UNSIGNED")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mission_id")
+    private Mission mission;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mission_object_id")
+    private MissionObject missionObject;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
+    private Room room;
+
+    // post
     @Builder
-    public Alarm(User user, Mission mission, String name, String icon, Boolean isVibrate,
-            Integer snoozeInterval, Integer snoozeCnt, String alarmTime, Boolean monday,
-            Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday,
-            Boolean sunday) {
-        this.user = user;
-        this.mission = mission;
+    public Alarm(String name, String icon, Integer snoozeInterval, Integer snoozeCnt, String alarmTime,
+            Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday,
+            Boolean saturday, Boolean sunday, Boolean isSnoozeActivated, Boolean isVibrate,
+            User user, Mission mission, MissionObject missionObject, Room room) {
         this.name = name;
         this.icon = icon;
-        this.isVibrate = isVibrate;
         this.snoozeInterval = snoozeInterval;
         this.snoozeCnt = snoozeCnt;
         this.alarmTime = alarmTime;
@@ -80,13 +83,44 @@ public class Alarm {
         this.friday = friday;
         this.saturday = saturday;
         this.sunday = sunday;
+        this.isSnoozeActivated = isSnoozeActivated;
+        this.isVibrate = isVibrate;
+        this.user = user;
+        this.mission = mission;
+        this.missionObject = missionObject;
+        this.room = room;
     }
 
-    public void modifyProperties(Mission mission, String name, String icon, Boolean isVibrate,
+    // patch
+    @Builder
+    public Alarm(String name, String icon, Integer snoozeInterval, Integer snoozeCnt, String alarmTime,
+            Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday,
+            Boolean saturday, Boolean sunday, Boolean isSnoozeActivated, Boolean isVibrate,
+            Boolean isActivated, Mission mission, MissionObject missionObject) {
+        this.name = name;
+        this.icon = icon;
+        this.snoozeInterval = snoozeInterval;
+        this.snoozeCnt = snoozeCnt;
+        this.alarmTime = alarmTime;
+        this.monday = monday;
+        this.tuesday = tuesday;
+        this.wednesday = wednesday;
+        this.thursday = thursday;
+        this.friday = friday;
+        this.saturday = saturday;
+        this.sunday = sunday;
+        this.isSnoozeActivated = isSnoozeActivated;
+        this.isVibrate = isVibrate;
+        this.isActivated = isActivated;
+        this.mission = mission;
+        this.missionObject = missionObject;
+    }
+
+    public void modifyProperties(String name, String icon,
             Integer snoozeInterval, Integer snoozeCnt, String alarmTime, Boolean monday,
             Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday,
-            Boolean sunday, Boolean isActivated) {
-        setMission(mission);
+            Boolean sunday, Boolean isVibrate, Boolean isSnoozeActivated, Boolean isActivated,
+            Mission mission, MissionObject missionObject) {
         setName(name);
         setIcon(icon);
         setIsVibrate(isVibrate);
@@ -100,6 +134,10 @@ public class Alarm {
         setFriday(friday);
         setSaturday(saturday);
         setSunday(sunday);
+        setIsVibrate(isVibrate);
+        setIsSnoozeActivated(isSnoozeActivated);
         setIsActivated(isActivated);
+        setMission(mission);
+        setMissionObject(missionObject);
     }
 }

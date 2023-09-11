@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.mission.dto.response;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,9 +12,10 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetMissionRes {
+public class GetMissionWithObjectListRes {
     private int id;
     private String name;
     private String createdAt;
     private Boolean isActive;
+    private List<GetMissionObjectRes> missionObjectResList;
 }

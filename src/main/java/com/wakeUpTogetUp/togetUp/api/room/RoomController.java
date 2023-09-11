@@ -37,21 +37,23 @@ public class RoomController {
     }
 
 
-//    @ResponseBody
-//    @GetMapping()
-//    public BaseResponse<List<RoomRes>> get(@AuthUser Integer userId){
-//       //List<RoomRes> roomList = roomService.getRoomList(userId);
-//      // return new BaseResponse<>(Status.SUCCESS,roomList);
-//    }
 
-    @GetMapping
 
-    public BaseResponse<List<RoomRes>> test(@AuthUser Integer userId ) {
+    @GetMapping()
+    public BaseResponse<List<RoomRes>> getList(@AuthUser Integer userId ) {
 
 
         return new BaseResponse(Status.SUCCESS,roomService.getRoomList(userId));
 
     }
+
+//    @GetMapping
+//    public BaseResponse<List<RoomRes>> getRoomDetailByDate(@AuthUser Integer userId ) {
+//
+//
+//        return new BaseResponse(Status.SUCCESS,roomService.getRoomList(userId));
+//
+//    }
 
 
 

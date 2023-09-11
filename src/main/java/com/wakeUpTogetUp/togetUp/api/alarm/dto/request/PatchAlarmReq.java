@@ -10,10 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PatchAlarmReq {
-    @Schema(description = "미션 id", example = "1")
-    @NotNull(message = "null 값일 수 없습니다.")
-    private Integer missionId;
-
     @Schema(description = "알람 이름", example = "기상 알람")
     @NotNull(message = "null 값일 수 없습니다.")
     private String name;
@@ -21,10 +17,6 @@ public class PatchAlarmReq {
     @Schema(description = "아이콘", example = "⏰")
     @NotNull(message = "null 값일 수 없습니다.")
     private String icon;
-
-    @Schema(description = "진동 여부", example = "true")
-    @NotNull(message = "null 값일 수 없습니다.")
-    private Boolean isVibrate;
 
     @Schema(description = "다시울림 간격", example = "5")
     @NotNull(message = "null 값일 수 없습니다.")
@@ -67,7 +59,22 @@ public class PatchAlarmReq {
     @NotNull(message = "null 값일 수 없습니다.")
     private Boolean sunday;
 
+    @Schema(description = "다시울림 활성화 여부", example = "true", defaultValue = "true")
+    @NotNull(message = "null 값일 수 없습니다.")
+    private Boolean isSnoozeActivated;
+
+    @Schema(description = "진동 활성화 여부", example = "true")
+    @NotNull(message = "null 값일 수 없습니다.")
+    private Boolean isVibrate;
+
     @Schema(description = "알람 활성화 여부", example = "true")
     @NotNull(message = "null 값일 수 없습니다.")
     private Boolean isActivated;
+
+    @Schema(description = "미션 id", example = "1")
+    @NotNull(message = "미션 아이디를 넣어주세요.")
+    private Integer missionId;
+
+    @Schema(description = "미션 객체 id", example = "1")
+    private Integer missionObjectId;
 }
