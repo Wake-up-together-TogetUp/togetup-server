@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 public class ObjectDetectionRes {
     private List<Prediction> predictions;
 
-    // getters, setters 및 기타 필요한 메서드를 추가합니다.
     @Getter
     public static class Prediction {
         private int num_detections;

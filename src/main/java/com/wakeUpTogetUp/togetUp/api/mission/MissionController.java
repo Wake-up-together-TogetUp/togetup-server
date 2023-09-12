@@ -30,10 +30,10 @@ public class MissionController {
     private final MissionService missionService;
     private final FileService fileService;
 
-    @Operation(summary = "미션 목록 가져오기", description = "missionId\n- 객체인식 : 2\n- 표정인식 : 3")
+    @Operation(summary = "미션 목록 가져오기")
     @GetMapping("/{missionId}")
     BaseResponse<GetMissionWithObjectListRes> getObjectDetectionMissions(
-            @PathVariable(value = "missionId") int missionId
+            @Parameter(required = true, description = "- 객체인식 : 2\n- 표정인식 : 3") @PathVariable(value = "missionId") int missionId
     ) {
         return new BaseResponse(Status.SUCCESS, missionProvider.getMission(missionId));
     }
@@ -43,11 +43,12 @@ public class MissionController {
     @ResponseStatus(HttpStatus.CREATED)
     public BaseResponse<PostPerformMissionRes> recognizeObject(
             @Parameter(hidden = true) @AuthUser Integer userId,
-            @Parameter(description = "미션 수행 사진") @RequestPart MultipartFile missionImage,
-            @Parameter(description = "탐지할 객체") @PathVariable String objectName
+            @Parameter(required = true, description = "미션 수행 사진") @RequestPart MultipartFile missionImage,
+            @Parameter(required = true, description = "탐지할 객체") @PathVariable String objectName
     ) throws Exception {
         long startTime = System.currentTimeMillis();
 
+        System.out.println("missionImage = " + missionImage.getOriginalFilename());
         missionService.recognizeObject(objectName, missionImage);
         String filePath = fileService.uploadFile(missionImage, "mission");
 
@@ -64,12 +65,12 @@ public class MissionController {
     @ResponseStatus(HttpStatus.CREATED)
     public BaseResponse<PostPerformMissionRes> recognizeFaceExpression(
             @Parameter(hidden = true) @AuthUser Integer userId,
-            @Parameter(description = "미션 수행 사진") @RequestPart MultipartFile missionImage,
-            @Parameter(description = "탐지할 객체") @PathVariable String objectName
+            @Parameter(required = true, description = "미션 수행 사진") @RequestPart MultipartFile missionImage,
+            @Parameter(required = true, description = "탐지할 객체") @PathVariable String objectName
     ) throws Exception {
         long startTime = System.currentTimeMillis();
 
-        missionService.recognizeObject(objectName, missionImage);
+        missionService.recognizeEmotion(objectName, missionImage);
         String filePath = fileService.uploadFile(missionImage, "mission");
 
         // 걸린 시간 계산
