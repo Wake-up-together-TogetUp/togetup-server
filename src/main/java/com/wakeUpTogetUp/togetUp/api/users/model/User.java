@@ -58,7 +58,6 @@ public class User {
 
 
     @OneToMany(mappedBy = "user")
-    @Column(name = "fcm_token")
     private List<FcmToken> fcmToken = new ArrayList<>();
 
 

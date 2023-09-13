@@ -57,14 +57,14 @@ public interface EntityDtoMapper {
     @Mapping(target = "roomId",source = "room.id")
     @Mapping(target = "icon",source = "icon")
     @Mapping(target = "name",source = "room.name")
-    @Mapping(target = "mission",source = "mission.name")
+    @Mapping(target = "mission",source = "missionObject.name")
     RoomRes toRoomRes(Alarm alarm);
 
     //Room
     @Mapping(target = "id",source = "room")
     @Mapping(target = "icon",source = "icon")
     @Mapping(target = ".",source = "room")
-    @Mapping(target = "mission",source = "mission.name")
+    @Mapping(target = "mission",source = "missionObject.name")
     List<RoomRes> toRoomResList(List<Alarm> alarmList);
 
 

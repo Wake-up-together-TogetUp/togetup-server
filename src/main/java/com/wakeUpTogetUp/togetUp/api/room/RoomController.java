@@ -37,8 +37,6 @@ public class RoomController {
     }
 
 
-
-
     @GetMapping()
     public BaseResponse<List<RoomRes>> getList(@AuthUser Integer userId ) {
 
