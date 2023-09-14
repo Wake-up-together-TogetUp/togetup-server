@@ -3,6 +3,7 @@ package com.wakeUpTogetUp.togetUp.api.users;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.api.auth.service.AppleLoginServiceImpl;
 import com.wakeUpTogetUp.togetUp.api.auth.service.AuthService;
+import com.wakeUpTogetUp.togetUp.api.users.dto.request.AppleUserDeleteReq;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -12,9 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Map;
 
 @Tag(name = "유저")
 @RestController
@@ -51,8 +55,9 @@ public class UserController  {
 
     @Operation(summary="애플 유저 탈퇴")
     @DeleteMapping("apple")
-    public BaseResponse<Status> deleteAppleUser(@Parameter(hidden = true) @AuthUser Integer userId,@RequestParam() String authorizationCode ) throws IOException{
-        userService.deleteAppleUser(userId,authorizationCode);
+    public BaseResponse<Status> deleteAppleUser(@Parameter(hidden = true) @AuthUser Integer userId,
+                                                @RequestBody @Valid AppleUserDeleteReq appleUserDeleteReq) throws IOException{
+        userService.deleteAppleUser(userId,appleUserDeleteReq.getAuthorizationCode());
         return new BaseResponse<>(Status.SUCCESS);
     }
 
