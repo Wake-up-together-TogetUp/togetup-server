@@ -24,6 +24,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ BaseException.class })
     protected ResponseEntity<BaseResponse<Status>> handleCustomException(BaseException exception) {
         logger.debug("BaseResponse exception occurred: {}", exception.getMessage(), exception);
+        exception.printStackTrace();
 
         Status status = exception.getStatus();
         ResponseEntity<BaseResponse<Status>> responseEntity = ResponseEntity.status(status.getHttpStatus())
@@ -47,6 +48,7 @@ public class GlobalExceptionHandler {
         logger.debug("Bad request exception occurred: {}",
                 exception.getMessage(),
                 exception);
+        exception.printStackTrace();
 
         return new BaseResponse<>(Status.BAD_REQUEST);
     }
@@ -56,6 +58,7 @@ public class GlobalExceptionHandler {
         logger.debug("Bad request exception occurred: {}",
                 exception.getMessage(),
                 exception);
+        exception.printStackTrace();
 
         return new BaseResponse<>(Status.UNSUPPORTED_MEDIA_TYPE);
     }
@@ -64,6 +67,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected BaseResponse validException(MethodArgumentNotValidException exception) {
         String msg = "유효성 검사 실패 : " + exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        exception.printStackTrace();
 
         return new BaseResponse(Status.BAD_REQUEST, msg);
     }
@@ -74,6 +78,7 @@ public class GlobalExceptionHandler {
         logger.error("Unexpected exception occurred: {}",
                 exception.getMessage(),
                 exception);
+        exception.printStackTrace();
 
         return new BaseResponse<>(Status.INTERNAL_SERVER_ERROR);
     }

@@ -1,5 +1,8 @@
 package com.wakeUpTogetUp.togetUp.api.alarm;
 
+import static com.wakeUpTogetUp.togetUp.common.Constant.GET_ALARM_MODE_GROUP;
+import static com.wakeUpTogetUp.togetUp.common.Constant.GET_ALARM_MODE_PERSONAL;
+
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
@@ -27,10 +30,10 @@ public class AlarmProvider {
         userRepository.findById(userId).orElseThrow(
                 () -> new BaseException(Status.USER_NOT_FOUND));
 
-        if (type.equals("personal")) {
+        if (type.equals(GET_ALARM_MODE_PERSONAL)) {
             List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNull(userId);
             return EntityDtoMapper.INSTANCE.toAlarmResList(alarmList);
-        } else if (type.equals("group")) {
+        } else if (type.equals(GET_ALARM_MODE_GROUP)) {
             List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNotNull(userId);
             return EntityDtoMapper.INSTANCE.toAlarmResList(alarmList);
         } else

@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MissionLogRes {
+public class GetMissionLogRes {
     @Schema(description = "미션 수행 기록 id")
     private Integer id;
 

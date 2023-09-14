@@ -5,7 +5,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class MissionProvider {
         return EntityDtoMapper.INSTANCE.toGetMissionRes(mission);
     }
 
-    public MissionLogRes getMissionLog(Integer missionCompleteLogId){
+    public GetMissionLogRes getMissionLog(Integer missionCompleteLogId){
         MissionLog missionLog = missionLogRepository.findById(missionCompleteLogId)
                 .orElseThrow(
                         () -> new BaseException(Status.INTERNAL_SERVER_ERROR));
@@ -31,7 +31,7 @@ public class MissionProvider {
         return EntityDtoMapper.INSTANCE.toMissionLogRes(missionLog);
     }
 
-    public List<MissionLogRes> getMissionCompleteLogsByUserId(Integer userId) {
+    public List<GetMissionLogRes> getMissionCompleteLogsByUserId(Integer userId) {
         List<MissionLog> missionLogList = missionLogRepository.findAllByUserId(userId);
 
         return EntityDtoMapper.INSTANCE.toMissionLogResList(missionLogList);
