@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.auth.service;
 
+import com.amazonaws.util.IOUtils;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.auth.apple.*;
@@ -118,9 +119,15 @@ public class AppleLoginServiceImpl implements SocialLoginService {
     }
 
     private PrivateKey getPrivateKey() throws IOException {
-        ClassPathResource resource = new ClassPathResource("AuthKey_M992KTZK9V.p8");
-        String privateKey = new String(Files.readAllBytes(Paths.get(resource.getURI())));
-        Reader pemReader = new StringReader(privateKey);
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream("AuthKey_M992KTZK9V.p8");
+
+        if (inputStream == null) {
+            throw new BaseException(Status.FILE_NOT_FOUND);
+        }
+
+        byte[] privateKeyBytes = IOUtils.toByteArray(inputStream);
+        Reader pemReader = new StringReader(new String(privateKeyBytes));
         PEMParser pemParser = new PEMParser(pemReader);
         JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
         PrivateKeyInfo object = (PrivateKeyInfo) pemParser.readObject();
