@@ -71,7 +71,7 @@ public class PatchAlarmReq {
     @NotNull(message = "null 값일 수 없습니다.")
     private Boolean isActivated;
 
-    @Schema(description = "미션 id", example = "1")
+    @Schema(description = "미션 id", example = "2")
     @NotNull(message = "미션 아이디를 넣어주세요.")
     private Integer missionId;
 

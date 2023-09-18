@@ -57,11 +57,9 @@ public class AlarmController {
             @Parameter(hidden = true) @AuthUser Integer userId,
             @RequestBody @Valid PostAlarmReq postAlarmReq
     ){
-        alarmService.createAlarm(userId, postAlarmReq);
-        return new BaseResponse(Status.SUCCESS_CREATED);
+        return new BaseResponse<>(Status.SUCCESS_CREATED, alarmService.createAlarm(userId, postAlarmReq).getId());
     }
 
-    // TODO : 알람 id return
     @Operation(summary = "알람 수정")
     @PatchMapping("/{alarmId}")
     public BaseResponse<Integer> updateAlarm(
@@ -69,19 +67,16 @@ public class AlarmController {
             @PathVariable Integer alarmId,
             @RequestBody @Valid PatchAlarmReq patchAlarmReq
     ) {
-        alarmService.updateAlarm(userId, alarmId, patchAlarmReq);
-        return new BaseResponse<>(Status.SUCCESS);
+        return new BaseResponse<>(Status.SUCCESS, alarmService.updateAlarm(userId, alarmId, patchAlarmReq).getId());
     }
 
-    // TODO : 알람 id return
     @Operation(summary = "알람 삭제")
     @DeleteMapping("/{alarmId}")
     public BaseResponse<Integer> deleteAlarm(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @PathVariable Integer alarmId
     ) {
-        alarmService.deleteAlarm(alarmId);
-        return new BaseResponse<>(Status.SUCCESS);
+        return new BaseResponse<>(Status.SUCCESS, alarmService.deleteAlarm(alarmId));
     }
 }
 
