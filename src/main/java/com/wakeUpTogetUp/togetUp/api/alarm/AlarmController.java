@@ -27,17 +27,6 @@ public class AlarmController {
     private final AlarmService alarmService;
     private final AlarmProvider alarmProvider;
 
-    @Operation(summary = "알람 생성")
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponse createAlarm(
-            @Parameter(hidden = true) @AuthUser Integer userId,
-            @RequestBody @Valid PostAlarmReq postAlarmReq
-    ){
-        alarmService.createAlarm(userId, postAlarmReq);
-        return new BaseResponse(Status.SUCCESS_CREATED);
-    }
-
     @Operation(summary = "알람 1개 불러오기")
     @ApiResponse(
             responseCode = "200",
@@ -58,12 +47,24 @@ public class AlarmController {
             @Parameter(description = "- 개인 : personal\n- 그룹 : group", example = "personal") String type,
             @Parameter(hidden = true) @AuthUser Integer userId
     ){
-        return new BaseResponse<>(Status.SUCCESS, alarmProvider.getAlarmsByUserId(userId, type));
+        return new BaseResponse<>(Status.SUCCESS, alarmProvider.getAlarmsByUserIdOrderByDate(userId, type));
     }
 
+    @Operation(summary = "알람 생성")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public BaseResponse<Integer> createAlarm(
+            @Parameter(hidden = true) @AuthUser Integer userId,
+            @RequestBody @Valid PostAlarmReq postAlarmReq
+    ){
+        alarmService.createAlarm(userId, postAlarmReq);
+        return new BaseResponse(Status.SUCCESS_CREATED);
+    }
+
+    // TODO : 알람 id return
     @Operation(summary = "알람 수정")
     @PatchMapping("/{alarmId}")
-    public BaseResponse updateAlarm(
+    public BaseResponse<Integer> updateAlarm(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @PathVariable Integer alarmId,
             @RequestBody @Valid PatchAlarmReq patchAlarmReq
@@ -72,9 +73,10 @@ public class AlarmController {
         return new BaseResponse<>(Status.SUCCESS);
     }
 
+    // TODO : 알람 id return
     @Operation(summary = "알람 삭제")
     @DeleteMapping("/{alarmId}")
-    public BaseResponse deleteAlarm(
+    public BaseResponse<Integer> deleteAlarm(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @PathVariable Integer alarmId
     ) {
