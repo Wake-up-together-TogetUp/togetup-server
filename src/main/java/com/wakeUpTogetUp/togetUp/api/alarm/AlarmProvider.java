@@ -25,16 +25,16 @@ public class AlarmProvider {
      * @param userId
      * @return
      */
-    public List<GetAlarmRes> getAlarmsByUserId(Integer userId, String type) {
+    public List<GetAlarmRes> getAlarmsByUserIdOrderByDate(Integer userId, String type) {
         // 유저 id 유무 확인
         userRepository.findById(userId).orElseThrow(
                 () -> new BaseException(Status.USER_NOT_FOUND));
 
         if (type.equals(GET_ALARM_MODE_PERSONAL)) {
-            List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNull(userId);
+            List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNullOrderByAlarmTime(userId);
             return EntityDtoMapper.INSTANCE.toAlarmResList(alarmList);
         } else if (type.equals(GET_ALARM_MODE_GROUP)) {
-            List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNotNull(userId);
+            List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNotNullOrderByAlarmTime(userId);
             return EntityDtoMapper.INSTANCE.toAlarmResList(alarmList);
         } else
             throw new BaseException(Status.BAD_REQUEST_PARAM);
