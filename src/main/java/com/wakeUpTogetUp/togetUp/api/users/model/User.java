@@ -35,6 +35,9 @@ public class User {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "social_id")
     private String socialId;
 
@@ -77,10 +80,11 @@ public class User {
 
 
     @Builder
-    public User(Integer id, String socialId, String name, LoginType loginType) {
+    public User(Integer id, String socialId, String name,String email, LoginType loginType) {
         this.id = id;
         this.socialId=socialId;
         this.name = name;
+        this.email=email;
         this.loginType=loginType;
     }
 }
