@@ -1,6 +1,7 @@
 CREATE TABLE `user` (
                         `id`	                INT UNSIGNED    NOT NULL    AUTO_INCREMENT PRIMARY KEY,
                         `name`     	            VARCHAR(10)	    NULL,
+                        `email`     	        VARCHAR(30)	    NULL,
                         `login_type`            VARCHAR(20)	    NOT NULL,
                         `social_id`	            VARCHAR(80)	    NOT NULL,
                         `agree_push`	        TINYINT(1)	    NOT NULL	DEFAULT TRUE,

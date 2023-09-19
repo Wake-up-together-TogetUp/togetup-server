@@ -53,6 +53,7 @@ public class AuthService {
         return LoginRes.builder()
                 .userId(userId)
                 .userName(socialUserRes.getName())
+                .email(socialUserRes.getEmail())
                 .accessToken(accessToken)
                 .build();
     }
@@ -78,6 +79,7 @@ public class AuthService {
                         .socialId(socialUserRes.getId())
                         .loginType(loginType)
                         .name(socialUserRes.getName())
+                        .email(socialUserRes.getEmail())
                         .build()
         );
 
