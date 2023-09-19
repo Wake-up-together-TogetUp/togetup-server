@@ -124,10 +124,11 @@ public class AlarmService {
 
     // 알람 삭제
     @Transactional
-    public void deleteAlarm(Integer alarmId) {
+    public int deleteAlarm(Integer alarmId) {
         Alarm alarm = alarmRepository.findById(alarmId)
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
-
         alarmRepository.delete(alarm);
+
+        return alarm.getId();
     }
 }

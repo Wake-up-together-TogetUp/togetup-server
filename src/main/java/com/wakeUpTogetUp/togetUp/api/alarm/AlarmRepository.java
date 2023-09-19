@@ -21,9 +21,9 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
     @Query("select a from Alarm a where a.id = :id and a.user.id = :userId")
     Optional<Alarm> findById(Integer id, Integer userId);
 
-    List<Alarm> findAllByUser_IdAndRoom_IdIsNull(Integer userId);
+    List<Alarm> findAllByUser_IdAndRoom_IdIsNullOrderByAlarmTime(Integer userId);
 
-    List<Alarm> findAllByUser_IdAndRoom_IdIsNotNull(Integer userId);
+    List<Alarm> findAllByUser_IdAndRoom_IdIsNotNullOrderByAlarmTime(Integer userId);
 
     @Modifying
     @Query("update Alarm a set a.room.id = :roomId where a.id = :alarmId")

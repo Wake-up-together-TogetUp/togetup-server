@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostObjectRecognitionRes {
+public class PostPerformMissionRes {
     private String filePath;
 }

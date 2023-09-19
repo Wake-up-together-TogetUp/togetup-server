@@ -1,5 +1,8 @@
 package com.wakeUpTogetUp.togetUp.api.alarm;
 
+import static com.wakeUpTogetUp.togetUp.common.Constant.GET_ALARM_MODE_GROUP;
+import static com.wakeUpTogetUp.togetUp.common.Constant.GET_ALARM_MODE_PERSONAL;
+
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
@@ -22,16 +25,16 @@ public class AlarmProvider {
      * @param userId
      * @return
      */
-    public List<GetAlarmRes> getAlarmsByUserId(Integer userId, String type) {
+    public List<GetAlarmRes> getAlarmsByUserIdOrderByDate(Integer userId, String type) {
         // 유저 id 유무 확인
         userRepository.findById(userId).orElseThrow(
                 () -> new BaseException(Status.USER_NOT_FOUND));
 
-        if (type.equals("personal")) {
-            List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNull(userId);
+        if (type.equals(GET_ALARM_MODE_PERSONAL)) {
+            List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNullOrderByAlarmTime(userId);
             return EntityDtoMapper.INSTANCE.toAlarmResList(alarmList);
-        } else if (type.equals("group")) {
-            List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNotNull(userId);
+        } else if (type.equals(GET_ALARM_MODE_GROUP)) {
+            List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNotNullOrderByAlarmTime(userId);
             return EntityDtoMapper.INSTANCE.toAlarmResList(alarmList);
         } else
             throw new BaseException(Status.BAD_REQUEST_PARAM);
