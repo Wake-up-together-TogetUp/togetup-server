@@ -9,5 +9,6 @@ import lombok.*;
 public class AppleLoginRes {
 
     private String id;
+    private String email;
 }
 

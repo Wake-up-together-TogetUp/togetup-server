@@ -20,6 +20,7 @@ public class KakaoLoginRes {
     @AllArgsConstructor
     public static class KakaoLoginData {
 
+        private String email;
         @Builder.Default
         private KakaoProfile profile = KakaoProfile.builder().build();
         @Builder.Default
