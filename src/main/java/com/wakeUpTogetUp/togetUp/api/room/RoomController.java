@@ -2,10 +2,10 @@ package com.wakeUpTogetUp.togetUp.api.room;
 
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
-import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
+import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomUserLogReq;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
-import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Tag(name = "그룹 (room)")
@@ -32,11 +31,11 @@ public class RoomController {
     public BaseResponse<Status> create(@AuthUser Integer userId,  @RequestBody RoomReq roomReq ) {
 
         roomService.createRoom(userId,roomReq);
-        return new BaseResponse(Status.SUCCESS);
+        return new BaseResponse(Status.SUCCESS_CREATED);
 
     }
 
-
+    @Operation(description = "그룹 리스트 불러오기")
     @GetMapping()
     public BaseResponse<List<RoomRes>> getList(@AuthUser Integer userId ) {
 
@@ -45,13 +44,14 @@ public class RoomController {
 
     }
 
-//    @GetMapping
-//    public BaseResponse<List<RoomRes>> getRoomDetailByDate(@AuthUser Integer userId ) {
-//
-//
-//        return new BaseResponse(Status.SUCCESS,roomService.getRoomList(userId));
-//
-//    }
+    @Operation(description = "그룹의 멤버의 미션기록 보기")
+    @GetMapping("/user/mission-log")
+    public BaseResponse<RoomUserLogRes> getRoomDetailByDate(@AuthUser Integer userId, @RequestBody RoomUserLogReq roomLogReq) {
+
+
+        return new BaseResponse(Status.SUCCESS,roomService.getRoomUserLogList(userId,roomLogReq));
+
+    }
 
 
 

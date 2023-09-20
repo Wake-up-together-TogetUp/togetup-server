@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.users.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
@@ -61,6 +62,7 @@ public class User {
     private List<FcmToken> fcmToken = new ArrayList<>();
 
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<RoomUser> roomUsers = new ArrayList<>();
 
