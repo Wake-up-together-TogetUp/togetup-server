@@ -6,31 +6,32 @@ import lombok.*;
 import java.util.List;
 
 
-@Schema(description = "room 로그 response")
+@Schema(description = "room의 멤버들의 미션로그 response")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoomUserLogRes {
 
-    @Schema(description = "room name")
+    @Schema(description = "room name",example = "설여대 기상방")
     private String name;
     private List<UserLogData> userLogList;
 
     @Builder
     @Data
     public static class UserLogData {
-        @Schema(description = "유저 Id")
+        @Schema(description = "유저 Id",example = "1")
         private Integer userId;
 
-        @Schema(description = "유저 이름")
+        @Schema(description = "유저 이름",example = "조혜온")
         private String userName;
 
-        @Schema(description = "나인지 다른 멤버인지 여부")
+        @Schema(description = "나인지 다른 멤버인지 여부",example = "true")
         private Boolean isMyLog;
-        @Schema(description = "유저의 미션 수행 상태 (성공, 실패, 아직 수행 안함, 수행하는 날 아님)")
+
+        @Schema(description = "유저의 미션 수행 상태 (성공 SUCCESS, 실패 FAIL, 아직 수행 안함 WAITING, 수행하는 날 아님 NOT_MISSION)",example = "WAITING")
         private UserCompleteType userCompleteType;
 
-        @Schema(description = "미션 수행 사진")
+        @Schema(description = "미션 수행 사진",example = "http://~~~")
         private String missionPicLink;
 
 
