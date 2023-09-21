@@ -9,7 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Time;
-
+@ToString
 @Entity
 @Table(name = "alarm")
 @DynamicInsert

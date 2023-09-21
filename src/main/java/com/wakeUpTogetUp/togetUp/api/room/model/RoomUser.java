@@ -7,7 +7,8 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
-
+import java.util.stream.Collectors;
+@ToString
 @Entity
 @Table(name = "room_user")
 @Getter
@@ -53,5 +54,7 @@ public class RoomUser {
         this.user = user;
         user.getRoomUsers().add(this);
     }
+
+
 
 }
