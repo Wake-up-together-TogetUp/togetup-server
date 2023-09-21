@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoomUserLogRes {
+public class RoomUserMissionLogRes {
 
     @Schema(description = "room name",example = "설여대 기상방")
     private String name;

@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.mission.model;
 
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
-import com.wakeUpTogetUp.togetUp.utils.TimestampFormatter;
+import com.wakeUpTogetUp.togetUp.utils.TimeFormatter;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -35,7 +35,7 @@ public class MissionLog {
     private String missionPicLink;
 
     @Column(name = "created_at",columnDefinition = "Timestamp")
-    private String createdAt = TimestampFormatter.format(new Timestamp(System.currentTimeMillis()));
+    private String createdAt = TimeFormatter.timestampFormat(new Timestamp(System.currentTimeMillis()));
 
     @Column(name = "is_deleted")
     private Boolean isDeleted = false;

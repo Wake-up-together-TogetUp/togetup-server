@@ -9,7 +9,7 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Schema(description = "소셜로그인 요펑")
+@Schema(description = "소셜로그인 요청")
 @Setter
 @Getter
 @NoArgsConstructor

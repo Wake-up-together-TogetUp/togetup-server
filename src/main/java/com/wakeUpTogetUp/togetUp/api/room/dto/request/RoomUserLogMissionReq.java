@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoomUserLogReq {
+public class RoomUserLogMissionReq {
 
     @Schema( description = "룸 id",requiredMode = Schema.RequiredMode.REQUIRED ,example = "1")
     @NotBlank(message = "룸 id는 공백일 수 없습니다.")

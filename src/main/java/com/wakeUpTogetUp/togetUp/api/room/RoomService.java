@@ -5,8 +5,8 @@ import com.wakeUpTogetUp.togetUp.api.alarm.AlarmService;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
-import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomUserLogReq;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserLogRes;
+import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomUserLogMissionReq;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
@@ -16,6 +16,7 @@ import com.wakeUpTogetUp.togetUp.common.Constant;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
+import com.wakeUpTogetUp.togetUp.utils.TimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,7 @@ public class RoomService {
     private final RoomUserRepository roomUserRepository;
     private final AlarmRepository alarmRepository;
     private final MissionLogRepository missionLogRepository;
+    private final TimeFormatter timeFormatter;
     @Transactional
     public  void createRoom(Integer userId, RoomReq roomReq){
 
@@ -78,29 +80,29 @@ public class RoomService {
     }
 
 
-    public RoomUserLogRes getRoomUserLogList(Integer userId, RoomUserLogReq roomUserLogReq){
-        Integer roomId = roomUserLogReq.getRoomId();
-        LocalDateTime localDateTime = roomUserLogReq.getLocalDateTime();
-        boolean isAlarmActive = roomUserLogReq.getIsAlarmActive();
+    public RoomUserMissionLogRes getRoomUserLogList(Integer userId, RoomUserLogMissionReq roomUserLogMissionReq){
+        Integer roomId = roomUserLogMissionReq.getRoomId();
+        LocalDateTime localDateTime = roomUserLogMissionReq.getLocalDateTime();
+        boolean isAlarmActive = roomUserLogMissionReq.getIsAlarmActive();
 
         List<RoomUser> roomUserList = roomUserRepository.findAllByRoom_Id(roomId);
         //크기가 0이면 예외처리
         if(roomUserList.isEmpty())
             throw new BaseException(Status.ROOM_USER_NOT_FOUND);
         //룸이름, userId,userName 매핑 (항상 반환하는 정보)
-        RoomUserLogRes roomUserLogRes =new RoomUserLogRes();
-        roomUserLogRes.setName(roomUserList.get(0).getRoom().getName());
-        roomUserLogRes.setUserLogList(EntityDtoMapper.INSTANCE.toUserLogDataList(roomUserList));
+        RoomUserMissionLogRes roomUserMissionLogRes =new RoomUserMissionLogRes();
+        roomUserMissionLogRes.setName(roomUserList.get(0).getRoom().getName());
+        roomUserMissionLogRes.setUserLogList(EntityDtoMapper.INSTANCE.toUserLogDataList(roomUserList));
 
         //isMyLog, missionPicLink, userCompleteType 는 각케이스에 맞게 설정
-        return setUserLogData(roomUserLogRes, userId, roomId, isAlarmActive, localDateTime);
+        return setUserLogData(roomUserMissionLogRes, userId, roomId, isAlarmActive, localDateTime);
 
     }
 
-    public RoomUserLogRes setUserLogData(RoomUserLogRes roomUserLogRes,Integer userId,Integer roomId,boolean isAlarmActive,LocalDateTime localDateTime){
+    public RoomUserMissionLogRes setUserLogData(RoomUserMissionLogRes roomUserMissionLogRes, Integer userId, Integer roomId, boolean isAlarmActive, LocalDateTime localDateTime){
         if(!isAlarmActive)
         {
-            for (RoomUserLogRes.UserLogData userLogData : roomUserLogRes.getUserLogList()) {
+            for (RoomUserMissionLogRes.UserLogData userLogData : roomUserMissionLogRes.getUserLogList()) {
                 userLogData.setUserCompleteType(UserCompleteType.NOT_MISSION);
                 userLogData.setMissionPicLink(Constant.ROOM_USER_MISSION_IMG_NOT_MISSION);
                 if(userLogData.getUserId()==userId)
@@ -109,7 +111,7 @@ public class RoomService {
                 }
 
             }
-            return roomUserLogRes;
+            return roomUserMissionLogRes;
         }
         //missionLog에서 날짜로 가져옴 .
         List<MissionLog> missionLogList = missionLogRepository.findAllByRoom_IdAndCreatedAtContaining(roomId,localDateTime.toLocalDate());
@@ -117,7 +119,7 @@ public class RoomService {
         boolean isToday = localDateTime.toLocalDate().isEqual(LocalDate.now());
 
         // for 문돌면서 : 유저 Id로 비교 :
-        for (RoomUserLogRes.UserLogData userLogData : roomUserLogRes.getUserLogList()) {
+        for (RoomUserMissionLogRes.UserLogData userLogData : roomUserMissionLogRes.getUserLogList()) {
             // 유저 Id가 있으면 (미션 수행한 기록이 있으면) -> 미션 수행사진 매핑
             if(userLogData.getUserId()==userId)
             {
@@ -138,7 +140,7 @@ public class RoomService {
                 {
                     //알람의 다시 울림 시간을 계산함.
                     Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
-                    LocalTime alarmLocalTime = alarmService.alarmTimeStringToLocalTime(alarm.getAlarmTime());
+                    LocalTime alarmLocalTime = timeFormatter.stringToLocalTime(alarm.getAlarmTime());
                     LocalTime alarmOffTime = alarmLocalTime.withMinute(alarmLocalTime.getMinute() + alarm.getSnoozeCnt()*alarm.getSnoozeInterval());
                     //알람이 끝나기 전인지 여부
                     boolean isBeforeAlarmEnd = localDateTime.toLocalTime().isBefore(alarmOffTime);
@@ -163,7 +165,7 @@ public class RoomService {
 
 
 
-        return roomUserLogRes;
+        return roomUserMissionLogRes;
     }
 
 

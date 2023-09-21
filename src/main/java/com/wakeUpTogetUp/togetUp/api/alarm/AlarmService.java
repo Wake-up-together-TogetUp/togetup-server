@@ -132,12 +132,6 @@ public class AlarmService {
 
         return alarm.getId();
     }
-    //String 인 alarmTime을 LocalTime으로 변경
-    public LocalTime alarmTimeStringToLocalTime(String alarmTime)
-    {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalTime localTime = LocalTime.parse(alarmTime, formatter);
-        return localTime;
 
-    }
+
 }

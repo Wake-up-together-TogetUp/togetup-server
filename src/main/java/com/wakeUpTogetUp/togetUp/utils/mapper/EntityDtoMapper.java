@@ -10,7 +10,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectLi
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserLogRes;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import org.mapstruct.Mapper;
@@ -71,11 +71,11 @@ public interface EntityDtoMapper {
 
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "userName",source = "user.name")
-    RoomUserLogRes.UserLogData toUserLogData(RoomUser roomUser);
+    RoomUserMissionLogRes.UserLogData toUserLogData(RoomUser roomUser);
 
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "userName",source = "user.name")
-    List<RoomUserLogRes.UserLogData> toUserLogDataList(List<RoomUser> roomUser);
+    List<RoomUserMissionLogRes.UserLogData> toUserLogDataList(List<RoomUser> roomUser);
 
 
 

@@ -3,7 +3,6 @@ package com.wakeUpTogetUp.togetUp.api.room.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
 
 @Schema(description = "룸리스트 요청 api 응답")
 @Getter
@@ -16,7 +15,7 @@ public class RoomRes {
     @Schema( description = "룸 id" ,example = "1")
     private Integer roomId;
 
-    @Schema( description = "룸 이름",example = "⏰")
+    @Schema( description = "룸이 가이고 있는 알람의 아이콘",example = "⏰")
     private String icon;
 
     @Schema( description = "룸 이름",example = "일찍 일어나는 새들의 방")

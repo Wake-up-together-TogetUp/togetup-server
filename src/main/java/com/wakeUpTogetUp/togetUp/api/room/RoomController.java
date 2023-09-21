@@ -2,9 +2,9 @@ package com.wakeUpTogetUp.togetUp.api.room;
 
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
-import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomUserLogReq;
+import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomUserLogMissionReq;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserLogRes;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.common.Status;
@@ -58,11 +58,11 @@ public class RoomController {
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.",
-                    content = @Content(schema = @Schema(implementation = RoomUserLogRes.class))),
+                    content = @Content(schema = @Schema(implementation = RoomUserMissionLogRes.class))),
             @ApiResponse(responseCode = "404", description = "그룹의 멤버가 없습니다.")})
     @Operation(description = "그룹의 멤버의 미션기록 보기")
     @GetMapping("/user/mission-log")
-    public BaseResponse<RoomUserLogRes> getRoomDetailByDate(@Parameter(hidden = true) @AuthUser Integer userId, @RequestBody RoomUserLogReq roomLogReq) {
+    public BaseResponse<RoomUserMissionLogRes> getRoomDetailByDate(@Parameter(hidden = true) @AuthUser Integer userId, @RequestBody RoomUserLogMissionReq roomLogReq) {
 
 
         return new BaseResponse(Status.SUCCESS,roomService.getRoomUserLogList(userId,roomLogReq));
