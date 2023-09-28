@@ -25,7 +25,7 @@ public class FaceRecognitionRes {
     public static class Face {
         private Roi roi;
         private Landmark landmark;
-        private Attribute<GenderValue> gender;
+        private Attribute<String> gender;
         private Attribute<String> age;
         private Attribute<EmotionValue> emotion;
         private Attribute<PoseValue> pose;
@@ -57,10 +57,6 @@ public class FaceRecognitionRes {
         public static class Attribute<T> {
             private T value;
             private double confidence;
-        }
-
-        public enum GenderValue {
-            male, female // Add other potential gender values if necessary
         }
 
         public enum EmotionValue {
