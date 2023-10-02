@@ -1,6 +1,8 @@
-package com.wakeUpTogetUp.togetUp.api.mission.objectDetection.dto.response;
+package com.wakeUpTogetUp.togetUp.api.mission.service.dto.response;
 
+import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.vo.ImageProcessedResult;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +11,11 @@ import lombok.NoArgsConstructor;
 public class FaceRecognitionRes {
     private Info info;
     private List<Face> faces;
+    private ImageProcessedResult originalImageProcessedResult;
+
+    public void setOriginalImageProcessedResult(ImageProcessedResult imageProcessedResult){
+        this.originalImageProcessedResult = imageProcessedResult;
+    }
 
     @Getter
     public static class Info {
@@ -16,6 +23,7 @@ public class FaceRecognitionRes {
         private int faceCount;
 
         @Getter
+        @AllArgsConstructor
         public static class Size {
             private int width;
             private int height;
