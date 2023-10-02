@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.notification.entity;
 
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
-import com.wakeUpTogetUp.togetUp.utils.TimestampFormatter;
+import com.wakeUpTogetUp.togetUp.utils.TimeFormatter;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,7 +41,7 @@ public class Notification {
     private String content;
 
     @Column(columnDefinition = "timestamp")
-    private String createdAt = TimestampFormatter.format(new Timestamp(System.currentTimeMillis()));
+    private String createdAt = TimeFormatter.timestampFormat(new Timestamp(System.currentTimeMillis()));
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomId",columnDefinition = "INT UNSIGNED")

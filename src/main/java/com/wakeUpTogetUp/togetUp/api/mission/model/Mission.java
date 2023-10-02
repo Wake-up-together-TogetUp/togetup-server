@@ -1,15 +1,17 @@
 package com.wakeUpTogetUp.togetUp.api.mission.model;
 
-import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.*;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
+@ToString
 @Entity
 @Table(name = "mission")
 @DynamicInsert

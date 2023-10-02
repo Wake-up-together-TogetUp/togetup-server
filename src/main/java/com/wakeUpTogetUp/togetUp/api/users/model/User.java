@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.users.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
@@ -35,6 +36,9 @@ public class User {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "social_id")
     private String socialId;
 
@@ -54,14 +58,14 @@ public class User {
     private Timestamp updatedAt;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted = false;
+    private boolean isDeleted ;
 
 
     @OneToMany(mappedBy = "user")
-    @Column(name = "fcm_token")
     private List<FcmToken> fcmToken = new ArrayList<>();
 
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<RoomUser> roomUsers = new ArrayList<>();
 
@@ -77,10 +81,11 @@ public class User {
 
 
     @Builder
-    public User(Integer id, String socialId, String name, LoginType loginType) {
+    public User(Integer id, String socialId, String name,String email, LoginType loginType) {
         this.id = id;
         this.socialId=socialId;
         this.name = name;
+        this.email=email;
         this.loginType=loginType;
     }
 }

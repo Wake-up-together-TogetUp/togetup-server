@@ -76,3 +76,7 @@ INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (6
 INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (69, 'sad', '슬픈 표정', '?', 1, 3);
 INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (70, 'suprise', '놀란 표정', '?', 1, 3);
 INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (71, 'smile', '미소짓는 표정', '?', 1, 3);
+
+-- user email 추가
+alter table user
+    add email varchar(30) null;

@@ -45,11 +45,14 @@ public enum Status {
     Invalid_APPLE_Token(HttpStatus.BAD_REQUEST,"Apple OAuth Claims 값이 올바르지 않습니다."),
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 유저 입니다."),
+    ROOM_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 room 입니다."),
     ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 알람 입니다."),
     FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "파일을 찾을 수 없습니다."),
     ACCOUNT_DOESNT_EXISTS(HttpStatus.NOT_FOUND,"계정이 존재하지 않습니다."),
     OBJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "객체를 찾을 수 없습니다."),
+    ROOM_USER_NOT_FOUND(HttpStatus.NOT_FOUND,"그룹의 멤버가 없습니다."),
     UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "지원하지 않는 파일 확장자 입니다."),
+
 
 
     /**
@@ -57,9 +60,7 @@ public enum Status {
      */
     // 공통
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 서버 에러입니다. 제보 부탁드립니다."),
-    LOAD_MODEL_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "모델 객체 정보 불러오기를 실패했습니다."),
-
-    ;
+    LOAD_MODEL_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "모델 객체 정보 불러오기를 실패했습니다."),;
 
     private final HttpStatus httpStatus;
     private final String message;

@@ -76,10 +76,11 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 
         validateClaims(claims);
 
-        AppleLoginRes appleLoginRes = new AppleLoginRes(claims.getSubject());
+        AppleLoginRes appleLoginRes = new AppleLoginRes(claims.getSubject(), claims.get("email", String.class));
 
         return SocialUserRes.builder()
                 .id(appleLoginRes.getId())
+                .email(appleLoginRes.getEmail())
                 .build();
     }
 
