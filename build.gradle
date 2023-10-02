@@ -65,7 +65,6 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 
-
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 
@@ -106,6 +105,8 @@ dependencies {
 	// Swagger
 	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 
+	//image
+	implementation 'org.apache.commons:commons-imaging:1.0-alpha3'
 }
 ext {
 	snippetsDir = file('build/generated-snippets')
@@ -115,11 +116,7 @@ dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
 	}
-
-
 }
-
-
 
 test {
 	outputs.dir snippetsDir
