@@ -1,6 +1,8 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
+import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes;
+import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.ObjectDetectionRes;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.api.file.FileService;
@@ -8,9 +10,12 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.request.PostMissionLogReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.PostPerformMissionRes;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.ImageProcessor;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Objects;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,58 +34,84 @@ public class MissionController {
     private final MissionProvider missionProvider;
     private final MissionService missionService;
     private final FileService fileService;
+    private final ImageProcessor imageProcessor;
 
     @Operation(summary = "미션 목록 가져오기")
     @GetMapping("/{missionId}")
     BaseResponse<GetMissionWithObjectListRes> getObjectDetectionMissions(
             @Parameter(required = true, description = "- 객체인식 : 2\n- 표정인식 : 3") @PathVariable(value = "missionId") int missionId
     ) {
-        return new BaseResponse(Status.SUCCESS, missionProvider.getMission(missionId));
+        return new BaseResponse<>(Status.SUCCESS, missionProvider.getMission(missionId));
     }
 
+    // TODO : 걸린 시간 계산 aop 만들기
     @Operation(summary = "객체 탐지 미션")
-    @PostMapping(value = "/object-detection/{objectName}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/object-detection/{object}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public BaseResponse<PostPerformMissionRes> recognizeObject(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @Parameter(required = true, description = "미션 수행 사진") @RequestPart MultipartFile missionImage,
-            @Parameter(required = true, description = "탐지할 객체") @PathVariable String objectName
+            @Parameter(required = true, description = "탐지할 객체") @PathVariable String object
     ) throws Exception {
+        System.out.println("\n[객체 탐지 미션 api 시작]");
         long startTime = System.currentTimeMillis();
 
-        System.out.println("missionImage = " + missionImage.getOriginalFilename());
-        missionService.recognizeObject(objectName, missionImage);
-        String filePath = fileService.uploadFile(missionImage, "mission");
+        String filePath;
+
+        // 이미지 형식 검사 : jpg
+        if (Objects.equals(missionImage.getContentType(), MediaType.IMAGE_JPEG_VALUE)) {
+            ObjectDetectionRes odr = missionService.recognizeObject(object, missionImage);
+
+            filePath = fileService.uploadMissionImage(
+                    missionImage,
+                    imageProcessor.drawODResultOnImage(missionImage, odr, object),
+                    "mission");
+        } else {
+            throw new BaseException(Status.UNSUPPORTED_MEDIA_TYPE);
+        }
 
         // 걸린 시간 계산
         long endTime = System.currentTimeMillis();
         long timeElapsed = endTime - startTime;
-        System.out.println("Execution time in milliseconds: " + timeElapsed);
+        System.out.println("총 걸린 시간 : " + timeElapsed);
 
-        return new BaseResponse(Status.MISSION_SUCCESS, new PostPerformMissionRes(filePath));
+        return new BaseResponse<>(Status.MISSION_SUCCESS, new PostPerformMissionRes(filePath));
     }
 
     @Operation(summary = "표정 인식 미션")
-    @PostMapping(value = "/face-recognition/{objectName}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/face-recognition/{object}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public BaseResponse<PostPerformMissionRes> recognizeFaceExpression(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @Parameter(required = true, description = "미션 수행 사진") @RequestPart MultipartFile missionImage,
-            @Parameter(required = true, description = "탐지할 객체") @PathVariable String objectName
+            @Parameter(required = true, description = "탐지할 표정") @PathVariable String object
     ) throws Exception {
+        System.out.println("\n[표정 인식 미션 api 시작]");
         long startTime = System.currentTimeMillis();
 
-        missionService.recognizeEmotion(objectName, missionImage);
-        String filePath = fileService.uploadFile(missionImage, "mission");
+        String filePath;
+
+        // 이미지 형식 검사 : jpg
+        if (Objects.equals(missionImage.getContentType(), MediaType.IMAGE_JPEG_VALUE)) {
+            FaceRecognitionRes frc = missionService.recognizeEmotion(object, missionImage);
+
+            filePath = fileService.uploadMissionImage(
+                    missionImage,
+                    imageProcessor.drawODResultOnImage(missionImage, frc, object),
+                    "mission");
+        } else {
+            throw new BaseException(Status.UNSUPPORTED_MEDIA_TYPE);
+        }
 
         // 걸린 시간 계산
         long endTime = System.currentTimeMillis();
         long timeElapsed = endTime - startTime;
-        System.out.println("Execution time in milliseconds: " + timeElapsed);
+        System.out.println("총 걸린 시간 : " + timeElapsed);
 
-        return new BaseResponse(Status.MISSION_SUCCESS, new PostPerformMissionRes(filePath));
+        return new BaseResponse<>(Status.MISSION_SUCCESS, new PostPerformMissionRes(filePath));
     }
 
+    // TODO : 미션 수행이랑 합치기
     @Operation(summary = "미션 수행 기록 생성")
     @PostMapping("/complete")
     @ResponseStatus(HttpStatus.CREATED)
@@ -90,7 +121,7 @@ public class MissionController {
     ) {
         missionService.createMissionLog(userId, postMissionLogReq);
 
-        return new BaseResponse(Status.SUCCESS_CREATED);
+        return new BaseResponse<>(Status.SUCCESS_CREATED);
     }
 
     // TODO : 달별 검색
@@ -101,7 +132,7 @@ public class MissionController {
     public BaseResponse<List<GetMissionLogRes>> getMissionCompleteLogsByUserId(
             @Parameter(hidden = true) @AuthUser Integer userId
     ) {
-        return new BaseResponse(Status.SUCCESS,
+        return new BaseResponse<>(Status.SUCCESS,
                 missionProvider.getMissionCompleteLogsByUserId(userId));
     }
 }

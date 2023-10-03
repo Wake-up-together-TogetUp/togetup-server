@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.mission.objectDetection;
+package com.wakeUpTogetUp.togetUp.api.mission.service;
 
 import ai.onnxruntime.OnnxTensor;
 import ai.onnxruntime.OrtException;
@@ -9,7 +9,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.domain.ObjectDetectionModel;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.config.ODConfig;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.utils.ImageCompressor;
+import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.ImageProcessor;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +21,6 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,7 +31,7 @@ public class ObjectDetectionService {
     private final ObjectDetectionModel odm;
     private final ODConfig odConfig;
     private final Letterbox letterbox;
-    private final ImageCompressor imageCompressor;
+    private final ImageProcessor imageProcessor;
 
 //    @Value("${my.path.save-pic-path}")
 //    private String savePicPath;
@@ -60,7 +59,7 @@ public class ObjectDetectionService {
             Mat img = Imgcodecs.imdecode(new MatOfByte(missionImage.getBytes()),
                     Imgcodecs.IMREAD_COLOR);
 //            Mat img = Imgcodecs.imdecode(
-//                    new MatOfByte(imageCompressor.compressImage(missionImage, 0.5f)),
+//                    new MatOfByte(imageProcessor.compress(missionImage, 0.5f)),
 //                    Imgcodecs.IMREAD_COLOR);
             Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2RGB);
             Mat image = img.clone();

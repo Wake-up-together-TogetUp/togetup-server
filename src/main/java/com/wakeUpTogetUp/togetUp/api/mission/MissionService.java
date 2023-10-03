@@ -1,11 +1,11 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
-import com.wakeUpTogetUp.togetUp.api.mission.objectDetection.NaverAiService;
-import com.wakeUpTogetUp.togetUp.api.mission.objectDetection.ObjectDetectionService;
-import com.wakeUpTogetUp.togetUp.api.mission.objectDetection.dto.response.FaceRecognitionRes;
-import com.wakeUpTogetUp.togetUp.api.mission.objectDetection.dto.response.FaceRecognitionRes.Face;
-import com.wakeUpTogetUp.togetUp.api.mission.objectDetection.dto.response.FaceRecognitionRes.Face.EmotionValue;
-import com.wakeUpTogetUp.togetUp.api.mission.objectDetection.dto.response.ObjectDetectionRes;
+import com.wakeUpTogetUp.togetUp.api.mission.service.NaverAiService;
+import com.wakeUpTogetUp.togetUp.api.mission.service.ObjectDetectionService;
+import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes;
+import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes.Face;
+import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes.Face.EmotionValue;
+import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.ObjectDetectionRes;
 import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
@@ -32,51 +32,57 @@ public class MissionService {
     private final RoomRepository roomRepository;
 
     // 객체 인식
-    public boolean recognizeObject(String object, MultipartFile missionImage) {
+    public ObjectDetectionRes recognizeObject(String object, MultipartFile missionImage)
+            throws Exception {
         ObjectDetectionRes objectDetectionRes = naverAiService.detectObject(missionImage);
 
+        // 인식된 객체가 없을때
         if(objectDetectionRes.getPredictions().get(0).getNum_detections() == 0)
             throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
 
+        // 미션 성공 여부 판별
         for(String objectDetected : objectDetectionRes.getPredictions().get(0).getDetection_names()){
             System.out.println("objectDetected = " + objectDetected);
 
             if (objectDetected.equals(object))
-                return true;
+                return objectDetectionRes;
         }
-
-        throw new BaseException(Status.MISSION_FAILURE);
-    }
-
-    public boolean recognizeObjectByModel(String object, MultipartFile missionImage) {
-        for(String objectDetected : objectDetectionService.detectObject(missionImage)){
-            System.out.println("objectDetected = " + objectDetected);
-
-            if (objectDetected.equals(object))
-                return true;
-        }
-
         throw new BaseException(Status.MISSION_FAILURE);
     }
 
     // 표정 인식
-    public boolean recognizeEmotion(String object, MultipartFile missionImage) {
+    public FaceRecognitionRes recognizeEmotion(String object, MultipartFile missionImage)
+            throws Exception {
         FaceRecognitionRes faceRecognitionRes = naverAiService.recognizeFace(missionImage);
 
+        // 인식된 객체가 없을때
         if(faceRecognitionRes.getInfo().getFaceCount() == 0)
             throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
 
+        // 미션 성공 여부 판별
         for(Face face : faceRecognitionRes.getFaces()) {
             System.out.println("face.getEmotion().getValue() = " + face.getEmotion().getValue());
 
             if(face.getEmotion().getValue().equals(EmotionValue.valueOf(object)))
-                return true;
+                return faceRecognitionRes;
+        }
+        throw new BaseException(Status.MISSION_FAILURE);
+    }
+
+    // 모델로 객체 인식하기
+    public void recognizeObjectByModel(String object, MultipartFile missionImage) {
+        for(String objectDetected : objectDetectionService.detectObject(missionImage)){
+            System.out.println("objectDetected = " + objectDetected);
+
+            if (objectDetected.equals(object))
+                return;
         }
 
         throw new BaseException(Status.MISSION_FAILURE);
     }
 
     // 미션 수행 기록하기
+    // TODO : 미션 수행 기록 추가 + REQUEST 수정하기
     @Transactional
     public Integer createMissionLog(int userId, PostMissionLogReq req){
         User user = userRepository.findById(userId)
