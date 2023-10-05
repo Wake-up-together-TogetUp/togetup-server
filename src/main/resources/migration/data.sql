@@ -80,3 +80,12 @@ INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (7
 -- user email 추가
 alter table user
     add email varchar(30) null;
+
+-- room_user에 방장 여부 추가
+alter table room_user
+    add is_host tinyint(1) default 0 null;
+
+-- room_user에 푸쉬 알림 여부 추가
+alter table room_user
+    add agree_push tinyint(1) default 1 not null;
+
