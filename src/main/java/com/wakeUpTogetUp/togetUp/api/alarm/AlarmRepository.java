@@ -24,6 +24,12 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
     List<Alarm> findAllByUser_IdAndRoom_IdIsNullOrderByAlarmTime(Integer userId);
 
     List<Alarm> findAllByUser_IdAndRoom_IdIsNotNullOrderByAlarmTime(Integer userId);
+    @Query("SELECT DISTINCT a FROM Alarm a " +
+            "JOIN a.room r " +
+            "JOIN r.roomUsers ru " +
+            "WHERE a.user.id = :userId AND r.id IS NOT NULL " +
+            "ORDER BY ru.createdAt DESC") // createdAt을 역순으로 정렬
+    List<Alarm> findAllByUserIdAndRoomIdIsNotNullOrderByRoomUserCreatedAt(@Param("userId") Integer userId);
 
     @Modifying
     @Query("update Alarm a set a.room.id = :roomId where a.id = :alarmId")
@@ -34,6 +40,8 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
 
     @Query("select a from Alarm a where a.room.id IN :roomIds")
     List<Alarm> findAllByRoomIds(@Param("roomIds") List<Integer> roomIds);
+
+
 
 
 

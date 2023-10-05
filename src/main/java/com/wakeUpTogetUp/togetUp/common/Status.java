@@ -43,6 +43,7 @@ public enum Status {
     INVALID_MISSION_OBJECT_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 미션 객체 id 입니다."),
     MISSION_ID_NOT_MATCH(HttpStatus.BAD_REQUEST, "미션과 미션 객체 id 값이 일치하지 않습니다."),
     Invalid_APPLE_Token(HttpStatus.BAD_REQUEST,"Apple OAuth Claims 값이 올바르지 않습니다."),
+    INVALID_ROOM_HOST_ID(HttpStatus.BAD_REQUEST,"방장의 id가 아닙니다."),
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 유저 입니다."),
     ROOM_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 room 입니다."),

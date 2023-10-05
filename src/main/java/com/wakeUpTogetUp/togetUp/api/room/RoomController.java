@@ -4,6 +4,7 @@ import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomUserLogMissionReq;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
@@ -62,10 +63,63 @@ public class RoomController {
             @ApiResponse(responseCode = "404", description = "그룹의 멤버가 없습니다.")})
     @Operation(description = "그룹의 멤버의 미션기록 보기")
     @GetMapping("/user/mission-log")
-    public BaseResponse<RoomUserMissionLogRes> getRoomDetailByDate(@Parameter(hidden = true) @AuthUser Integer userId, @RequestBody RoomUserLogMissionReq roomLogReq) {
+    public BaseResponse<RoomUserMissionLogRes> getRoomLogDetailByDate(@Parameter(hidden = true) @AuthUser Integer userId, @RequestBody RoomUserLogMissionReq roomLogReq) {
 
 
         return new BaseResponse(Status.SUCCESS,roomService.getRoomUserLogList(userId,roomLogReq));
+
+    }
+
+    @Operation(summary = "그룹 나가기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "404", description = "그룹의 멤버가 없습니다."),
+            @ApiResponse(responseCode = "404",description = "존재하지 않는 알람입니다.")
+    })
+    @DeleteMapping("{roomId}/member")
+    public BaseResponse leaveRoom(@Parameter(hidden = true) @AuthUser Integer userId ,@PathVariable Integer roomId ) {
+
+        roomService.leaveRoom(roomId,userId);
+        return new BaseResponse(Status.SUCCESS);
+
+    }
+
+    @Operation(summary= "방장 변경하기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "400", description = "방장의 id가 아닙니다.")})
+    @ResponseBody
+    @PostMapping("/{roomId}/host/{selectedUserId}")
+    public BaseResponse changeRoomHost(@Parameter(hidden = true) @AuthUser Integer userId, @PathVariable Integer roomId,@Parameter Integer selectedUserId) {
+
+        roomService.changeRoomHost(roomId,userId,selectedUserId);
+        return new BaseResponse(Status.SUCCESS);
+
+    }
+
+    @Operation(summary = "그룹 디테일 보기",description = "그룹 디테일 보기 (설정 화면)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.",
+                    content = @Content(schema = @Schema(implementation = RoomDetailRes.class))),
+            @ApiResponse(responseCode = "404",description = "존재하지 않는 알람입니다.")})
+    @GetMapping("/{roomId}")
+    public BaseResponse<RoomDetailRes> getRoomDetail(@PathVariable Integer roomId) {
+
+
+        return new BaseResponse(Status.SUCCESS,roomService.getRoomDetail(roomId));
+
+    }
+
+    @Operation(summary= "그룹 푸쉬 알림 설정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "404", description = "그룹의 멤버가 없습니다."),})
+    @ResponseBody
+    @PostMapping("/user/push/{roomId}")
+    public BaseResponse updateAgreePush(@Parameter(hidden = true) @AuthUser Integer userId, @PathVariable Integer roomId,@Parameter(description = "알람동의 값",example = "true")@RequestParam() boolean agreePush) {
+
+        roomService.updateAgreePush(roomId,userId,agreePush);
+        return new BaseResponse(Status.SUCCESS);
 
     }
 
