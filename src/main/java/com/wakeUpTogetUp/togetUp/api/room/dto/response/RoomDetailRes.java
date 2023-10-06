@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class RoomDetailRes {
 
-    @Schema( description = "룸이 가이고 있는 알람의 아이콘",example = "⏰")
+    @Schema( description = "룸이 가지고 있는 알람의 아이콘",example = "⏰")
     private String icon;
 
     @Schema(description = "room name", example = "설여대 기상방")
