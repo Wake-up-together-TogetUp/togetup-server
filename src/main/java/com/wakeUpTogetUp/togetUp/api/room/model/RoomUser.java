@@ -7,12 +7,12 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.stream.Collectors;
-@ToString
 @Entity
 @Table(name = "room_user")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(force = true)
 public class RoomUser {
 
@@ -35,20 +35,17 @@ public class RoomUser {
     @Column(name = "created_at")
     private Timestamp createdAt;
 
+    @Column(name = "is_host")
+    private Boolean isHost;
+
+    @Column(name = "agree_push")
+    private Boolean agreePush;
+
     @PrePersist
     void createdAt() {
         this.createdAt = Timestamp.from(Instant.now());
     }
 
-
-
-
-    @Builder
-    private RoomUser(Integer id , User user, Room room) {
-        this.id=id;
-        this.user=user;
-        this.room = room;
-    }
 
     public void setUser(User user) {
         this.user = user;

@@ -4,6 +4,7 @@ package com.wakeUpTogetUp.togetUp.api.room.model;
 import com.wakeUpTogetUp.togetUp.common.Constant;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -13,7 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@ToString
 @Entity
+@SQLDelete(sql = "UPDATE room SET is_deleted = true WHERE id = ?")
+@Where(clause = "is_deleted = false")
 @Table(name = "room")
 @Getter
 @Setter
@@ -42,6 +46,7 @@ public class Room {
      */
     @Column(name = "invitation_code",length = 50)
     private String invitationCode;
+
 
     @OneToMany(mappedBy = "room")
     private List<RoomUser> roomUsers= new ArrayList<>();

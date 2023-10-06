@@ -37,4 +37,6 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
 
 
 
+
+
 }

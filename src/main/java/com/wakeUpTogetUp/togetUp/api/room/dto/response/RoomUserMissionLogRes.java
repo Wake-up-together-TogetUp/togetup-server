@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.List;
 
 
-@Schema(description = "room의 멤버들의 미션로그 response")
+@Schema(description = "room의 멤버들의 미션로그 api 응답")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

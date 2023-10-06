@@ -36,6 +36,8 @@ CREATE TABLE `room_user` (
                               `created_at`	TIMESTAMP	    NOT NULL	DEFAULT current_timestamp,
                               `room_id`	    INT UNSIGNED	NULL,
                               `user_id`	    INT UNSIGNED	NOT NULL,
+                              `is_host`	    TINYINT(1)	    NULL	    DEFAULT FALSE,
+                              `agree_push`	TINYINT(1)	    NOT NULL	DEFAULT TRUE,
                               FOREIGN KEY (room_id)         REFERENCES room (id),
                               FOREIGN KEY (user_id)         REFERENCES user(id)
 

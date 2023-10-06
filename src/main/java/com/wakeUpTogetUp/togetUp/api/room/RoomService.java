@@ -6,6 +6,7 @@ import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomUserLogMissionReq;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
@@ -24,8 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 
@@ -63,6 +66,7 @@ public class RoomService {
         RoomUser roomUser =RoomUser.builder()
                 .user(user)
                 .room(room)
+                .isHost(true)
                 .build();
         roomUserRepository.save(roomUser);
 
@@ -74,9 +78,20 @@ public class RoomService {
 
 
     public List<RoomRes> getRoomList(Integer userId) {
-        List<Alarm> alarmList =  alarmRepository.findAllByUser_IdAndRoom_IdIsNotNullOrderByAlarmTime(userId);
 
-        return EntityDtoMapper.INSTANCE.toRoomResList(alarmList);
+        //userId로 roomId list 가져오기- createdAt 내림차순으로 가져옴
+        List<Integer> roomIdsByUserId = roomUserRepository.findAllRoomIdsByUserId(userId);
+
+        //roomId를 포함하는 알람리스트 가져오기
+        List<Alarm> alarmList = alarmRepository.findAllByRoomIds(roomIdsByUserId);
+
+        //room에 들어온 순서대로 정렬
+        List<Alarm> sortedAlarmList = roomIdsByUserId.stream()
+                .flatMap(roomId -> alarmList.stream()
+                        .filter(alarm -> alarm.getRoom().getId().equals(roomId)))
+                .collect(Collectors.toList());
+
+        return EntityDtoMapper.INSTANCE.toRoomResList(sortedAlarmList);
     }
 
 
@@ -168,6 +183,86 @@ public class RoomService {
         return roomUserMissionLogRes;
     }
 
+    @Transactional
+    public void changeRoomHost(Integer roomId,Integer userId,Integer selectedUserId){
 
+        //host false로 바꾸기
+        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId);
+        if(!roomUser.getIsHost()) throw new BaseException(Status.INVALID_ROOM_HOST_ID);
+        roomUser.setIsHost(false);
+
+        //선택한 user를 host 지정
+        RoomUser seletedRoomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId,selectedUserId);
+        seletedRoomUser.setIsHost(true);
+
+    }
+
+    @Transactional
+    public void leaveRoom(Integer roomId,Integer userId){
+
+        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId);
+        if(Objects.isNull(roomUser)) throw new BaseException(Status.ROOM_USER_NOT_FOUND);
+
+        //방장이 방을 나갈때 방장이 양도됨.
+        if(roomUser.getIsHost())
+            this.findNextCreatedUser(roomId,roomUser.getId());
+
+        roomUserRepository.deleteByRoom_IdAndUser_Id(roomId,userId);
+
+    }
+
+    @Transactional
+    public void findNextCreatedUser(Integer roomId,Integer userId){
+        List<RoomUser> orderedRoomUser = roomUserRepository.findAllByRoom_IdOrderByCreatedAt(roomId);
+        //방의 마지막 멤버가 나가면 방,알람 삭제
+        if(orderedRoomUser.size()<Constant.MINIMUM_NUMBER_TO_CHANGE_HOST)
+            deleteUnnecessaryRoomAndAlarm(roomId);
+
+        //방장이 제일 먼저 들어온 사람인 경우 그 다음 사람이 방장이 된다.
+        Integer nextHostId=orderedRoomUser.get(0).getId();
+        if(nextHostId==userId)
+            nextHostId=orderedRoomUser.get(1).getId();
+
+        this.changeRoomHost(roomId,userId,nextHostId);
+    }
+
+    @Transactional
+    public void deleteUnnecessaryRoomAndAlarm(Integer roomId){
+        roomRepository.deleteById(roomId);
+        Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
+        if(Objects.isNull(alarm))
+            throw new BaseException(Status.ALARM_NOT_FOUND);
+        alarmRepository.delete(alarm);
+    }
+
+
+    public RoomDetailRes getRoomDetail(Integer roomId){
+        //알람 조회
+        Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
+        if(Objects.isNull(alarm)) throw new BaseException(Status.ALARM_NOT_FOUND);
+
+        //room_user 조회
+        List<RoomUser> roomUsers = roomUserRepository.findAllByRoom_Id(roomId);
+
+
+        //dto 매핑
+        RoomDetailRes roomDetailRes = EntityDtoMapper.INSTANCE.toRoomDetailRes(alarm);
+        roomDetailRes.setUserList(EntityDtoMapper.INSTANCE.toUserDataList(roomUsers));
+
+        roomDetailRes.setCreatedAtString("개설일 "+timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
+        roomDetailRes.setPersonnelString(roomUsers.size()+"명이 함께해요");
+
+        return  roomDetailRes;
+    }
+
+
+    @Transactional
+    public void updateAgreePush(Integer roomId,Integer userId, boolean agreePush){
+
+        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId);
+        if(Objects.isNull(roomUser)) throw new BaseException(Status.ROOM_USER_NOT_FOUND);
+        roomUser.setAgreePush(agreePush);
+
+    }
 
 }
