@@ -35,12 +35,10 @@ public enum Status {
     INVALID_JWT(HttpStatus.BAD_REQUEST, "유효하지 않은 jwt 입니다."),
     JWT_MISMATCH(HttpStatus.BAD_REQUEST, "jwt 정보가 일치하지 않습니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"로그인이 필요합니다."),
-    UNAUTHORIZED_KAKAO_TOKEN(HttpStatus.UNAUTHORIZED,"유효하지않은 카카오 엑세스토큰입니다."),
+    UNAUTHORIZED_KAKAO_TOKEN(HttpStatus.UNAUTHORIZED,"유효하지 않은 카카오 엑세스토큰입니다."),
 
     // 유효하지 않은 요청
     INVALID_GROUP_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 그룹 id 입니다."),
-    INVALID_MISSION_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 미션 id 입니다."),
-    INVALID_MISSION_OBJECT_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 미션 객체 id 입니다."),
     MISSION_ID_NOT_MATCH(HttpStatus.BAD_REQUEST, "미션과 미션 객체 id 값이 일치하지 않습니다."),
     Invalid_APPLE_Token(HttpStatus.BAD_REQUEST,"Apple OAuth Claims 값이 올바르지 않습니다."),
     INVALID_ROOM_HOST_ID(HttpStatus.BAD_REQUEST,"방장의 id가 아닙니다."),
@@ -48,6 +46,7 @@ public enum Status {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 유저 입니다."),
     ROOM_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 room 입니다."),
     ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 알람 입니다."),
+    MISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 미션 입니다."),
     FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "파일을 찾을 수 없습니다."),
     ACCOUNT_DOESNT_EXISTS(HttpStatus.NOT_FOUND,"계정이 존재하지 않습니다."),
     OBJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "객체를 찾을 수 없습니다."),

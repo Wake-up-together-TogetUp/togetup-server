@@ -1,5 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
+import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
+import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.service.NaverAiService;
 import com.wakeUpTogetUp.togetUp.api.mission.service.ObjectDetectionService;
 import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes;
@@ -8,10 +10,9 @@ import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitio
 import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.ObjectDetectionRes;
 import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
-import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.request.PostMissionLogReq;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionLogCreateReq;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class MissionService {
     private final ObjectDetectionService objectDetectionService;
     private final NaverAiService naverAiService;
+    private final AlarmRepository alarmRepository;
     private final MissionRepository missionRepository;
     private final MissionLogRepository missionLogRepository;
     private final UserRepository userRepository;
@@ -84,32 +86,26 @@ public class MissionService {
     // 미션 수행 기록하기
     // TODO : 미션 수행 기록 추가 + REQUEST 수정하기
     @Transactional
-    public Integer createMissionLog(int userId, PostMissionLogReq req){
+    public void createMissionLog(int userId, MissionLogCreateReq req){
         User user = userRepository.findById(userId)
-                .orElseThrow(
-                        () -> new BaseException(Status.USER_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
 
-        Mission mission = missionRepository.findById(req.getMissionId())
-                .orElseThrow(
-                        () -> new BaseException(Status.INVALID_MISSION_ID));
+        Alarm alarm = alarmRepository.findById(req.getAlarmId())
+                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
         Room room = Objects.isNull(req.getRoomId())
                 ? null
                 : roomRepository.findById(req.getRoomId())
-                        .orElseThrow(
-                                () -> new BaseException(Status.ALARM_NOT_FOUND));
+                        .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
         MissionLog missionLog = MissionLog.builder()
-                .alarmName(req.getAlarmName())
+                .alarmName(alarm.getName())
                 .missionPicLink(req.getMissionPicLink())
                 .user(user)
                 .room(room)
-                .mission(mission)
                 .build();
 
-        MissionLog missionLogCreated = missionLogRepository.save(missionLog);
-
-        return missionLogCreated.getId();
+        missionLogRepository.save(missionLog);
     }
 }
 
