@@ -77,6 +77,11 @@ INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (6
 INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (70, 'suprise', '놀란 표정', '?', 1, 3);
 INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (71, 'smile', '미소짓는 표정', '?', 1, 3);
 
+-- 아바타 (임시)
+INSERT INTO avatar (id, theme, avatar_img_link, price, unlock_level, created_at) VALUES (1, '신입 병아리', 'STRING', 0, 1, '2023-10-07 20:35:51');
+
+
+-- DB 반영 후 삭제 요망 --
 
 -- mission_log에 mission_id 삭제
 alter table mission_log
