@@ -95,6 +95,9 @@ alter table user
 alter table user
     add point int unsigned default 0 not null after experience;
 
--- avatar에 unlock_level(해금 레벨) 컬럼 추가
+-- avatar에 unlock_level(해금 레벨) 컬럼 추가, phase 컬럼 삭제
 alter table avatar
     add unlock_level int unsigned not null after price;
+
+alter table avatar
+    drop column phase;
