@@ -42,7 +42,6 @@ public class User {
     @Column(name = "social_id")
     private String socialId;
 
-
     @Column(name = "login_type", length = 20)
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -50,6 +49,15 @@ public class User {
 
     @Column(name = "agree_push")
     private boolean agreePush;
+
+    @Column(name = "level")
+    private Integer level;
+
+    @Column(name = "experience")
+    private Integer experience;
+
+    @Column(name = "point")
+    private Integer point;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -87,5 +95,23 @@ public class User {
         this.name = name;
         this.email=email;
         this.loginType=loginType;
+    }
+
+    // 경험치 획득
+    public void gainExperience(int experience) {
+        this.setExperience(this.getExperience() + experience);
+    }
+
+    // 레벨업 가능 여부 검사
+    public boolean checkUserLevelUpAvailable(int threshold) {
+        return this.getExperience() >= threshold;
+    }
+
+    // 레벨 업
+    public void levelUp(int threshold){
+        // 레벨 1 증가, 경험치 초기화, 포인트 증가
+        this.setLevel(this.getLevel() + 1);
+        this.setExperience(this.getExperience() - threshold);
+        this.setPoint(this.getPoint() + 25);
     }
 }

@@ -5,8 +5,10 @@ import com.wakeUpTogetUp.togetUp.api.room.RoomUserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressionResult;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,14 +72,27 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteAppleUser(Integer userId,String authorizationCode) throws IOException {
+    public void deleteAppleUser(Integer userId, String authorizationCode) throws IOException {
 
         authService.disconnectApple(authorizationCode);
         this.deleteById(userId);
     }
 
+    // 경험치, 레벨 정산
+    @Transactional
+    public UserProgressionResult userProgression(int userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
 
+        user.gainExperience(10);
+        int threshold = 10 + 16 * (user.getLevel() - 1);
 
+        if(user.checkUserLevelUpAvailable(threshold)) {
+            // 레벨 업 가능하면,
+            user.levelUp(threshold);
+        }
+        userRepository.save(user);
 
-
+        return new UserProgressionResult(user.getLevel(), user.getExperience(), user.getPoint());
+    }
 }

@@ -1,15 +1,18 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogCreateRes;
 import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes;
 import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.ObjectDetectionRes;
+import com.wakeUpTogetUp.togetUp.api.users.UserService;
+import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressionResult;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.api.file.FileService;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.request.PostMissionLogReq;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionLogCreateReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.PostPerformMissionRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionPerfomRes;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.ImageProcessor;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +34,7 @@ import java.util.List;
 @RequestMapping("/app/mission")
 public class MissionController {
 
+    private final UserService userService;
     private final MissionProvider missionProvider;
     private final MissionService missionService;
     private final FileService fileService;
@@ -48,7 +52,7 @@ public class MissionController {
     @Operation(summary = "객체 탐지 미션")
     @PostMapping(value = "/object-detection/{object}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponse<PostPerformMissionRes> recognizeObject(
+    public BaseResponse<MissionPerfomRes> recognizeObject(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @Parameter(required = true, description = "미션 수행 사진") @RequestPart MultipartFile missionImage,
             @Parameter(required = true, description = "탐지할 객체") @PathVariable String object
@@ -75,13 +79,13 @@ public class MissionController {
         long timeElapsed = endTime - startTime;
         System.out.println("총 걸린 시간 : " + timeElapsed);
 
-        return new BaseResponse<>(Status.MISSION_SUCCESS, new PostPerformMissionRes(filePath));
+        return new BaseResponse<>(Status.MISSION_SUCCESS, new MissionPerfomRes(filePath));
     }
 
     @Operation(summary = "표정 인식 미션")
     @PostMapping(value = "/face-recognition/{object}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponse<PostPerformMissionRes> recognizeFaceExpression(
+    public BaseResponse<MissionPerfomRes> recognizeFaceExpression(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @Parameter(required = true, description = "미션 수행 사진") @RequestPart MultipartFile missionImage,
             @Parameter(required = true, description = "탐지할 표정") @PathVariable String object
@@ -108,20 +112,22 @@ public class MissionController {
         long timeElapsed = endTime - startTime;
         System.out.println("총 걸린 시간 : " + timeElapsed);
 
-        return new BaseResponse<>(Status.MISSION_SUCCESS, new PostPerformMissionRes(filePath));
+        return new BaseResponse<>(Status.MISSION_SUCCESS, new MissionPerfomRes(filePath));
     }
 
-    // TODO : 미션 수행이랑 합치기
-    @Operation(summary = "미션 수행 기록 생성")
+    @Operation(summary = "미션 수행 기록 생성 및 경험치, 레벨, 포인트 정산")
     @PostMapping("/complete")
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponse<GetMissionLogRes> postMissionLog(
+    public BaseResponse<MissionLogCreateRes> postMissionLog(
             @Parameter(hidden = true) @AuthUser Integer userId,
-            @RequestBody @Valid PostMissionLogReq postMissionLogReq
+            @RequestBody @Valid MissionLogCreateReq missionLogCreateReq
     ) {
-        missionService.createMissionLog(userId, postMissionLogReq);
+        // 미션 수행 기록 생성
+        missionService.createMissionLog(userId, missionLogCreateReq);
+        // 경험치 정산
+        UserProgressionResult upr = userService.userProgression(userId);
 
-        return new BaseResponse<>(Status.SUCCESS_CREATED);
+        return new BaseResponse<>(Status.SUCCESS_CREATED, new MissionLogCreateRes(upr));
     }
 
     // TODO : 달별 검색
