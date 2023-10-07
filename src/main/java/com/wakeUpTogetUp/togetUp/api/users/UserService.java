@@ -95,4 +95,6 @@ public class UserService {
 
         return new UserProgressionResult(user.getLevel(), user.getExperience(), user.getPoint());
     }
+
+    // 유저 아바타 구매
 }

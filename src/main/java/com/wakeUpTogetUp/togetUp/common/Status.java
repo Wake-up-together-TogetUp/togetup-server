@@ -47,6 +47,7 @@ public enum Status {
     ROOM_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 room 입니다."),
     ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 알람 입니다."),
     MISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 미션 입니다."),
+    AVATAR_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 아바타 입니다."),
     FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "파일을 찾을 수 없습니다."),
     ACCOUNT_DOESNT_EXISTS(HttpStatus.NOT_FOUND,"계정이 존재하지 않습니다."),
     OBJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "객체를 찾을 수 없습니다."),
