@@ -77,15 +77,24 @@ INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (6
 INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (70, 'suprise', '놀란 표정', '?', 1, 3);
 INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (71, 'smile', '미소짓는 표정', '?', 1, 3);
 
--- user email 추가
+
+-- mission_log에 mission_id 삭제
+alter table mission_log
+    drop foreign key mission_log_ibfk_3;
+
+alter table mission_log
+    drop column mission_id;
+
+-- user에 level, experience, point 컬럼 추가
 alter table user
-    add email varchar(30) null;
+    add level int unsigned default 1 not null after agree_push;
 
--- room_user에 방장 여부 추가
-alter table room_user
-    add is_host tinyint(1) default 0 null;
+alter table user
+    add experience int unsigned default 0 not null after level;
 
--- room_user에 푸쉬 알림 여부 추가
-alter table room_user
-    add agree_push tinyint(1) default 1 not null;
+alter table user
+    add point int unsigned default 0 not null after experience;
 
+-- avatar에 unlock_level(해금 레벨) 컬럼 추가
+alter table avatar
+    add unlock_level int unsigned not null after price;
