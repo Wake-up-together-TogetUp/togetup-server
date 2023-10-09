@@ -106,3 +106,10 @@ alter table avatar
 
 alter table avatar
     drop column phase;
+
+-- alarm에 user_id, mission_id nullable 속성 수정
+alter table alarm
+    modify user_id int unsigned null;
+
+alter table alarm
+    modify mission_id int unsigned not null;

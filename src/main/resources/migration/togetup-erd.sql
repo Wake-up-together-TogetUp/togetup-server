@@ -97,8 +97,8 @@ create table alarm
     is_snooze_activated tinyint(1)  default 1   not null,
     is_vibrate          tinyint(1)  default 1   not null,
     is_activated        tinyint(1)  default 1   not null,
-    user_id             int unsigned            not null,
-    mission_id          int unsigned            null,
+    user_id             int unsigned            null,
+    mission_id          int unsigned            not null,
     mission_object_id   int unsigned            null,
     room_id             int unsigned            null,
     constraint alarm_ibfk_1
