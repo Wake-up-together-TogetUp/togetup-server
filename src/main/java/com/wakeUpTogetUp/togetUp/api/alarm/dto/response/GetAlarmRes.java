@@ -11,7 +11,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class GetAlarmRes {
     @Schema(description = "알람 id")
     private Integer id;

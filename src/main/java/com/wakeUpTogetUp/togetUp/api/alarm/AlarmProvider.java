@@ -34,7 +34,7 @@ public class AlarmProvider {
             List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNullOrderByAlarmTime(userId);
             return EntityDtoMapper.INSTANCE.toAlarmResList(alarmList);
         } else if (type.equals(GET_ALARM_MODE_GROUP)) {
-            List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNotNullOrderByAlarmTime(userId);
+            List<Alarm> alarmList = alarmRepository.findRoomAlarmByUserId(userId);
             return EntityDtoMapper.INSTANCE.toAlarmResList(alarmList);
         } else
             throw new BaseException(Status.BAD_REQUEST_PARAM);
