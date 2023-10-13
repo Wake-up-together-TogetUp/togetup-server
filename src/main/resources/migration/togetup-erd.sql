@@ -37,7 +37,7 @@ CREATE TABLE `room_user` (
                               `room_id`	    INT UNSIGNED	NULL,
                               `user_id`	    INT UNSIGNED	NOT NULL,
                               `is_host`	    TINYINT(1)	    NULL	    DEFAULT FALSE,
-                              `agree_push`	TINYINT(1)	    NOT NULL	DEFAULT TRUE,
+                              `agree_push`	TINYINT(1)	    NULL	DEFAULT TRUE,
                               FOREIGN KEY (room_id)         REFERENCES room (id),
                               FOREIGN KEY (user_id)         REFERENCES user(id)
 

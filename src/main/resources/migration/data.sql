@@ -87,5 +87,5 @@ alter table room_user
 
 -- room_user에 푸쉬 알림 여부 추가
 alter table room_user
-    add agree_push tinyint(1) default 1 not null;
+    add agree_push tinyint(1) default 1  null;
 
