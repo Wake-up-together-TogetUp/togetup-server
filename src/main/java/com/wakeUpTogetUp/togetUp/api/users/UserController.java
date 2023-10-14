@@ -22,7 +22,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
 
-@Tag(name = "유저")
+@Tag(name = "유저(User)")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app/users")

@@ -8,14 +8,18 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
-@ToString
-@Entity
-@Table(name = "mission_log")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
+@Entity
 @DynamicInsert
+@Table(name = "mission_log")
+@SQLDelete(sql = "UPDATE mission_log SET is_deleted = true WHERE id = ?")
+@Where(clause = "is_deleted = false")
 public class MissionLog {
 //    @PrePersist
 //    public void prePersist() {
@@ -48,17 +52,11 @@ public class MissionLog {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mission_id")
-    private Mission mission;
-
     @Builder
-    public MissionLog(String alarmName, String missionPicLink, User user, Room room,
-            Mission mission) {
+    public MissionLog(String alarmName, String missionPicLink, User user, Room room) {
         this.alarmName = alarmName;
         this.missionPicLink = missionPicLink;
         this.user = user;
         this.room = room;
-        this.mission = mission;
     }
 }

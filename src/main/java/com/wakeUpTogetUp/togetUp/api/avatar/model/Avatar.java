@@ -22,8 +22,6 @@ public class Avatar {
 
     private String theme;
 
-    private String phase;
-
     @Column(columnDefinition = "TEXT")
     private String avatarImgLink;
 

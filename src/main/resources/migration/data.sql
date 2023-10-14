@@ -77,15 +77,42 @@ INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (6
 INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (70, 'suprise', '놀란 표정', '?', 1, 3);
 INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (71, 'smile', '미소짓는 표정', '?', 1, 3);
 
--- user email 추가
-alter table user
-    add email varchar(30) null;
+-- 아바타 (임시)
+INSERT INTO avatar (id, theme, avatar_img_link, price, unlock_level, created_at) VALUES (1, '신입 병아리', 'STRING', 0, 1, '2023-10-07 20:35:51');
 
--- room_user에 방장 여부 추가
-alter table room_user
-    add is_host tinyint(1) default 0 null;
+
+-- DB 반영 후 삭제 요망 --
+
+-- mission_log에 mission_id 삭제
+alter table mission_log
+    drop foreign key mission_log_ibfk_3;
+
+alter table mission_log
+    drop column mission_id;
+
+-- user에 level, experience, point 컬럼 추가
+alter table user
+    add level int unsigned default 1 not null after agree_push;
+
+alter table user
+    add experience int unsigned default 0 not null after level;
+
+alter table user
+    add point int unsigned default 0 not null after experience;
 
 -- room_user에 푸쉬 알림 여부 추가
 alter table room_user
     add agree_push tinyint(1) default 1  null;
+-- avatar에 unlock_level(해금 레벨) 컬럼 추가, phase 컬럼 삭제
+alter table avatar
+    add unlock_level int unsigned not null after price;
 
+alter table avatar
+    drop column phase;
+
+-- alarm에 user_id, mission_id nullable 속성 수정
+alter table alarm
+    modify user_id int unsigned null;
+
+alter table alarm
+    modify mission_id int unsigned not null;

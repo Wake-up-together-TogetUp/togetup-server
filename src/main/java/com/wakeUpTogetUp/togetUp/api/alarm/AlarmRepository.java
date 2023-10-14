@@ -23,7 +23,12 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
 
     List<Alarm> findAllByUser_IdAndRoom_IdIsNullOrderByAlarmTime(Integer userId);
 
-    List<Alarm> findAllByUser_IdAndRoom_IdIsNotNullOrderByAlarmTime(Integer userId);
+    // 그룹 알람 가져오기
+    @Query("SELECT a "
+            + "FROM Alarm a "
+            + "WHERE a.room.id IN (SELECT ru.room.id FROM RoomUser ru WHERE ru.user.id = :userId) "
+            + "ORDER BY a.alarmTime")
+    List<Alarm> findRoomAlarmByUserId(@Param("userId") Integer userId);
 
     @Modifying
     @Query("update Alarm a set a.room.id = :roomId where a.id = :alarmId")

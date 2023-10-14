@@ -11,9 +11,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "user_avatar")
+@NoArgsConstructor
 public class UserAvatar {
 
     @Id
@@ -28,6 +32,10 @@ public class UserAvatar {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "avatar_id", nullable = false)
     private Avatar avatar;
-    @Column(name = "is_current_avatar")
-    private Boolean isCurrentAvatar;
+
+    @Builder
+    public UserAvatar(User user, Avatar avatar) {
+        this.user = user;
+        this.avatar = avatar;
+    }
 }

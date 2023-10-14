@@ -29,6 +29,8 @@ public interface EntityDtoMapper {
     @Mapping(target = "getMissionRes", source = "mission")
     @Mapping(target = "getMissionObjectRes", source = "missionObject")
     @Mapping(target = "roomRes", source = "room")
+    @Mapping(target = "roomRes.roomId", source = "room.id")
+    @Mapping(target = "roomRes.icon", source = "icon")
     GetAlarmRes toAlarmRes(Alarm alarm);
 
     List<GetAlarmRes> toAlarmResList(List<Alarm> alarmList);
@@ -43,7 +45,7 @@ public interface EntityDtoMapper {
     List<GetMissionWithObjectListRes> toGetMissionResList(List<Mission> missionList);
 
 
-    // MissionCompleteLog
+    // GetMissionLogRes
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "roomId", source = "room.id")
     @Mapping(target = "missionId", source = "mission.id")

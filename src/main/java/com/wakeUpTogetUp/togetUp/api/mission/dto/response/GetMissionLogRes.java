@@ -26,7 +26,4 @@ public class GetMissionLogRes {
 
     @Schema(description = "그룹 id")
     private Integer roomId;
-
-    @Schema(description = "미션 id")
-    private Integer missionId;
 }
