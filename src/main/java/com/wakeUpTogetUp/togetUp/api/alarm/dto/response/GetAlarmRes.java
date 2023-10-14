@@ -11,7 +11,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class GetAlarmRes {
     @Schema(description = "알람 id")
     private Integer id;
@@ -70,7 +69,7 @@ public class GetAlarmRes {
     @Schema(description = "미션 객체")
     private GetMissionObjectRes getMissionObjectRes;
 
-    @Schema(description = "그룹")
+    @Schema(description = "그룹 정보")
     private RoomRes roomRes;
 }
 

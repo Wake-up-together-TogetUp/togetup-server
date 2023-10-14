@@ -3,11 +3,14 @@ package com.wakeUpTogetUp.togetUp.api.users.model;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Table(name = "user_avatar_purchase_log")
 @DynamicInsert
+@NoArgsConstructor
 public class UserAvatarPurchaseLog {
 
     @Id
@@ -25,4 +28,10 @@ public class UserAvatarPurchaseLog {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "avatar_id", nullable = false)
     private Avatar avatar;
+
+    @Builder
+    public UserAvatarPurchaseLog(User user, Avatar avatar) {
+        this.user = user;
+        this.avatar = avatar;
+    }
 }

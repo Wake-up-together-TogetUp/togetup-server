@@ -25,8 +25,6 @@ import java.util.UUID;
 @DynamicInsert
 public class Room {
 
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id=null;

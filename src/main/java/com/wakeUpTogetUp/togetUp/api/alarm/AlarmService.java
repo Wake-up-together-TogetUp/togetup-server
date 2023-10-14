@@ -36,18 +36,19 @@ public class AlarmService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
         Room room = postAlarmReq.getRoomId() != null
-                ? roomRepository.findById(postAlarmReq.getRoomId()).orElseThrow(() -> new BaseException(Status.INVALID_GROUP_ID))
+                ? roomRepository.findById(postAlarmReq.getRoomId())
+                    .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND))
                 : null;
         Mission mission = null;
         MissionObject missionObject = null;
 
         if(postAlarmReq.getMissionId() != null) {
             mission= missionRepository.findById(postAlarmReq.getMissionId())
-                    .orElseThrow(() -> new BaseException(Status.INVALID_MISSION_ID));
+                    .orElseThrow(() -> new BaseException(Status.MISSION_NOT_FOUND));
 
             if(postAlarmReq.getMissionObjectId() != null) {
                 missionObject = missionObjectRepository.findById(postAlarmReq.getMissionObjectId())
-                        .orElseThrow(() -> new BaseException(Status.INVALID_MISSION_OBJECT_ID));
+                        .orElseThrow(() -> new BaseException(Status.MISSION_OBJECT_NOT_FOUND));
 
                 if(missionObject.getMission().getId() != mission.getId())
                     throw new BaseException(Status.MISSION_ID_NOT_MATCH);
@@ -89,11 +90,11 @@ public class AlarmService {
 
         if(patchAlarmReq.getMissionId() != null) {
             mission = missionRepository.findById(patchAlarmReq.getMissionId())
-                    .orElseThrow(() -> new BaseException(Status.INVALID_MISSION_ID));
+                    .orElseThrow(() -> new BaseException(Status.MISSION_NOT_FOUND));
 
             if (patchAlarmReq.getMissionObjectId() != null) {
                 missionObject = missionObjectRepository.findById(patchAlarmReq.getMissionObjectId())
-                        .orElseThrow(() -> new BaseException(Status.INVALID_MISSION_OBJECT_ID));
+                        .orElseThrow(() -> new BaseException(Status.MISSION_NOT_FOUND));
 
                 if (missionObject.getMission().getId() != mission.getId())
                     throw new BaseException(Status.MISSION_ID_NOT_MATCH);

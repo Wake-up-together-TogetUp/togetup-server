@@ -16,6 +16,8 @@ public class Constant {
     public static final String ROOM_USER_MISSION_IMG_FAIL="http://fail~";
     public static final String ROOM_USER_MISSION_IMG_NOT_MISSION="http://not-mission~";
 
-    public static final Integer  MINIMUM_NUMBER_TO_CHANGE_HOST=2;
+    public static final Integer MINIMUM_NUMBER_TO_CHANGE_HOST=2;
+
+    public static final Integer DEFAULT_AVATAR_ID = 1;
 
 }

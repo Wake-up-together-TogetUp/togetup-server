@@ -1,11 +1,21 @@
 package com.wakeUpTogetUp.togetUp.api.auth.service;
 
+import static com.wakeUpTogetUp.togetUp.common.Constant.DEFAULT_AVATAR_ID;
+
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.AppleTokenRes;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.LoginRes;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.request.SocialLoginReq;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.SocialUserRes;
+import com.wakeUpTogetUp.togetUp.api.avatar.AvatarRepository;
+import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
+import com.wakeUpTogetUp.togetUp.api.users.UserAvatarPurchaseLogRepository;
+import com.wakeUpTogetUp.togetUp.api.users.UserAvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.model.UserAvatar;
+import com.wakeUpTogetUp.togetUp.api.users.model.UserAvatarPurchaseLog;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +37,9 @@ public class AuthService {
     private final List<SocialLoginService> loginServices;
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final AvatarRepository avatarRepository;
+    private final UserAvatarRepository userAvatarRepository;
+    private final UserAvatarPurchaseLogRepository userAvatarPurchaseLogRepository;
     private final AppleLoginServiceImpl appleLoginService;
 
 
@@ -82,6 +95,24 @@ public class AuthService {
                         .email(socialUserRes.getEmail())
                         .build()
         );
+
+        // 기본 아바타 가져오기
+        Avatar defaultAvatar = avatarRepository.findById(DEFAULT_AVATAR_ID)
+                .orElseThrow(() -> new BaseException(Status.AVATAR_NOT_FOUND));
+
+        // 기본 아바타 구매 내역 row 생성
+        UserAvatarPurchaseLog userAvatarPurchaseLog = UserAvatarPurchaseLog.builder()
+                .user(user)
+                .avatar(defaultAvatar)
+                .build();
+        userAvatarPurchaseLogRepository.save(userAvatarPurchaseLog);
+
+        // 기본 아바타 설정 row 생성
+        UserAvatar userAvatar = UserAvatar.builder()
+                .user(user)
+                .avatar(defaultAvatar)
+                .build();
+        userAvatarRepository.save(userAvatar);
 
         return user.getId();
     }

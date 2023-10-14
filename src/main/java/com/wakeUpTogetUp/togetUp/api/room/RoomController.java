@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "그룹 (room)")
+@Tag(name = "그룹(Room)")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app/room")
