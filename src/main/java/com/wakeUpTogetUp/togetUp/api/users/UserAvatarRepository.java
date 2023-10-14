@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserAvatarRepository extends JpaRepository<UserAvatar, Integer> {
 
+    UserAvatar findByUser_Id(Integer userId);
+
 }

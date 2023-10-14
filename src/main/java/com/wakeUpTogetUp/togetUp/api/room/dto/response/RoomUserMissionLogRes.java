@@ -15,8 +15,8 @@ public class RoomUserMissionLogRes {
     @Schema(description = "room name",example = "설여대 기상방")
     private String name;
 
-    @Schema(description = "유저의 아바타 ",example = "")
-    private String avatar;
+    @Schema(description = "- NOOB_CHICKS : 신입 병아리 \n - TWINKLING_TEDDY_BEAR : 눈을 반짝이는 곰돌이 \n - CUTE_BUNNY: 깜찍한 토끼" ,example = "NOOB_CHICKS")
+    private String theme;
 
     private List<UserLogData> userLogList;
 

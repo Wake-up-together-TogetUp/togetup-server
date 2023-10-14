@@ -48,7 +48,6 @@ public interface EntityDtoMapper {
     // GetMissionLogRes
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "roomId", source = "room.id")
-    @Mapping(target = "missionId", source = "mission.id")
     GetMissionLogRes toMissionLogRes(MissionLog missionLog);
     List<GetMissionLogRes> toMissionLogResList(List<MissionLog> missionLogList);
 
