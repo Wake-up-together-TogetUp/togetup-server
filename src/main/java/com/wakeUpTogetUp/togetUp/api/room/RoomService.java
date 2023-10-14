@@ -107,6 +107,9 @@ public class RoomService {
         //룸이름, userId,userName 매핑 (항상 반환하는 정보)
         RoomUserMissionLogRes roomUserMissionLogRes =new RoomUserMissionLogRes();
         roomUserMissionLogRes.setName(roomUserList.get(0).getRoom().getName());
+
+        //아바타 찾기
+      
         roomUserMissionLogRes.setUserLogList(EntityDtoMapper.INSTANCE.toUserLogDataList(roomUserList));
 
         //isMyLog, missionPicLink, userCompleteType 는 각케이스에 맞게 설정

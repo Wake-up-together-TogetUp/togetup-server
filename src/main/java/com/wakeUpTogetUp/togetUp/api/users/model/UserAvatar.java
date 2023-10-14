@@ -28,4 +28,6 @@ public class UserAvatar {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "avatar_id", nullable = false)
     private Avatar avatar;
+    @Column(name = "is_current_avatar")
+    private Boolean isCurrentAvatar;
 }
