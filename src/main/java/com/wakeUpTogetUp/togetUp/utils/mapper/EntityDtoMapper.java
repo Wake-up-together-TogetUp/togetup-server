@@ -13,7 +13,6 @@ import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
-import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -58,10 +57,11 @@ public interface EntityDtoMapper {
     List<NotificationRes> toNotificationResList(List<Notification> notificationList);
 
 
-    @Mapping(target = "roomId", source = "room.id")
-    @Mapping(target = "icon", source = "icon")
-    @Mapping(target = "name", source = "room.name")
-    @Mapping(target = "mission", source = "missionObject.name")
+    @Mapping(target = "roomId",source = "room.id")
+    @Mapping(target = "icon",source = "icon")
+    @Mapping(target = "name",source = "room.name")
+    @Mapping(target = "mission",source = "missionObject.name")
+    @Mapping(target = "kr",source = "missionObject.kr")
     RoomRes toRoomRes(Alarm alarm);
 
     //Room
@@ -69,6 +69,7 @@ public interface EntityDtoMapper {
     @Mapping(target = "icon",source = "icon")
     @Mapping(target = ".",source = "room")
     @Mapping(target = "mission",source = "missionObject.name")
+    @Mapping(target = "kr",source = "missionObject.kr")
     List<RoomRes> toRoomResList(List<Alarm> alarmList);
 
 

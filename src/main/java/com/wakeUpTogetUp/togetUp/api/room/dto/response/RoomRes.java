@@ -24,4 +24,7 @@ public class RoomRes {
     @Schema( description = "룸이 가지고 있는 알람의 미션", example = "수저 찍기")
     private String mission;
 
+    @Schema(description = "미션의 한국말",example = "자동차")
+    private String kr;
+
 }

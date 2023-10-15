@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -25,10 +26,19 @@ public class TimeFormatter {
         return localTime;
 
     }
+    //yyyy-MM-dd HH:mm:ss
     public String timestampToDotDateFormat(Timestamp timestamp){
 
         String formattedDate = simpleDotDateFormat.format(timestamp);
 
         return  formattedDate;
+    }
+
+    public LocalDateTime stringToLocalDateTime(String timeString)
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime localDateTime = LocalDateTime.parse(timeString, formatter);
+        return localDateTime;
+
     }
 }

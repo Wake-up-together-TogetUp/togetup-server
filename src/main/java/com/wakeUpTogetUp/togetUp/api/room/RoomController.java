@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Tag(name = "그룹(Room)")
@@ -60,13 +61,17 @@ public class RoomController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.",
                     content = @Content(schema = @Schema(implementation = RoomUserMissionLogRes.class))),
-            @ApiResponse(responseCode = "404", description = "그룹의 멤버가 없습니다.")})
-    @Operation(description = "그룹의 멤버의 미션기록 보기")
+            })
+    @Operation(summary = "그룹게시판의 미션기록 불러오기",description = "그룹의 멤버의 미션기록 보기")
     @GetMapping("/user/mission-log")
-    public BaseResponse<RoomUserMissionLogRes> getRoomLogDetailByDate(@Parameter(hidden = true) @AuthUser Integer userId, @RequestBody RoomUserLogMissionReq roomLogReq) {
+    public BaseResponse<RoomUserMissionLogRes> getRoomLogDetailByDate(@Parameter(hidden = true) @AuthUser Integer userId,
+                                                                      @Parameter(description = "룸 아이디",example = "1") Integer roomId,
+                                                                      @Parameter(description = "기록을 가져올 날의 LocalDateTime String 값" , example = "2023-09-20 11:55:38") String localDateTime,
+                                                                      @Parameter(description = "알람이 울리는 날인지 여부",example = "true") Boolean isAlarmActive
+                                                                      ) {
 
 
-        return new BaseResponse(Status.SUCCESS,roomService.getRoomUserLogList(userId,roomLogReq));
+        return new BaseResponse(Status.SUCCESS,roomService.getRoomUserLogList(userId,roomId,localDateTime,isAlarmActive));
 
     }
 

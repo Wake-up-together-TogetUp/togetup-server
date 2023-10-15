@@ -3,6 +3,7 @@ package com.wakeUpTogetUp.togetUp.api.room;
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmService;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+import com.wakeUpTogetUp.togetUp.api.avatar.AvatarTheme;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomUserLogMissionReq;
@@ -11,8 +12,10 @@ import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
+import com.wakeUpTogetUp.togetUp.api.users.UserAvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.model.UserAvatar;
 import com.wakeUpTogetUp.togetUp.common.Constant;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
@@ -44,6 +47,7 @@ public class RoomService {
     private final AlarmRepository alarmRepository;
     private final MissionLogRepository missionLogRepository;
     private final TimeFormatter timeFormatter;
+    private final UserAvatarRepository userAvatarRepository;
     @Transactional
     public  void createRoom(Integer userId, RoomReq roomReq){
 
@@ -95,11 +99,9 @@ public class RoomService {
     }
 
 
-    public RoomUserMissionLogRes getRoomUserLogList(Integer userId, RoomUserLogMissionReq roomUserLogMissionReq){
-        Integer roomId = roomUserLogMissionReq.getRoomId();
-        LocalDateTime localDateTime = roomUserLogMissionReq.getLocalDateTime();
-        boolean isAlarmActive = roomUserLogMissionReq.getIsAlarmActive();
+    public RoomUserMissionLogRes getRoomUserLogList(Integer userId,Integer roomId,String localDateTimeString ,Boolean isAlarmActive){
 
+        LocalDateTime localDateTime = timeFormatter.stringToLocalDateTime(localDateTimeString);
         List<RoomUser> roomUserList = roomUserRepository.findAllByRoom_Id(roomId);
         //크기가 0이면 예외처리
         if(roomUserList.isEmpty())
@@ -107,6 +109,11 @@ public class RoomService {
         //룸이름, userId,userName 매핑 (항상 반환하는 정보)
         RoomUserMissionLogRes roomUserMissionLogRes =new RoomUserMissionLogRes();
         roomUserMissionLogRes.setName(roomUserList.get(0).getRoom().getName());
+
+        //테마 찾기
+        UserAvatar userAvatar = userAvatarRepository.findByUser_Id(userId);
+        roomUserMissionLogRes.setTheme(AvatarTheme.valueOf(userAvatar.getAvatar().getTheme()).getValue());
+
         roomUserMissionLogRes.setUserLogList(EntityDtoMapper.INSTANCE.toUserLogDataList(roomUserList));
 
         //isMyLog, missionPicLink, userCompleteType 는 각케이스에 맞게 설정
@@ -124,6 +131,10 @@ public class RoomService {
                 {
                     userLogData.setIsMyLog(true);
                 }
+                else
+                {
+                    userLogData.setIsMyLog(false);
+                }
 
             }
             return roomUserMissionLogRes;
@@ -139,6 +150,10 @@ public class RoomService {
             if(userLogData.getUserId()==userId)
             {
                 userLogData.setIsMyLog(true);
+            }
+            else
+            {
+                userLogData.setIsMyLog(false);
             }
             for(MissionLog missionLog:missionLogList){
                 if(userLogData.getUserId()==missionLog.getUser().getId()) {

@@ -13,10 +13,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-
+@Data
 @Entity
 @Table(name = "user_avatar")
+@AllArgsConstructor
 @NoArgsConstructor
 public class UserAvatar {
 
