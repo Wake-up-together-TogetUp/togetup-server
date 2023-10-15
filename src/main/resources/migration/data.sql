@@ -86,7 +86,7 @@ alter table avatar
 drop column phase;
 
 -- 아바타 (임시)
-INSERT INTO avatar (id, theme, avatar_img_link, price, unlock_level, created_at) VALUES (1, '신입 병아리', 'STRING', 0, 1, '2023-10-07 20:35:51');
+INSERT INTO avatar (id, theme, avatar_img_link, price, unlock_level, created_at) VALUES (1, 'NOOB_CHICK', 'STRING', 0, 1, '2023-10-07 20:35:51');
 
 
 -- DB 반영 후 삭제 요망 --
