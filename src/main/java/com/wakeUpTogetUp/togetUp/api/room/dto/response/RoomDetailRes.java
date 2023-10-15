@@ -25,6 +25,11 @@ public class RoomDetailRes {
     @Schema(description = "room 개설일",example = "개설일 2020.02.03")
     private String createdAtString;
 
+//    @Schema(description = "룸이 가지고 있는 알람의 미션" , example = "강아지")
+//    private String mission;
+//
+//    private String a
+
     @Schema(description = "함께하는 인원수",example = "6명이 함께해요")
     private String personnelString;
 

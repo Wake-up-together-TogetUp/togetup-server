@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.room.dto.response;
 
+import com.wakeUpTogetUp.togetUp.api.avatar.AvatarTheme;
 import com.wakeUpTogetUp.togetUp.api.room.UserCompleteType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -15,7 +16,7 @@ public class RoomUserMissionLogRes {
     @Schema(description = "room name",example = "설여대 기상방")
     private String name;
 
-    @Schema(description = "- NOOB_CHICKS : 신입 병아리 \n - TWINKLING_TEDDY_BEAR : 눈을 반짝이는 곰돌이 \n - CUTE_BUNNY: 깜찍한 토끼" ,example = "NOOB_CHICKS")
+    @Schema(description = "- 신입 병아리 \n - 눈을 반짝이는 곰돌이 \n - 깜찍한 토끼" ,example = "신입 병아리")
     private String theme;
 
     private List<UserLogData> userLogList;

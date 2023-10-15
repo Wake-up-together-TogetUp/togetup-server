@@ -10,7 +10,7 @@ import java.util.Map;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum AvatarTheme {
-    NOOB_CHICKS("신입 병아리"),
+    NOOB_CHICK("신입 병아리"),
     TWINKLING_TEDDY_BEAR("눈을 반짝이는 곰돌이"),
     CUTE_BUNNY("깜찍한 토끼")
     ;

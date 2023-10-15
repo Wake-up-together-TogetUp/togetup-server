@@ -112,7 +112,7 @@ public class RoomService {
 
         //테마 찾기
         UserAvatar userAvatar = userAvatarRepository.findByUser_Id(userId);
-        roomUserMissionLogRes.setTheme(AvatarTheme.fromValue(userAvatar.getAvatar().getTheme()).name());
+        roomUserMissionLogRes.setTheme(AvatarTheme.valueOf(userAvatar.getAvatar().getTheme()).getValue());
 
         roomUserMissionLogRes.setUserLogList(EntityDtoMapper.INSTANCE.toUserLogDataList(roomUserList));
 
