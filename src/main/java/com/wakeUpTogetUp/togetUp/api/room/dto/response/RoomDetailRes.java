@@ -16,7 +16,7 @@ public class RoomDetailRes {
     @Schema(description = "룸 정보")
     private RoomData roomData;
 
-    @Schema(description = "룸 정보")
+    @Schema(description = "알람 정보")
     private AlarmData alarmData;
 
     @Schema(description = "룸의 유저들 정보 리스트")
@@ -35,10 +35,10 @@ public class RoomDetailRes {
         private String intro;
 
         @Schema(description = "room 개설일",example = "2020.02.03")
-        private String createdAtString;
+        private String createdAt;
 
         @Schema(description = "함께하는 인원수",example = "6")
-        private Integer personnelString;
+        private Integer personnel;
 
 
     }
@@ -49,7 +49,7 @@ public class RoomDetailRes {
         @Schema(description = "미션의 한국말",example = "자동차")
         private String missionKr;
 
-        @Schema(description = "알람 시간", example = "06:00")
+        @Schema(description = "알람 시간", example = "pm 13:00")
         private String alarmTime;
 
         @Schema(description = "그룹알람 울리는 날",example = "주중")

@@ -6,7 +6,6 @@ import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.avatar.AvatarTheme;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
-import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomUserLogMissionReq;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
@@ -28,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -267,8 +265,8 @@ public class RoomService {
         roomDetailRes.setUserList(EntityDtoMapper.INSTANCE.toUserDataList(roomUsers));
 
         //dto 매핑 - 커스텀 필드
-        roomDetailRes.getRoomData().setCreatedAtString(timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
-        roomDetailRes.getRoomData().setPersonnelString(roomUsers.size());
+        roomDetailRes.getRoomData().setCreatedAt(timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
+        roomDetailRes.getRoomData().setPersonnel(roomUsers.size());
 
         // ex) 13:00 -> pm 1:00
         roomDetailRes.getAlarmData().setAlarmTime(timeFormatter.timeStringToAMPMFormat(alarm.getAlarmTime()));
