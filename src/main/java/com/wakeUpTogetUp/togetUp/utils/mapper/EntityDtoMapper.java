@@ -84,11 +84,14 @@ public interface EntityDtoMapper {
     @Mapping(target = "icon",source = "icon")
     @Mapping(target = "name",source = "room.name")
     @Mapping(target = "intro",source = "room.intro")
-    RoomDetailRes toRoomDetailRes(Alarm alarm);
+    RoomDetailRes.RoomData toRoomDetailResRoomData(Alarm alarm);
+
+    @Mapping(target = "missionKr", source = "missionObject.kr")
+    RoomDetailRes.AlarmData toRoomDetailResAlarmData(Alarm alarm);
     @Mapping(target = "userId",source = "user.id")
     @Mapping(target = "userName",source = "user.name")
     @Mapping(target = "isHost",source = "isHost")
-    RoomDetailRes.UserData toUserData(RoomUser roomUser);
+    RoomDetailRes.UserData toRoomDetailUserData(RoomUser roomUser);
 
     @Mapping(target = "userId",source = "user.id")
     @Mapping(target = "userName",source = "user.name")

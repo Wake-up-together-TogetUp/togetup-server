@@ -260,12 +260,20 @@ public class RoomService {
         List<RoomUser> roomUsers = roomUserRepository.findAllByRoom_Id(roomId);
 
 
-        //dto 매핑
-        RoomDetailRes roomDetailRes = EntityDtoMapper.INSTANCE.toRoomDetailRes(alarm);
+        //dto 매핑 mapper 사용
+        RoomDetailRes roomDetailRes =new RoomDetailRes();
+        roomDetailRes.setRoomData(EntityDtoMapper.INSTANCE.toRoomDetailResRoomData(alarm));
+        roomDetailRes.setAlarmData(EntityDtoMapper.INSTANCE.toRoomDetailResAlarmData(alarm));
         roomDetailRes.setUserList(EntityDtoMapper.INSTANCE.toUserDataList(roomUsers));
 
-        roomDetailRes.setCreatedAtString("개설일 "+timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
-        roomDetailRes.setPersonnelString(roomUsers.size()+"명이 함께해요");
+        //dto 매핑 - 커스텀 필드
+        roomDetailRes.getRoomData().setCreatedAtString(timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
+        roomDetailRes.getRoomData().setPersonnelString(roomUsers.size());
+
+        // ex) 13:00 -> pm 1:00
+        roomDetailRes.getAlarmData().setAlarmTime(timeFormatter.timeStringToAMPMFormat(alarm.getAlarmTime()));
+        // ex)  평일, 주말, 매일, 월요일, (월, 화, 수), 빈칸
+        roomDetailRes.getAlarmData().setAlarmDay(timeFormatter.formatDaysOfWeek(alarm.getMonday(),alarm.getTuesday(),alarm.getWednesday(),alarm.getThursday(),alarm.getFriday(),alarm.getSaturday(),alarm.getSunday()));
 
         return  roomDetailRes;
     }

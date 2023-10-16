@@ -13,27 +13,52 @@ import java.util.List;
 @Builder
 public class RoomDetailRes {
 
-    @Schema( description = "룸이 가지고 있는 알람의 아이콘",example = "⏰")
-    private String icon;
+    @Schema(description = "룸 정보")
+    private RoomData roomData;
 
-    @Schema(description = "room name", example = "설여대 기상방")
-    private String name;
+    @Schema(description = "룸 정보")
+    private AlarmData alarmData;
 
-    @Schema(description = "room 소개",example = "소프트웨어융학학과 기상방입니다.")
-    private String intro;
-
-    @Schema(description = "room 개설일",example = "개설일 2020.02.03")
-    private String createdAtString;
-
-//    @Schema(description = "룸이 가지고 있는 알람의 미션" , example = "강아지")
-//    private String mission;
-//
-//    private String a
-
-    @Schema(description = "함께하는 인원수",example = "6명이 함께해요")
-    private String personnelString;
-
+    @Schema(description = "룸의 유저들 정보 리스트")
     private List<RoomDetailRes.UserData> userList;
+    @Builder
+    @Data
+    public static class RoomData {
+
+        @Schema( description = "룸이 가지고 있는 알람의 아이콘",example = "⏰")
+        private String icon;
+
+        @Schema(description = "room name", example = "설여대 기상방")
+        private String name;
+
+        @Schema(description = "room 소개",example = "소프트웨어융학학과 기상방입니다.")
+        private String intro;
+
+        @Schema(description = "room 개설일",example = "2020.02.03")
+        private String createdAtString;
+
+        @Schema(description = "함께하는 인원수",example = "6")
+        private Integer personnelString;
+
+
+    }
+
+    @Builder
+    @Data
+    public static class AlarmData {
+        @Schema(description = "미션의 한국말",example = "자동차")
+        private String missionKr;
+
+        @Schema(description = "알람 시간", example = "06:00")
+        private String alarmTime;
+
+        @Schema(description = "그룹알람 울리는 날",example = "주중")
+        private String alarmDay;
+
+
+    }
+
+
 
     @Builder
     @Data
