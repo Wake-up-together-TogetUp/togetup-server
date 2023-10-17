@@ -82,6 +82,9 @@ public class TimeFormatter {
                     formattedDays.append(",");
                 }
             }
+            //요일이 한개이면
+            if (formattedDays.length()==2)
+                return formattedDays.toString().replace(",","요일");
             formattedDays.deleteCharAt(formattedDays.length() - 1);
         }
 
