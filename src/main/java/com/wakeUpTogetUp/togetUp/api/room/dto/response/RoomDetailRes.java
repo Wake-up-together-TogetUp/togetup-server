@@ -46,6 +46,10 @@ public class RoomDetailRes {
     @Builder
     @Data
     public static class AlarmData {
+
+        @Schema(description = "룸에서 울리는 알람아이디",example = "2")
+        private Integer id;
+
         @Schema(description = "미션의 한국말",example = "자동차")
         private String missionKr;
 

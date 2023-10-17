@@ -86,6 +86,7 @@ public interface EntityDtoMapper {
     @Mapping(target = "intro",source = "room.intro")
     RoomDetailRes.RoomData toRoomDetailResRoomData(Alarm alarm);
 
+    @Mapping(target = "id" , source = "id")
     @Mapping(target = "missionKr", source = "missionObject.kr")
     RoomDetailRes.AlarmData toRoomDetailResAlarmData(Alarm alarm);
     @Mapping(target = "userId",source = "user.id")
