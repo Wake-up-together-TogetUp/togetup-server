@@ -49,32 +49,22 @@ public class RoomService {
     @Transactional
     public  void createRoom(Integer userId, RoomReq roomReq){
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
-
         //그룹 만들기
         Room room = Room.builder()
                 .name(roomReq.getName())
                 .intro(roomReq.getIntro())
                 .build();
         //알람 만들기
-
         Integer alarmId = alarmService.createAlarm(userId,roomReq.getPostAlarmReq()).getId();
 
         //그룹 만들기
-        roomRepository.save(room);
+        Room savedRoom = roomRepository.save(room);
 
-        //유저 그룹에 넣기
-        RoomUser roomUser =RoomUser.builder()
-                .user(user)
-                .room(room)
-                .isHost(true)
-                .build();
-        roomUserRepository.save(roomUser);
+        //그룹에 유저 넣기
+        this.joinRoom(savedRoom.getId(),userId,true);
 
         //알람에 room넣기
-
-        alarmRepository.updateRoomIdByAlarmId(alarmId,room.getId());
+        alarmRepository.updateRoomIdByAlarmId(alarmId,savedRoom.getId());
 
     }
 
@@ -284,6 +274,27 @@ public class RoomService {
         if(Objects.isNull(roomUser)) throw new BaseException(Status.ROOM_USER_NOT_FOUND);
         roomUser.setAgreePush(agreePush);
 
+    }
+
+    @Transactional
+    public void joinRoom(Integer roomId , Integer invitedUserId , boolean isHost){
+
+        User user = userRepository.findById(invitedUserId)
+                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
+
+        //그룹 만들기
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
+
+        //유저 그룹에 넣기
+        RoomUser roomUser =RoomUser.builder()
+                .user(user)
+                .room(room)
+                .isHost(isHost)
+                .agreePush(true)
+                .build();
+
+        roomUserRepository.save(roomUser);
     }
 
 }

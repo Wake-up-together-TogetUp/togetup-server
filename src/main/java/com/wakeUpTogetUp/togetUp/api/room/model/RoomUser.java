@@ -39,7 +39,7 @@ public class RoomUser {
     private Boolean isHost;
 
     @Column(name = "agree_push")
-    private Boolean agreePush;
+    private Boolean agreePush = true;
 
     @PrePersist
     void createdAt() {

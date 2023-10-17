@@ -130,4 +130,18 @@ public class RoomController {
 
 
 
+    @Operation(summary= "그룹에 참가")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.")})
+    @ResponseBody
+    @PostMapping("/join/{roomId}")
+    public BaseResponse joinRoom(@Parameter(hidden = true) @AuthUser Integer  invitedUserId , @PathVariable Integer roomId) {
+
+        roomService.joinRoom(roomId,invitedUserId,false);
+        return new BaseResponse(Status.SUCCESS);
+
+    }
+
+
+
 }
