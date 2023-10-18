@@ -6,7 +6,6 @@ import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.avatar.AvatarTheme;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
-import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomUserLogMissionReq;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
@@ -28,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -51,32 +49,22 @@ public class RoomService {
     @Transactional
     public  void createRoom(Integer userId, RoomReq roomReq){
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
-
         //그룹 만들기
         Room room = Room.builder()
                 .name(roomReq.getName())
                 .intro(roomReq.getIntro())
                 .build();
         //알람 만들기
-
         Integer alarmId = alarmService.createAlarm(userId,roomReq.getPostAlarmReq()).getId();
 
         //그룹 만들기
-        roomRepository.save(room);
+        Room savedRoom = roomRepository.save(room);
 
-        //유저 그룹에 넣기
-        RoomUser roomUser =RoomUser.builder()
-                .user(user)
-                .room(room)
-                .isHost(true)
-                .build();
-        roomUserRepository.save(roomUser);
+        //그룹에 유저 넣기
+        this.joinRoom(savedRoom.getId(),userId,true);
 
         //알람에 room넣기
-
-        alarmRepository.updateRoomIdByAlarmId(alarmId,room.getId());
+        alarmRepository.updateRoomIdByAlarmId(alarmId,savedRoom.getId());
 
     }
 
@@ -260,12 +248,20 @@ public class RoomService {
         List<RoomUser> roomUsers = roomUserRepository.findAllByRoom_Id(roomId);
 
 
-        //dto 매핑
-        RoomDetailRes roomDetailRes = EntityDtoMapper.INSTANCE.toRoomDetailRes(alarm);
+        //dto 매핑 mapper 사용
+        RoomDetailRes roomDetailRes =new RoomDetailRes();
+        roomDetailRes.setRoomData(EntityDtoMapper.INSTANCE.toRoomDetailResRoomData(alarm));
+        roomDetailRes.setAlarmData(EntityDtoMapper.INSTANCE.toRoomDetailResAlarmData(alarm));
         roomDetailRes.setUserList(EntityDtoMapper.INSTANCE.toUserDataList(roomUsers));
 
-        roomDetailRes.setCreatedAtString("개설일 "+timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
-        roomDetailRes.setPersonnelString(roomUsers.size()+"명이 함께해요");
+        //dto 매핑 - 커스텀 필드
+        roomDetailRes.getRoomData().setCreatedAt(timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
+        roomDetailRes.getRoomData().setPersonnel(roomUsers.size());
+
+        // ex) 13:00 -> pm 1:00
+        roomDetailRes.getAlarmData().setAlarmTime(timeFormatter.timeStringToAMPMFormat(alarm.getAlarmTime()));
+        // ex)  평일, 주말, 매일, 월요일, (월, 화, 수), 빈칸
+        roomDetailRes.getAlarmData().setAlarmDay(timeFormatter.formatDaysOfWeek(alarm.getMonday(),alarm.getTuesday(),alarm.getWednesday(),alarm.getThursday(),alarm.getFriday(),alarm.getSaturday(),alarm.getSunday()));
 
         return  roomDetailRes;
     }
@@ -278,6 +274,27 @@ public class RoomService {
         if(Objects.isNull(roomUser)) throw new BaseException(Status.ROOM_USER_NOT_FOUND);
         roomUser.setAgreePush(agreePush);
 
+    }
+
+    @Transactional
+    public void joinRoom(Integer roomId , Integer invitedUserId , boolean isHost){
+
+        User user = userRepository.findById(invitedUserId)
+                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
+
+        //그룹 만들기
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
+
+        //유저 그룹에 넣기
+        RoomUser roomUser =RoomUser.builder()
+                .user(user)
+                .room(room)
+                .isHost(isHost)
+                .agreePush(true)
+                .build();
+
+        roomUserRepository.save(roomUser);
     }
 
 }

@@ -102,7 +102,7 @@ public class RoomController {
 
     }
 
-    @Operation(summary = "그룹 디테일 보기",description = "그룹 디테일 보기 (설정 화면)")
+    @Operation(summary = "그룹 디테일 보기 and 초대 받은 사람에게 보이는 그룹 정보 보기 ",description = "그룹 디테일 보기 (설정 화면) and 초대 받은 사람에게 보이는 앱 내 페이지")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.",
                     content = @Content(schema = @Schema(implementation = RoomDetailRes.class))),
@@ -124,6 +124,20 @@ public class RoomController {
     public BaseResponse updateAgreePush(@Parameter(hidden = true) @AuthUser Integer userId, @PathVariable Integer roomId,@Parameter(description = "알람동의 값",example = "true")@RequestParam() boolean agreePush) {
 
         roomService.updateAgreePush(roomId,userId,agreePush);
+        return new BaseResponse(Status.SUCCESS);
+
+    }
+
+
+
+    @Operation(summary= "그룹에 참가")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.")})
+    @ResponseBody
+    @PostMapping("/join/{roomId}")
+    public BaseResponse joinRoom(@Parameter(hidden = true) @AuthUser Integer  invitedUserId , @PathVariable Integer roomId) {
+
+        roomService.joinRoom(roomId,invitedUserId,false);
         return new BaseResponse(Status.SUCCESS);
 
     }
