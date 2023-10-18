@@ -218,8 +218,10 @@ public class RoomService {
     public void findNextCreatedUser(Integer roomId,Integer userId){
         List<RoomUser> orderedRoomUser = roomUserRepository.findAllByRoom_IdOrderByCreatedAt(roomId);
         //방의 마지막 멤버가 나가면 방,알람 삭제
-        if(orderedRoomUser.size()<Constant.MINIMUM_NUMBER_TO_CHANGE_HOST)
+        if(orderedRoomUser.size()<Constant.MINIMUM_NUMBER_TO_CHANGE_HOST) {
             deleteUnnecessaryRoomAndAlarm(roomId);
+            return;
+        }
 
         //방장이 제일 먼저 들어온 사람인 경우 그 다음 사람이 방장이 된다.
         Integer nextHostId=orderedRoomUser.get(0).getId();
@@ -231,11 +233,11 @@ public class RoomService {
 
     @Transactional
     public void deleteUnnecessaryRoomAndAlarm(Integer roomId){
-        roomRepository.deleteById(roomId);
         Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
         if(Objects.isNull(alarm))
             throw new BaseException(Status.ALARM_NOT_FOUND);
         alarmRepository.delete(alarm);
+        roomRepository.deleteById(roomId);
     }
 
 
