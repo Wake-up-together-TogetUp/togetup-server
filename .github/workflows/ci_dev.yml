@@ -1,6 +1,9 @@
 name: TogetUp-Server-Dev CI
+
 on:
   pull_request:
+    branches: [ "main" ]
+  push:
     branches: [ "main" ]
 
 permissions:
@@ -22,8 +25,8 @@ jobs:
     
     - name: make application.properties
       run: |
-        #mkdir ./server/src/main/resources
-        cd ./server/src/main/resources
+        mkdir ./src/main/resources
+        cd ./src/main/resources
         touch ./application.yaml
         echo "${{ secrets.TOGETUP_PROD_APPLICATION }}" >> ./application.yaml
         cat ./application.yaml
@@ -31,9 +34,7 @@ jobs:
 
 
     - name: Grant execute permission for gradlew
-      run: chmod +x ./server/gradlew
+      run: chmod +x gradlew
       
     - name: Build with Gradle
-      run: |
-        cd ./server
-        ./gradlew build -x test
+      run: ./gradlew build -x test
