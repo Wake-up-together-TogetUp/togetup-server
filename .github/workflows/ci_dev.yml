@@ -25,7 +25,8 @@ jobs:
     
     - name: make application.properties
       run: |
-        mkdir ./src/main/resources
+        ## create application.yml
+        mkdir -p ./src/main/resources
         cd ./src/main/resources
         touch ./application.yaml
         echo "${{ secrets.TOGETUP_PROD_APPLICATION }}" >> ./application.yaml
