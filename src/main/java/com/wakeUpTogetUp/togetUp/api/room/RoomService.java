@@ -87,7 +87,7 @@ public class RoomService {
     }
 
 
-    public RoomUserMissionLogRes getRoomUserLogList(Integer userId,Integer roomId,String localDateTimeString ,Boolean isAlarmActive){
+    public RoomUserMissionLogRes getRoomUserLogList(Integer userId,Integer roomId,String localDateTimeString ){
 
         LocalDateTime localDateTime = timeFormatter.stringToLocalDateTime(localDateTimeString);
         List<RoomUser> roomUserList = roomUserRepository.findAllByRoom_Id(roomId);
@@ -105,11 +105,13 @@ public class RoomService {
         roomUserMissionLogRes.setUserLogList(EntityDtoMapper.INSTANCE.toUserLogDataList(roomUserList));
 
         //isMyLog, missionPicLink, userCompleteType 는 각케이스에 맞게 설정
-        return setUserLogData(roomUserMissionLogRes, userId, roomId, isAlarmActive, localDateTime);
+        return setUserLogData(roomUserMissionLogRes, userId, roomId, localDateTime);
 
     }
 
-    public RoomUserMissionLogRes setUserLogData(RoomUserMissionLogRes roomUserMissionLogRes, Integer userId, Integer roomId, boolean isAlarmActive, LocalDateTime localDateTime){
+    public RoomUserMissionLogRes setUserLogData(RoomUserMissionLogRes roomUserMissionLogRes, Integer userId, Integer roomId, LocalDateTime localDateTime){
+
+        boolean isAlarmActive = alarmRepository.findFirstByRoom_Id(roomId).getDayOfWeekValue(localDateTime.getDayOfWeek());
         if(!isAlarmActive)
         {
             for (RoomUserMissionLogRes.UserLogData userLogData : roomUserMissionLogRes.getUserLogList()) {

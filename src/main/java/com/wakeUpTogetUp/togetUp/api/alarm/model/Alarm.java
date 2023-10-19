@@ -6,9 +6,12 @@ import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+import java.time.DayOfWeek;
 
 import javax.persistence.*;
-import java.sql.Time;
+
+
+
 @ToString
 @Entity
 @Table(name = "alarm")
@@ -139,5 +142,25 @@ public class Alarm {
         setIsActivated(isActivated);
         setMission(mission);
         setMissionObject(missionObject);
+    }
+    public boolean getDayOfWeekValue(DayOfWeek dayOfWeek) {
+        switch (dayOfWeek) {
+            case MONDAY:
+                return getMonday();
+            case TUESDAY:
+                return getTuesday();
+            case WEDNESDAY:
+                return getWednesday();
+            case THURSDAY:
+                return getThursday();
+            case FRIDAY:
+                return getFriday();
+            case SATURDAY:
+                return getSaturday();
+            case SUNDAY:
+                return getSunday();
+            default:
+                throw new IllegalArgumentException("Invalid day of the week");
+        }
     }
 }

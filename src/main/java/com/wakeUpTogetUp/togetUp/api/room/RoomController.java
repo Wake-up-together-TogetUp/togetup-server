@@ -66,12 +66,11 @@ public class RoomController {
     @GetMapping("/user/mission-log")
     public BaseResponse<RoomUserMissionLogRes> getRoomLogDetailByDate(@Parameter(hidden = true) @AuthUser Integer userId,
                                                                       @Parameter(description = "룸 아이디",example = "1") Integer roomId,
-                                                                      @Parameter(description = "기록을 가져올 날의 LocalDateTime String 값" , example = "2023-09-20 11:55:38") String localDateTime,
-                                                                      @Parameter(description = "알람이 울리는 날인지 여부",example = "true") Boolean isAlarmActive
+                                                                      @Parameter(description = "기록을 가져올 날의 LocalDateTime String 값" , example = "2023-09-20 11:55:38") String localDateTime
                                                                       ) {
 
 
-        return new BaseResponse(Status.SUCCESS,roomService.getRoomUserLogList(userId,roomId,localDateTime,isAlarmActive));
+        return new BaseResponse(Status.SUCCESS,roomService.getRoomUserLogList(userId,roomId,localDateTime));
 
     }
 
