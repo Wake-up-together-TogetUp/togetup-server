@@ -27,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -243,14 +245,13 @@ public class RoomService {
     }
 
 
-    public RoomDetailRes getRoomDetail(Integer roomId){
+    public RoomDetailRes getRoomDetail(Integer roomId , Integer userId){
         //알람 조회
         Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
         if(Objects.isNull(alarm)) throw new BaseException(Status.ALARM_NOT_FOUND);
 
         //room_user 조회
         List<RoomUser> roomUsers = roomUserRepository.findAllByRoom_Id(roomId);
-
 
         //dto 매핑 mapper 사용
         RoomDetailRes roomDetailRes =new RoomDetailRes();
@@ -259,6 +260,9 @@ public class RoomService {
         roomDetailRes.setUserList(EntityDtoMapper.INSTANCE.toUserDataList(roomUsers));
 
         //dto 매핑 - 커스텀 필드
+
+        //아바타 세팅 (아바타 수정 이후 변경될 예정)
+        this.setUserTheme(roomDetailRes);
         roomDetailRes.getRoomData().setCreatedAt(timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
         roomDetailRes.getRoomData().setPersonnel(roomUsers.size());
 
@@ -267,7 +271,31 @@ public class RoomService {
         // ex)  평일, 주말, 매일, 월요일, (월, 화, 수), 빈칸
         roomDetailRes.getAlarmData().setAlarmDay(timeFormatter.formatDaysOfWeek(alarm.getMonday(),alarm.getTuesday(),alarm.getWednesday(),alarm.getThursday(),alarm.getFriday(),alarm.getSaturday(),alarm.getSunday()));
 
+        // 나 -> 방장순으로 userList 정렬
+        for(int i=0;i<roomDetailRes.getUserList().size();i++){
+            if(roomDetailRes.getUserList().get(i).getUserId()==userId){
+                RoomDetailRes.UserData  temp = roomDetailRes.getUserList().get(0);
+                roomDetailRes.getUserList().set(0, roomDetailRes.getUserList().get(i));
+                roomDetailRes.getUserList().set(i, temp);
+                //나와 방장이 일치할때 더 비교안해도 됨
+                if(roomDetailRes.getUserList().get(0).getIsHost())
+                    break;
+            }
+            if(roomDetailRes.getUserList().get(i).getIsHost()){
+                RoomDetailRes.UserData  temp = roomDetailRes.getUserList().get(1);
+                roomDetailRes.getUserList().set(1, roomDetailRes.getUserList().get(i));
+                roomDetailRes.getUserList().set(i, temp);
+                break;
+            }
+        }
         return  roomDetailRes;
+    }
+
+    public void setUserTheme(RoomDetailRes roomDetailRes){
+
+        //TODO 테이블 바뀌면 수정 해야함
+        roomDetailRes.getUserList().forEach(userData ->  userData.setTheme(AvatarTheme.valueOf(userAvatarRepository.findByUser_Id(userData.getUserId()).getAvatar().getTheme()).getValue()));
+
     }
 
 
