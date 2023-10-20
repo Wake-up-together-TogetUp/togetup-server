@@ -7,7 +7,7 @@ import com.wakeUpTogetUp.togetUp.api.auth.dto.response.LoginRes;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.request.SocialLoginReq;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.SocialUserRes;
-import com.wakeUpTogetUp.togetUp.api.users.UserService;
+import com.wakeUpTogetUp.togetUp.api.users.UserAvatarService;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
@@ -30,7 +30,7 @@ public class AuthService {
 
     private final List<SocialLoginService> loginServices;
     private final JwtService jwtService;
-    private final UserService userService;
+    private final UserAvatarService userAvatarService;
     private final AppleLoginServiceImpl appleLoginService;
     private final UserRepository userRepository;
 
@@ -93,8 +93,8 @@ public class AuthService {
         );
 
         // 유저 기본 아바타 설정
-        userService.unlockAvatar(user, DEFAULT_AVATAR_ID);
-        userService.changeUserAvatar(user, DEFAULT_AVATAR_ID);
+        userAvatarService.unlockAvatar(user, DEFAULT_AVATAR_ID);
+        userAvatarService.changeUserAvatar(user, DEFAULT_AVATAR_ID);
 
         return user.getId();
     }

@@ -45,14 +45,4 @@ public class UserAvatar {
         this.user = user;
         this.avatar = avatar;
     }
-
-    // 유저 아바타 활성화
-    public void activate() {
-        this.setIsActive(true);
-    }
-
-    // 유저 아바타 비활성화
-    public void inactivate() {
-        this.setIsActive(false);
-    }
 }
