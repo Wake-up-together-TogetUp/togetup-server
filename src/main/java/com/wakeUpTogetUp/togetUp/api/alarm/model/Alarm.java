@@ -16,8 +16,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "alarm")
 @DynamicInsert
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Alarm {
@@ -73,7 +72,7 @@ public class Alarm {
     public Alarm(String name, String icon, Integer snoozeInterval, Integer snoozeCnt, String alarmTime,
             Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday,
             Boolean saturday, Boolean sunday, Boolean isSnoozeActivated, Boolean isVibrate,
-            User user, Mission mission, MissionObject missionObject, Room room) {
+            User user, Mission mission, MissionObject missionObject) {
         this.name = name;
         this.icon = icon;
         this.snoozeInterval = snoozeInterval;
@@ -91,7 +90,6 @@ public class Alarm {
         this.user = user;
         this.mission = mission;
         this.missionObject = missionObject;
-        this.room = room;
     }
 
     // patch
@@ -143,6 +141,7 @@ public class Alarm {
         setMission(mission);
         setMissionObject(missionObject);
     }
+
     public boolean getDayOfWeekValue(DayOfWeek dayOfWeek) {
         switch (dayOfWeek) {
             case MONDAY:

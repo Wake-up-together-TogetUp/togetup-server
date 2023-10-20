@@ -28,17 +28,13 @@ public class AlarmService {
     private final UserRepository userRepository;
     private final MissionRepository missionRepository;
     private final MissionObjectRepository missionObjectRepository;
-    private final RoomRepository roomRepository;
 
     // 알람 생성
     @Transactional
     public Alarm createAlarm(Integer userId, PostAlarmReq postAlarmReq) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
-        Room room = postAlarmReq.getRoomId() != null
-                ? roomRepository.findById(postAlarmReq.getRoomId())
-                    .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND))
-                : null;
+
         Mission mission = null;
         MissionObject missionObject = null;
 
@@ -73,7 +69,6 @@ public class AlarmService {
                 .user(user)
                 .mission(mission)
                 .missionObject(missionObject)
-                .room(room)
                 .build();
 
         return alarmRepository.save(alarm);
