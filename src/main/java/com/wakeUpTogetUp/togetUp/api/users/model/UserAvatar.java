@@ -1,6 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.users.model;
 
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,6 +28,8 @@ public class UserAvatar {
     @Column(name = "id", columnDefinition = "INT UNSIGNED", nullable = false, updatable = false)
     private Integer id;
 
+    private Boolean isActive;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -34,6 +37,9 @@ public class UserAvatar {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "avatar_id", nullable = false)
     private Avatar avatar;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     @Builder
     public UserAvatar(User user, Avatar avatar) {

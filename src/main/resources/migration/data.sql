@@ -78,6 +78,11 @@ INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (7
 INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (71, 'smile', '미소짓는 표정', '?', 1, 3);
 
 
+-- 아바타 (임시)
+INSERT INTO avatar (id, theme, avatar_img_link, price, unlock_level, created_at) VALUES (1, 'NOOB_CHICK', 'STRING', 0, 1, '2023-10-07 20:35:51');
+
+
+
 -- avatar에 unlock_level(해금 레벨) 컬럼 추가, phase 컬럼 삭제
 alter table avatar
     add unlock_level int unsigned not null after price;
@@ -85,11 +90,6 @@ alter table avatar
 alter table avatar
 drop column phase;
 
--- 아바타 (임시)
-INSERT INTO avatar (id, theme, avatar_img_link, price, unlock_level, created_at) VALUES (1, 'NOOB_CHICK', 'STRING', 0, 1, '2023-10-07 20:35:51');
-
-
--- DB 반영 후 삭제 요망 --
 
 -- mission_log에 mission_id 삭제
 alter table mission_log
@@ -110,10 +110,19 @@ alter table user
 
 
 
-
 -- alarm에 user_id, mission_id nullable 속성 수정
 alter table alarm
     modify user_id int unsigned null;
 
 alter table alarm
     modify mission_id int unsigned not null;
+
+-- table : user_avatar_purchase_log 삭제
+DROP TABLE user_avatar_purchase_log;
+
+-- table : user_avatar 현재 아바타 정보를 위한 컬럼 추가
+alter table user_avatar
+    add is_active tinyint(1) default 0 not null after id;
+
+alter table user_avatar
+    add created_at TIMESTAMP default CURRENT_TIMESTAMP not null after is_active;

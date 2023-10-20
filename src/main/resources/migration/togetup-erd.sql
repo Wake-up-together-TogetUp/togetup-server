@@ -155,7 +155,7 @@ create table room_user
     room_id    int unsigned                         null,
     user_id    int unsigned                         not null,
     is_host    tinyint(1) default 0                 null,
-    agree_push tinyint(1) default 1                 not null,
+    agree_push tinyint(1) default 1                 null,
     constraint room_user_ibfk_1
         foreign key (room_id) references room (id),
     constraint room_user_ibfk_2
@@ -170,10 +170,12 @@ create index user_id
 
 create table user_avatar
 (
-    id        int unsigned auto_increment
+    id         int unsigned auto_increment
         primary key,
-    user_id   int unsigned not null,
-    avatar_id int unsigned not null,
+    is_active  tinyint(1) default 0                 not null,
+    created_at timestamp  default CURRENT_TIMESTAMP not null,
+    user_id    int unsigned                         not null,
+    avatar_id  int unsigned                         not null,
     constraint user_avatar_ibfk_1
         foreign key (user_id) references user (id),
     constraint user_avatar_ibfk_2
@@ -185,23 +187,4 @@ create index avatar_id
 
 create index user_id
     on user_avatar (user_id);
-
-create table user_avatar_purchase_log
-(
-    id         int unsigned auto_increment
-        primary key,
-    created_at timestamp default CURRENT_TIMESTAMP not null,
-    user_id    int unsigned                        not null,
-    avatar_id  int unsigned                        not null,
-    constraint user_avatar_purchase_log_ibfk_1
-        foreign key (user_id) references user (id),
-    constraint user_avatar_purchase_log_ibfk_2
-        foreign key (avatar_id) references avatar (id)
-);
-
-create index avatar_id
-    on user_avatar_purchase_log (avatar_id);
-
-create index user_id
-    on user_avatar_purchase_log (user_id);
 
