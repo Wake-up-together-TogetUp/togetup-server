@@ -125,7 +125,7 @@ public class MissionController {
         // 미션 수행 기록 생성
         missionService.createMissionLog(userId, missionLogCreateReq);
         // 경험치 정산
-        UserProgressionResult upr = userService.userProgression(userId);
+        UserProgressionResult upr = userService.userProgress(userId);
 
         return new BaseResponse<>(Status.SUCCESS_CREATED, new MissionLogCreateRes(upr));
     }
