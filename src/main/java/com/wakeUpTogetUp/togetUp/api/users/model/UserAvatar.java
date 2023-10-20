@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,5 +44,15 @@ public class UserAvatar {
     public UserAvatar(User user, Avatar avatar) {
         this.user = user;
         this.avatar = avatar;
+    }
+
+    // 유저 아바타 활성화
+    public void activate() {
+        this.setIsActive(true);
+    }
+
+    // 유저 아바타 비활성화
+    public void inactivate() {
+        this.setIsActive(false);
     }
 }
