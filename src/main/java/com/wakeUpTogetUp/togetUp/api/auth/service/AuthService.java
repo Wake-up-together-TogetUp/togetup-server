@@ -93,8 +93,8 @@ public class AuthService {
         );
 
         // 유저 기본 아바타 설정
-        userAvatarService.unlockAvatar(user, DEFAULT_AVATAR_ID);
-        userAvatarService.changeUserAvatar(user, DEFAULT_AVATAR_ID);
+        userAvatarService.createUserAvatar(user, DEFAULT_AVATAR_ID);
+        userAvatarService.changeUserAvatar(user.getId(), DEFAULT_AVATAR_ID);
 
         return user.getId();
     }

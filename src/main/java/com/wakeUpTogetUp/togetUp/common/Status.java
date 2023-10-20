@@ -43,6 +43,10 @@ public enum Status {
     Invalid_APPLE_Token(HttpStatus.BAD_REQUEST,"Apple OAuth Claims 값이 올바르지 않습니다."),
     INVALID_ROOM_HOST_ID(HttpStatus.BAD_REQUEST,"방장의 id가 아닙니다."),
 
+    // FORBIDDEN
+    USER_AVATAR_LOCKED(HttpStatus.FORBIDDEN, "유저가 보유하지 않은 아바타 ID 입니다."),
+    USER_POINT_LACKED(HttpStatus.FORBIDDEN, "포인트가 부족하여 구매가 불가능합니다."),
+
     // NOT FOUND
     USER_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 유저 입니다."),
     ROOM_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 room 입니다."),
@@ -54,8 +58,8 @@ public enum Status {
     OBJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "객체를 찾을 수 없습니다."),
     ROOM_USER_NOT_FOUND(HttpStatus.NOT_FOUND,"그룹의 해당 멤버가 없습니다."),
 
-    // FORBIDDEN
-    USER_AVATAR_LOCKED(HttpStatus.FORBIDDEN, "유저가 보유하지 않은 아바타 ID 입니다."),
+    // CONFLICT
+    USER_AVATAR_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 보유한 아바타 입니다."),
 
     // UNSUPPORTED MEDIA TYPE
     UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "지원하지 않는 파일 확장자 입니다."),

@@ -1,9 +1,12 @@
 package com.wakeUpTogetUp.togetUp.api.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -117,5 +120,17 @@ public class User {
         this.setLevel(this.getLevel() + 1);
         this.setExperience(this.getExperience() - threshold);
         this.setPoint(this.getPoint() + 25);
+    }
+
+    // 포인트 처리
+    public void purchaseAvatar(Avatar avatar) {
+        if(this.getPoint() < avatar.getPrice())
+            throw new BaseException(Status.USER_POINT_LACKED);
+        else
+            this.addUserPoint(-avatar.getPrice());
+    }
+
+    public void addUserPoint(int amount) {
+        this.setPoint(this.point + amount);
     }
 }

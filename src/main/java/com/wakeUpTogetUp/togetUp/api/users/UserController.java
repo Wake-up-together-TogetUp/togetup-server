@@ -67,12 +67,32 @@ public class UserController  {
         return new BaseResponse<>(Status.SUCCESS);
     }
 
-    @Operation(summary = "유저 아바타 목록 가져오기")
+    @Operation(summary = "아바타 목록 가져오기")
     @GetMapping("/avatars")
     public BaseResponse<List<UserAvatarData>> getUserAvatarList(
             @Parameter(hidden = true) @AuthUser Integer userId
     ) {
         return new BaseResponse<>(Status.SUCCESS, userAvatarService.findUserAvatarList(userId));
+    }
+
+    @Operation(summary = "아바타 변경")
+    @PatchMapping("/avatars/{avatarId}/change")
+    public BaseResponse<Object> updateUserAvatar(
+            @Parameter(hidden = true) @AuthUser Integer userId,
+            @PathVariable int avatarId
+    ) {
+        userAvatarService.changeUserAvatar(userId, avatarId);
+        return new BaseResponse<>(Status.SUCCESS);
+    }
+
+    @Operation(summary = "아바타 해금")
+    @PostMapping("/avatars/{avatarId}/unlock")
+    public BaseResponse<Object> unlockUserAvatar(
+            @Parameter(hidden = true) @AuthUser Integer userId,
+            @PathVariable int avatarId
+    ) {
+        userAvatarService.unlockAvatar(userId, avatarId);
+        return new BaseResponse<>(Status.SUCCESS);
     }
 }
 

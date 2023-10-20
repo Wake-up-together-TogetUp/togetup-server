@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserAvatarService {
+
+    private final UserRepository userRepository;
     private final AvatarRepository avatarRepository;
     private final UserAvatarRepository userAvatarRepository;
 
@@ -29,7 +31,24 @@ public class UserAvatarService {
 
     // 유저 아바타 해금
     @Transactional
-    public void unlockAvatar(User user, int avatarId) {
+    public void unlockAvatar(int userId, int avatarId) {
+        userAvatarRepository.findByUser_IdAndAvatar_Id(userId, avatarId)
+                .ifPresent(value -> {
+                    throw new BaseException(Status.USER_AVATAR_ALREADY_EXIST);
+                });
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
+        Avatar avatar = avatarRepository.findById(avatarId)
+                .orElseThrow(() -> new BaseException(Status.AVATAR_NOT_FOUND));
+
+        // 포인트 처리
+        user.purchaseAvatar(avatar);
+        this.createUserAvatar(user, avatarId);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void createUserAvatar(User user, int avatarId) {
         Avatar avatar = avatarRepository.findById(avatarId)
                 .orElseThrow(() -> new BaseException(Status.AVATAR_NOT_FOUND));
 
@@ -42,18 +61,17 @@ public class UserAvatarService {
 
     // 유저 아바타 변경
     @Transactional
-    public void changeUserAvatar(User user, int avatarId) {
+    public void changeUserAvatar(int userId, int avatarId) {
         List<UserAvatar> userAvatarList =
-                userAvatarRepository.findAllByUser_IdAndAvatar_Id(user.getId(), avatarId);
+                userAvatarRepository.findAllByUser_Id(userId);
 
         // 보유중인 아바타인지 검사
         userAvatarList.stream().filter(i -> i.getAvatar().getId() == avatarId).findAny()
                 .orElseThrow(() -> new BaseException(Status.USER_AVATAR_LOCKED));
 
-        for(UserAvatar userAvatar : userAvatarList) {
+        for (UserAvatar userAvatar : userAvatarList) {
             // 해당 아바타이면 활성화, 나머지 비활성화
             userAvatar.setIsActive(userAvatar.getAvatar().getId() == avatarId);
-
             userAvatarRepository.save(userAvatar);
         }
     }
