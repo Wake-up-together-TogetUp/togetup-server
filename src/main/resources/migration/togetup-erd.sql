@@ -1,12 +1,11 @@
 create table avatar
 (
-    id              int unsigned auto_increment
+    id           int unsigned auto_increment
         primary key,
-    theme           varchar(20)                         not null,
-    avatar_img_link text                                not null,
-    price           int unsigned                        not null,
-    unlock_level    int unsigned                        not null,
-    created_at      timestamp default CURRENT_TIMESTAMP not null
+    theme        varchar(20)                         not null,
+    price        int unsigned                        not null,
+    unlock_level int unsigned                        not null,
+    created_at   timestamp default CURRENT_TIMESTAMP not null
 );
 
 create table mission
@@ -187,4 +186,3 @@ create index avatar_id
 
 create index user_id
     on user_avatar (user_id);
-
