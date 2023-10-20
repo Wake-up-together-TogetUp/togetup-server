@@ -1,17 +1,18 @@
 package com.wakeUpTogetUp.togetUp.api.avatar.model;
 
+import com.wakeUpTogetUp.togetUp.api.avatar.AvatarTheme;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.time.Instant;
+import org.hibernate.annotations.DynamicInsert;
 
 @Setter
 @Getter
 @Entity
 @Table(name="avatar")
+@DynamicInsert
 @NoArgsConstructor
 public class Avatar {
 
@@ -20,20 +21,22 @@ public class Avatar {
     @Column(columnDefinition = "INT UNSIGNED")
     private Integer id;
 
-    private String theme;
-
-    @Column(columnDefinition = "TEXT")
-    private String avatarImgLink;
+    @Enumerated(EnumType.STRING)
+    private AvatarTheme theme;
 
     @Column(columnDefinition = "INT UNSIGNED")
     private Integer price;
 
-    @Column(name = "createdAt")
-    private Timestamp createdAt;
+    @Column(columnDefinition = "INT UNSIGNED")
+    private Integer unlockLevel;
 
-    @PrePersist
-    void createdAt() {
-        this.createdAt = Timestamp.from(Instant.now());
-    }
+    // TODO : 더 좋은 방법 찾기
+    @Column(columnDefinition = "TIMESTAMP")
+    private String createdAt;
+
+//    @PrePersist
+//    void createdAt() {
+//        this.createdAt = Timestamp.from(Instant.now());
+//    }
 
 }

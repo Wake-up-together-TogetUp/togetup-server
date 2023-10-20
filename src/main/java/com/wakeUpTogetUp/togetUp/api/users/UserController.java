@@ -1,26 +1,21 @@
 package com.wakeUpTogetUp.togetUp.api.users;
 
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
-import com.wakeUpTogetUp.togetUp.api.auth.service.AppleLoginServiceImpl;
-import com.wakeUpTogetUp.togetUp.api.auth.service.AuthService;
+import com.wakeUpTogetUp.togetUp.api.avatar.vo.UserAvatarData;
 import com.wakeUpTogetUp.togetUp.api.users.dto.request.AppleUserDeleteReq;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Map;
 
 @Tag(name = "유저(User)")
 @RestController
@@ -29,7 +24,7 @@ import java.util.Map;
 public class UserController  {
 
     private final UserService userService;
-
+    private final UserAvatarService userAvatarService;
 
     @Operation(summary = "fcmToken 업데이트")
     @ApiResponses(value = {
@@ -72,15 +67,12 @@ public class UserController  {
         return new BaseResponse<>(Status.SUCCESS);
     }
 
-
-
-
-
-
-
+    @Operation(summary = "유저 아바타 목록 가져오기")
+    @GetMapping("/avatars")
+    public BaseResponse<List<UserAvatarData>> getUserAvatarList(
+            @Parameter(hidden = true) @AuthUser Integer userId
+    ) {
+        return new BaseResponse<>(Status.SUCCESS, userAvatarService.findUserAvatarList(userId));
+    }
 }
-
-
-
-
 

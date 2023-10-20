@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface UserAvatarRepository extends JpaRepository<UserAvatar, Integer> {
 
     UserAvatar findByUser_Id(Integer userId);
-
+    Optional<UserAvatar> findByUser_IdAndIsActiveIsTrue(Integer userId);
+    List<UserAvatar> findAllByUser_Id(Integer userId);
     List<UserAvatar> findAllByUser_IdAndAvatar_Id(Integer userId, Integer avatarId);
 }

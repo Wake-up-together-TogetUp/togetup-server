@@ -1,17 +1,16 @@
 package com.wakeUpTogetUp.togetUp.api.users;
 
 import com.wakeUpTogetUp.togetUp.api.auth.service.AuthService;
-import com.wakeUpTogetUp.togetUp.api.avatar.AvatarRepository;
-import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
+import com.wakeUpTogetUp.togetUp.api.avatar.AvatarTheme;
+import com.wakeUpTogetUp.togetUp.api.avatar.vo.UserAvatarData;
 import com.wakeUpTogetUp.togetUp.api.room.RoomUserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
-import com.wakeUpTogetUp.togetUp.api.users.model.UserAvatar;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressionResult;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import java.util.List;
+import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +27,6 @@ public class UserService {
     private final AuthService authService;
     private final FcmTokenRepository fcmTokenRepository;
     private final RoomUserRepository roomUserRepository;
-    private final AvatarRepository avatarRepository;
-    private final UserAvatarRepository userAvatarRepository;
 
     public Integer updateFcmToken(Integer userId, Integer fcmTokenId, String fcmToken) {
 
@@ -98,40 +95,5 @@ public class UserService {
         userRepository.save(user);
 
         return new UserProgressionResult(user.getLevel(), user.getExperience(), user.getPoint());
-    }
-
-    // 유저 아바타 해금
-    @Transactional
-    public void unlockAvatar(User user, int avatarId) {
-        Avatar avatar = avatarRepository.findById(avatarId)
-                .orElseThrow(() -> new BaseException(Status.AVATAR_NOT_FOUND));
-
-        UserAvatar userAvatar = UserAvatar.builder()
-                .user(user)
-                .avatar(avatar)
-                .build();
-        userAvatarRepository.save(userAvatar);
-    }
-
-    // 유저 아바타 변경
-    @Transactional
-    public void changeUserAvatar(User user, int avatarId) {
-        List<UserAvatar> userAvatarList =
-                userAvatarRepository.findAllByUser_IdAndAvatar_Id(user.getId(), avatarId);
-
-        // 보유중인 아바타인지 검사
-        userAvatarList.stream().filter(i -> i.getAvatar().getId() == avatarId).findAny()
-                .orElseThrow(() -> new BaseException(Status.USER_AVATAR_LOCKED));
-
-        for(UserAvatar userAvatar : userAvatarList) {
-            if(userAvatar.getAvatar().getId() == avatarId) {
-                // 해당 아바타 활성화
-                userAvatar.activate();
-            } else {
-                // 다른 보유 아바타 비활성화
-                userAvatar.inactivate();
-            }
-            userAvatarRepository.save(userAvatar);
-        }
     }
 }

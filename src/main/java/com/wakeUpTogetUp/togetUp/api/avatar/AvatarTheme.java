@@ -4,9 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum AvatarTheme {
@@ -15,6 +12,4 @@ public enum AvatarTheme {
     CUTE_BUNNY("깜찍한 토끼");
 
     private final String value;
-
-
 }
