@@ -107,10 +107,10 @@ public class RoomController {
                     content = @Content(schema = @Schema(implementation = RoomDetailRes.class))),
             @ApiResponse(responseCode = "404",description = "존재하지 않는 알람입니다.")})
     @GetMapping("/{roomId}")
-    public BaseResponse<RoomDetailRes> getRoomDetail(@PathVariable Integer roomId) {
+    public BaseResponse<RoomDetailRes> getRoomDetail(@Parameter(hidden = true) @AuthUser Integer userId,@PathVariable Integer roomId) {
 
 
-        return new BaseResponse(Status.SUCCESS,roomService.getRoomDetail(roomId));
+        return new BaseResponse(Status.SUCCESS,roomService.getRoomDetail(roomId , userId));
 
     }
 

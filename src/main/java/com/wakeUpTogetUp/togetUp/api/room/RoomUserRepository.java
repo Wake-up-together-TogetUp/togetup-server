@@ -13,7 +13,17 @@ import java.util.List;
 public interface RoomUserRepository extends JpaRepository<RoomUser, Integer> {
 
     List<RoomUser> findByUserId(Integer userId);
-    List<RoomUser> findAllByRoom_Id(Integer roomId);
+
+    @Query("SELECT ru FROM RoomUser ru " +
+        "JOIN User u ON (ru.user.id = u.id) " +
+        "WHERE ru.room.id = :roomId " +
+        "ORDER BY " +
+        "CASE WHEN ru.user.id = :userId THEN 0 " +
+        "WHEN ru.isHost = true THEN 1 " +
+        "ELSE 2 " +
+        "END, u.name")
+    List<RoomUser> findAllByRoom_IdOrderByPreference(Integer roomId ,Integer userId);
+
 
     @Query("SELECT ru.room.id " +
             "FROM RoomUser ru " +

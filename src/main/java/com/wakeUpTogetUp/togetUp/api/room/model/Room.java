@@ -1,6 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.room.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wakeUpTogetUp.togetUp.common.Constant;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@ToString
+
 @Entity
 @SQLDelete(sql = "UPDATE room SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
@@ -45,7 +46,7 @@ public class Room {
     @Column(name = "invitation_code",length = 50)
     private String invitationCode;
 
-
+   // @JsonIgnore
     @OneToMany(mappedBy = "room")
     private List<RoomUser> roomUsers= new ArrayList<>();
 

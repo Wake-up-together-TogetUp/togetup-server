@@ -90,7 +90,7 @@ public class RoomService {
     public RoomUserMissionLogRes getRoomUserLogList(Integer userId,Integer roomId,String localDateTimeString ){
 
         LocalDateTime localDateTime = timeFormatter.stringToLocalDateTime(localDateTimeString);
-        List<RoomUser> roomUserList = roomUserRepository.findAllByRoom_Id(roomId);
+        List<RoomUser> roomUserList = roomUserRepository.findAllByRoom_IdOrderByPreference(roomId , userId);
         //크기가 0이면 예외처리
         if(roomUserList.isEmpty())
             throw new BaseException(Status.ROOM_USER_NOT_FOUND);
@@ -243,14 +243,13 @@ public class RoomService {
     }
 
 
-    public RoomDetailRes getRoomDetail(Integer roomId){
+    public RoomDetailRes getRoomDetail(Integer roomId , Integer userId){
         //알람 조회
         Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
         if(Objects.isNull(alarm)) throw new BaseException(Status.ALARM_NOT_FOUND);
 
         //room_user 조회
-        List<RoomUser> roomUsers = roomUserRepository.findAllByRoom_Id(roomId);
-
+        List<RoomUser> roomUsers = roomUserRepository.findAllByRoom_IdOrderByPreference(roomId , userId);
 
         //dto 매핑 mapper 사용
         RoomDetailRes roomDetailRes =new RoomDetailRes();
@@ -259,6 +258,9 @@ public class RoomService {
         roomDetailRes.setUserList(EntityDtoMapper.INSTANCE.toUserDataList(roomUsers));
 
         //dto 매핑 - 커스텀 필드
+
+        //아바타 세팅 (아바타 수정 이후 변경될 예정)
+        this.setUserTheme(roomDetailRes);
         roomDetailRes.getRoomData().setCreatedAt(timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
         roomDetailRes.getRoomData().setPersonnel(roomUsers.size());
 
@@ -268,6 +270,13 @@ public class RoomService {
         roomDetailRes.getAlarmData().setAlarmDay(timeFormatter.formatDaysOfWeek(alarm.getMonday(),alarm.getTuesday(),alarm.getWednesday(),alarm.getThursday(),alarm.getFriday(),alarm.getSaturday(),alarm.getSunday()));
 
         return  roomDetailRes;
+    }
+
+    public void setUserTheme(RoomDetailRes roomDetailRes){
+
+        //TODO 테이블 바뀌면 수정 해야함
+        roomDetailRes.getUserList().forEach(userData ->  userData.setTheme(AvatarTheme.valueOf(userAvatarRepository.findByUser_Id(userData.getUserId()).getAvatar().getTheme()).getValue()));
+
     }
 
 

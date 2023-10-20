@@ -9,8 +9,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 @Entity
 @Table(name = "room_user")
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(force = true)

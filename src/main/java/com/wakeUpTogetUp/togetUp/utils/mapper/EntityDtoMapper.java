@@ -92,11 +92,13 @@ public interface EntityDtoMapper {
     @Mapping(target = "userId",source = "user.id")
     @Mapping(target = "userName",source = "user.name")
     @Mapping(target = "isHost",source = "isHost")
+    @Mapping(target = "level" , source = "user.level")
     RoomDetailRes.UserData toRoomDetailUserData(RoomUser roomUser);
 
     @Mapping(target = "userId",source = "user.id")
     @Mapping(target = "userName",source = "user.name")
     @Mapping(target = "isHost",source = "isHost")
+    @Mapping(target = "level" , source = "user.level")
     List<RoomDetailRes.UserData> toUserDataList(List<RoomUser> roomUser);
 
 
