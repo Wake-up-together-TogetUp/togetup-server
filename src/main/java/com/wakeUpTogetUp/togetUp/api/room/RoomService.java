@@ -99,8 +99,12 @@ public class RoomService {
         roomUserMissionLogRes.setName(roomUserList.get(0).getRoom().getName());
 
         //테마 찾기
-        UserAvatar userAvatar = userAvatarRepository.findByUser_Id(userId);
-        roomUserMissionLogRes.setTheme(AvatarTheme.valueOf(userAvatar.getAvatar().getTheme()).getValue());
+//        UserAvatar userAvatar = userAvatarRepository.findByUser_Id(userId);
+//        roomUserMissionLogRes.setTheme(AvatarTheme.valueOf(userAvatar.getAvatar().getTheme()).getValue());
+        UserAvatar userAvatar = userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userId)
+                .orElseThrow(() -> new BaseException(Status.INTERNAL_SERVER_ERROR));
+
+        roomUserMissionLogRes.setTheme(userAvatar.getAvatar().getTheme().getValue());
 
         roomUserMissionLogRes.setUserLogList(EntityDtoMapper.INSTANCE.toUserLogDataList(roomUserList));
 
@@ -275,7 +279,8 @@ public class RoomService {
     public void setUserTheme(RoomDetailRes roomDetailRes){
 
         //TODO 테이블 바뀌면 수정 해야함
-        roomDetailRes.getUserList().forEach(userData ->  userData.setTheme(AvatarTheme.valueOf(userAvatarRepository.findByUser_Id(userData.getUserId()).getAvatar().getTheme()).getValue()));
+//        roomDetailRes.getUserList().forEach(userData ->  userData.setTheme(AvatarTheme.valueOf(userAvatarRepository.findByUser_Id(userData.getUserId()).getAvatar().getTheme()).getValue()));
+        roomDetailRes.getUserList().forEach(userData ->  userData.setTheme(userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userData.getUserId()).orElseThrow(() -> new BaseException(Status.INTERNAL_SERVER_ERROR)).getAvatar().getTheme().getValue()));
 
     }
 
