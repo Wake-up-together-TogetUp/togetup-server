@@ -101,6 +101,7 @@ public class UserService {
     }
 
     // 유저 아바타 해금
+    @Transactional
     public void unlockAvatar(User user, int avatarId) {
         Avatar avatar = avatarRepository.findById(avatarId)
                 .orElseThrow(() -> new BaseException(Status.AVATAR_NOT_FOUND));
@@ -113,6 +114,7 @@ public class UserService {
     }
 
     // 유저 아바타 변경
+    @Transactional
     public void changeUserAvatar(User user, int avatarId) {
         List<UserAvatar> userAvatarList =
                 userAvatarRepository.findAllByUser_IdAndAvatar_Id(user.getId(), avatarId);
