@@ -10,7 +10,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UserAvatarData {
-//    @Mapping(target = "theme", expression = "java(avatar.getTheme().getValue())")
 
     @Schema(description = "아바타 Id")
     private int avatarId;
@@ -23,9 +22,6 @@ public class UserAvatarData {
 
     @Schema(description = "해금 레벨")
     private int unlockLevel;
-
-    @Schema(description = "생성일자")
-    private String createdAt;
 
     @Schema(description = "유저 보유 여부")
     private Boolean isUnlocked;
