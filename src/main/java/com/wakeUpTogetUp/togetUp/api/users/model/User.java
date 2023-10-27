@@ -1,12 +1,28 @@
 package com.wakeUpTogetUp.togetUp.api.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
-import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,14 +30,6 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Setter
 @Getter
@@ -104,17 +112,14 @@ public class User {
         this.loginType = loginType;
     }
 
-    // 경험치 획득
     public void gainExperience(int experience) {
         this.setExperience(this.getExperience() + experience);
     }
 
-    // 레벨업 가능 여부 검사
     public boolean checkUserLevelUpAvailable(int threshold) {
         return this.getExperience() >= threshold;
     }
 
-    // 레벨 업
     public void levelUp(int threshold) {
         // 레벨 1 증가, 경험치 초기화, 포인트 증가
         this.setLevel(this.getLevel() + 1);
@@ -122,12 +127,12 @@ public class User {
         this.setPoint(this.getPoint() + 25);
     }
 
-    // 포인트 처리
     public void purchaseAvatar(Avatar avatar) {
-        if(this.getPoint() < avatar.getPrice())
+        if (this.getPoint() < avatar.getPrice()) {
             throw new BaseException(Status.USER_POINT_LACKED);
-        else
+        } else {
             this.addUserPoint(-avatar.getPrice());
+        }
     }
 
     public void addUserPoint(int amount) {

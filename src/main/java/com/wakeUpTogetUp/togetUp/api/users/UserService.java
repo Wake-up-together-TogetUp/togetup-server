@@ -1,8 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.users;
 
 import com.wakeUpTogetUp.togetUp.api.auth.service.AuthService;
-import com.wakeUpTogetUp.togetUp.api.avatar.AvatarTheme;
-import com.wakeUpTogetUp.togetUp.api.avatar.vo.UserAvatarData;
 import com.wakeUpTogetUp.togetUp.api.room.RoomUserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenRepository;
@@ -10,13 +8,10 @@ import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressionResult;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
+import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import lombok.RequiredArgsConstructor;
-
-import java.io.IOException;
 
 
 @Service
@@ -79,8 +74,6 @@ public class UserService {
         this.deleteById(userId);
     }
 
-    // 경험치, 레벨 정산
-    @Transactional
     public UserProgressionResult userProgress(int userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
@@ -88,7 +81,6 @@ public class UserService {
         user.gainExperience(10);
         int threshold = 10 + 16 * (user.getLevel() - 1);
 
-        // 레벨 업 가능하면,
         if (user.checkUserLevelUpAvailable(threshold)) {
             user.levelUp(threshold);
         }

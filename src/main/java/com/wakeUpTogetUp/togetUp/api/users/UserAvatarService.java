@@ -21,7 +21,6 @@ public class UserAvatarService {
     private final AvatarRepository avatarRepository;
     private final UserAvatarRepository userAvatarRepository;
 
-    // 유저 아바타 목록 가져오기
     public List<UserAvatarData> findUserAvatarList(int userId) {
         List<Avatar> avatarList = avatarRepository.findAll();
         List<UserAvatar> userAvatarList = userAvatarRepository.findAllByUser_Id(userId);
@@ -29,7 +28,6 @@ public class UserAvatarService {
         return EntityDtoMapper.INSTANCE.toUserAvatarDataList(avatarList, userAvatarList);
     }
 
-    // 유저 아바타 해금
     @Transactional
     public void unlockAvatar(int userId, int avatarId) {
         userAvatarRepository.findByUser_IdAndAvatar_Id(userId, avatarId)
@@ -41,7 +39,6 @@ public class UserAvatarService {
         Avatar avatar = avatarRepository.findById(avatarId)
                 .orElseThrow(() -> new BaseException(Status.AVATAR_NOT_FOUND));
 
-        // 포인트 처리
         user.purchaseAvatar(avatar);
         this.createUserAvatar(user, avatarId);
         userRepository.save(user);
@@ -59,13 +56,11 @@ public class UserAvatarService {
         userAvatarRepository.save(userAvatar);
     }
 
-    // 유저 아바타 변경
     @Transactional
     public void changeUserAvatar(int userId, int avatarId) {
         List<UserAvatar> userAvatarList =
                 userAvatarRepository.findAllByUser_Id(userId);
 
-        // 보유중인 아바타인지 검사
         userAvatarList.stream().filter(i -> i.getAvatar().getId() == avatarId).findAny()
                 .orElseThrow(() -> new BaseException(Status.USER_AVATAR_LOCKED));
 
