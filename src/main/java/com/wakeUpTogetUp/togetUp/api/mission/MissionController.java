@@ -1,32 +1,37 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
+import com.wakeUpTogetUp.togetUp.api.file.FileService;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionLogCreateReq;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogCreateRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionPerfomRes;
 import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes;
 import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.ObjectDetectionRes;
 import com.wakeUpTogetUp.togetUp.api.users.UserService;
-import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressionResult;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import com.wakeUpTogetUp.togetUp.api.file.FileService;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionLogCreateReq;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionPerfomRes;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.ImageProcessor;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import java.util.Objects;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Tag(name = "미션(Mission)")
 @RestController
@@ -122,12 +127,9 @@ public class MissionController {
             @Parameter(hidden = true) @AuthUser Integer userId,
             @RequestBody @Valid MissionLogCreateReq missionLogCreateReq
     ) {
-        // 미션 수행 기록 생성
-        missionService.createMissionLog(userId, missionLogCreateReq);
-        // 경험치 정산
-        UserProgressionResult upr = userService.userProgress(userId);
-
-        return new BaseResponse<>(Status.SUCCESS_CREATED, new MissionLogCreateRes(upr));
+        return new BaseResponse<>(Status.SUCCESS_CREATED,
+                new MissionLogCreateRes(
+                        missionService.afterMissionComplete(userId, missionLogCreateReq)));
     }
 
     // TODO : 달별 검색
