@@ -64,7 +64,4 @@ public class PostAlarmReq {
 
     @Schema(description = "미션 객체 id", requiredMode = RequiredMode.REQUIRED, example = "1")
     private Integer missionObjectId;
-
-    @Schema(description = "그룹 id", requiredMode = RequiredMode.REQUIRED, example = "1")
-    private Integer roomId;
 }

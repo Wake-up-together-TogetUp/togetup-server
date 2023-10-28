@@ -1,6 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.users.model;
 
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,15 +10,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+
 @Data
 @Entity
 @Table(name = "user_avatar")
+@DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserAvatar {
@@ -27,13 +30,18 @@ public class UserAvatar {
     @Column(name = "id", columnDefinition = "INT UNSIGNED", nullable = false, updatable = false)
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    private Boolean isActive;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "avatar_id", nullable = false)
     private Avatar avatar;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     @Builder
     public UserAvatar(User user, Avatar avatar) {
