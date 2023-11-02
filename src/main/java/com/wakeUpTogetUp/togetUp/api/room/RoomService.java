@@ -294,7 +294,7 @@ public class RoomService {
 //        roomDetailRes.getUserList().forEach(userData ->  userData.setTheme(AvatarTheme.valueOf(userAvatarRepository.findByUser_Id(userData.getUserId()).getAvatar().getTheme()).getValue()));
         roomDetailRes.getUserList().forEach(userData -> userData.setTheme(
                 userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userData.getUserId())
-                        .orElseThrow(() -> new BaseException(Status.INTERNAL_SERVER_ERROR))
+                        .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL))
                         .getAvatar().getTheme().getValue()));
 
     }
