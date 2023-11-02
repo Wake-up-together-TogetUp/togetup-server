@@ -49,7 +49,7 @@ public enum Status {
 
     // NOT FOUND
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 유저 입니다."),
-    ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 room 입니다."),
+    ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 방 입니다."),
     ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 알람 입니다."),
     MISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 미션 입니다."),
     AVATAR_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 아바타 입니다."),

@@ -7,6 +7,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomInfoRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
@@ -20,12 +21,14 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.TimeFormatter;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,7 +89,7 @@ public class RoomService {
 
 
     public RoomUserMissionLogRes getRoomUserLogList(Integer userId, Integer roomId,
-            String localDateTimeString) {
+                                                    String localDateTimeString) {
 
         LocalDateTime localDateTime = timeFormatter.stringToLocalDateTime(localDateTimeString);
         List<RoomUser> roomUserList = roomUserRepository.findAllByRoom_IdOrderByPreference(roomId,
@@ -116,7 +119,7 @@ public class RoomService {
     }
 
     public RoomUserMissionLogRes setUserLogData(RoomUserMissionLogRes roomUserMissionLogRes,
-            Integer userId, Integer roomId, LocalDateTime localDateTime) {
+                                                Integer userId, Integer roomId, LocalDateTime localDateTime) {
 
         boolean isAlarmActive = alarmRepository.findFirstByRoom_Id(roomId)
                 .getDayOfWeekValue(localDateTime.getDayOfWeek());
@@ -269,11 +272,10 @@ public class RoomService {
         roomDetailRes.setUserList(EntityDtoMapper.INSTANCE.toUserDataList(roomUsers));
 
         //dto 매핑 - 커스텀 필드
-
-        //아바타 세팅 (아바타 수정 이후 변경될 예정)
         this.setUserTheme(roomDetailRes);
         roomDetailRes.getRoomData().setCreatedAt(
                 timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
+
         roomDetailRes.getRoomData().setPersonnel(roomUsers.size());
 
         // ex) 13:00 -> pm 1:00
@@ -290,7 +292,7 @@ public class RoomService {
 
     public void setUserTheme(RoomDetailRes roomDetailRes) {
 
-              roomDetailRes.getUserList().forEach(userData -> userData.setTheme(
+        roomDetailRes.getUserList().forEach(userData -> userData.setTheme(
                 userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userData.getUserId())
                         .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL))
                         .getAvatar().getTheme().getValue()));
@@ -328,6 +330,38 @@ public class RoomService {
                 .build();
 
         roomUserRepository.save(roomUser);
+    }
+
+    public RoomInfoRes getRoomInformation(String invitationCode) {
+
+        Alarm alarm = alarmRepository.findByInvitationCode(invitationCode)
+                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
+
+        Integer roomPersonnel =roomUserRepository.countByRoomId(alarm.getRoom().getId());
+        if(roomPersonnel<1)
+            throw new BaseException(Status.ROOM_NOT_FOUND);
+
+        //dto 매핑 mapper 사용
+        RoomInfoRes roomInfoRes = new RoomInfoRes();
+        roomInfoRes.setRoomData(EntityDtoMapper.INSTANCE.toRoomInfoResRoomData(alarm));
+        roomInfoRes.setAlarmData(EntityDtoMapper.INSTANCE.toRoomInfoResAlarmData(alarm));
+
+        //dto 매핑 - 커스텀 필드
+        roomInfoRes.getRoomData().setCreatedAt(
+                timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
+        roomInfoRes.getRoomData().setPersonnel(roomPersonnel);
+
+        // ex) 13:00 -> pm 1:00
+        roomInfoRes.getAlarmData()
+                .setAlarmTime(timeFormatter.timeStringToAMPMFormat(alarm.getAlarmTime()));
+
+        // ex)  평일, 주말, 매일, 월요일, (월, 화, 수), 빈칸
+        roomInfoRes.getAlarmData().setAlarmDay(
+                timeFormatter.formatDaysOfWeek(alarm.getMonday(), alarm.getTuesday(),
+                        alarm.getWednesday(), alarm.getThursday(), alarm.getFriday(),
+                        alarm.getSaturday(), alarm.getSunday()));
+
+    return roomInfoRes;
     }
 
 }

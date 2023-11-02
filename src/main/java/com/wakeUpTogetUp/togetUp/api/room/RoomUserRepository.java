@@ -32,6 +32,8 @@ public interface RoomUserRepository extends JpaRepository<RoomUser, Integer> {
     List<Integer> findAllRoomIdsByUserId(@Param("userId") Integer userId);
 
     Integer countByUserId(Integer userId);
+
+    Integer countByRoomId(Integer roomId);
     void deleteByUserId(Integer userId);
 
     RoomUser findByRoom_IdAndUser_Id(Integer roomId , Integer userId);
