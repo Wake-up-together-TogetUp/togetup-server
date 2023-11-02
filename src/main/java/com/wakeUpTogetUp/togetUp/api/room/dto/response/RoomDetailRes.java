@@ -40,6 +40,9 @@ public class RoomDetailRes {
         @Schema(description = "함께하는 인원수",example = "6")
         private Integer personnel;
 
+        @Schema(description = "룸 초대코드" ,example = "4c905")
+        private String invitationCode;
+
 
     }
 
