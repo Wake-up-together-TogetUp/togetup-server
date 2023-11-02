@@ -290,9 +290,7 @@ public class RoomService {
 
     public void setUserTheme(RoomDetailRes roomDetailRes) {
 
-        //TODO 테이블 바뀌면 수정 해야함
-//        roomDetailRes.getUserList().forEach(userData ->  userData.setTheme(AvatarTheme.valueOf(userAvatarRepository.findByUser_Id(userData.getUserId()).getAvatar().getTheme()).getValue()));
-        roomDetailRes.getUserList().forEach(userData -> userData.setTheme(
+              roomDetailRes.getUserList().forEach(userData -> userData.setTheme(
                 userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userData.getUserId())
                         .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL))
                         .getAvatar().getTheme().getValue()));
