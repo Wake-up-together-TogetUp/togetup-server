@@ -1,7 +1,3 @@
-
-
-
-
 INSERT INTO room (id, name, intro, topic, invitation_code, created_at, updated_at, is_deleted) VALUES (1, 'test room1', 'test room 1 입니다', 'kdfja39r83', 'dfjasdlf', '2023-09-19 11:01:11', '2023-09-19 11:02:24', 0);
 INSERT INTO room (id, name, intro, topic, invitation_code, created_at, updated_at, is_deleted) VALUES (2, 'test room2', 'test room 2 입니다', 'adsfadf', 'asdfade', '2023-09-19 11:03:15', '2023-09-19 11:03:15', 0);
 INSERT INTO room (id, name, intro, topic, invitation_code, created_at, updated_at, is_deleted) VALUES (3, 'test room3', 'test room 3입니다', 'egaaegg', 'egageg', '2023-09-19 11:03:45', '2023-09-19 11:03:48', 0);
