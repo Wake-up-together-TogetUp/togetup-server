@@ -29,7 +29,7 @@ public class DevController {
     public BaseResponse<List<User>> user() {
 
 
-        return new BaseResponse<>(Status.SUCCESS,devService.get());
+        return new BaseResponse<>(Status.SUCCESS, devService.get());
 
     }
 
@@ -40,10 +40,9 @@ public class DevController {
 
         String jwt = devService.devGetJwt(userId);
 
-        return new BaseResponse<>(Status.SUCCESS,jwt);
+        return new BaseResponse<>(Status.SUCCESS, jwt);
 
     }
-
 
 
 }

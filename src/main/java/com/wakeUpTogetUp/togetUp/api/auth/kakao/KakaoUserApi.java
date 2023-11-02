@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.Map;
 
-@FeignClient(value = "kakaoUser", url="https://kapi.kakao.com", configuration = {FeignConfig.class})
+@FeignClient(value = "kakaoUser", url = "https://kapi.kakao.com", configuration = {FeignConfig.class})
 public interface KakaoUserApi {
     @GetMapping("/v2/user/me")
     ResponseEntity<String> getUserInfo(@RequestHeader Map<String, String> header);

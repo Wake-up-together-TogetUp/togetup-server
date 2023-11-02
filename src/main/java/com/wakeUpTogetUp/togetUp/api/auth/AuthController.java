@@ -9,7 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-@Tag(name = "Auth(로그인)",description = "로그인 및 유저의 권한 인증")
+
+@Tag(name = "Auth(로그인)", description = "로그인 및 유저의 권한 인증")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app/auth")
@@ -21,12 +22,11 @@ public class AuthController {
     @PostMapping("/login")
     public BaseResponse<LoginRes> join(@RequestBody SocialLoginReq loginReq) {
 
-           LoginRes loginRes = authService.socialLogin(loginReq);
+        LoginRes loginRes = authService.socialLogin(loginReq);
 
-            return new BaseResponse<>(Status.SUCCESS_CREATED,loginRes);
+        return new BaseResponse<>(Status.SUCCESS_CREATED, loginRes);
 
     }
-
 
 
 }

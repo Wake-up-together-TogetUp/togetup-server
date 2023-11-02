@@ -8,7 +8,9 @@ import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +23,7 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app/users")
-public class UserController  {
+public class UserController {
 
     private final UserService userService;
     private final UserAvatarService userAvatarService;
@@ -31,39 +33,39 @@ public class UserController  {
             @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다.")})
     @PatchMapping("/fcm-token")
-    public BaseResponse<Integer> updateFcmToken(@Parameter(hidden = true) @AuthUser Integer userId, @Parameter(description = "디바이스토큰 id")@RequestParam( required = false) Integer fcmTokenId, @Parameter(description = "토큰값",required = true) @RequestParam String fcmToken){
-        Integer updatedFcmTokenId =userService.updateFcmToken(userId,fcmTokenId,fcmToken);
-        return new BaseResponse<>(Status.SUCCESS,updatedFcmTokenId);
+    public BaseResponse<Integer> updateFcmToken(@Parameter(hidden = true) @AuthUser Integer userId, @Parameter(description = "디바이스토큰 id") @RequestParam(required = false) Integer fcmTokenId, @Parameter(description = "토큰값", required = true) @RequestParam String fcmToken) {
+        Integer updatedFcmTokenId = userService.updateFcmToken(userId, fcmTokenId, fcmToken);
+        return new BaseResponse<>(Status.SUCCESS, updatedFcmTokenId);
     }
 
 
-    @Operation(summary="알림설정 동의 변경")
+    @Operation(summary = "알림설정 동의 변경")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다.")})
     @PatchMapping("/push")
-    public BaseResponse<Status> updateAgreePush(@Parameter(hidden = true) @AuthUser Integer userId,@Parameter(description = "알람동의 값",example = "true")@RequestParam() boolean agreePush){
-        userService.updateAgreePush(userId,agreePush);
+    public BaseResponse<Status> updateAgreePush(@Parameter(hidden = true) @AuthUser Integer userId, @Parameter(description = "알람동의 값", example = "true") @RequestParam() boolean agreePush) {
+        userService.updateAgreePush(userId, agreePush);
         return new BaseResponse<>(Status.SUCCESS);
     }
 
 
-    @Operation(summary="카카오 유저 탈퇴")
+    @Operation(summary = "카카오 유저 탈퇴")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다.")})
     @DeleteMapping()
-    public BaseResponse<Status> deleteKaKaoUser(@Parameter(hidden = true) @AuthUser Integer userId){
+    public BaseResponse<Status> deleteKaKaoUser(@Parameter(hidden = true) @AuthUser Integer userId) {
         userService.deleteById(userId);
         return new BaseResponse<>(Status.SUCCESS);
     }
 
-    @Operation(summary="애플 유저 탈퇴")
+    @Operation(summary = "애플 유저 탈퇴")
     @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.")
     @DeleteMapping("apple")
     public BaseResponse<Status> deleteAppleUser(@Parameter(hidden = true) @AuthUser Integer userId,
-                                                @RequestBody @Valid AppleUserDeleteReq appleUserDeleteReq) throws IOException{
-        userService.deleteAppleUser(userId,appleUserDeleteReq.getAuthorizationCode());
+                                                @RequestBody @Valid AppleUserDeleteReq appleUserDeleteReq) throws IOException {
+        userService.deleteAppleUser(userId, appleUserDeleteReq.getAuthorizationCode());
         return new BaseResponse<>(Status.SUCCESS);
     }
 
