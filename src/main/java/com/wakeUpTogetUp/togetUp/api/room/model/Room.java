@@ -43,7 +43,7 @@ public class Room {
     /**
      * todo uuid
      */
-    @Column(name = "invitation_code",length = 50)
+    @Column(name = "invitation_code",length = 10)
     private String invitationCode;
 
    // @JsonIgnore
