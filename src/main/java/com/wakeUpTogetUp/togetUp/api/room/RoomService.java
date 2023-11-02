@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -194,15 +195,16 @@ public class RoomService {
     public void changeRoomHost(Integer roomId, Integer userId, Integer selectedUserId) {
 
         //host false로 바꾸기
-        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId);
+        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId)
+                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
         if (!roomUser.getIsHost()) {
             throw new BaseException(Status.INVALID_ROOM_HOST_ID);
         }
         roomUser.setIsHost(false);
 
         //선택한 user를 host 지정
-        RoomUser seletedRoomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId,
-                selectedUserId);
+        RoomUser seletedRoomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, selectedUserId)
+                .orElseThrow();
         seletedRoomUser.setIsHost(true);
 
     }
@@ -210,7 +212,8 @@ public class RoomService {
     @Transactional
     public void leaveRoom(Integer roomId, Integer userId) {
 
-        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId);
+        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId)
+                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
         if (Objects.isNull(roomUser)) {
             throw new BaseException(Status.ROOM_USER_NOT_FOUND);
         }
@@ -303,16 +306,19 @@ public class RoomService {
     @Transactional
     public void updateAgreePush(Integer roomId, Integer userId, boolean agreePush) {
 
-        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId);
-        if (Objects.isNull(roomUser)) {
-            throw new BaseException(Status.ROOM_USER_NOT_FOUND);
-        }
+        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId)
+                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
+
         roomUser.setAgreePush(agreePush);
 
     }
 
     @Transactional
     public void joinRoom(Integer roomId, Integer invitedUserId, boolean isHost) {
+
+        if(!isHost && roomUserRepository.existsRoomUserByRoom_IdAndUser_Id(roomId,invitedUserId)) {
+            throw new BaseException(Status.ROOM_USER_ALREADY_EXIST);
+        }
 
         User user = userRepository.findById(invitedUserId)
                 .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
