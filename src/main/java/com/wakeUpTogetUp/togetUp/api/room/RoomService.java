@@ -204,7 +204,7 @@ public class RoomService {
 
         //선택한 user를 host 지정
         RoomUser seletedRoomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, selectedUserId)
-                .orElseThrow();
+                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
         seletedRoomUser.setIsHost(true);
 
     }
@@ -316,7 +316,7 @@ public class RoomService {
     @Transactional
     public void joinRoom(Integer roomId, Integer invitedUserId, boolean isHost) {
 
-        if(!isHost && roomUserRepository.existsRoomUserByRoom_IdAndUser_Id(roomId,invitedUserId)) {
+        if (!isHost && roomUserRepository.existsRoomUserByRoom_IdAndUser_Id(roomId, invitedUserId)) {
             throw new BaseException(Status.ROOM_USER_ALREADY_EXIST);
         }
 
@@ -343,8 +343,8 @@ public class RoomService {
         Alarm alarm = alarmRepository.findByInvitationCode(invitationCode)
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
-        Integer roomPersonnel =roomUserRepository.countByRoomId(alarm.getRoom().getId());
-        if(roomPersonnel<1)
+        Integer roomPersonnel = roomUserRepository.countByRoomId(alarm.getRoom().getId());
+        if (roomPersonnel < 1)
             throw new BaseException(Status.ROOM_NOT_FOUND);
 
         //dto 매핑 mapper 사용
@@ -367,7 +367,7 @@ public class RoomService {
                         alarm.getWednesday(), alarm.getThursday(), alarm.getFriday(),
                         alarm.getSaturday(), alarm.getSunday()));
 
-    return roomInfoRes;
+        return roomInfoRes;
     }
 
 }
