@@ -13,6 +13,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomInfoRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
@@ -88,6 +89,7 @@ public interface EntityDtoMapper {
     @Mapping(target = "icon", source = "icon")
     @Mapping(target = "name", source = "room.name")
     @Mapping(target = "intro", source = "room.intro")
+    @Mapping(target = "invitationCode", source = "room.invitationCode")
     RoomDetailRes.RoomData toRoomDetailResRoomData(Alarm alarm);
 
     @Mapping(target = "id", source = "id")
@@ -101,6 +103,17 @@ public interface EntityDtoMapper {
     RoomDetailRes.UserData toRoomDetailUserData(RoomUser roomUser);
 
     List<RoomDetailRes.UserData> toUserDataList(List<RoomUser> roomUser);
+
+
+    @Mapping(target = "id", source = "room.id")
+    @Mapping(target = "icon", source = "icon")
+    @Mapping(target = "name", source = "room.name")
+    @Mapping(target = "intro", source = "room.intro")
+    RoomInfoRes.RoomData toRoomInfoResRoomData(Alarm alarm);
+
+
+    @Mapping(target = "missionKr", source = "missionObject.kr")
+    RoomInfoRes.AlarmData toRoomInfoResAlarmData(Alarm alarm);
 
     // Avatar
     @Mapping(source = "avatar.id", target = "avatarId")
@@ -116,4 +129,5 @@ public interface EntityDtoMapper {
         target.setIsUnlocked(userAvatarList.stream()
                 .anyMatch(userAvatar -> userAvatar.getAvatar().getId().equals(avatar.getId())));
     }
+
 }

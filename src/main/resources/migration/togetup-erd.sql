@@ -37,7 +37,7 @@ create table room
     name                   varchar(10)                          not null,
     intro                  varchar(30)                          null,
     topic                  varchar(100)                         null,
-    invitation_code        varchar(100)                         null,
+    invitation_code        varchar(10)                         null,
     created_at             timestamp  default CURRENT_TIMESTAMP not null,
     updated_at             timestamp  default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP,
     latest_completion_time timestamp                            null,

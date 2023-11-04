@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RoomUserRepository extends JpaRepository<RoomUser, Integer> {
@@ -32,9 +33,13 @@ public interface RoomUserRepository extends JpaRepository<RoomUser, Integer> {
     List<Integer> findAllRoomIdsByUserId(@Param("userId") Integer userId);
 
     Integer countByUserId(Integer userId);
+
+    Integer countByRoomId(Integer roomId);
     void deleteByUserId(Integer userId);
 
-    RoomUser findByRoom_IdAndUser_Id(Integer roomId , Integer userId);
+    Optional<RoomUser> findByRoom_IdAndUser_Id(Integer roomId , Integer userId);
+
+    Boolean existsRoomUserByRoom_IdAndUser_Id(Integer roomId , Integer userId);
 
     void deleteByRoom_IdAndUser_Id(Integer roomId, Integer userId);
     List<RoomUser> findAllByRoom_IdOrderByCreatedAt(Integer roomId);

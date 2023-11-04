@@ -78,6 +78,6 @@ INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id) VALUES (7
 
 
 -- 아바타 (임시)
-INSERT INTO togetup_local_cm.avatar (id, theme, price, unlock_level, created_at) VALUES (1, 'NOOB_CHICK', 0, 1, '2023-10-07 20:35:51');
-INSERT INTO togetup_local_cm.avatar (id, theme, price, unlock_level, created_at) VALUES (2, 'TWINKLING_TEDDY_BEAR', 1500, 15, '2023-10-21 03:24:06');
-INSERT INTO togetup_local_cm.avatar (id, theme, price, unlock_level, created_at) VALUES (3, 'CUTE_BUNNY', 1500, 30, '2023-10-21 03:24:06');
+INSERT INTO avatar (id, theme, price, unlock_level, created_at) VALUES (1, 'NOOB_CHICK', 0, 1, '2023-10-07 20:35:51');
+INSERT INTO avatar (id, theme, price, unlock_level, created_at) VALUES (2, 'TWINKLING_TEDDY_BEAR', 1500, 15, '2023-10-21 03:24:06');
+INSERT INTO avatar (id, theme, price, unlock_level, created_at) VALUES (3, 'CUTE_BUNNY', 1500, 30, '2023-10-21 03:24:06');
