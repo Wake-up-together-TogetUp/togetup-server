@@ -36,6 +36,6 @@ public class BaseResponse<T> {
         this.httpReasonPhrase = exception.getStatus().getHttpStatus().getReasonPhrase();
         this.message = exception.getStatus().getMessage();
     }
-    
+
     // TODO : 정적 메소드 만들기
 }

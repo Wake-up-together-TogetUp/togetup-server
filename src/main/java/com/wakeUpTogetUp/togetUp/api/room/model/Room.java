@@ -28,13 +28,13 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id=null;
+    private Integer id = null;
 
 
-    @Column(name = "name",length = 10)
+    @Column(name = "name", length = 10)
     private String name;
 
-    @Column(name = "intro",length = 30)
+    @Column(name = "intro", length = 30)
     private String intro;
 
 
@@ -43,12 +43,12 @@ public class Room {
     /**
      * todo uuid
      */
-    @Column(name = "invitation_code",length = 10)
+    @Column(name = "invitation_code", length = 10)
     private String invitationCode;
 
-   // @JsonIgnore
+    // @JsonIgnore
     @OneToMany(mappedBy = "room")
-    private List<RoomUser> roomUsers= new ArrayList<>();
+    private List<RoomUser> roomUsers = new ArrayList<>();
 
 
     @Column(name = "created_at")
@@ -75,10 +75,10 @@ public class Room {
         this.id = id;
         this.name = name;
         this.intro = intro;
-        this.topic = UUID.randomUUID().toString();;
-        this.invitationCode = UUID.randomUUID().toString().substring(0,Constant.INVITATION_CODE_LENGTH);
+        this.topic = UUID.randomUUID().toString();
+        ;
+        this.invitationCode = UUID.randomUUID().toString().substring(0, Constant.INVITATION_CODE_LENGTH);
     }
-
 
 
 }

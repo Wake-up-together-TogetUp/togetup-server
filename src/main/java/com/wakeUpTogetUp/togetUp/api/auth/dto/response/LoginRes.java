@@ -12,6 +12,6 @@ public class LoginRes {
     private Integer userId;
     private String userName;
     private String email;
-    private String  accessToken;
+    private String accessToken;
 
 }

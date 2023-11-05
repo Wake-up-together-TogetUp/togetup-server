@@ -1,4 +1,5 @@
 package com.wakeUpTogetUp.togetUp.api.mission.domain;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class Letterbox {
 
     private Size newShape = new Size(1280, 1280);
-    private double[] color = new double[]{114,114,114};
+    private double[] color = new double[]{114, 114, 114};
     private Boolean auto = false;
     private Boolean scaleUp = false;
     private Integer stride = 32;
