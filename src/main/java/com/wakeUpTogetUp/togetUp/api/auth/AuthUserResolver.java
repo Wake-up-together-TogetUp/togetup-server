@@ -27,11 +27,11 @@ public class AuthUserResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory)  {
-        if(webRequest.getHeader("Authorization")==null)
-          throw  new BaseException(Status.UNAUTHORIZED);
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+        if (webRequest.getHeader("Authorization") == null)
+            throw new BaseException(Status.UNAUTHORIZED);
         String jwt = webRequest.getHeader("Authorization").replace("Bearer", "").trim();
-        if(jwt.isEmpty())
+        if (jwt.isEmpty())
             throw new BaseException(Status.UNAUTHORIZED);
 
         return jwtService.getUserId(jwt);

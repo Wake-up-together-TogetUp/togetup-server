@@ -25,6 +25,7 @@ public class KakaoLoginRes {
         private KakaoProfile profile = KakaoProfile.builder().build();
         @Builder.Default
         private KakaoPropery properties = KakaoPropery.builder().build();
+
         @Builder
         @Data
         @NoArgsConstructor

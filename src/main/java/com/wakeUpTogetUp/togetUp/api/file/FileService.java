@@ -39,7 +39,7 @@ public class FileService {
 
     @Transactional
     public String uploadMissionImage(MultipartFile file, ImageDrawResult imageDrawResult,
-            String type) throws Exception {
+                                     String type) throws Exception {
         if (type.equals("mission")) {
             String uploadFilePath = ("mission/" + getFolderName());
             return uploadToBucket(file, uploadFilePath, imageDrawResult);
@@ -90,7 +90,7 @@ public class FileService {
     }
 
     public String uploadToBucket(MultipartFile file, String uploadFilePath,
-            ImageDrawResult imageDrawResult) throws Exception {
+                                 ImageDrawResult imageDrawResult) throws Exception {
         // 파일 이름
         String uploadFileName = getUuidFileName(file.getName());
 

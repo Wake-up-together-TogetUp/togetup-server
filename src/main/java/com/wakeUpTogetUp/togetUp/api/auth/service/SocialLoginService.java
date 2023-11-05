@@ -8,5 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface SocialLoginService {
     LoginType getServiceName();
+
     SocialUserRes getUserInfo(String accessToken);
 }

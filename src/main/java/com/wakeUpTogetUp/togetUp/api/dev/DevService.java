@@ -15,13 +15,13 @@ public class DevService {
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
-    public List<User> get()
-    {
+
+    public List<User> get() {
         return userRepository.findAll();
     }
 
 
-    public String devGetJwt(Integer userId)  {
+    public String devGetJwt(Integer userId) {
 
         //accessToken 만들기
         String accessToken = jwtService.generateAccessToken(userId);

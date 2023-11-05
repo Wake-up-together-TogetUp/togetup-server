@@ -45,5 +45,4 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
     Optional<Alarm> findByInvitationCode(@Param("invitationCode") String invitationCode);
 
 
-
 }

@@ -16,28 +16,28 @@ import java.util.stream.Stream;
 public class TimeFormatter {
     public static SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static SimpleDateFormat simpleDotDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+
     public static String timestampFormat(Timestamp timestamp) {
         return simpleDateTimeFormat.format(timestamp);
     }
 
 
-    public LocalTime stringToLocalTime(String timeString)
-    {
+    public LocalTime stringToLocalTime(String timeString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalTime localTime = LocalTime.parse(timeString, formatter);
         return localTime;
 
     }
+
     //yyyy-MM-dd HH:mm:ss
-    public String timestampToDotDateFormat(Timestamp timestamp){
+    public String timestampToDotDateFormat(Timestamp timestamp) {
 
         String formattedDate = simpleDotDateFormat.format(timestamp);
 
-        return  formattedDate;
+        return formattedDate;
     }
 
-    public LocalDateTime stringToLocalDateTime(String timeString)
-    {
+    public LocalDateTime stringToLocalDateTime(String timeString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime localDateTime = LocalDateTime.parse(timeString, formatter);
         return localDateTime;
@@ -51,40 +51,37 @@ public class TimeFormatter {
     }
 
 
-
-
     public String formatDaysOfWeek(boolean monday, boolean tuesday, boolean wednesday, boolean thursday, boolean friday, boolean saturday, boolean sunday) {
 
         StringBuilder formattedDays = new StringBuilder();
 
-        Boolean[] weekDays= {true, true, true, true, true, false, false };
+        Boolean[] weekDays = {true, true, true, true, true, false, false};
         Boolean[] weekend = {false, false, false, false, false, true, true};
         Boolean[] none = {false, false, false, false, false, false, false};
-        Boolean[] everyDay= {true, true, true, true, true, true, true };
+        Boolean[] everyDay = {true, true, true, true, true, true, true};
 
 
-        Boolean[] alarmDays = {monday, tuesday, wednesday, thursday, friday, saturday, sunday };
+        Boolean[] alarmDays = {monday, tuesday, wednesday, thursday, friday, saturday, sunday};
 
-        if(Objects.deepEquals(weekDays,alarmDays))
+        if (Objects.deepEquals(weekDays, alarmDays))
             formattedDays.append("주중");
-        else if(Objects.deepEquals(weekend,alarmDays))
+        else if (Objects.deepEquals(weekend, alarmDays))
             formattedDays.append("주말");
-        else if (Objects.deepEquals(none,alarmDays))
+        else if (Objects.deepEquals(none, alarmDays))
             formattedDays.append("");
-        else if(Objects.deepEquals(everyDay,alarmDays))
+        else if (Objects.deepEquals(everyDay, alarmDays))
             formattedDays.append("매일");
-        else
-        {
+        else {
 
             for (int i = 0; i < alarmDays.length; i++) {
                 if (alarmDays[i]) {
-                    formattedDays.append(new String[]{"월", "화", "수", "목", "금","토","일"}[i]);
+                    formattedDays.append(new String[]{"월", "화", "수", "목", "금", "토", "일"}[i]);
                     formattedDays.append(",");
                 }
             }
             //요일이 한개이면
-            if (formattedDays.length()==2)
-                return formattedDays.toString().replace(",","요일");
+            if (formattedDays.length() == 2)
+                return formattedDays.toString().replace(",", "요일");
             formattedDays.deleteCharAt(formattedDays.length() - 1);
         }
 

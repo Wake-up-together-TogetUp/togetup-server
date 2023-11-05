@@ -33,13 +33,13 @@ public class KakaoLoginServiceImpl implements SocialLoginService {
 
     @Override
     public SocialUserRes getUserInfo(String accessToken) {
-        Map<String ,String> headerMap = new HashMap<>();
+        Map<String, String> headerMap = new HashMap<>();
         headerMap.put("authorization", "Bearer " + accessToken);
 
-        ResponseEntity<?> response  =null;
+        ResponseEntity<?> response = null;
         try {
             response = kakaoUserApi.getUserInfo(headerMap);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BaseException(Status.UNAUTHORIZED_KAKAO_TOKEN);
         }
         String jsonString = response.getBody().toString();

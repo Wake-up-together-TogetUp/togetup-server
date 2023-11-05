@@ -7,6 +7,7 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
+
 @Entity
 @Table(name = "room_user")
 @Data
@@ -17,7 +18,7 @@ public class RoomUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column( columnDefinition = "INT UNSIGNED")
+    @Column(columnDefinition = "INT UNSIGNED")
     private Integer id = null;
 
 
@@ -28,7 +29,6 @@ public class RoomUser {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
-
 
 
     @Column(name = "created_at")
@@ -50,7 +50,6 @@ public class RoomUser {
         this.user = user;
         user.getRoomUsers().add(this);
     }
-
 
 
 }

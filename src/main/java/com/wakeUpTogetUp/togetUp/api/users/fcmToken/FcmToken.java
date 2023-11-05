@@ -27,12 +27,13 @@ public class FcmToken {
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+
     @PreUpdate
     void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public void updateFcmToken(String fcmToken){
+    public void updateFcmToken(String fcmToken) {
         setValue(fcmToken);
     }
 

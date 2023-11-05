@@ -1,7 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.auth.dto.request;
 
 
-
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import lombok.*;
 

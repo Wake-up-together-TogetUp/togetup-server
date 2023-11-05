@@ -60,6 +60,7 @@ public class AppleLoginServiceImpl implements SocialLoginService {
     private String iss;
     @Value("${oauth.apple.key-id}")
     private String keyId;
+
     @Override
     public LoginType getServiceName() {
         return LoginType.APPLE;
@@ -86,10 +87,11 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 
     private void validateClaims(Claims claims) {
         if (!appleClaimsValidator.isValid(claims)) {
-            throw  new BaseException(Status.Invalid_APPLE_Token);
+            throw new BaseException(Status.Invalid_APPLE_Token);
 
         }
     }
+
     public AppleTokenRes getAppleToken(String authorizationCode) throws IOException {
 
         AppleTokenReq appleTokenReq = AppleTokenReq.builder()
@@ -102,8 +104,7 @@ public class AppleLoginServiceImpl implements SocialLoginService {
         return appleClient.findAppleToken(appleTokenReq);
     }
 
-    public String createClientSecret() throws IOException{
-
+    public String createClientSecret() throws IOException {
 
 
         Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
@@ -136,20 +137,19 @@ public class AppleLoginServiceImpl implements SocialLoginService {
     }
 
 
-    public void revoke (String accessToken) throws  IOException {
-    try {
-        AppleRevokeReq appleRevokeReq = AppleRevokeReq.builder()
-                .client_id(clientId)
-                .client_secret(this.createClientSecret())
-                .token(accessToken)
-                .token_type_hint("access_token")
-                .build();
-        appleClient.revoke(appleRevokeReq);
-    } catch (HttpClientErrorException e) {
-        throw new RuntimeException("Apple Revoke Error");
+    public void revoke(String accessToken) throws IOException {
+        try {
+            AppleRevokeReq appleRevokeReq = AppleRevokeReq.builder()
+                    .client_id(clientId)
+                    .client_secret(this.createClientSecret())
+                    .token(accessToken)
+                    .token_type_hint("access_token")
+                    .build();
+            appleClient.revoke(appleRevokeReq);
+        } catch (HttpClientErrorException e) {
+            throw new RuntimeException("Apple Revoke Error");
+        }
     }
-    }
-
 
 
 }

@@ -11,6 +11,6 @@ public class UserRes {
 
 
     private Integer id;
-    //private String jwt;
+
 
 }

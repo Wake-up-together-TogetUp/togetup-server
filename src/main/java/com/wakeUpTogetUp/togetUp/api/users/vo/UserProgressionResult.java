@@ -9,7 +9,7 @@ import lombok.Getter;
 public class UserProgressionResult {
     @Schema(description = "현재 레벨")
     private int level;
-    
+
     @Schema(description = "현재 경험치")
     private int experience;
 

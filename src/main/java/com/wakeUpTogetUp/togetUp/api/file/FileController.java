@@ -18,6 +18,7 @@ public class FileController {
 
     /**
      * upload 메소드
+     *
      * @param type
      * @return
      * @throws Exception
@@ -33,6 +34,7 @@ public class FileController {
 
     /**
      * 파일 삭제
+     *
      * @param name
      * @return
      */
