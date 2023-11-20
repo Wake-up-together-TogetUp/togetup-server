@@ -1,10 +1,9 @@
 package com.wakeUpTogetUp.togetUp.api.alarm;
 
-import static com.wakeUpTogetUp.togetUp.common.Status.SUCCESS_NO_CONTENT;
-
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PatchAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmTimeLineRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionObjectRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionRepository;
@@ -17,6 +16,7 @@ import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,6 @@ public class AlarmService {
     private final MissionRepository missionRepository;
     private final MissionObjectRepository missionObjectRepository;
 
-    // 알람 생성
     @Transactional
     public Alarm createAlarm(Integer userId, PostAlarmReq postAlarmReq) {
         User user = userRepository.findById(userId)
@@ -77,7 +76,6 @@ public class AlarmService {
         return alarmRepository.save(alarm);
     }
 
-    // 알람 수정
     @Transactional
     public Alarm updateAlarm(Integer userId, Integer alarmId, PatchAlarmReq patchAlarmReq) {
         // 알람 수정
@@ -123,7 +121,6 @@ public class AlarmService {
         return alarmRepository.save(alarm);
     }
 
-    // 알람 삭제
     @Transactional
     public int deleteAlarm(Integer alarmId) {
         Alarm alarm = alarmRepository.findById(alarmId)
@@ -133,14 +130,28 @@ public class AlarmService {
         return alarm.getId();
     }
 
-    public AlarmSimpleRes getNextAlarmByUserId(Integer userId) {
-        String dayOfWeek = LocalDate.now().getDayOfWeek().name();
-        LocalTime today = LocalTime.now();
+    public AlarmTimeLineRes getAlarmTimeLineByUserId(Integer userId) {
+        LocalDate today = LocalDate.now();
+        String dayOfWeek = today.getDayOfWeek().name();
 
-        return alarmRepository.findNextAlarmsByUserId(userId, dayOfWeek, today)
-                .stream()
+        List<Alarm> todayAlarms = alarmRepository.findTodayAlarmsByUserId(userId, dayOfWeek);
+        AlarmSimpleRes nextAlarm = EntityDtoMapper.INSTANCE.toAlarmSimpleRes(getNextAlarm(todayAlarms));
+        List<AlarmSimpleRes> alarmSimpleResList = EntityDtoMapper.INSTANCE.toAlarmSimpleResList(todayAlarms);
+
+        return AlarmTimeLineRes.builder()
+                .today(today)
+                .dayOfWeek(dayOfWeek)
+                .nextAlarm(nextAlarm)
+                .todayAlarmList(alarmSimpleResList)
+                .build();
+    }
+
+    private Alarm getNextAlarm(List<Alarm> alarms) {
+        LocalTime now = LocalTime.now();
+
+        return alarms.stream()
+                .filter(alarm -> alarm.getAlarmTime().isAfter(now))
                 .findFirst()
-                .map(EntityDtoMapper.INSTANCE::toAlarmSimpleRes)
-                .orElseThrow(() -> new BaseException(SUCCESS_NO_CONTENT));
+                .orElse(null);
     }
 }

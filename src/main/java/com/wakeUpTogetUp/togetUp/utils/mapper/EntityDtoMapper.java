@@ -45,7 +45,9 @@ public interface EntityDtoMapper {
 
     @Mapping(target = "missionObject", source = "alarm.missionObject.name")
     AlarmSimpleRes toAlarmSimpleRes(Alarm alarm);
-    
+
+    List<AlarmSimpleRes> toAlarmSimpleResList(List<Alarm> alarmList);
+
     // Mission
     GetMissionObjectRes toGetMissionObjectRes(MissionObject missionObject);
 

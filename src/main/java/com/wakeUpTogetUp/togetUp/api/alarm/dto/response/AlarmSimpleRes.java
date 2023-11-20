@@ -7,6 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Schema(description = "알람 간단 정보 response")
 public class AlarmSimpleRes {
     @Schema(description = "알람 id")
     private Integer id;

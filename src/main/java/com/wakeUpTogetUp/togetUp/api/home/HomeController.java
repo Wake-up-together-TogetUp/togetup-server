@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.home;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmService;
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmTimeLineRes;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
     private final AlarmService alarmService;
 
-    @Operation(summary = "브리핑 보드 - 다음에 울릴 알람")
-    @GetMapping("/brief-board/alarm/next")
-    BaseResponse<AlarmSimpleRes> getNextAlarmOfUser(
+    @Operation(summary = "브리핑 보드 - 알람 타임라인")
+    @GetMapping("/brief-board/alarm/timeline")
+    BaseResponse<AlarmTimeLineRes> getAlarmTimeLineOfUser(
             @Parameter(hidden = true) @AuthUser Integer userId
     ) {
-        return new BaseResponse<>(Status.SUCCESS, alarmService.getNextAlarmByUserId(userId));
+        return new BaseResponse<>(Status.SUCCESS, alarmService.getAlarmTimeLineByUserId(userId));
     }
 }
