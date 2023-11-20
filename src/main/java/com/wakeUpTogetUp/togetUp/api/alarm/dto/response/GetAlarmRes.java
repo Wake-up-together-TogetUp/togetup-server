@@ -4,7 +4,11 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionObjectRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import java.time.LocalTime;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Schema(description = "알람 1개 가져오기 response")
 @Getter
@@ -30,8 +34,8 @@ public class GetAlarmRes {
     @Schema(description = "다시울림 횟수", example = "3")
     private Integer snoozeCnt;
 
-    @Schema(description = "알람 시간", example = "06:00")
-    private String alarmTime;
+    @Schema(description = "알람 시간", example = "06:00:00")
+    private LocalTime alarmTime;
 
     @Schema(description = "월요일 울림 여부", example = "true")
     private Boolean monday;

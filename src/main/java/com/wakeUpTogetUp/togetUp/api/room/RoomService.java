@@ -21,15 +21,12 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.TimeFormatter;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -164,8 +161,7 @@ public class RoomService {
                 if (isToday) {
                     //알람의 다시 울림 시간을 계산함.
                     Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
-                    LocalTime alarmLocalTime = timeFormatter.stringToLocalTime(
-                            alarm.getAlarmTime());
+                    LocalTime alarmLocalTime = alarm.getAlarmTime();
                     LocalTime alarmOffTime = alarmLocalTime.withMinute(alarmLocalTime.getMinute()
                             + alarm.getSnoozeCnt() * alarm.getSnoozeInterval());
                     //알람이 끝나기 전인지 여부
@@ -283,7 +279,7 @@ public class RoomService {
 
         // ex) 13:00 -> pm 1:00
         roomDetailRes.getAlarmData()
-                .setAlarmTime(timeFormatter.timeStringToAMPMFormat(alarm.getAlarmTime()));
+                .setAlarmTime(alarm.getAlarmTime());
         // ex)  평일, 주말, 매일, 월요일, (월, 화, 수), 빈칸
         roomDetailRes.getAlarmData().setAlarmDay(
                 timeFormatter.formatDaysOfWeek(alarm.getMonday(), alarm.getTuesday(),
@@ -344,8 +340,9 @@ public class RoomService {
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
         Integer roomPersonnel = roomUserRepository.countByRoomId(alarm.getRoom().getId());
-        if (roomPersonnel < 1)
+        if (roomPersonnel < 1) {
             throw new BaseException(Status.ROOM_NOT_FOUND);
+        }
 
         //dto 매핑 mapper 사용
         RoomInfoRes roomInfoRes = new RoomInfoRes();
@@ -359,7 +356,7 @@ public class RoomService {
 
         // ex) 13:00 -> pm 1:00
         roomInfoRes.getAlarmData()
-                .setAlarmTime(timeFormatter.timeStringToAMPMFormat(alarm.getAlarmTime()));
+                .setAlarmTime(alarm.getAlarmTime());
 
         // ex)  평일, 주말, 매일, 월요일, (월, 화, 수), 빈칸
         roomInfoRes.getAlarmData().setAlarmDay(
