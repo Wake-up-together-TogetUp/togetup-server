@@ -1,24 +1,26 @@
 package com.wakeUpTogetUp.togetUp.api.alarm;
 
+import static com.wakeUpTogetUp.togetUp.common.Status.SUCCESS_NO_CONTENT;
+
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PatchAlarmReq;
-import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionObjectRepository;
-import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
-import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
-import com.wakeUpTogetUp.togetUp.api.room.model.Room;
-import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -38,16 +40,17 @@ public class AlarmService {
         Mission mission = null;
         MissionObject missionObject = null;
 
-        if(postAlarmReq.getMissionId() != null) {
-            mission= missionRepository.findById(postAlarmReq.getMissionId())
+        if (postAlarmReq.getMissionId() != null) {
+            mission = missionRepository.findById(postAlarmReq.getMissionId())
                     .orElseThrow(() -> new BaseException(Status.MISSION_NOT_FOUND));
 
-            if(postAlarmReq.getMissionObjectId() != null) {
+            if (postAlarmReq.getMissionObjectId() != null) {
                 missionObject = missionObjectRepository.findById(postAlarmReq.getMissionObjectId())
                         .orElseThrow(() -> new BaseException(Status.MISSION_OBJECT_NOT_FOUND));
 
-                if(missionObject.getMission().getId() != mission.getId())
+                if (missionObject.getMission().getId() != mission.getId()) {
                     throw new BaseException(Status.MISSION_ID_NOT_MATCH);
+                }
             }
         }
 
@@ -56,7 +59,7 @@ public class AlarmService {
                 .icon(postAlarmReq.getIcon())
                 .snoozeInterval(postAlarmReq.getSnoozeInterval())
                 .snoozeCnt(postAlarmReq.getSnoozeCnt())
-                .alarmTime(postAlarmReq.getAlarmTime())
+                .alarmTime(LocalTime.parse(postAlarmReq.getAlarmTime()))
                 .monday(postAlarmReq.getMonday())
                 .tuesday(postAlarmReq.getTuesday())
                 .wednesday(postAlarmReq.getWednesday())
@@ -83,7 +86,7 @@ public class AlarmService {
         Mission mission = null;
         MissionObject missionObject = null;
 
-        if(patchAlarmReq.getMissionId() != null) {
+        if (patchAlarmReq.getMissionId() != null) {
             mission = missionRepository.findById(patchAlarmReq.getMissionId())
                     .orElseThrow(() -> new BaseException(Status.MISSION_NOT_FOUND));
 
@@ -91,8 +94,9 @@ public class AlarmService {
                 missionObject = missionObjectRepository.findById(patchAlarmReq.getMissionObjectId())
                         .orElseThrow(() -> new BaseException(Status.MISSION_NOT_FOUND));
 
-                if (missionObject.getMission().getId() != mission.getId())
+                if (!Objects.equals(missionObject.getMission().getId(), mission.getId())) {
                     throw new BaseException(Status.MISSION_ID_NOT_MATCH);
+                }
             }
         }
 
@@ -101,7 +105,7 @@ public class AlarmService {
                 patchAlarmReq.getIcon(),
                 patchAlarmReq.getSnoozeInterval(),
                 patchAlarmReq.getSnoozeCnt(),
-                patchAlarmReq.getAlarmTime(),
+                LocalTime.parse(patchAlarmReq.getAlarmTime()),
                 patchAlarmReq.getMonday(),
                 patchAlarmReq.getTuesday(),
                 patchAlarmReq.getWednesday(),
@@ -129,5 +133,14 @@ public class AlarmService {
         return alarm.getId();
     }
 
+    public AlarmSimpleRes getNextAlarmByUserId(Integer userId) {
+        String dayOfWeek = LocalDate.now().getDayOfWeek().name();
+        LocalTime today = LocalTime.now();
 
+        return alarmRepository.findNextAlarmsByUserId(userId, dayOfWeek, today)
+                .stream()
+                .findFirst()
+                .map(EntityDtoMapper.INSTANCE::toAlarmSimpleRes)
+                .orElseThrow(() -> new BaseException(SUCCESS_NO_CONTENT));
+    }
 }

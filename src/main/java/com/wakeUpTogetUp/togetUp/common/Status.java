@@ -14,6 +14,7 @@ public enum Status {
     // 공통
     SUCCESS(HttpStatus.OK, "요청에 성공하였습니다."),
     SUCCESS_CREATED(HttpStatus.CREATED, "생성 되었습니다."),
+    SUCCESS_NO_CONTENT(HttpStatus.NO_CONTENT, "결과 데이터가 없습니다."),
 
     // Mission
     MISSION_OBJECT_NOT_FOUND(HttpStatus.OK, "탐지된 객체가 없습니다."),

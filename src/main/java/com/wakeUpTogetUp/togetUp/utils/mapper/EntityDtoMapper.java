@@ -1,31 +1,31 @@
 package com.wakeUpTogetUp.togetUp.utils.mapper;
 
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.vo.UserAvatarData;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionObjectRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
+import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.notification.dto.response.NotificationRes;
 import com.wakeUpTogetUp.togetUp.api.notification.entity.Notification;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
-import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
-import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomInfoRes;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.model.UserAvatar;
+import java.util.List;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface EntityDtoMapper {
@@ -43,7 +43,9 @@ public interface EntityDtoMapper {
 
     List<GetAlarmRes> toAlarmResList(List<Alarm> alarmList);
 
-
+    @Mapping(target = "missionObject", source = "alarm.missionObject.name")
+    AlarmSimpleRes toAlarmSimpleRes(Alarm alarm);
+    
     // Mission
     GetMissionObjectRes toGetMissionObjectRes(MissionObject missionObject);
 
@@ -121,11 +123,11 @@ public interface EntityDtoMapper {
     UserAvatarData toUserAvatarData(Avatar avatar, @Context List<UserAvatar> userAvatarList);
 
     List<UserAvatarData> toUserAvatarDataList(List<Avatar> avatarList,
-            @Context List<UserAvatar> userAvatarList);
+                                              @Context List<UserAvatar> userAvatarList);
 
     @AfterMapping
     default void setIsUnlockedStatus(@MappingTarget UserAvatarData target, Avatar avatar,
-            @Context List<UserAvatar> userAvatarList) {
+                                     @Context List<UserAvatar> userAvatarList) {
         target.setIsUnlocked(userAvatarList.stream()
                 .anyMatch(userAvatar -> userAvatar.getAvatar().getId().equals(avatar.getId())));
     }
