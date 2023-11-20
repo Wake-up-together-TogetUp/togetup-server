@@ -45,7 +45,7 @@ application-prod.yml
 application-oauth.properties
 
 ### firebase sdk json ###
-togetup-26b96-firebase-adminsdk-3l3ah-3164ed8f18.json
+togetup-51b17-firebase-adminsdk-alyjm-73b76dcc29.json
 
 ### log files ###
 logs
@@ -55,6 +55,3 @@ AuthKey_M992KTZK9V.p8
 
 ### result image file ###
 **/src/main/**/images/
-
-###apple
-AuthKey_M992KTZK9V.p8
