@@ -1,14 +1,15 @@
 package com.wakeUpTogetUp.togetUp.api.auth.apple;
 
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import io.jsonwebtoken.*;
+
 import java.security.PublicKey;
 import java.util.Map;
+
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 
@@ -26,8 +27,8 @@ public class AppleJwtParser {
             String decodedHeader = new String(Base64Utils.decodeFromUrlSafeString(encodedHeader));
             return OBJECT_MAPPER.readValue(decodedHeader, Map.class);
         } catch (JsonProcessingException | ArrayIndexOutOfBoundsException e) {
-          //  throw new InvalidTokenException("Apple OAuth Identity Token 형식이 올바르지 않습니다.");
-            throw  new BaseException(Status.UNAUTHORIZED); //todo 에러 바꾸기
+            //  throw new InvalidTokenException("Apple OAuth Identity Token 형식이 올바르지 않습니다.");
+            throw new BaseException(Status.UNAUTHORIZED); //todo 에러 바꾸기
         }
     }
 
@@ -39,11 +40,11 @@ public class AppleJwtParser {
                     .getBody();
         } catch (ExpiredJwtException e) {
             //throw new TokenExpiredException("Apple OAuth 로그인 중 Identity Token 유효기간이 만료됐습니다.");
-            throw  new BaseException(Status.UNAUTHORIZED); //todo 에러 바꾸기
+            throw new BaseException(Status.UNAUTHORIZED); //todo 에러 바꾸기
 
         } catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
             //throw new InvalidTokenException("Apple OAuth Identity Token 값이 올바르지 않습니다.");
-            throw  new BaseException(Status.UNAUTHORIZED); //todo 에러 바꾸기
+            throw new BaseException(Status.UNAUTHORIZED); //todo 에러 바꾸기
 
         }
     }

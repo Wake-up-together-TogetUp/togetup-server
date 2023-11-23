@@ -6,12 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+
 import org.hibernate.annotations.DynamicInsert;
 
 @Setter
 @Getter
 @Entity
-@Table(name="avatar")
+@Table(name = "avatar")
 @DynamicInsert
 @NoArgsConstructor
 public class Avatar {
@@ -33,10 +34,5 @@ public class Avatar {
     // TODO : 더 좋은 방법 찾기
     @Column(columnDefinition = "TIMESTAMP")
     private String createdAt;
-
-//    @PrePersist
-//    void createdAt() {
-//        this.createdAt = Timestamp.from(Instant.now());
-//    }
 
 }

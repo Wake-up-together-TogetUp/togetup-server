@@ -18,9 +18,9 @@ public interface AppleClient {
     @GetMapping("/keys")
     ApplePublicKeys getApplePublicKeys();
 
-    @PostMapping(value = "/token",consumes = "application/x-www-form-urlencoded")
+    @PostMapping(value = "/token", consumes = "application/x-www-form-urlencoded")
     AppleTokenRes findAppleToken(@RequestBody AppleTokenReq req);
 
-    @PostMapping(value = "/revoke",consumes = "application/x-www-form-urlencoded")
+    @PostMapping(value = "/revoke", consumes = "application/x-www-form-urlencoded")
     void revoke(AppleRevokeReq req);
 }

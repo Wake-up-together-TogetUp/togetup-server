@@ -29,6 +29,6 @@ public class AppleClaimsValidator {
         return claims.getIssuer().contains(iss) &&
                 claims.getAudience().equals(clientId);
 //                claims.get(NONCE_KEY, String.class).equals(nonce);
-               }
+    }
 }
 

@@ -22,29 +22,29 @@ import java.util.Date;
 @Component
 public class JwtService {
     @Value("${jwt.secret-key}")
-    private  String key;
+    private String key;
     @Value("${jwt.token-expired-time}")
-    private  Long expiredTimeMs;
+    private Long expiredTimeMs;
 
     public Boolean validate(String token, String userEmail, String key) {
         String useremailByToken = getUseremail(token, key);
         return useremailByToken.equals(userEmail) && !isTokenExpired(token, key);
     }
 
-    public String getJwt(){
+    public String getJwt() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         return request.getHeader("X-ACCESS-TOKEN");
     }
 
     public Integer getUserId(String accessToken) {
         Claims claims;
-        try{
+        try {
             claims = Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(accessToken)
                     .getBody();
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new BaseException(Status.INVALID_JWT);
         }
@@ -52,21 +52,20 @@ public class JwtService {
     }
 
     /**
-     *
      * @return int
      * @throws BaseException
      */
     // TODO :getUserId 와 합치기
-    public int getUserNum() throws BaseException{
+    public int getUserNum() throws BaseException {
         //1. JWT 추출
         String accessToken = getJwt();
-        if(accessToken == null || accessToken.length() == 0){
+        if (accessToken == null || accessToken.length() == 0) {
             throw new BaseException(Status.EMPTY_JWT);
         }
 
         // 2. JWT parsing
         Claims claims;
-        try{
+        try {
             claims = Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
                     .build()
@@ -77,7 +76,7 @@ public class JwtService {
         }
 
         // 3. userId 추출
-        return claims.get("userId",Integer.class);
+        return claims.get("userId", Integer.class);
     }
 
     public Claims extractAllClaims(String token, String key) {
@@ -92,7 +91,7 @@ public class JwtService {
         return extractAllClaims(token, key).get("username", String.class);
     }
 
-    private  Key getSigningKey() {
+    private Key getSigningKey() {
         byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
@@ -126,7 +125,7 @@ public class JwtService {
 //        return doGenerateToken(userId, expiredTimeMs, key);
 //    }
 
-    public  String generateAccessToken(Integer userId) {
+    public String generateAccessToken(Integer userId) {
         return doGenerateToken(userId, expiredTimeMs, key);
     }
 

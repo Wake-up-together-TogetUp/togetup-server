@@ -7,6 +7,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomInfoRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
@@ -86,7 +87,7 @@ public class RoomService {
 
 
     public RoomUserMissionLogRes getRoomUserLogList(Integer userId, Integer roomId,
-            String localDateTimeString) {
+                                                    String localDateTimeString) {
 
         LocalDateTime localDateTime = timeFormatter.stringToLocalDateTime(localDateTimeString);
         List<RoomUser> roomUserList = roomUserRepository.findAllByRoom_IdOrderByPreference(roomId,
@@ -116,7 +117,7 @@ public class RoomService {
     }
 
     public RoomUserMissionLogRes setUserLogData(RoomUserMissionLogRes roomUserMissionLogRes,
-            Integer userId, Integer roomId, LocalDateTime localDateTime) {
+                                                Integer userId, Integer roomId, LocalDateTime localDateTime) {
 
         boolean isAlarmActive = alarmRepository.findFirstByRoom_Id(roomId)
                 .getDayOfWeekValue(localDateTime.getDayOfWeek());
@@ -160,8 +161,7 @@ public class RoomService {
                 if (isToday) {
                     //알람의 다시 울림 시간을 계산함.
                     Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
-                    LocalTime alarmLocalTime = timeFormatter.stringToLocalTime(
-                            alarm.getAlarmTime());
+                    LocalTime alarmLocalTime = alarm.getAlarmTime();
                     LocalTime alarmOffTime = alarmLocalTime.withMinute(alarmLocalTime.getMinute()
                             + alarm.getSnoozeCnt() * alarm.getSnoozeInterval());
                     //알람이 끝나기 전인지 여부
@@ -191,15 +191,16 @@ public class RoomService {
     public void changeRoomHost(Integer roomId, Integer userId, Integer selectedUserId) {
 
         //host false로 바꾸기
-        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId);
+        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId)
+                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
         if (!roomUser.getIsHost()) {
             throw new BaseException(Status.INVALID_ROOM_HOST_ID);
         }
         roomUser.setIsHost(false);
 
         //선택한 user를 host 지정
-        RoomUser seletedRoomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId,
-                selectedUserId);
+        RoomUser seletedRoomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, selectedUserId)
+                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
         seletedRoomUser.setIsHost(true);
 
     }
@@ -207,7 +208,8 @@ public class RoomService {
     @Transactional
     public void leaveRoom(Integer roomId, Integer userId) {
 
-        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId);
+        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId)
+                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
         if (Objects.isNull(roomUser)) {
             throw new BaseException(Status.ROOM_USER_NOT_FOUND);
         }
@@ -269,16 +271,15 @@ public class RoomService {
         roomDetailRes.setUserList(EntityDtoMapper.INSTANCE.toUserDataList(roomUsers));
 
         //dto 매핑 - 커스텀 필드
-
-        //아바타 세팅 (아바타 수정 이후 변경될 예정)
         this.setUserTheme(roomDetailRes);
         roomDetailRes.getRoomData().setCreatedAt(
                 timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
+
         roomDetailRes.getRoomData().setPersonnel(roomUsers.size());
 
         // ex) 13:00 -> pm 1:00
         roomDetailRes.getAlarmData()
-                .setAlarmTime(timeFormatter.timeStringToAMPMFormat(alarm.getAlarmTime()));
+                .setAlarmTime(alarm.getAlarmTime());
         // ex)  평일, 주말, 매일, 월요일, (월, 화, 수), 빈칸
         roomDetailRes.getAlarmData().setAlarmDay(
                 timeFormatter.formatDaysOfWeek(alarm.getMonday(), alarm.getTuesday(),
@@ -290,11 +291,9 @@ public class RoomService {
 
     public void setUserTheme(RoomDetailRes roomDetailRes) {
 
-        //TODO 테이블 바뀌면 수정 해야함
-//        roomDetailRes.getUserList().forEach(userData ->  userData.setTheme(AvatarTheme.valueOf(userAvatarRepository.findByUser_Id(userData.getUserId()).getAvatar().getTheme()).getValue()));
         roomDetailRes.getUserList().forEach(userData -> userData.setTheme(
                 userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userData.getUserId())
-                        .orElseThrow(() -> new BaseException(Status.INTERNAL_SERVER_ERROR))
+                        .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL))
                         .getAvatar().getTheme().getValue()));
 
     }
@@ -303,16 +302,19 @@ public class RoomService {
     @Transactional
     public void updateAgreePush(Integer roomId, Integer userId, boolean agreePush) {
 
-        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId);
-        if (Objects.isNull(roomUser)) {
-            throw new BaseException(Status.ROOM_USER_NOT_FOUND);
-        }
+        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId)
+                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
+
         roomUser.setAgreePush(agreePush);
 
     }
 
     @Transactional
     public void joinRoom(Integer roomId, Integer invitedUserId, boolean isHost) {
+
+        if (!isHost && roomUserRepository.existsRoomUserByRoom_IdAndUser_Id(roomId, invitedUserId)) {
+            throw new BaseException(Status.ROOM_USER_ALREADY_EXIST);
+        }
 
         User user = userRepository.findById(invitedUserId)
                 .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
@@ -330,6 +332,39 @@ public class RoomService {
                 .build();
 
         roomUserRepository.save(roomUser);
+    }
+
+    public RoomInfoRes getRoomInformation(String invitationCode) {
+
+        Alarm alarm = alarmRepository.findByInvitationCode(invitationCode)
+                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
+
+        Integer roomPersonnel = roomUserRepository.countByRoomId(alarm.getRoom().getId());
+        if (roomPersonnel < 1) {
+            throw new BaseException(Status.ROOM_NOT_FOUND);
+        }
+
+        //dto 매핑 mapper 사용
+        RoomInfoRes roomInfoRes = new RoomInfoRes();
+        roomInfoRes.setRoomData(EntityDtoMapper.INSTANCE.toRoomInfoResRoomData(alarm));
+        roomInfoRes.setAlarmData(EntityDtoMapper.INSTANCE.toRoomInfoResAlarmData(alarm));
+
+        //dto 매핑 - 커스텀 필드
+        roomInfoRes.getRoomData().setCreatedAt(
+                timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
+        roomInfoRes.getRoomData().setPersonnel(roomPersonnel);
+
+        // ex) 13:00 -> pm 1:00
+        roomInfoRes.getAlarmData()
+                .setAlarmTime(alarm.getAlarmTime());
+
+        // ex)  평일, 주말, 매일, 월요일, (월, 화, 수), 빈칸
+        roomInfoRes.getAlarmData().setAlarmDay(
+                timeFormatter.formatDaysOfWeek(alarm.getMonday(), alarm.getTuesday(),
+                        alarm.getWednesday(), alarm.getThursday(), alarm.getFriday(),
+                        alarm.getSaturday(), alarm.getSunday()));
+
+        return roomInfoRes;
     }
 
 }

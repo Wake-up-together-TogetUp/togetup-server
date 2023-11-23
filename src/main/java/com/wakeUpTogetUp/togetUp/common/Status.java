@@ -14,6 +14,7 @@ public enum Status {
     // 공통
     SUCCESS(HttpStatus.OK, "요청에 성공하였습니다."),
     SUCCESS_CREATED(HttpStatus.CREATED, "생성 되었습니다."),
+    SUCCESS_NO_CONTENT(HttpStatus.NO_CONTENT, "결과 데이터가 없습니다."),
 
     // Mission
     MISSION_OBJECT_NOT_FOUND(HttpStatus.OK, "탐지된 객체가 없습니다."),
@@ -49,7 +50,7 @@ public enum Status {
 
     // NOT FOUND
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 유저 입니다."),
-    ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 room 입니다."),
+    ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 방 입니다."),
     ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 알람 입니다."),
     MISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 미션 입니다."),
     AVATAR_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 아바타 입니다."),
@@ -60,6 +61,7 @@ public enum Status {
 
     // CONFLICT
     USER_AVATAR_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 보유한 아바타 입니다."),
+    ROOM_USER_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 방에 들어간 멤버입니다."),
 
     // UNSUPPORTED MEDIA TYPE
     UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "지원하지 않는 파일 확장자 입니다."),

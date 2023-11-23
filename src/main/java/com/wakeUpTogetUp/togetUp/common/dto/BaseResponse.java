@@ -2,12 +2,12 @@ package com.wakeUpTogetUp.togetUp.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import lombok.Getter;
 
 @Getter
-@JsonPropertyOrder({"httpStatusCode", "httpReasonPhrase", "message", "images/result"})
+@JsonPropertyOrder({"httpStatusCode", "httpReasonPhrase", "message", "result"})
 public class BaseResponse<T> {
     private final int httpStatusCode;
     private final String httpReasonPhrase;
@@ -36,6 +36,6 @@ public class BaseResponse<T> {
         this.httpReasonPhrase = exception.getStatus().getHttpStatus().getReasonPhrase();
         this.message = exception.getStatus().getMessage();
     }
-    
+
     // TODO : 정적 메소드 만들기
 }

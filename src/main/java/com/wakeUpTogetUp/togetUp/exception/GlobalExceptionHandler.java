@@ -5,7 +5,6 @@ import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import org.hibernate.TypeMismatchException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,15 +20,12 @@ public class GlobalExceptionHandler {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // Catch Custom Exception(BaseException)
-    @ExceptionHandler({ BaseException.class })
-    protected ResponseEntity<BaseResponse<Status>> handleCustomException(BaseException exception) {
+    @ExceptionHandler({BaseException.class})
+    protected BaseResponse<Status> handleCustomException(BaseException exception) {
         logger.debug("BaseResponse exception occurred: {}", exception.getMessage(), exception);
         exception.printStackTrace();
 
-        Status status = exception.getStatus();
-        ResponseEntity<BaseResponse<Status>> responseEntity = ResponseEntity.status(status.getHttpStatus())
-                .body(new BaseResponse<>(status));
-        return responseEntity;
+        return new BaseResponse<>(exception.getStatus());
     }
 
     // Catch Bad Request Exception
@@ -44,7 +40,7 @@ public class GlobalExceptionHandler {
             MultipartException.class,
             NoHandlerFoundException.class,
     })
-    protected BaseResponse handleBadRequestException(Exception exception) {
+    protected BaseResponse<Status> handleBadRequestException(Exception exception) {
         logger.debug("Bad request exception occurred: {}",
                 exception.getMessage(),
                 exception);
@@ -54,7 +50,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    protected BaseResponse handleNotSupportedMediaTypeException(HttpMediaTypeNotSupportedException exception) {
+    protected BaseResponse<Status> handleNotSupportedMediaTypeException(HttpMediaTypeNotSupportedException exception) {
         logger.debug("Bad request exception occurred: {}",
                 exception.getMessage(),
                 exception);
@@ -73,8 +69,8 @@ public class GlobalExceptionHandler {
     }
 
     // Catch all Exception
-    @ExceptionHandler({ Exception.class })
-    protected BaseResponse handleServerException(Exception exception) {
+    @ExceptionHandler({Exception.class})
+    protected BaseResponse<Status> handleServerException(Exception exception) {
         logger.error("Unexpected exception occurred: {}",
                 exception.getMessage(),
                 exception);

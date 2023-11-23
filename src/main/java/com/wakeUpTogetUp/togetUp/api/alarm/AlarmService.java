@@ -1,24 +1,26 @@
 package com.wakeUpTogetUp.togetUp.api.alarm;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PatchAlarmReq;
-import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmTimeLineRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionObjectRepository;
-import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
-import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
-import com.wakeUpTogetUp.togetUp.api.room.model.Room;
-import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +31,6 @@ public class AlarmService {
     private final MissionRepository missionRepository;
     private final MissionObjectRepository missionObjectRepository;
 
-    // 알람 생성
     @Transactional
     public Alarm createAlarm(Integer userId, PostAlarmReq postAlarmReq) {
         User user = userRepository.findById(userId)
@@ -38,16 +39,17 @@ public class AlarmService {
         Mission mission = null;
         MissionObject missionObject = null;
 
-        if(postAlarmReq.getMissionId() != null) {
-            mission= missionRepository.findById(postAlarmReq.getMissionId())
+        if (postAlarmReq.getMissionId() != null) {
+            mission = missionRepository.findById(postAlarmReq.getMissionId())
                     .orElseThrow(() -> new BaseException(Status.MISSION_NOT_FOUND));
 
-            if(postAlarmReq.getMissionObjectId() != null) {
+            if (postAlarmReq.getMissionObjectId() != null) {
                 missionObject = missionObjectRepository.findById(postAlarmReq.getMissionObjectId())
                         .orElseThrow(() -> new BaseException(Status.MISSION_OBJECT_NOT_FOUND));
 
-                if(missionObject.getMission().getId() != mission.getId())
+                if (missionObject.getMission().getId() != mission.getId()) {
                     throw new BaseException(Status.MISSION_ID_NOT_MATCH);
+                }
             }
         }
 
@@ -56,7 +58,7 @@ public class AlarmService {
                 .icon(postAlarmReq.getIcon())
                 .snoozeInterval(postAlarmReq.getSnoozeInterval())
                 .snoozeCnt(postAlarmReq.getSnoozeCnt())
-                .alarmTime(postAlarmReq.getAlarmTime())
+                .alarmTime(LocalTime.parse(postAlarmReq.getAlarmTime()))
                 .monday(postAlarmReq.getMonday())
                 .tuesday(postAlarmReq.getTuesday())
                 .wednesday(postAlarmReq.getWednesday())
@@ -74,7 +76,6 @@ public class AlarmService {
         return alarmRepository.save(alarm);
     }
 
-    // 알람 수정
     @Transactional
     public Alarm updateAlarm(Integer userId, Integer alarmId, PatchAlarmReq patchAlarmReq) {
         // 알람 수정
@@ -83,7 +84,7 @@ public class AlarmService {
         Mission mission = null;
         MissionObject missionObject = null;
 
-        if(patchAlarmReq.getMissionId() != null) {
+        if (patchAlarmReq.getMissionId() != null) {
             mission = missionRepository.findById(patchAlarmReq.getMissionId())
                     .orElseThrow(() -> new BaseException(Status.MISSION_NOT_FOUND));
 
@@ -91,8 +92,9 @@ public class AlarmService {
                 missionObject = missionObjectRepository.findById(patchAlarmReq.getMissionObjectId())
                         .orElseThrow(() -> new BaseException(Status.MISSION_NOT_FOUND));
 
-                if (missionObject.getMission().getId() != mission.getId())
+                if (!Objects.equals(missionObject.getMission().getId(), mission.getId())) {
                     throw new BaseException(Status.MISSION_ID_NOT_MATCH);
+                }
             }
         }
 
@@ -101,7 +103,7 @@ public class AlarmService {
                 patchAlarmReq.getIcon(),
                 patchAlarmReq.getSnoozeInterval(),
                 patchAlarmReq.getSnoozeCnt(),
-                patchAlarmReq.getAlarmTime(),
+                LocalTime.parse(patchAlarmReq.getAlarmTime()),
                 patchAlarmReq.getMonday(),
                 patchAlarmReq.getTuesday(),
                 patchAlarmReq.getWednesday(),
@@ -119,7 +121,6 @@ public class AlarmService {
         return alarmRepository.save(alarm);
     }
 
-    // 알람 삭제
     @Transactional
     public int deleteAlarm(Integer alarmId) {
         Alarm alarm = alarmRepository.findById(alarmId)
@@ -129,5 +130,28 @@ public class AlarmService {
         return alarm.getId();
     }
 
+    public AlarmTimeLineRes getAlarmTimeLineByUserId(Integer userId) {
+        LocalDate today = LocalDate.now();
+        String dayOfWeek = today.getDayOfWeek().name();
 
+        List<Alarm> todayAlarms = alarmRepository.findTodayAlarmsByUserId(userId, dayOfWeek);
+        AlarmSimpleRes nextAlarm = EntityDtoMapper.INSTANCE.toAlarmSimpleRes(getNextAlarm(todayAlarms));
+        List<AlarmSimpleRes> alarmSimpleResList = EntityDtoMapper.INSTANCE.toAlarmSimpleResList(todayAlarms);
+
+        return AlarmTimeLineRes.builder()
+                .today(today)
+                .dayOfWeek(dayOfWeek)
+                .nextAlarm(nextAlarm)
+                .todayAlarmList(alarmSimpleResList)
+                .build();
+    }
+
+    private Alarm getNextAlarm(List<Alarm> alarms) {
+        LocalTime now = LocalTime.now();
+
+        return alarms.stream()
+                .filter(alarm -> alarm.getAlarmTime().isAfter(now))
+                .findFirst()
+                .orElse(null);
+    }
 }
