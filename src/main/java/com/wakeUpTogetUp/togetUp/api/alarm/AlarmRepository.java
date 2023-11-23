@@ -34,15 +34,17 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
     @Query("SELECT a FROM Alarm a WHERE a.room.invitationCode = :invitationCode")
     Optional<Alarm> findByInvitationCode(@Param("invitationCode") String invitationCode);
 
-    @Query("SELECT a FROM Alarm a WHERE " +
-            "a.user.id = :userId AND " +
-            "(:dayOfWeek = 'MONDAY' AND a.monday = TRUE) OR " +
+    @Query("SELECT a FROM Alarm a " +
+            "WHERE (a.user.id = :userId OR a.room.id IN (" +
+            "SELECT ru.id FROM RoomUser ru WHERE ru.user.id = :userId)) " +
+            "AND ((:dayOfWeek = 'MONDAY' AND a.monday = TRUE) OR " +
             "(:dayOfWeek = 'TUESDAY' AND a.tuesday = TRUE) OR " +
             "(:dayOfWeek = 'WEDNESDAY' AND a.wednesday = TRUE) OR " +
             "(:dayOfWeek = 'THURSDAY' AND a.thursday = TRUE) OR " +
             "(:dayOfWeek = 'FRIDAY' AND a.friday = TRUE) OR " +
             "(:dayOfWeek = 'SATURDAY' AND a.saturday = TRUE) OR " +
-            "(:dayOfWeek = 'SUNDAY' AND a.sunday = TRUE) " +
+            "(:dayOfWeek = 'SUNDAY' AND a.sunday = TRUE)) " +
+            "AND a.isActivated = TRUE " +
             "ORDER BY a.alarmTime ASC, a.id ASC")
     List<Alarm> findTodayAlarmsByUserId(@Param("userId") Integer userId,
                                         @Param("dayOfWeek") String dayOfWeek);
