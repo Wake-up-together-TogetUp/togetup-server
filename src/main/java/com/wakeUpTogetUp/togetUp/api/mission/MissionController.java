@@ -9,7 +9,6 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogCreateRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionPerfomRes;
 import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes;
 import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.ObjectDetectionRes;
-import com.wakeUpTogetUp.togetUp.api.users.UserService;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
@@ -38,8 +37,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/app/mission")
 public class MissionController {
-
-    private final UserService userService;
     private final MissionProvider missionProvider;
     private final MissionService missionService;
     private final FileService fileService;

@@ -1,22 +1,34 @@
 package com.wakeUpTogetUp.togetUp.api.alarm.model;
 
+import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
-import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
-import lombok.*;
-import org.hibernate.annotations.DynamicInsert;
 import java.time.DayOfWeek;
-
-import javax.persistence.*;
-
-
+import java.time.LocalTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.hibernate.annotations.DynamicInsert;
 
 @ToString
 @Entity
 @Table(name = "alarm")
 @DynamicInsert
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Alarm {
@@ -30,14 +42,14 @@ public class Alarm {
 
     private String icon;
 
-    @Column(name = "snooze_interval", columnDefinition = "TINYINT")
+    @Column(columnDefinition = "TINYINT")
     private Integer snoozeInterval;
 
-    @Column(name = "snooze_cnt", columnDefinition = "TINYINT")
+    @Column(columnDefinition = "TINYINT")
     private Integer snoozeCnt;
 
-    @Column(name = "alarm_time", columnDefinition = "TIME")
-    private String alarmTime;
+    @Column(columnDefinition = "TIME")
+    private LocalTime alarmTime;
 
     private Boolean monday;
     private Boolean tuesday;
@@ -67,61 +79,11 @@ public class Alarm {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    // post
-    @Builder
-    public Alarm(String name, String icon, Integer snoozeInterval, Integer snoozeCnt, String alarmTime,
-            Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday,
-            Boolean saturday, Boolean sunday, Boolean isSnoozeActivated, Boolean isVibrate,
-            User user, Mission mission, MissionObject missionObject) {
-        this.name = name;
-        this.icon = icon;
-        this.snoozeInterval = snoozeInterval;
-        this.snoozeCnt = snoozeCnt;
-        this.alarmTime = alarmTime;
-        this.monday = monday;
-        this.tuesday = tuesday;
-        this.wednesday = wednesday;
-        this.thursday = thursday;
-        this.friday = friday;
-        this.saturday = saturday;
-        this.sunday = sunday;
-        this.isSnoozeActivated = isSnoozeActivated;
-        this.isVibrate = isVibrate;
-        this.user = user;
-        this.mission = mission;
-        this.missionObject = missionObject;
-    }
-
-    // patch
-    @Builder
-    public Alarm(String name, String icon, Integer snoozeInterval, Integer snoozeCnt, String alarmTime,
-            Boolean monday, Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday,
-            Boolean saturday, Boolean sunday, Boolean isSnoozeActivated, Boolean isVibrate,
-            Boolean isActivated, Mission mission, MissionObject missionObject) {
-        this.name = name;
-        this.icon = icon;
-        this.snoozeInterval = snoozeInterval;
-        this.snoozeCnt = snoozeCnt;
-        this.alarmTime = alarmTime;
-        this.monday = monday;
-        this.tuesday = tuesday;
-        this.wednesday = wednesday;
-        this.thursday = thursday;
-        this.friday = friday;
-        this.saturday = saturday;
-        this.sunday = sunday;
-        this.isSnoozeActivated = isSnoozeActivated;
-        this.isVibrate = isVibrate;
-        this.isActivated = isActivated;
-        this.mission = mission;
-        this.missionObject = missionObject;
-    }
-
     public void modifyProperties(String name, String icon,
-            Integer snoozeInterval, Integer snoozeCnt, String alarmTime, Boolean monday,
-            Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday,
-            Boolean sunday, Boolean isVibrate, Boolean isSnoozeActivated, Boolean isActivated,
-            Mission mission, MissionObject missionObject) {
+                                 Integer snoozeInterval, Integer snoozeCnt, LocalTime alarmTime, Boolean monday,
+                                 Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday,
+                                 Boolean sunday, Boolean isVibrate, Boolean isSnoozeActivated, Boolean isActivated,
+                                 Mission mission, MissionObject missionObject) {
         setName(name);
         setIcon(icon);
         setIsVibrate(isVibrate);
