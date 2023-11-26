@@ -1,15 +1,12 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
+import com.azure.ai.vision.imageanalysis.DetectedObject;
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionLogCreateReq;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
-import com.wakeUpTogetUp.togetUp.api.mission.service.NaverAiService;
+import com.wakeUpTogetUp.togetUp.api.mission.service.AzureAiService;
 import com.wakeUpTogetUp.togetUp.api.mission.service.ObjectDetectionService;
-import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes;
-import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes.Face;
-import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes.Face.EmotionValue;
-import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.ObjectDetectionRes;
 import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
@@ -18,7 +15,10 @@ import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressionResult;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class MissionService {
 
     private final ObjectDetectionService objectDetectionService;
-    private final NaverAiService naverAiService;
+    private final AzureAiService azureAiService;
     private final AlarmRepository alarmRepository;
     private final MissionLogRepository missionLogRepository;
     private final UserService userService;
@@ -37,47 +37,48 @@ public class MissionService {
     private final RoomRepository roomRepository;
 
     // 객체 인식
-    public ObjectDetectionRes recognizeObject(String object, MultipartFile missionImage)
+    public List<DetectedObject> getObjectDetectionResult(String object, MultipartFile missionImage)
             throws Exception {
-        ObjectDetectionRes objectDetectionRes = naverAiService.detectObject(missionImage);
+        List<DetectedObject> detectedObjects = azureAiService.detectObject(missionImage);
 
         // 인식된 객체가 없을때
-        if (objectDetectionRes.getPredictions().get(0).getNum_detections() == 0) {
+        if (detectedObjects.size() == 0) {
             throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
         }
 
-        // 미션 성공 여부 판별
-        for (String objectDetected : objectDetectionRes.getPredictions().get(0)
-                .getDetection_names()) {
-            System.out.println("objectDetected = " + objectDetected);
+        List<DetectedObject> highestConfidenceObjects = detectedObjects.stream()
+                .filter(objetDetected -> objetDetected.getName().equals(object))
+                .sorted(Comparator.comparing(DetectedObject::getConfidence).reversed())
+                .limit(3)
+                .collect(Collectors.toList());
 
-            if (objectDetected.equals(object)) {
-                return objectDetectionRes;
-            }
+        if (highestConfidenceObjects.isEmpty()) {
+            throw new BaseException(Status.MISSION_FAILURE);
         }
-        throw new BaseException(Status.MISSION_FAILURE);
+
+        return highestConfidenceObjects;
     }
 
     // 표정 인식
-    public FaceRecognitionRes recognizeEmotion(String object, MultipartFile missionImage)
-            throws Exception {
-        FaceRecognitionRes faceRecognitionRes = naverAiService.recognizeFace(missionImage);
-
-        // 인식된 객체가 없을때
-        if (faceRecognitionRes.getInfo().getFaceCount() == 0) {
-            throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
-        }
-
-        // 미션 성공 여부 판별
-        for (Face face : faceRecognitionRes.getFaces()) {
-            System.out.println("face.getEmotion().getValue() = " + face.getEmotion().getValue());
-
-            if (face.getEmotion().getValue().equals(EmotionValue.valueOf(object))) {
-                return faceRecognitionRes;
-            }
-        }
-        throw new BaseException(Status.MISSION_FAILURE);
-    }
+//    public FaceRecognitionRes recognizeEmotion(String object, MultipartFile missionImage)
+//            throws Exception {
+//        FaceRecognitionRes faceRecognitionRes = naverAiService.recognizeFace(missionImage);
+//
+//        // 인식된 객체가 없을때
+//        if (faceRecognitionRes.getInfo().getFaceCount() == 0) {
+//            throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
+//        }
+//
+//        // 미션 성공 여부 판별
+//        for (Face face : faceRecognitionRes.getFaces()) {
+//            System.out.println("face.getEmotion().getValue() = " + face.getEmotion().getValue());
+//
+//            if (face.getEmotion().getValue().equals(EmotionValue.valueOf(object))) {
+//                return faceRecognitionRes;
+//            }
+//        }
+//        throw new BaseException(Status.MISSION_FAILURE);
+//    }
 
     // 모델로 객체 인식하기
     public void recognizeObjectByModel(String object, MultipartFile missionImage) {

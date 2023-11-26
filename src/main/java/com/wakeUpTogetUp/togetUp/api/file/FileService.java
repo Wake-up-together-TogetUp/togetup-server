@@ -6,15 +6,18 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.vo.ImageDrawResult;
+import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.vo.ImageProcessResult;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,25 +30,47 @@ public class FileService {
     @Transactional
     public String uploadFile(MultipartFile file, String type) throws Exception {
         if (type.equals("group")) {
-            //String uploadFilePath = ("group/" + getFolderName());
-            //그룹프로필 사진 한 장
-            String filePath = uploadToBucket(file, type);
-
-            return filePath;
+            return uploadToBucket(file, type);
         } else {
             throw new BaseException(Status.BAD_REQUEST_PARAM);
         }
     }
 
     @Transactional
-    public String uploadMissionImage(MultipartFile file, ImageDrawResult imageDrawResult,
-                                     String type) throws Exception {
-        if (type.equals("mission")) {
-            String uploadFilePath = ("mission/" + getFolderName());
-            return uploadToBucket(file, uploadFilePath, imageDrawResult);
-        } else {
-            throw new BaseException(Status.BAD_REQUEST_PARAM);
-        }
+    public String uploadMissionImage(MultipartFile file, ImageProcessResult imageProcessResult) {
+        String uploadFilePath = ("mission/" + getFolderName() + "/" + getUuidFileName(file.getName()));
+        return uploadMissionImageToBucket(file, imageProcessResult, uploadFilePath);
+    }
+
+    public String uploadMissionImageToBucket(MultipartFile file, ImageProcessResult imageProcessResult, String key) {
+        ObjectMetadata objectMetaData = new ObjectMetadata();
+        objectMetaData.setContentType(file.getContentType());
+        objectMetaData.setContentLength(imageProcessResult.getLength());
+
+        amazonS3Client.putObject(
+                new PutObjectRequest(S3Bucket, key, imageProcessResult.getInputStream(), objectMetaData)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
+
+        return amazonS3Client.getUrl(S3Bucket, key).toString();
+    }
+
+    public String uploadToBucket(MultipartFile file, String uploadFilePath) throws Exception {
+        String uploadFileName = getUuidFileName(file.getName());
+
+        long size = file.getSize();
+
+        ObjectMetadata objectMetaData = new ObjectMetadata();
+        objectMetaData.setContentType(file.getContentType());
+        objectMetaData.setContentLength(size);
+
+        String keyName = uploadFilePath + "/" + uploadFileName;
+
+        amazonS3Client.putObject(
+                new PutObjectRequest(S3Bucket, keyName, file.getInputStream(), objectMetaData)
+                        .withCannedAcl(CannedAccessControlList.PublicRead)
+        );
+
+        return amazonS3Client.getUrl(S3Bucket, keyName).toString();
     }
 
     @Transactional
@@ -63,56 +88,6 @@ public class FileService {
         } else {
             throw new BaseException(Status.BAD_REQUEST_PARAM);
         }
-    }
-
-    public String uploadToBucket(MultipartFile file, String uploadFilePath) throws Exception {
-        // 파일 이름
-        String uploadFileName = getUuidFileName(file.getName());
-
-        // 파일 크기
-        long size = file.getSize();
-
-        ObjectMetadata objectMetaData = new ObjectMetadata();
-        objectMetaData.setContentType(file.getContentType());
-        objectMetaData.setContentLength(size);
-
-        String keyName = uploadFilePath + "/" + uploadFileName;
-
-        // S3에 업로드
-        amazonS3Client.putObject(
-                new PutObjectRequest(S3Bucket, keyName, file.getInputStream(), objectMetaData)
-                        .withCannedAcl(CannedAccessControlList.PublicRead)
-        );
-
-        String filePath = amazonS3Client.getUrl(S3Bucket, keyName).toString(); // 접근가능한 URL 가져오기
-
-        return filePath;
-    }
-
-    public String uploadToBucket(MultipartFile file, String uploadFilePath,
-                                 ImageDrawResult imageDrawResult) throws Exception {
-        // 파일 이름
-        String uploadFileName = getUuidFileName(file.getName());
-
-        // 파일 크기
-        long size = imageDrawResult.getSize();
-
-        ObjectMetadata objectMetaData = new ObjectMetadata();
-        objectMetaData.setContentType(file.getContentType());
-        objectMetaData.setContentLength(size);
-
-        String keyName = uploadFilePath + "/" + uploadFileName;
-
-        // S3에 업로드
-        amazonS3Client.putObject(
-                new PutObjectRequest(S3Bucket, keyName, imageDrawResult.getInputStream(),
-                        objectMetaData)
-                        .withCannedAcl(CannedAccessControlList.PublicRead));
-
-        String filePath = amazonS3Client.getUrl(S3Bucket, keyName).toString(); // 접근가능한 URL 가져오기
-        imageDrawResult.getInputStream().close();
-
-        return filePath;
     }
 
     /**
@@ -137,7 +112,7 @@ public class FileService {
      */
     public String getUuidFileName(String fileName) {
         String ext = fileName.substring(fileName.indexOf(".") + 1);
-        return UUID.randomUUID().toString() + "." + ext;
+        return UUID.randomUUID() + "." + ext;
     }
 
     /**

@@ -1,15 +1,9 @@
 package com.wakeUpTogetUp.togetUp.utils.ImageProcessing;
 
-import static org.apache.commons.imaging.Imaging.*;
+import static org.apache.commons.imaging.Imaging.getMetadata;
 
-import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes;
-import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes.Face;
-import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes.Face.EmotionValue;
-import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.FaceRecognitionRes.Info.Size;
-import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.ObjectDetectionRes;
-import com.wakeUpTogetUp.togetUp.api.mission.service.dto.response.ObjectDetectionRes.Prediction;
-import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.vo.ImageDrawResult;
-import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.vo.ImageProcessedResult;
+import com.azure.ai.vision.common.BoundingBox;
+import com.azure.ai.vision.imageanalysis.DetectedObject;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -22,9 +16,9 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -74,9 +68,9 @@ public class ImageProcessor {
 
         // 압축된 이미지 스트림을 BufferedImage로 변환
         ByteArrayInputStream bis = new ByteArrayInputStream(compressedImageStream.toByteArray());
-        BufferedImage compressedImage = ImageIO.read(bis);
 
         // 이미지 저장
+//        BufferedImage compressedImage = ImageIO.read(bis);
 //        File outputFile = new File(imagePath + "/result_compressed.jpg");
 //        ImageIO.write(compressedImage, "jpg", outputFile);
 
@@ -138,9 +132,9 @@ public class ImageProcessor {
         return rotatedImageStream.toByteArray();
     }
 
-    public ImageProcessedResult orientImage(byte[] imageToByte, TiffImageMetadata metadata)
+    public byte[] orientImage(byte[] imageToByte, TiffImageMetadata metadata)
             throws IOException, ImageReadException {
-        System.out.println("[이미지 정보 가져와서 회전]");
+        System.out.println("[이미지 정보를 가져와 회전]");
 
         TiffField orientationField = metadata != null
                 ? metadata.findField(TiffTagConstants.TIFF_TAG_ORIENTATION)
@@ -193,9 +187,11 @@ public class ImageProcessor {
         BufferedImage rotatedImage = op.filter(originalImage, null);
 
         // AffineTransformOp에 의해 반환된 BufferedImage의 타입이 원본과 다를 수 있어 때로 약간의 색상 변화나 문제가 발생할 수 있다.
-        // 새로운 BufferedImage를 생성하고 그 위에 결과 이미지를 그리는 것을 시도해볼 수 있다.
-        BufferedImage newImage = new BufferedImage(rotatedImage.getWidth(),
-                rotatedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+        // 새로운 BufferedImage를 생성하고 그 위에 결과 이미지를 그린다.
+        BufferedImage newImage = new BufferedImage(
+                rotatedImage.getWidth(),
+                rotatedImage.getHeight(),
+                BufferedImage.TYPE_INT_RGB);
         Graphics2D g = newImage.createGraphics();
         g.drawImage(rotatedImage, 0, 0, null);
         g.dispose();
@@ -209,151 +205,46 @@ public class ImageProcessor {
         ImageIO.write(rotatedImage, "jpg", rotatedImageStream);
         rotatedImageStream.close();
 
-        return new ImageProcessedResult(rotatedImageStream.toByteArray(),
-                new Size(rotatedImage.getWidth(), rotatedImage.getHeight()));
+        return rotatedImageStream.toByteArray();
     }
 
     // 객체 인식 결과 그림 그리기
-    public ImageDrawResult drawODResultOnImage(MultipartFile file,
-            ObjectDetectionRes objectDetectionRes,
-            String object) throws IOException, ImageReadException {
-        // TODO : 시계, 사람 상반신의 경우 2번 인식되므로 완전 겹치면 안 그리는 로직을 추가해야 될것같음
+    public byte[] drawODResultOnImage(MultipartFile file, List<DetectedObject> detectedObjects, String object)
+            throws IOException {
+        BufferedImage originalImage = readImage(file.getBytes());
 
-        System.out.println("[결과 그리기]");
-        long startTime = System.currentTimeMillis();
-
-        // 결과 가져오기
-        Prediction pred = objectDetectionRes.getPredictions().get(0);
-
-        // MultipartFile -> BufferedImage
-        TiffImageMetadata metadata = getImageMetadata(file);
-        BufferedImage originalImage = readImage(orientImage(file.getBytes(), metadata).getResult());
-
-        // 그래픽 객체 생성
         Graphics2D g2d = originalImage.createGraphics();
 
-        for (int i = 0; i < pred.getNum_detections(); i++) {
-            if (pred.getDetection_names().get(i).equals(object)) {
-                // 좌표 값
-                float y1 = pred.getDetection_boxes().get(i).get(0).floatValue()
-                        * originalImage.getHeight();
-                float x1 = pred.getDetection_boxes().get(i).get(1).floatValue()
-                        * originalImage.getWidth();
-                float y2 = pred.getDetection_boxes().get(i).get(2).floatValue()
-                        * originalImage.getHeight();
-                float x2 = pred.getDetection_boxes().get(i).get(3).floatValue()
-                        * originalImage.getWidth();
+        for (DetectedObject detectedObject : detectedObjects) {
+            BoundingBox box = detectedObject.getBoundingBox();
 
-                // 사각형 그리기
-                int minDwDh = Math.min(originalImage.getWidth(), originalImage.getHeight());
-                int thickness = minDwDh / 150;
+            // 두께 결정
+            int minDwDh = Math.min(originalImage.getWidth(), originalImage.getHeight());
+            int thickness = minDwDh / 150;
 
-                Random rand = new Random();
-                g2d.setColor(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
-//                g2d.setColor(Color.decode("#4B89DC"));
-                g2d.setStroke(new BasicStroke(thickness));
-                g2d.draw(new Rectangle2D.Float(x1, y1, x2 - x1, y2 - y1));
+            Random rand = new Random();
+            g2d.setColor(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
+            g2d.setStroke(new BasicStroke(thickness));
+            g2d.draw(new Rectangle2D.Float(box.getX(), box.getY(), box.getW(), box.getH()));
 
-                // 사각형 왼쪽 위에 글씨 쓰기
-                int fontSize = (int) minDwDh / 25;
-                g2d.setFont(new Font("Arial", Font.PLAIN, fontSize));
-                g2d.drawString(
-                        object + " : " + String.format("%.3f", pred.getDetection_scores().get(i)),
-                        x1, y1 - (float) (originalImage.getHeight() / 100));
-            }
+            // 사각형 왼쪽 위 글씨 쓰기
+            int fontSize = minDwDh / 25;
+            g2d.setFont(new Font("Arial", Font.PLAIN, fontSize));
+            g2d.drawString(
+                    object + " : " + String.format("%.3f", detectedObject.getConfidence()),
+                    box.getX(), box.getY() - (float) (originalImage.getHeight() / 100));
         }
-
-        // 그래픽 리소스 해제
         g2d.dispose();
 
         // 이미지 저장
 //        File outputFile = new File(imagePath + "/result.jpg");
 //        ImageIO.write(originalImage, "jpg", outputFile);
 
-        // BufferedImage를 ByteArrayOutputStream으로 변환
-        var drawedImageStream = new ByteArrayOutputStream();
-        ImageIO.write(originalImage, "jpg", drawedImageStream);
-        drawedImageStream.close();
+        var outputImageStream = new ByteArrayOutputStream();
+        ImageIO.write(originalImage, "jpg", outputImageStream);
+        outputImageStream.close();
 
-        // 걸린 시간 계산
-        long endTime = System.currentTimeMillis();
-        long timeElapsed = endTime - startTime;
-        System.out.println("결과 그리는데 걸린 시간 : " + timeElapsed);
-
-        return new ImageDrawResult(
-                new ByteArrayInputStream(drawedImageStream.toByteArray()),
-                drawedImageStream.size());
-    }
-
-    // 표정 인식 결과 그림 그리기
-    public ImageDrawResult drawODResultOnImage(MultipartFile file,
-            FaceRecognitionRes faceRecognitionRes,
-            String object) throws IOException, ImageReadException {
-        System.out.println("[결과 그리기]");
-        long startTime = System.currentTimeMillis();
-
-        // MultipartFile -> BufferedImage
-        TiffImageMetadata metadata = getImageMetadata(file);
-        BufferedImage originalImage = readImage(orientImage(file.getBytes(), metadata).getResult());
-
-        // 그래픽 객체 생성
-        Graphics2D g2d = originalImage.createGraphics();
-
-        float sizeRatio = (float) (1.0 * originalImage.getWidth() /
-                faceRecognitionRes.getOriginalImageProcessedResult().getSize().getWidth());
-
-        for (Face face : faceRecognitionRes.getFaces()) {
-            if (face.getEmotion().getValue() == EmotionValue.valueOf(object)) {
-                // 좌표 값
-                float x = face.getRoi().getX() * sizeRatio;
-                float y = face.getRoi().getY() * sizeRatio;
-                float width = face.getRoi().getWidth() * sizeRatio;
-                float height = face.getRoi().getHeight() * sizeRatio;
-
-                System.out.println("x = " + x);
-                System.out.println("y = " + y);
-                System.out.println("width = " + width);
-                System.out.println("height = " + height);
-
-                // 비율 정보
-                int minDwDh = Math.min(originalImage.getWidth(), originalImage.getHeight());
-                int thickness = minDwDh / 200;
-
-                // 사각형 그리기
-                Random rand = new Random();
-                g2d.setColor(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
-//                g2d.setColor(Color.decode("#4B89DC"));
-                g2d.setStroke(new BasicStroke(thickness));
-                g2d.draw(new Rectangle2D.Float(x, y, width, height));
-
-                // 사각형 왼쪽 위에 글씨 쓰기
-                int fontSize = (int) minDwDh / 30;
-                g2d.setFont(new Font("Arial", Font.PLAIN, fontSize));
-                g2d.drawString(
-                        object + " : " + String.format("%.3f", face.getEmotion().getConfidence()),
-                        x, y - (float) (originalImage.getHeight() / 100));
-            }
-        }
-        // 그래픽 리소스 해제
-        g2d.dispose();
-
-        // 이미지 저장
-        File outputFile = new File(imagePath + "/result.jpg");
-        ImageIO.write(originalImage, "jpg", outputFile);
-
-        // BufferedImage를 ByteArrayOutputStream으로 변환
-        ByteArrayOutputStream drawedImageStream = new ByteArrayOutputStream();
-        ImageIO.write(originalImage, "jpg", drawedImageStream);
-        drawedImageStream.close();
-
-        // 걸린 시간 계산
-        long endTime = System.currentTimeMillis();
-        long timeElapsed = endTime - startTime;
-        System.out.println("결과 그리는데 걸린 시간 : " + timeElapsed);
-
-        return new ImageDrawResult(
-                new ByteArrayInputStream(drawedImageStream.toByteArray()),
-                drawedImageStream.size());
+        return outputImageStream.toByteArray();
     }
 
     public TiffImageMetadata getImageMetadata(MultipartFile file)

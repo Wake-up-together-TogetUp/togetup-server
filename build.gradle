@@ -110,6 +110,10 @@ dependencies {
 
     //image
     implementation 'org.apache.commons:commons-imaging:1.0-alpha3'
+
+    // Azure AI Vision
+    implementation 'com.azure:azure-ai-vision-imageanalysis:0.15.1-beta.1'
+    implementation 'com.azure:azure-core-http-netty:1.13.6'
 }
 ext {
     snippetsDir = file('build/generated-snippets')
@@ -155,7 +159,9 @@ test {
 //}
 
 gradle.projectsEvaluated {
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << "-parameters"
+    tasks.withType(JavaCompile).tap {
+        configureEach {
+            options.compilerArgs << "-parameters"
+        }
     }
 }
