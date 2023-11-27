@@ -6,6 +6,7 @@ import com.google.cloud.vision.v1.Likelihood;
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionLogCreateReq;
+import com.wakeUpTogetUp.togetUp.api.mission.model.Emotion;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.service.AzureAiService;
 import com.wakeUpTogetUp.togetUp.api.mission.service.GoogleVisionService;
@@ -43,14 +44,16 @@ public class MissionService {
     // 객체 인식
     public List<DetectedObject> getObjectDetectionResult(String object, MultipartFile missionImage)
             throws Exception {
-        List<DetectedObject> detectedObjects = azureAiService.detectObject(missionImage);
+        List<DetectedObject> detectedObjects = azureAiService.detectObjectByVer40(missionImage);
 
         if (detectedObjects.size() == 0) {
             throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
         }
 
+        // todo: 객체 정리하고 비교할 자료구조 찾기
+
         List<DetectedObject> highestConfidenceObjects = detectedObjects.stream()
-                .filter(objetDetected -> objetDetected.getName().equals(object))
+                .filter(objetDetected -> objetDetected.getName().toLowerCase().equals(object))
                 .sorted(Comparator.comparing(DetectedObject::getConfidence).reversed())
                 .limit(3)
                 .collect(Collectors.toList());
@@ -64,6 +67,7 @@ public class MissionService {
 
     // 표정 인식
     public List<FaceAnnotation> getFaceRecognitionResult(String object, MultipartFile missionImage) {
+        Emotion emotion = Emotion.fromName(object);
         List<FaceAnnotation> faceAnnotations = googleVisionService.getFaceRecognitionResult(missionImage);
 
         if (faceAnnotations.isEmpty()) {
@@ -71,7 +75,7 @@ public class MissionService {
         }
 
         List<FaceAnnotation> highestConfidenceFaces = faceAnnotations.stream()
-                .filter(face -> getLikelihood(object, face).getNumber() >= 3)
+                .filter(face -> getLikelihood(emotion, face).getNumber() >= 3)
                 .sorted(Comparator.comparing(FaceAnnotation::getDetectionConfidence).reversed())
                 .limit(3)
                 .collect(Collectors.toList());
@@ -80,18 +84,18 @@ public class MissionService {
             throw new BaseException(Status.MISSION_FAILURE);
         }
 
-        return faceAnnotations;
+        return highestConfidenceFaces;
     }
 
-    private Likelihood getLikelihood(String emotion, FaceAnnotation face) {
-        switch (emotion.toLowerCase()) {
-            case "joy":
+    private Likelihood getLikelihood(Emotion emotion, FaceAnnotation face) {
+        switch (emotion) {
+            case JOY:
                 return face.getJoyLikelihood();
-            case "sorrow":
+            case SORROW:
                 return face.getSorrowLikelihood();
-            case "anger":
+            case ANGER:
                 return face.getAngerLikelihood();
-            case "surprise":
+            case SURPRISE:
                 return face.getSurpriseLikelihood();
             default:
                 throw new BaseException(Status.INVALID_OBJECT_NAME);

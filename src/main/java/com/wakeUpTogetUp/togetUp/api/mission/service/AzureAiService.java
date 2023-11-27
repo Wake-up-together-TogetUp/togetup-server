@@ -14,6 +14,7 @@ import com.azure.ai.vision.imageanalysis.ImageAnalysisResultReason;
 import com.azure.ai.vision.imageanalysis.ImageAnalyzer;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.EnumSet;
@@ -30,16 +31,11 @@ public class AzureAiService {
     @Value("${azure.computer-vision.key}")
     private String key;
 
-    public List<DetectedObject> detectObject(MultipartFile file) throws Exception {
+    // TODO : 나오는 객체비교해서 ENUM 타입 만들고 정리해서 검색해서 일치하면 미션 성공하는걸로
+    public List<DetectedObject> detectObjectByVer40(MultipartFile file) throws Exception {
         VisionServiceOptions serviceOptions = new VisionServiceOptions(new URL(endpoint), key);
-
-        ImageSourceBuffer imageSourceBuffer = new ImageSourceBuffer();
-        ImageWriter imageWriter = imageSourceBuffer.getWriter();
-        imageWriter.write(ByteBuffer.wrap(file.getBytes()));
-        VisionSource imageSource = VisionSource.fromImageSourceBuffer(imageSourceBuffer);
-
-        ImageAnalysisOptions analysisOptions = new ImageAnalysisOptions();
-        analysisOptions.setFeatures(EnumSet.of(ImageAnalysisFeature.OBJECTS));
+        VisionSource imageSource = getVisionSource(file);
+        ImageAnalysisOptions analysisOptions = getAnalysisOptions(ImageAnalysisFeature.OBJECTS);
 
         try (ImageAnalyzer analyzer = new ImageAnalyzer(serviceOptions, imageSource, analysisOptions);
              ImageAnalysisResult result = analyzer.analyze()) {
@@ -58,6 +54,20 @@ public class AzureAiService {
         }
     }
 
+    private VisionSource getVisionSource(MultipartFile file) throws IOException {
+        ImageSourceBuffer imageSourceBuffer = new ImageSourceBuffer();
+        ImageWriter imageWriter = imageSourceBuffer.getWriter();
+        imageWriter.write(ByteBuffer.wrap(file.getBytes()));
+        return VisionSource.fromImageSourceBuffer(imageSourceBuffer);
+    }
+
+    private ImageAnalysisOptions getAnalysisOptions(ImageAnalysisFeature feature) {
+        ImageAnalysisOptions analysisOptions = new ImageAnalysisOptions();
+        analysisOptions.setFeatures(EnumSet.of(feature));
+
+        return analysisOptions;
+    }
+
     private void printObjectDetectionResult(ImageAnalysisResult result) {
         System.out.println(" Image height = " + result.getImageHeight());
         System.out.println(" Image width = " + result.getImageWidth());
@@ -66,9 +76,7 @@ public class AzureAiService {
         if (result.getObjects() != null) {
             System.out.println(" Objects:");
             for (DetectedObject detectedObject : result.getObjects()) {
-                System.out.println("   \"" + detectedObject.getName() + "\", Bounding box "
-                        + detectedObject.getBoundingBox() +
-                        ", Confidence " + String.format("%.2f", detectedObject.getConfidence()));
+                System.out.println(detectedObject.toString());
             }
         }
     }
