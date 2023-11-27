@@ -1,11 +1,14 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
 import com.azure.ai.vision.imageanalysis.DetectedObject;
+import com.google.cloud.vision.v1.FaceAnnotation;
+import com.google.cloud.vision.v1.Likelihood;
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionLogCreateReq;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.service.AzureAiService;
+import com.wakeUpTogetUp.togetUp.api.mission.service.GoogleVisionService;
 import com.wakeUpTogetUp.togetUp.api.mission.service.ObjectDetectionService;
 import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
@@ -30,6 +33,7 @@ public class MissionService {
 
     private final ObjectDetectionService objectDetectionService;
     private final AzureAiService azureAiService;
+    private final GoogleVisionService googleVisionService;
     private final AlarmRepository alarmRepository;
     private final MissionLogRepository missionLogRepository;
     private final UserService userService;
@@ -41,7 +45,6 @@ public class MissionService {
             throws Exception {
         List<DetectedObject> detectedObjects = azureAiService.detectObject(missionImage);
 
-        // 인식된 객체가 없을때
         if (detectedObjects.size() == 0) {
             throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
         }
@@ -60,25 +63,40 @@ public class MissionService {
     }
 
     // 표정 인식
-//    public FaceRecognitionRes recognizeEmotion(String object, MultipartFile missionImage)
-//            throws Exception {
-//        FaceRecognitionRes faceRecognitionRes = naverAiService.recognizeFace(missionImage);
-//
-//        // 인식된 객체가 없을때
-//        if (faceRecognitionRes.getInfo().getFaceCount() == 0) {
-//            throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
-//        }
-//
-//        // 미션 성공 여부 판별
-//        for (Face face : faceRecognitionRes.getFaces()) {
-//            System.out.println("face.getEmotion().getValue() = " + face.getEmotion().getValue());
-//
-//            if (face.getEmotion().getValue().equals(EmotionValue.valueOf(object))) {
-//                return faceRecognitionRes;
-//            }
-//        }
-//        throw new BaseException(Status.MISSION_FAILURE);
-//    }
+    public List<FaceAnnotation> getFaceRecognitionResult(String object, MultipartFile missionImage) {
+        List<FaceAnnotation> faceAnnotations = googleVisionService.getFaceRecognitionResult(missionImage);
+
+        if (faceAnnotations.isEmpty()) {
+            throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
+        }
+
+        List<FaceAnnotation> highestConfidenceFaces = faceAnnotations.stream()
+                .filter(face -> getLikelihood(object, face).getNumber() >= 3)
+                .sorted(Comparator.comparing(FaceAnnotation::getDetectionConfidence).reversed())
+                .limit(3)
+                .collect(Collectors.toList());
+
+        if (highestConfidenceFaces.isEmpty()) {
+            throw new BaseException(Status.MISSION_FAILURE);
+        }
+
+        return faceAnnotations;
+    }
+
+    private Likelihood getLikelihood(String emotion, FaceAnnotation face) {
+        switch (emotion.toLowerCase()) {
+            case "joy":
+                return face.getJoyLikelihood();
+            case "sorrow":
+                return face.getSorrowLikelihood();
+            case "anger":
+                return face.getAngerLikelihood();
+            case "surprise":
+                return face.getSurpriseLikelihood();
+            default:
+                throw new BaseException(Status.INVALID_OBJECT_NAME);
+        }
+    }
 
     // 모델로 객체 인식하기
     public void recognizeObjectByModel(String object, MultipartFile missionImage) {

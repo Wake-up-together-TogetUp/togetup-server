@@ -40,8 +40,9 @@ public enum Status {
     INVALID_JWT(HttpStatus.BAD_REQUEST, "유효하지 않은 jwt 입니다."),
     JWT_MISMATCH(HttpStatus.BAD_REQUEST, "jwt 정보가 일치하지 않습니다."),
     INVALID_GROUP_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 그룹 id 입니다."),
+    INVALID_OBJECT_NAME(HttpStatus.BAD_REQUEST, "유효하지 미션 객체 이름입니다."),
     MISSION_ID_NOT_MATCH(HttpStatus.BAD_REQUEST, "미션과 미션 객체 id 값이 일치하지 않습니다."),
-    Invalid_APPLE_Token(HttpStatus.BAD_REQUEST, "Apple OAuth Claims 값이 올바르지 않습니다."),
+    INVALID_APPLE_TOKEN(HttpStatus.BAD_REQUEST, "Apple OAuth Claims 값이 올바르지 않습니다."),
     INVALID_ROOM_HOST_ID(HttpStatus.BAD_REQUEST, "방장의 id가 아닙니다."),
 
     // FORBIDDEN

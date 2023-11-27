@@ -37,7 +37,7 @@ public class FileService {
     }
 
     @Transactional
-    public String uploadMissionImage(MultipartFile file, ImageProcessResult imageProcessResult) {
+    public String uploadMissionImage(MultipartFile file, ImageProcessResult imageProcessResult) throws Exception {
         String uploadFilePath = ("mission/" + getFolderName() + "/" + getUuidFileName(file.getName()));
         return uploadMissionImageToBucket(file, imageProcessResult, uploadFilePath);
     }
