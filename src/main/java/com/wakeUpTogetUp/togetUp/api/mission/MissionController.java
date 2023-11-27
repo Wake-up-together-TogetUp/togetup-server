@@ -78,7 +78,7 @@ public class MissionController {
     public BaseResponse<MissionPerfomRes> recognizeFaceExpression(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @Parameter(required = true, description = "미션 수행 사진") @RequestPart MultipartFile missionImage,
-            @Parameter(required = true, description = "탐지할 표정") @PathVariable String object
+            @Parameter(required = true, description = "탐지할 표정(`joy`/`sorrow`/`anger`/`surprise`)") @PathVariable String object
     ) throws Exception {
 
         if (!Objects.equals(missionImage.getContentType(), MediaType.IMAGE_JPEG_VALUE)) {
