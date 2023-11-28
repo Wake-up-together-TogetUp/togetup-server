@@ -45,7 +45,7 @@ application-prod.yml
 application-oauth.properties
 
 ### firebase sdk json ###
-togetup-51b17-firebase-adminsdk-alyjm-73b76dcc29.json
+*.json
 
 ### log files ###
 logs

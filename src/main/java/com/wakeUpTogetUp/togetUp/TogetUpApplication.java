@@ -10,14 +10,12 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @SpringBootApplication
 public class TogetUpApplication {
 
-	static {
-		System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
-		nu.pattern.OpenCV.loadLocally();
-//		nu.pattern.OpenCV.loadShared();
-//		System.loadLibrary(org.opencv.core.Core.NATIVE_LIBRARY_NAME);
-	}
+    static {
+        System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
+        nu.pattern.OpenCV.loadLocally();
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(TogetUpApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(TogetUpApplication.class, args);
+    }
 }
