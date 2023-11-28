@@ -5,18 +5,22 @@ import com.google.firebase.messaging.*;
 import com.wakeUpTogetUp.togetUp.api.notification.vo.NotificationSendVo;
 import com.wakeUpTogetUp.togetUp.api.notification.dto.response.PushNotificationRes;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
+import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
 public class FcmService {
     private final FirebaseMessaging firebaseMessaging;
+    private final FcmTokenRepository fcmTokenRepository;
 
 //    @Transactional
 //    public PushNotificationRes sendMessageToToken(NotificationSendVo notificationSendVo)
@@ -32,13 +36,35 @@ public class FcmService {
 //                .build();
 //    }
 
-    @Transactional
+
     public void sendMessageToTokens(NotificationSendVo notificationSendVo) {
         // message 만들기
         MulticastMessage message = getPreconfiguredMessageToTokens(notificationSendVo);
         ApiFuture<BatchResponse> response = sendAndGetResponse(message);
 
+        deleteInvalidToken(response, notificationSendVo.getFcmTokens().stream()
+                .map(FcmToken::getValue)
+                .collect(Collectors.toList()));
+    }
 
+    public void deleteInvalidToken(ApiFuture<BatchResponse> response, List<String> deviceTokens) {
+
+        try {
+            if (response.get().getFailureCount() > 0) {
+                List<String> failedDeviceTokens = new ArrayList<>();
+                List<SendResponse> responses = response.get().getResponses();
+
+                IntStream.range(0, responses.size())
+                        .filter(idx -> !responses.get(idx).isSuccessful())
+                        .forEach(idx -> failedDeviceTokens.add(deviceTokens.get(idx)));
+
+                fcmTokenRepository.deleteAllByValueIn(failedDeviceTokens);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 //    @Transactional
@@ -114,24 +140,24 @@ public class FcmService {
 //                .build();
 //    }
 
-    // 구독 요청
-    public void subscribe(List<String> memberTokenList, String topicName) {
-        firebaseMessaging.subscribeToTopicAsync(
-                memberTokenList,
-                topicName
-        );
-    }
-
-    // 구독 취소
-    public void unSubscribe(List<String> memberTokenList, String topicName) {
-        firebaseMessaging.unsubscribeFromTopicAsync(
-                memberTokenList,
-                topicName
-        );
-    }
-
-    // TODO : 토픽 삭제
-    public void deleteTopic(String topicName) {
-
-    }
+//    // 구독 요청
+//    public void subscribe(List<String> memberTokenList, String topicName) {
+//        firebaseMessaging.subscribeToTopicAsync(
+//                memberTokenList,
+//                topicName
+//        );
+//    }
+//
+//    // 구독 취소
+//    public void unSubscribe(List<String> memberTokenList, String topicName) {
+//        firebaseMessaging.unsubscribeFromTopicAsync(
+//                memberTokenList,
+//                topicName
+//        );
+//    }
+//
+//    // TODO : 토픽 삭제
+//    public void deleteTopic(String topicName) {
+//
+//    }
 }

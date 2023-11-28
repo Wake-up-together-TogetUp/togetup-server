@@ -27,15 +27,13 @@ public class NotificationController {
     //    private final NotificationProvider notificationProvider;
     @Operation(summary = "전체 유저에게 fcm 노티 전송")
     @PostMapping("/broadcast")
-    public  BaseResponse<Status> sendNotificationToAllUsers(
+    public BaseResponse<Status> sendNotificationToAllUsers(
             @Valid @RequestBody BroadCastNotificationReq broadCastNotificationReq
     ) {
         notificationService.sendNotificationToAllUsers(broadCastNotificationReq.getTitle(), broadCastNotificationReq.getBody());
 
         return new BaseResponse(Status.SUCCESS);
     }
-
-
 
 
 //    @Operation(summary = "토큰으로 알림 보내기")

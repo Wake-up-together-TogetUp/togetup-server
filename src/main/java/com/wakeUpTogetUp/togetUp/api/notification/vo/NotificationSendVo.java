@@ -16,7 +16,7 @@ public class NotificationSendVo {
     private final String body;
     private final Map<String, String> dataMap;
 
-    public NotificationSendVo(List<FcmToken> fcmTokens, String title, String body,  Map<String, String> dataMap) {
+    public NotificationSendVo(List<FcmToken> fcmTokens, String title, String body, Map<String, String> dataMap) {
         this.fcmTokens = fcmTokens;
         this.title = title;
         this.body = body;

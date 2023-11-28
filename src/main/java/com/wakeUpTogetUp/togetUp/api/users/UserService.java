@@ -93,7 +93,8 @@ public class UserService {
 
         return new UserProgressionResult(user.getLevel(), user.getExperience(), user.getPoint());
     }
-    public List<Integer> getAgreedNotiUsersIds(){
+
+    public List<Integer> getAgreedNotiUsersIds() {
         return userRepository.findAllByAgreePushIsTrue().stream()
                 .map(User::getId)
                 .collect(Collectors.toList());
