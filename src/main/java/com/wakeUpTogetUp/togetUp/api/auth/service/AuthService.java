@@ -1,21 +1,19 @@
 package com.wakeUpTogetUp.togetUp.api.auth.service;
 
-import com.wakeUpTogetUp.togetUp.api.auth.dto.response.AppleTokenRes;
-import com.wakeUpTogetUp.togetUp.api.auth.dto.response.LoginRes;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.request.SocialLoginReq;
+import com.wakeUpTogetUp.togetUp.api.auth.dto.response.AppleTokenRes;
+import com.wakeUpTogetUp.togetUp.api.auth.dto.response.LoginRes;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.SocialUserRes;
 import com.wakeUpTogetUp.togetUp.api.users.UserAvatarService;
 import com.wakeUpTogetUp.togetUp.api.users.UserService;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -48,7 +46,6 @@ public class AuthService {
 
         //저장된 유저 or 저장한유저의 id 가져오기
         User user = userService.getSignedUser(socialUserRes, socialLoginReq.getLoginType());
-        userAvatarService.setUserDefaultAvatar(user);
 
         //accessToken 만들기
         String accessToken = jwtService.generateAccessToken(user.getId());

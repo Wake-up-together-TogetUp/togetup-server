@@ -9,7 +9,6 @@ import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private static final int DEFAULT_USER_LEVEL = 1;
+    private static final int DEFAULT_USER_EXPERIENCE = 0;
+    private static final int DEFAULT_USER_POINT = 0;
 
+    private final UserAvatarService userAvatarService;
     private final UserRepository userRepository;
     private final FcmTokenRepository fcmTokenRepository;
     private final RoomUserRepository roomUserRepository;
@@ -32,13 +35,19 @@ public class UserService {
         }
 
         // 유저 저장
-        return userRepository.save(
+        User user = userRepository.save(
                 User.builder()
                         .socialId(socialUserRes.getId())
                         .loginType(loginType)
                         .name(socialUserRes.getName())
                         .email(socialUserRes.getEmail())
+                        .level(DEFAULT_USER_LEVEL)
+                        .experience(DEFAULT_USER_EXPERIENCE)
+                        .point(DEFAULT_USER_POINT)
                         .build());
+        userAvatarService.setUserDefaultAvatar(user);
+        
+        return user;
     }
 
     public Integer updateFcmToken(Integer userId, Integer fcmTokenId, String fcmToken) {
