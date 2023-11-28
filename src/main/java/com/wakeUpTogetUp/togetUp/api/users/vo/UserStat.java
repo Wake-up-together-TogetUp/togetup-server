@@ -2,11 +2,13 @@ package com.wakeUpTogetUp.togetUp.api.users.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 @AllArgsConstructor
-public class UserProgressionResult {
+public class UserStat {
     @Schema(description = "현재 레벨")
     private int level;
 

@@ -16,7 +16,7 @@ import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserService;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
-import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressionResult;
+import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import java.util.Comparator;
@@ -116,7 +116,7 @@ public class MissionService {
     }
 
     @Transactional
-    public UserProgressionResult afterMissionComplete(int userId, MissionLogCreateReq req) {
+    public UserStat afterMissionComplete(int userId, MissionLogCreateReq req) {
         createMissionLog(userId, req);
         return userService.userProgress(userId);
     }
