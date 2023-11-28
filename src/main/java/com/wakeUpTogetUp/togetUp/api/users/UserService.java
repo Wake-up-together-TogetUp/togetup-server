@@ -1,16 +1,16 @@
 package com.wakeUpTogetUp.togetUp.api.users;
 
-import com.wakeUpTogetUp.togetUp.api.auth.service.AuthService;
+import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
+import com.wakeUpTogetUp.togetUp.api.auth.dto.response.SocialUserRes;
 import com.wakeUpTogetUp.togetUp.api.room.RoomUserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
-import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressionResult;
+import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 
-import java.io.IOException;
-
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +21,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final AuthService authService;
     private final FcmTokenRepository fcmTokenRepository;
     private final RoomUserRepository roomUserRepository;
+
+    public User getSignedUser(SocialUserRes socialUserRes, LoginType loginType) {
+        User savedUser = userRepository.findBySocialId(socialUserRes.getId()).orElse(null);
+        //유저가 있으면 아이디 반환
+        if (Objects.nonNull(savedUser)) {
+            return savedUser;
+        }
+
+        // 유저 저장
+        return userRepository.save(
+                User.builder()
+                        .socialId(socialUserRes.getId())
+                        .loginType(loginType)
+                        .name(socialUserRes.getName())
+                        .email(socialUserRes.getEmail())
+                        .build());
+    }
 
     public Integer updateFcmToken(Integer userId, Integer fcmTokenId, String fcmToken) {
 
@@ -69,14 +85,7 @@ public class UserService {
 
     }
 
-    @Transactional
-    public void deleteAppleUser(Integer userId, String authorizationCode) throws IOException {
-
-        authService.disconnectApple(authorizationCode);
-        this.deleteById(userId);
-    }
-
-    public UserProgressionResult userProgress(int userId) {
+    public UserStat userProgress(int userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
 
@@ -88,6 +97,14 @@ public class UserService {
         }
         userRepository.save(user);
 
-        return new UserProgressionResult(user.getLevel(), user.getExperience(), user.getPoint());
+        return new UserStat(user.getLevel(), user.getExperience(), user.getPoint());
+    }
+
+    public UserStat getUserStat(User user) {
+        return UserStat.builder()
+                .level(user.getLevel())
+                .experience(user.getExperience())
+                .point(user.getPoint())
+                .build();
     }
 }

@@ -1,27 +1,23 @@
 package com.wakeUpTogetUp.togetUp.api.auth.service;
 
-import static com.wakeUpTogetUp.togetUp.common.Constant.DEFAULT_AVATAR_ID;
-
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.AppleTokenRes;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.LoginRes;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.request.SocialLoginReq;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.SocialUserRes;
 import com.wakeUpTogetUp.togetUp.api.users.UserAvatarService;
+import com.wakeUpTogetUp.togetUp.api.users.UserService;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
-import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 
 @Slf4j
 @Service
@@ -31,10 +27,9 @@ public class AuthService {
 
     private final List<SocialLoginService> loginServices;
     private final JwtService jwtService;
+    private final UserService userService;
     private final UserAvatarService userAvatarService;
     private final AppleLoginServiceImpl appleLoginService;
-    private final UserRepository userRepository;
-
 
     @Transactional
     public LoginRes socialLogin(SocialLoginReq socialLoginReq) {
@@ -52,16 +47,19 @@ public class AuthService {
         }
 
         //저장된 유저 or 저장한유저의 id 가져오기
-        Integer userId = this.getSignedUserId(socialUserRes, socialLoginReq.getLoginType());
+        User user = userService.getSignedUser(socialUserRes, socialLoginReq.getLoginType());
+        userAvatarService.setUserDefaultAvatar(user);
 
         //accessToken 만들기
-        String accessToken = jwtService.generateAccessToken(userId);
+        String accessToken = jwtService.generateAccessToken(user.getId());
 
         return LoginRes.builder()
-                .userId(userId)
+                .userId(user.getId())
                 .userName(socialUserRes.getName())
                 .email(socialUserRes.getEmail())
                 .accessToken(accessToken)
+                .avatarId(userAvatarService.getUserAvatarId(user.getId()))
+                .userStat(userService.getUserStat(user))
                 .build();
     }
 
@@ -75,31 +73,6 @@ public class AuthService {
         //todo 수정
         return loginServices.get(0);
     }
-
-    private Integer getSignedUserId(SocialUserRes socialUserRes, LoginType loginType) {
-        User savedUser = userRepository.findBySocialId(socialUserRes.getId()).orElse(null);
-        //유저가 있으면 아이디 반환
-        if (Objects.nonNull(savedUser)) {
-            return savedUser.getId();
-        }
-
-        // 유저 저장
-        User user = userRepository.save(
-                User.builder()
-                        .socialId(socialUserRes.getId())
-                        .loginType(loginType)
-                        .name(socialUserRes.getName())
-                        .email(socialUserRes.getEmail())
-                        .build()
-        );
-
-        // 유저 기본 아바타 설정
-        userAvatarService.createUserAvatar(user, DEFAULT_AVATAR_ID);
-        userAvatarService.changeUserAvatar(user.getId(), DEFAULT_AVATAR_ID);
-
-        return user.getId();
-    }
-
 
     @Transactional
     public void disconnectApple(String authCode) throws IOException {
