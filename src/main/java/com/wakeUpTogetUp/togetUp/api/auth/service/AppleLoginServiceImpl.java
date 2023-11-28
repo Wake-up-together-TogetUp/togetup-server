@@ -1,48 +1,41 @@
 package com.wakeUpTogetUp.togetUp.api.auth.service;
 
 import com.amazonaws.util.IOUtils;
-import com.nimbusds.jose.shaded.json.JSONObject;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
-import com.wakeUpTogetUp.togetUp.api.auth.apple.*;
+import com.wakeUpTogetUp.togetUp.api.auth.apple.AppleClaimsValidator;
+import com.wakeUpTogetUp.togetUp.api.auth.apple.AppleClient;
+import com.wakeUpTogetUp.togetUp.api.auth.apple.AppleJwtParser;
+import com.wakeUpTogetUp.togetUp.api.auth.apple.ApplePublicKeys;
+import com.wakeUpTogetUp.togetUp.api.auth.apple.PublicKeyGenerator;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.request.AppleRevokeReq;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.request.AppleTokenReq;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.AppleLoginRes;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.AppleTokenRes;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.SocialUserRes;
-import com.wakeUpTogetUp.togetUp.common.Constant;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -87,7 +80,7 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 
     private void validateClaims(Claims claims) {
         if (!appleClaimsValidator.isValid(claims)) {
-            throw new BaseException(Status.Invalid_APPLE_Token);
+            throw new BaseException(Status.INVALID_APPLE_TOKEN);
 
         }
     }
@@ -104,8 +97,8 @@ public class AppleLoginServiceImpl implements SocialLoginService {
         return appleClient.findAppleToken(appleTokenReq);
     }
 
+    // TODO: deprecated된 메소드 수정하기
     public String createClientSecret() throws IOException {
-
 
         Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
         return Jwts.builder()

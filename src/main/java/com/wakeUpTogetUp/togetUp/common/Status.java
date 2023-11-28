@@ -40,8 +40,9 @@ public enum Status {
     INVALID_JWT(HttpStatus.BAD_REQUEST, "유효하지 않은 jwt 입니다."),
     JWT_MISMATCH(HttpStatus.BAD_REQUEST, "jwt 정보가 일치하지 않습니다."),
     INVALID_GROUP_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 그룹 id 입니다."),
+    INVALID_OBJECT_NAME(HttpStatus.BAD_REQUEST, "유효하지 미션 객체 이름입니다."),
     MISSION_ID_NOT_MATCH(HttpStatus.BAD_REQUEST, "미션과 미션 객체 id 값이 일치하지 않습니다."),
-    Invalid_APPLE_Token(HttpStatus.BAD_REQUEST, "Apple OAuth Claims 값이 올바르지 않습니다."),
+    INVALID_APPLE_TOKEN(HttpStatus.BAD_REQUEST, "Apple OAuth Claims 값이 올바르지 않습니다."),
     INVALID_ROOM_HOST_ID(HttpStatus.BAD_REQUEST, "방장의 id가 아닙니다."),
 
     // FORBIDDEN
@@ -71,6 +72,7 @@ public enum Status {
      */
     // 공통
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 서버 에러입니다. 제보 부탁드립니다."),
+    IMAGE_ANALYSIS_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 분석을 실패했습니다."),
     FIND_USER_AVATAR_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "유저의 대표 아바타 정보를 가져오는데 실패했습니다."),
     LOAD_MODEL_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "모델 객체 정보 불러오기를 실패했습니다."),
     ;
@@ -78,7 +80,7 @@ public enum Status {
     private final HttpStatus httpStatus;
     private final String message;
 
-    private Status(HttpStatus httpStatus, String message) {
+    Status(HttpStatus httpStatus, String message) {
         this.httpStatus = httpStatus;
         this.message = message;
     }
