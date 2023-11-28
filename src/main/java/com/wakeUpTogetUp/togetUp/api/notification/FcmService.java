@@ -34,10 +34,10 @@ public class FcmService {
 
     @Transactional
     public void sendMessageToTokens(NotificationSendVo notificationSendVo) {
-        System.out.println(notificationSendVo.toString());
         // message 만들기
         MulticastMessage message = getPreconfiguredMessageToTokens(notificationSendVo);
         ApiFuture<BatchResponse> response = sendAndGetResponse(message);
+
 
     }
 
@@ -86,9 +86,8 @@ public class FcmService {
     }
 
     private Message.Builder getPreconfiguredMessageBuilder(NotificationSendVo notificationSendVo) {
-        ApnsConfig apnsConfig = getApnsConfig(notificationSendVo.getCategory());
+        // ApnsConfig apnsConfig = getApnsConfig(notificationSendVo.getCategory());
         return Message.builder()
-                .setApnsConfig(apnsConfig)
                 .setNotification(Notification.builder()
                         .setTitle(notificationSendVo.getTitle())
                         .setBody(notificationSendVo.getBody())
@@ -96,24 +95,24 @@ public class FcmService {
     }
 
     private MulticastMessage.Builder getPreconfiguredMulticastMessageBuilder(NotificationSendVo notificationSendVo) {
-        ApnsConfig apnsConfig = getApnsConfig(notificationSendVo.getCategory());
+        // ApnsConfig apnsConfig = getApnsConfig(notificationSendVo.getCategory());
         return MulticastMessage.builder()
-                .setApnsConfig(apnsConfig)
                 .setNotification(Notification.builder()
                         .setTitle(notificationSendVo.getTitle())
                         .setBody(notificationSendVo.getBody())
-                        .build());
+                        .build())
+                .putAllData(notificationSendVo.getDataMap());
     }
 
-    private ApnsConfig getApnsConfig(String category) {
-        return ApnsConfig.builder()
-                .setAps(Aps.builder()
-                        .setCategory(category)
-                        .setBadge(1)
-                        .setSound("default")
-                        .build())
-                .build();
-    }
+//    private ApnsConfig getApnsConfig(String category) {
+//        return ApnsConfig.builder()
+//                .setAps(Aps.builder()
+//                        .setCategory(category)
+//                        .setBadge(1)
+//                        .setSound("default")
+//                        .build())
+//                .build();
+//    }
 
     // 구독 요청
     public void subscribe(List<String> memberTokenList, String topicName) {

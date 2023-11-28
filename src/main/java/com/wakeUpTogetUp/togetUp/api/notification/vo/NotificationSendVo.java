@@ -14,14 +14,12 @@ public class NotificationSendVo {
     private final List<FcmToken> fcmTokens;
     private final String title;
     private final String body;
-    private String category;
     private final Map<String, String> dataMap;
 
-    public NotificationSendVo(List<FcmToken> fcmTokens, String title, String body, String category ,  Map<String, String> dataMap) {
+    public NotificationSendVo(List<FcmToken> fcmTokens, String title, String body,  Map<String, String> dataMap) {
         this.fcmTokens = fcmTokens;
         this.title = title;
         this.body = body;
-        this.category = category;
         this.dataMap = dataMap;
     }
 }
