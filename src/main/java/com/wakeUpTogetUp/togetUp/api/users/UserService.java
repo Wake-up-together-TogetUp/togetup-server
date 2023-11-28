@@ -10,6 +10,8 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ public class UserService {
     private final AuthService authService;
     private final FcmTokenRepository fcmTokenRepository;
     private final RoomUserRepository roomUserRepository;
+
 
     public Integer updateFcmToken(Integer userId, Integer fcmTokenId, String fcmToken) {
 
@@ -89,5 +92,10 @@ public class UserService {
         userRepository.save(user);
 
         return new UserProgressionResult(user.getLevel(), user.getExperience(), user.getPoint());
+    }
+    public List<Integer> getAgreedNotiUsersIds(){
+        return userRepository.findAllByAgreePushIsTrue().stream()
+                .map(User::getId)
+                .collect(Collectors.toList());
     }
 }
