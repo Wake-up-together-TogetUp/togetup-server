@@ -2,8 +2,6 @@ package com.wakeUpTogetUp.togetUp.api.notification.vo;
 
 import java.util.List;
 import java.util.Map;
-
-import com.wakeUpTogetUp.togetUp.api.notification.DataValueType;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import lombok.Getter;
 import lombok.ToString;
