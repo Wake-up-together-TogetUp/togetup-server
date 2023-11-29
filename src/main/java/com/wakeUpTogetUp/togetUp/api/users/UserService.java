@@ -9,6 +9,11 @@ import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,9 +51,10 @@ public class UserService {
                         .point(DEFAULT_USER_POINT)
                         .build());
         userAvatarService.setUserDefaultAvatar(user);
-        
+
         return user;
     }
+
 
     public Integer updateFcmToken(Integer userId, Integer fcmTokenId, String fcmToken) {
 
@@ -115,5 +121,11 @@ public class UserService {
                 .experience(user.getExperience())
                 .point(user.getPoint())
                 .build();
+    }
+
+    public List<Integer> getAgreedNotiUsersIds() {
+        return userRepository.findAllByAgreePushIsTrue().stream()
+                .map(User::getId)
+                .collect(Collectors.toList());
     }
 }

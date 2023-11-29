@@ -11,6 +11,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.service.AzureAiService;
 import com.wakeUpTogetUp.togetUp.api.mission.service.GoogleVisionService;
 import com.wakeUpTogetUp.togetUp.api.mission.service.ObjectDetectionService;
+import com.wakeUpTogetUp.togetUp.api.notification.NotificationService;
 import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
@@ -19,10 +20,12 @@ import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +43,7 @@ public class MissionService {
     private final UserService userService;
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
+    private final NotificationService notificationService;
 
     // 객체 인식
     public List<DetectedObject> getObjectDetectionResult(String object, MultipartFile missionImage)
@@ -132,7 +136,7 @@ public class MissionService {
         Room room = Objects.isNull(req.getRoomId())
                 ? null
                 : roomRepository.findById(req.getRoomId())
-                        .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
         MissionLog missionLog = MissionLog.builder()
                 .alarmName(alarm.getName())
@@ -142,6 +146,8 @@ public class MissionService {
                 .build();
 
         missionLogRepository.save(missionLog);
+
+
     }
 }
 

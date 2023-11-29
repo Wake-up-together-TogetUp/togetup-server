@@ -2,6 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.users.fcmToken;
 
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -14,6 +15,7 @@ import java.time.Instant;
 @NoArgsConstructor(force = true)
 @Builder
 @AllArgsConstructor
+@DynamicInsert
 public class FcmToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
