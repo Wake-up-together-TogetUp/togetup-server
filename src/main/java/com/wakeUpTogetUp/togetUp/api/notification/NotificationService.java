@@ -1,10 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.notification;
 
-import com.wakeUpTogetUp.togetUp.api.notification.dto.request.PushNotificationReq;
-import com.wakeUpTogetUp.togetUp.api.notification.dto.response.PushNotificationRes;
 import com.wakeUpTogetUp.togetUp.api.notification.vo.NotificationSendVo;
 import com.wakeUpTogetUp.togetUp.api.notification.vo.RoomMissionLogNotificationVo;
-import com.wakeUpTogetUp.togetUp.api.room.RoomService;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.UserService;
@@ -16,13 +13,9 @@ import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,8 +23,6 @@ import java.util.stream.Collectors;
 public class NotificationService {
     private final FcmService fcmService;
     private final UserService userService;
-    private final RoomService roomService;
-    //private final PushLogService pushLogService;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final FcmTokenRepository fcmTokenRepository;
@@ -71,34 +62,4 @@ public class NotificationService {
             );
     }
 
-
-    //=======================================================
-    // 그룹 채팅 알림 보내기
-//    @Transactional
-//    public PushNotificationRes sendMessageToGroup(int groupId, PushNotificationReq request)
-//            throws ExecutionException, InterruptedException {
-//        // group 조회
-//        Room room = roomRepository.findById(groupId)
-//                .orElseThrow(
-//                        () -> new BaseException(Status.INVALID_GROUP_ID)
-//                );
-//        request.setTopic(room.getTopic());
-//
-//        // 알림 보내기
-//        PushNotificationRes pushNotificationRes = fcmService.sendMessageToTopic(request);
-//
-//        // TODO : 리팩토링?
-//        // user list 조회
-////        List<User> userList = new ArrayList();
-////        for(RoomUser mgu : room.getMappingGroupUsers()){
-////            userList.add(mgu.getUser());
-////            System.out.println(mgu.getUser());
-////        }
-////
-////        // pushLog 생성
-////        for(User user : userList)
-////            pushLogService.createPushLog(user, request);
-//
-//        return pushNotificationRes;
-//    }
 }
