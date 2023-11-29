@@ -76,7 +76,6 @@ public class Room {
         this.name = name;
         this.intro = intro;
         this.topic = UUID.randomUUID().toString();
-        ;
         this.invitationCode = UUID.randomUUID().toString().substring(0, Constant.INVITATION_CODE_LENGTH);
     }
 

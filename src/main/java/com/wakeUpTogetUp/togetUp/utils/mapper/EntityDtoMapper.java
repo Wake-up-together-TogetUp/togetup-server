@@ -11,8 +11,6 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectLi
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
-import com.wakeUpTogetUp.togetUp.api.notification.dto.response.NotificationRes;
-import com.wakeUpTogetUp.togetUp.api.notification.entity.Notification;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomInfoRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
@@ -65,13 +63,6 @@ public interface EntityDtoMapper {
     GetMissionLogRes toMissionLogRes(MissionLog missionLog);
 
     List<GetMissionLogRes> toMissionLogResList(List<MissionLog> missionLogList);
-
-    // notification
-    @Mapping(target = "roomId", source = "room.id")
-    NotificationRes toNotificationRes(Notification notification);
-
-    List<NotificationRes> toNotificationResList(List<Notification> notificationList);
-
 
     //Room
     @Mapping(target = "roomId", source = "room.id")
