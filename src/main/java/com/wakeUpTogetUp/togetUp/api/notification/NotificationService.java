@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -45,7 +47,13 @@ public class NotificationService {
         );
     }
 
-    public void sendNotificationToUsersInRoom(Room room, User user) {
+    public void sendNotificationToUsersInRoom(Integer alarmId, Integer missionCompleteUserId) {
+
+        User user = userRepository.findById(missionCompleteUserId)
+                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
+        Room room = roomRepository.findByAlarmId(alarmId)
+                .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
+
         List<Integer> userIdsInRoom = room.getRoomUsers().stream()
                 .map(RoomUser::getUser)
                 .map(User::getId)

@@ -10,6 +10,8 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectLi
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogCreateRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionPerfomRes;
 import com.wakeUpTogetUp.togetUp.api.mission.service.MissionImageService;
+import com.wakeUpTogetUp.togetUp.api.notification.NotificationService;
+import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressionResult;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
@@ -17,9 +19,11 @@ import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.vo.ImageProcessResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 import java.util.Objects;
 import javax.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,6 +46,7 @@ public class MissionController {
     private final MissionService missionService;
     private final MissionImageService missionImageService;
     private final FileService fileService;
+    private final NotificationService notificationService;
 
 
     @Operation(summary = "미션 목록 가져오기")
@@ -99,9 +104,12 @@ public class MissionController {
             @Parameter(hidden = true) @AuthUser Integer userId,
             @RequestBody @Valid MissionLogCreateReq missionLogCreateReq
     ) {
+        UserProgressionResult userProgressionResult = missionService.afterMissionComplete(userId, missionLogCreateReq);
+        notificationService.sendNotificationToUsersInRoom(missionLogCreateReq.getAlarmId(), userId);
         return new BaseResponse<>(Status.SUCCESS_CREATED,
                 new MissionLogCreateRes(
-                        missionService.afterMissionComplete(userId, missionLogCreateReq)));
+                        userProgressionResult
+                ));
     }
 
     // TODO : 달별 검색

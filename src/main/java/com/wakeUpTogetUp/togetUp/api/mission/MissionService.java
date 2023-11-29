@@ -147,8 +147,6 @@ public class MissionService {
 
         missionLogRepository.save(missionLog);
 
-        if (Objects.nonNull(room))
-            notificationService.sendNotificationToUsersInRoom(room, user);
 
     }
 }
