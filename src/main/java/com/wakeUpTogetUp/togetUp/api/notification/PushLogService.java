@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.notification;
 
-import com.wakeUpTogetUp.togetUp.api.notification.dto.request.PushNotificationReq;
+//import com.wakeUpTogetUp.togetUp.api.notification.dto.request.PushNotificationReq;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.notification.entity.Notification;
