@@ -41,6 +41,7 @@ public interface EntityDtoMapper {
 
     List<GetAlarmRes> toAlarmResList(List<Alarm> alarmList);
 
+    @Mapping(target = "alarmType", expression = "java(alarm.determineAlarmType())")
     @Mapping(target = "missionObject", source = "alarm.missionObject.kr")
     AlarmSimpleRes toAlarmSimpleRes(Alarm alarm);
 
