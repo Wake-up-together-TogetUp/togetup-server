@@ -1,6 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.users;
 
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
+import com.wakeUpTogetUp.togetUp.api.auth.service.AuthService;
 import com.wakeUpTogetUp.togetUp.api.avatar.vo.UserAvatarData;
 import com.wakeUpTogetUp.togetUp.api.users.dto.request.AppleUserDeleteReq;
 import com.wakeUpTogetUp.togetUp.common.Status;
@@ -27,6 +28,7 @@ public class UserController {
 
     private final UserService userService;
     private final UserAvatarService userAvatarService;
+    private final AuthService authService;
 
     @Operation(summary = "fcmToken 업데이트")
     @ApiResponses(value = {
@@ -65,7 +67,8 @@ public class UserController {
     @DeleteMapping("apple")
     public BaseResponse<Status> deleteAppleUser(@Parameter(hidden = true) @AuthUser Integer userId,
                                                 @RequestBody @Valid AppleUserDeleteReq appleUserDeleteReq) throws IOException {
-        userService.deleteAppleUser(userId, appleUserDeleteReq.getAuthorizationCode());
+        authService.disconnectApple(appleUserDeleteReq.getAuthorizationCode());
+        userService.deleteById(userId);
         return new BaseResponse<>(Status.SUCCESS);
     }
 

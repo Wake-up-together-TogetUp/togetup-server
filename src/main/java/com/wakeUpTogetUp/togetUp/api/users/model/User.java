@@ -7,7 +7,6 @@ import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -106,12 +104,17 @@ public class User {
 
 
     @Builder
-    public User(Integer id, String socialId, String name, String email, LoginType loginType) {
+    public User(Integer id, String socialId, String name, String email, LoginType loginType,
+                int level, int experience, int point
+    ) {
         this.id = id;
         this.socialId = socialId;
         this.name = name;
         this.email = email;
         this.loginType = loginType;
+        this.level = level;
+        this.experience = experience;
+        this.point = point;
     }
 
     public void gainExperience(int experience) {

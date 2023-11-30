@@ -1,5 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.users;
 
+import static com.wakeUpTogetUp.togetUp.common.Constant.DEFAULT_AVATAR_ID;
+
 import com.wakeUpTogetUp.togetUp.api.avatar.AvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.vo.UserAvatarData;
@@ -47,6 +49,12 @@ public class UserAvatarService {
     }
 
     @Transactional
+    public void setUserDefaultAvatar(User user) {
+        createUserAvatar(user, DEFAULT_AVATAR_ID);
+        changeUserAvatar(user.getId(), DEFAULT_AVATAR_ID);
+    }
+
+    @Transactional
     public void createUserAvatar(User user, int avatarId) {
         Avatar avatar = avatarRepository.findById(avatarId)
                 .orElseThrow(() -> new BaseException(Status.AVATAR_NOT_FOUND));
@@ -71,5 +79,12 @@ public class UserAvatarService {
             userAvatar.setIsActive(userAvatar.getAvatar().getId() == avatarId);
             userAvatarRepository.save(userAvatar);
         }
+    }
+
+    public int getUserAvatarId(int userId) {
+        return userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userId)
+                .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL))
+                .getAvatar()
+                .getId();
     }
 }

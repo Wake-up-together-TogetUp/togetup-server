@@ -11,7 +11,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogCreateRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionPerfomRes;
 import com.wakeUpTogetUp.togetUp.api.mission.service.MissionImageService;
 import com.wakeUpTogetUp.togetUp.api.notification.NotificationService;
-import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressionResult;
+import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
@@ -19,11 +19,9 @@ import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.vo.ImageProcessResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import java.util.List;
 import java.util.Objects;
 import javax.validation.Valid;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -104,12 +102,9 @@ public class MissionController {
             @Parameter(hidden = true) @AuthUser Integer userId,
             @RequestBody @Valid MissionLogCreateReq missionLogCreateReq
     ) {
-        UserProgressionResult userProgressionResult = missionService.afterMissionComplete(userId, missionLogCreateReq);
+        UserStat userStat = missionService.afterMissionComplete(userId, missionLogCreateReq);
         notificationService.sendNotificationToUsersInRoom(missionLogCreateReq.getAlarmId(), userId);
-        return new BaseResponse<>(Status.SUCCESS_CREATED,
-                new MissionLogCreateRes(
-                        userProgressionResult
-                ));
+        return new BaseResponse<>(Status.SUCCESS_CREATED, new MissionLogCreateRes(userStat));
     }
 
     // TODO : 달별 검색
