@@ -12,10 +12,13 @@ import lombok.Getter;
 public class AlarmTimeLineRes {
     @Schema(description = "현재 날짜", example = "2023-11-20")
     private LocalDate today;
+
     @Schema(description = "요일", example = "MONDAY")
     private String dayOfWeek;
+
     @Schema(description = "다음 알람")
     private AlarmSimpleRes nextAlarm;
+    
     @Schema(description = "오늘 알람 리스트")
     private List<AlarmSimpleRes> todayAlarmList;
 }
