@@ -13,6 +13,7 @@ import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.utils.DateTimeProvider;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -25,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AlarmService {
-
     private final AlarmRepository alarmRepository;
     private final UserRepository userRepository;
     private final MissionRepository missionRepository;
@@ -131,7 +131,7 @@ public class AlarmService {
     }
 
     public AlarmTimeLineRes getAlarmTimeLineByUserId(Integer userId) {
-        LocalDate today = LocalDate.now();
+        LocalDate today = DateTimeProvider.getCurrentDateInSeoul();
         String dayOfWeek = today.getDayOfWeek().name();
 
         List<Alarm> todayAlarms = alarmRepository.findTodayAlarmsByUserId(userId, dayOfWeek);

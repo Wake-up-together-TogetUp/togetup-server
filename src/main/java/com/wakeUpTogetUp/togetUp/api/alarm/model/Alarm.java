@@ -6,6 +6,7 @@ import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -123,5 +124,9 @@ public class Alarm {
             default:
                 throw new IllegalArgumentException("Invalid day of the week");
         }
+    }
+
+    public AlarmType determineAlarmType() {
+        return Objects.isNull(room) ? AlarmType.PERSONAL : AlarmType.GROUP;
     }
 }
