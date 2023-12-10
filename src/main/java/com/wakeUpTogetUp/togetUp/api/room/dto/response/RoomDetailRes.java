@@ -1,7 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.room.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,7 +62,7 @@ public class RoomDetailRes {
         private String missionKr;
 
         @Schema(description = "알람 시간", example = "pm 13:00")
-        private LocalTime alarmTime;
+        private String alarmTime;
 
         @Schema(description = "그룹알람 울리는 날", example = "주중")
         private String alarmDay;

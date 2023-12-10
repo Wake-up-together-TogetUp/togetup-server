@@ -20,12 +20,10 @@ import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +48,14 @@ public class MissionService {
             throws Exception {
         List<DetectedObject> detectedObjects = azureAiService.detectObjectByVer40(missionImage);
 
+        // TODO: 디버그용 삭제
+        System.out.println();
+        System.out.println("탐지할 객체 = " + object);
+        System.out.println("[감지된 객체]");
+        detectedObjects.stream()
+                .map(DetectedObject::getName)
+                .forEach(System.out::println);
+
         if (detectedObjects.size() == 0) {
             throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
         }
@@ -61,6 +67,10 @@ public class MissionService {
                 .sorted(Comparator.comparing(DetectedObject::getConfidence).reversed())
                 .limit(3)
                 .collect(Collectors.toList());
+
+        // TODO: 디버그용 삭제
+        System.out.println("[감지된 객체 중 목표 객체 정확도순 최대 3개]");
+        highestConfidenceObjects.forEach(System.out::println);
 
         if (highestConfidenceObjects.isEmpty()) {
             throw new BaseException(Status.MISSION_FAILURE);
@@ -136,7 +146,7 @@ public class MissionService {
         Room room = Objects.isNull(req.getRoomId())
                 ? null
                 : roomRepository.findById(req.getRoomId())
-                .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
+                        .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
         MissionLog missionLog = MissionLog.builder()
                 .alarmName(alarm.getName())
