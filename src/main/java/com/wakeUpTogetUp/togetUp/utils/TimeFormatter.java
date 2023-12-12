@@ -1,8 +1,6 @@
 package com.wakeUpTogetUp.togetUp.utils;
 
 
-import org.springframework.stereotype.Component;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -10,7 +8,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.stream.Stream;
+import org.springframework.stereotype.Component;
 
 @Component
 public class TimeFormatter {
@@ -44,14 +42,14 @@ public class TimeFormatter {
 
     }
 
-    public String timeStringToAMPMFormat(String timeString) {
-        LocalTime localTime = stringToLocalTime(timeString);
+    public String timeStringToAMPMFormat(LocalTime time) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("a h:mm").withLocale(Locale.ENGLISH);
-        return localTime.format(formatter).toLowerCase();
+        return time.format(formatter).toLowerCase();
     }
 
 
-    public String formatDaysOfWeek(boolean monday, boolean tuesday, boolean wednesday, boolean thursday, boolean friday, boolean saturday, boolean sunday) {
+    public String formatDaysOfWeek(boolean monday, boolean tuesday, boolean wednesday, boolean thursday, boolean friday,
+                                   boolean saturday, boolean sunday) {
 
         StringBuilder formattedDays = new StringBuilder();
 
@@ -60,18 +58,17 @@ public class TimeFormatter {
         Boolean[] none = {false, false, false, false, false, false, false};
         Boolean[] everyDay = {true, true, true, true, true, true, true};
 
-
         Boolean[] alarmDays = {monday, tuesday, wednesday, thursday, friday, saturday, sunday};
 
-        if (Objects.deepEquals(weekDays, alarmDays))
+        if (Objects.deepEquals(weekDays, alarmDays)) {
             formattedDays.append("주중");
-        else if (Objects.deepEquals(weekend, alarmDays))
+        } else if (Objects.deepEquals(weekend, alarmDays)) {
             formattedDays.append("주말");
-        else if (Objects.deepEquals(none, alarmDays))
+        } else if (Objects.deepEquals(none, alarmDays)) {
             formattedDays.append("");
-        else if (Objects.deepEquals(everyDay, alarmDays))
+        } else if (Objects.deepEquals(everyDay, alarmDays)) {
             formattedDays.append("매일");
-        else {
+        } else {
 
             for (int i = 0; i < alarmDays.length; i++) {
                 if (alarmDays[i]) {
@@ -80,8 +77,9 @@ public class TimeFormatter {
                 }
             }
             //요일이 한개이면
-            if (formattedDays.length() == 2)
+            if (formattedDays.length() == 2) {
                 return formattedDays.toString().replace(",", "요일");
+            }
             formattedDays.deleteCharAt(formattedDays.length() - 1);
         }
 

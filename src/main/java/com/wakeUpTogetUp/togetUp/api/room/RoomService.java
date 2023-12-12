@@ -279,7 +279,7 @@ public class RoomService {
 
         // ex) 13:00 -> pm 1:00
         roomDetailRes.getAlarmData()
-                .setAlarmTime(alarm.getAlarmTime());
+                .setAlarmTime(timeFormatter.timeStringToAMPMFormat(alarm.getAlarmTime()));
         // ex)  평일, 주말, 매일, 월요일, (월, 화, 수), 빈칸
         roomDetailRes.getAlarmData().setAlarmDay(
                 timeFormatter.formatDaysOfWeek(alarm.getMonday(), alarm.getTuesday(),
