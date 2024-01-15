@@ -46,7 +46,7 @@ TogetUp은 `together`[함께]와 `get up`[일어나다]를 조합해서 만든 �
 ## ☁️ ERD
 
 <div align=center>
-     <img src="https://github.com/Wake-up-together-TogetUp/togetup-server/assets/68319395/4b329574-9985-479f-afda-cfe7c5c04ae3">
+     <img width="900" src="https://github.com/Wake-up-together-TogetUp/togetup-server/assets/68319395/4b329574-9985-479f-afda-cfe7c5c04ae3">
 </div>
 
 <br>
