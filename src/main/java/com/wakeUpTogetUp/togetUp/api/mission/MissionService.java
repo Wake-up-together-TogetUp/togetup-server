@@ -131,15 +131,17 @@ public class MissionService {
 
     @Transactional
     public UserStat afterMissionComplete(int userId, MissionLogCreateReq req) {
-        createMissionLog(userId, req);
-        return userService.userProgress(userId);
-    }
-
-    // TODO : 미션 수행 기록 추가 + REQUEST 수정하기
-    public void createMissionLog(int userId, MissionLogCreateReq req) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
 
+        createMissionLog(user, req);
+        userService.userProgress(user);
+
+        return UserStat.from(user);
+    }
+
+    // TODO : 미션 수행 기록 추가 + REQUEST 수정하기
+    public void createMissionLog(User user, MissionLogCreateReq req) {
         Alarm alarm = alarmRepository.findById(req.getAlarmId())
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
@@ -156,8 +158,6 @@ public class MissionService {
                 .build();
 
         missionLogRepository.save(missionLog);
-
-
     }
 }
 

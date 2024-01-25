@@ -103,7 +103,10 @@ public class MissionController {
             @RequestBody @Valid MissionLogCreateReq missionLogCreateReq
     ) {
         UserStat userStat = missionService.afterMissionComplete(userId, missionLogCreateReq);
-        notificationService.sendNotificationToUsersInRoom(missionLogCreateReq.getAlarmId(), userId);
+        // TODO: 비즈니스 로직 제거하기
+        if (Objects.nonNull(missionLogCreateReq.getRoomId())) {
+            notificationService.sendNotificationToUsersInRoom(missionLogCreateReq.getAlarmId(), userId);
+        }
         return new BaseResponse<>(Status.SUCCESS_CREATED, new MissionLogCreateRes(userStat));
     }
 

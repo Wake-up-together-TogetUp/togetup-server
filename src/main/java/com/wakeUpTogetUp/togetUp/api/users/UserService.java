@@ -6,15 +6,11 @@ import com.wakeUpTogetUp.togetUp.api.room.RoomUserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
-import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-
-import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +43,7 @@ public class UserService {
                         .name(socialUserRes.getName())
                         .email(socialUserRes.getEmail())
                         .level(DEFAULT_USER_LEVEL)
-                        .experience(DEFAULT_USER_EXPERIENCE)
+                        .expPoint(DEFAULT_USER_EXPERIENCE)
                         .point(DEFAULT_USER_POINT)
                         .build());
         userAvatarService.setUserDefaultAvatar(user);
@@ -97,30 +93,12 @@ public class UserService {
         if (roomUserNumber > 0) {
             roomUserRepository.deleteByUserId(userId);
         }
-
     }
 
-    public UserStat userProgress(int userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
-
-        user.gainExperience(10);
-        int threshold = 10 + 16 * (user.getLevel() - 1);
-
-        if (user.checkUserLevelUpAvailable(threshold)) {
-            user.levelUp(threshold);
-        }
+    public void userProgress(User user) {
+        user.gainExpPoint(10);
+        user.progress();
         userRepository.save(user);
-
-        return new UserStat(user.getLevel(), user.getExperience(), user.getPoint());
-    }
-
-    public UserStat getUserStat(User user) {
-        return UserStat.builder()
-                .level(user.getLevel())
-                .experience(user.getExperience())
-                .point(user.getPoint())
-                .build();
     }
 
     public List<Integer> getAgreedNotiUsersIds() {
