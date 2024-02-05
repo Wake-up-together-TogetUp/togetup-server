@@ -36,7 +36,10 @@ public class RoomController {
     @Operation(summary = "그룹과 그룹 알람 생성")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "생성 되었습니다."),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다.")})
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 방 입니다."),
+            @ApiResponse(responseCode = "409", description = "이미 방에 들어간 멤버입니다.")
+    })
     @ResponseBody
     @PostMapping() //
     public BaseResponse<Status> create(@Parameter(hidden = true) @AuthUser Integer userId, @RequestBody RoomReq roomReq) {
@@ -62,6 +65,9 @@ public class RoomController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.",
                     content = @Content(schema = @Schema(implementation = RoomUserMissionLogRes.class))),
+            @ApiResponse(responseCode = "404", description = "그룹의 해당 멤버가 없습니다."),
+            @ApiResponse(responseCode = "500", description = "유저의 대표 아바타 정보를 가져오는데 실패했습니다."),
+
     })
     @Operation(summary = "그룹게시판의 미션기록 불러오기", description = "그룹의 멤버의 미션기록 보기")
     @GetMapping("/user/mission-log")
@@ -92,7 +98,9 @@ public class RoomController {
     @Operation(summary = "방장 변경하기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
-            @ApiResponse(responseCode = "400", description = "방장의 id가 아닙니다.")})
+            @ApiResponse(responseCode = "400", description = "방장의 id가 아닙니다."),
+            @ApiResponse(responseCode = "404", description = "그룹의 해당 멤버가 없습니다."),
+    })
     @ResponseBody
     @PostMapping("/{roomId}/host/{selectedUserId}")
     public BaseResponse changeRoomHost(@Parameter(hidden = true) @AuthUser Integer userId, @PathVariable Integer roomId, @Parameter Integer selectedUserId) {
@@ -118,7 +126,7 @@ public class RoomController {
     @Operation(summary = "그룹 푸쉬 알림 설정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
-            @ApiResponse(responseCode = "404", description = "그룹의 멤버가 없습니다."),})
+            @ApiResponse(responseCode = "404", description = "그룹의 해당 멤버가 없습니다."),})
     @ResponseBody
     @PostMapping("/user/push/{roomId}")
     public BaseResponse updateAgreePush(@Parameter(hidden = true) @AuthUser Integer userId, @PathVariable Integer roomId, @Parameter(description = "알람동의 값", example = "true") @RequestParam() boolean agreePush) {
@@ -131,7 +139,11 @@ public class RoomController {
 
     @Operation(summary = "그룹에 참가")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.")})
+            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "409", description = "이미 방에 들어간 멤버입니다."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 방 입니다.")
+    })
     @ResponseBody
     @PostMapping("/join/{roomId}")
     public BaseResponse joinRoom(@Parameter(hidden = true) @AuthUser Integer invitedUserId, @PathVariable Integer roomId) {
