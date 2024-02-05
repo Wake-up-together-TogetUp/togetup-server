@@ -2,7 +2,6 @@ package com.wakeUpTogetUp.togetUp.api.room;
 
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
-import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomUserLogMissionReq;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomInfoRes;
@@ -21,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Tag(name = "그룹(Room)")
