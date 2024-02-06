@@ -8,6 +8,7 @@ import com.wakeUpTogetUp.togetUp.api.auth.dto.response.SocialUserRes;
 import com.wakeUpTogetUp.togetUp.api.users.UserAvatarService;
 import com.wakeUpTogetUp.togetUp.api.users.UserService;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import java.io.IOException;
 import java.util.List;
@@ -56,7 +57,7 @@ public class AuthService {
                 .email(socialUserRes.getEmail())
                 .accessToken(accessToken)
                 .avatarId(userAvatarService.getUserAvatarId(user.getId()))
-                .userStat(userService.getUserStat(user))
+                .userStat(UserStat.from(user))
                 .build();
     }
 
