@@ -120,10 +120,16 @@ public class MissionController {
         return new BaseResponse<>(Status.MISSION_SUCCESS, new MissionPerfomRes(imageUrl));
     }
 
-    // TODO: 머지 후 에러 리스폰스 추가하기
     @Operation(summary = "미션 수행 기록 생성 및 경험치, 레벨, 포인트 정산")
     @PostMapping("/complete")
     @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "생성 되었습니다.",
+                    content = @Content(schema = @Schema(implementation = MissionCompleteRes.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 알람 입니다."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다.")
+    })
     public BaseResponse<MissionCompleteRes> processMissionCompletion(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @RequestBody @Valid MissionCompleteReq missionCompleteReq
