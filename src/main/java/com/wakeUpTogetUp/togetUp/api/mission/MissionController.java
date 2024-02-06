@@ -4,14 +4,12 @@ import com.azure.ai.vision.imageanalysis.DetectedObject;
 import com.google.cloud.vision.v1.FaceAnnotation;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.api.file.FileService;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionLogCreateReq;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionCompleteReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionLogCreateRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionPerfomRes;
 import com.wakeUpTogetUp.togetUp.api.mission.service.MissionImageService;
-import com.wakeUpTogetUp.togetUp.api.notification.NotificationService;
-import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
@@ -44,8 +42,6 @@ public class MissionController {
     private final MissionService missionService;
     private final MissionImageService missionImageService;
     private final FileService fileService;
-    private final NotificationService notificationService;
-
 
     @Operation(summary = "미션 목록 가져오기")
     @GetMapping("/{missionId}")
@@ -98,16 +94,12 @@ public class MissionController {
     @Operation(summary = "미션 수행 기록 생성 및 경험치, 레벨, 포인트 정산")
     @PostMapping("/complete")
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponse<MissionLogCreateRes> postMissionLog(
+    public BaseResponse<MissionCompleteRes> processMissionCompletion(
             @Parameter(hidden = true) @AuthUser Integer userId,
-            @RequestBody @Valid MissionLogCreateReq missionLogCreateReq
+            @RequestBody @Valid MissionCompleteReq missionCompleteReq
     ) {
-        UserStat userStat = missionService.afterMissionComplete(userId, missionLogCreateReq);
-        // TODO: 비즈니스 로직 제거하기
-        if (Objects.nonNull(missionLogCreateReq.getRoomId())) {
-            notificationService.sendNotificationToUsersInRoom(missionLogCreateReq.getAlarmId(), userId);
-        }
-        return new BaseResponse<>(Status.SUCCESS_CREATED, new MissionLogCreateRes(userStat));
+        return new BaseResponse<>(Status.SUCCESS_CREATED,
+                missionService.afterMissionComplete(userId, missionCompleteReq));
     }
 
     // TODO : 달별 검색

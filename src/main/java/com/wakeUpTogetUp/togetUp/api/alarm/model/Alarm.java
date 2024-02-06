@@ -127,6 +127,10 @@ public class Alarm {
     }
 
     public AlarmType determineAlarmType() {
-        return Objects.isNull(room) ? AlarmType.PERSONAL : AlarmType.GROUP;
+        return isRoomAlarm() ? AlarmType.GROUP : AlarmType.PERSONAL;
+    }
+
+    public boolean isRoomAlarm() {
+        return Objects.nonNull(room);
     }
 }

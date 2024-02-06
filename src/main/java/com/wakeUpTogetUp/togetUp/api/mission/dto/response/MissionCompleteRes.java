@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MissionLogCreateRes {
+public class MissionCompleteRes {
     @Schema(description = "경험치, 레벨, 포인트 정산 결과")
     private UserStat userStat;
 }
