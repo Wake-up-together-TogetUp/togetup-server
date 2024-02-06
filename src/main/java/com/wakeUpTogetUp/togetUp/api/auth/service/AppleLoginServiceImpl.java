@@ -80,7 +80,7 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 
     private void validateClaims(Claims claims) {
         if (!appleClaimsValidator.isValid(claims)) {
-            throw new BaseException(Status.INVALID_APPLE_TOKEN);
+            throw new BaseException(Status.INVALID_APPLE_CLAIMS);
 
         }
     }

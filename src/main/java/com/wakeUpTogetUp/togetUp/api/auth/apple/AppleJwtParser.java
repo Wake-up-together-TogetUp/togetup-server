@@ -27,8 +27,7 @@ public class AppleJwtParser {
             String decodedHeader = new String(Base64Utils.decodeFromUrlSafeString(encodedHeader));
             return OBJECT_MAPPER.readValue(decodedHeader, Map.class);
         } catch (JsonProcessingException | ArrayIndexOutOfBoundsException e) {
-            //  throw new InvalidTokenException("Apple OAuth Identity Token 형식이 올바르지 않습니다.");
-            throw new BaseException(Status.UNAUTHORIZED); //todo 에러 바꾸기
+            throw new BaseException(Status.INVALID_APPLE_TOKEN);
         }
     }
 
@@ -39,12 +38,10 @@ public class AppleJwtParser {
                     .parseClaimsJws(idToken)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            //throw new TokenExpiredException("Apple OAuth 로그인 중 Identity Token 유효기간이 만료됐습니다.");
-            throw new BaseException(Status.UNAUTHORIZED); //todo 에러 바꾸기
+            throw new BaseException(Status.UNAUTHORIZED_APPLE_TOKEN);
 
         } catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
-            //throw new InvalidTokenException("Apple OAuth Identity Token 값이 올바르지 않습니다.");
-            throw new BaseException(Status.UNAUTHORIZED); //todo 에러 바꾸기
+            throw new BaseException(Status.INVALID_APPLE_TOKEN);
 
         }
     }

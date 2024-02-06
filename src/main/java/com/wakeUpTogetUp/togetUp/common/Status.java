@@ -32,6 +32,8 @@ public enum Status {
     // UNAUTHORIZED
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."),
     UNAUTHORIZED_KAKAO_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 카카오 엑세스토큰입니다."),
+    UNAUTHORIZED_APPLE_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 애플 엑세스토큰입니다."),
+
 
     // BAD REQUEST
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "요청 값을 확인해주세요."),
@@ -42,7 +44,8 @@ public enum Status {
     INVALID_GROUP_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 그룹 id 입니다."),
     INVALID_OBJECT_NAME(HttpStatus.BAD_REQUEST, "유효하지 미션 객체 이름입니다."),
     MISSION_ID_NOT_MATCH(HttpStatus.BAD_REQUEST, "미션과 미션 객체 id 값이 일치하지 않습니다."),
-    INVALID_APPLE_TOKEN(HttpStatus.BAD_REQUEST, "Apple OAuth Claims 값이 올바르지 않습니다."),
+    INVALID_APPLE_CLAIMS(HttpStatus.BAD_REQUEST, "Apple OAuth Claims 값이 올바르지 않습니다."),
+    INVALID_APPLE_TOKEN(HttpStatus.BAD_REQUEST, "Apple OAuth Identity Token 형식이 올바르지 않습니다."),
     INVALID_ROOM_HOST_ID(HttpStatus.BAD_REQUEST, "방장의 id가 아닙니다."),
 
     // FORBIDDEN
