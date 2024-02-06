@@ -66,11 +66,11 @@ public class User {
     @Column(name = "level")
     private Integer level;
 
-    @Column(name = "experience")
+    @Column(name = "exp_point")
     private Integer expPoint;
 
-    @Column(name = "point")
-    private Integer point;
+    @Column(name = "coin")
+    private Integer coin;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -105,7 +105,7 @@ public class User {
 
     @Builder
     public User(Integer id, String socialId, String name, String email, LoginType loginType,
-                int level, int expPoint, int point
+                int level, int expPoint, int coin
     ) {
         this.id = id;
         this.socialId = socialId;
@@ -114,7 +114,7 @@ public class User {
         this.loginType = loginType;
         this.level = level;
         this.expPoint = expPoint;
-        this.point = point;
+        this.coin = coin;
     }
 
     public void gainExpPoint(int expPoint) {
@@ -137,7 +137,7 @@ public class User {
         // 레벨 1 증가, 경험치 초기화, 포인트 증가
         this.setLevel(this.getLevel() + 1);
         this.setExpPoint(this.getExpPoint() - threshold);
-        this.setPoint(this.getPoint() + 25);
+        this.setCoin(this.getCoin() + 25);
     }
 
     public int calculateLevelUpThreshold() {
@@ -150,14 +150,14 @@ public class User {
     }
 
     public void purchaseAvatar(Avatar avatar) {
-        if (this.getPoint() < avatar.getPrice()) {
+        if (this.getCoin() < avatar.getPrice()) {
             throw new BaseException(Status.USER_POINT_LACKED);
         } else {
-            this.addUserPoint(-avatar.getPrice());
+            this.addCoin(-avatar.getPrice());
         }
     }
 
-    public void addUserPoint(int amount) {
-        this.setPoint(this.point + amount);
+    public void addCoin(int amount) {
+        this.setCoin(this.coin + amount);
     }
 }

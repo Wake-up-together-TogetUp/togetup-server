@@ -44,7 +44,7 @@ public class UserService {
                         .email(socialUserRes.getEmail())
                         .level(DEFAULT_USER_LEVEL)
                         .expPoint(DEFAULT_USER_EXPERIENCE)
-                        .point(DEFAULT_USER_POINT)
+                        .coin(DEFAULT_USER_POINT)
                         .build());
         userAvatarService.setUserDefaultAvatar(user);
 
