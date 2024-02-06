@@ -5,7 +5,8 @@ import com.google.cloud.vision.v1.FaceAnnotation;
 import com.google.cloud.vision.v1.Likelihood;
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionLogCreateReq;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionCompleteReq;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Emotion;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.service.AzureAiService;
@@ -13,7 +14,6 @@ import com.wakeUpTogetUp.togetUp.api.mission.service.GoogleVisionService;
 import com.wakeUpTogetUp.togetUp.api.mission.service.ObjectDetectionService;
 import com.wakeUpTogetUp.togetUp.api.notification.NotificationService;
 import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
-import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserService;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
@@ -22,15 +22,16 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MissionService {
 
     private final ObjectDetectionService objectDetectionService;
@@ -49,19 +50,17 @@ public class MissionService {
         List<DetectedObject> detectedObjects = azureAiService.detectObjectByVer40(missionImage);
 
         // TODO: 디버그용 삭제
-        System.out.println();
-        System.out.println("탐지할 객체 = " + object);
-        System.out.println("[감지된 객체]");
+        log.info("탐지할 객체 = " + object);
+        log.info("[감지된 객체]");
         detectedObjects.stream()
                 .map(DetectedObject::getName)
-                .forEach(System.out::println);
+                .forEach(log::info);
 
-        if (detectedObjects.size() == 0) {
+        if (detectedObjects.isEmpty()) {
             throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
         }
 
         // todo: 객체 정리하고 비교할 자료구조 찾기
-
         List<DetectedObject> highestConfidenceObjects = detectedObjects.stream()
                 .filter(objetDetected -> objetDetected.getName().toLowerCase().equals(object))
                 .sorted(Comparator.comparing(DetectedObject::getConfidence).reversed())
@@ -69,8 +68,8 @@ public class MissionService {
                 .collect(Collectors.toList());
 
         // TODO: 디버그용 삭제
-        System.out.println("[감지된 객체 중 목표 객체 정확도순 최대 3개]");
-        highestConfidenceObjects.forEach(System.out::println);
+        log.info("[감지된 객체 중 목표 객체 정확도순 최대 3개]");
+        highestConfidenceObjects.forEach(obj -> log.info(obj.toString()));
 
         if (highestConfidenceObjects.isEmpty()) {
             throw new BaseException(Status.MISSION_FAILURE);
@@ -119,7 +118,7 @@ public class MissionService {
     // 모델로 객체 인식하기
     public void recognizeObjectByModel(String object, MultipartFile missionImage) {
         for (String objectDetected : objectDetectionService.detectObject(missionImage)) {
-            System.out.println("objectDetected = " + objectDetected);
+            log.info("objectDetected = " + objectDetected);
 
             if (objectDetected.equals(object)) {
                 return;
@@ -130,34 +129,43 @@ public class MissionService {
     }
 
     @Transactional
-    public UserStat afterMissionComplete(int userId, MissionLogCreateReq req) {
-        createMissionLog(userId, req);
-        return userService.userProgress(userId);
-    }
-
-    // TODO : 미션 수행 기록 추가 + REQUEST 수정하기
-    public void createMissionLog(int userId, MissionLogCreateReq req) {
+    public MissionCompleteRes afterMissionComplete(int userId, MissionCompleteReq req) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
-
         Alarm alarm = alarmRepository.findById(req.getAlarmId())
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
-        Room room = Objects.isNull(req.getRoomId())
-                ? null
-                : roomRepository.findById(req.getRoomId())
-                        .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
+        createMissionLog(user, req);
+        userService.userProgress(user);
+        sendNotificationIfRoomExists(alarm, user);
+
+        return new MissionCompleteRes(UserStat.from(user));
+    }
+
+    private void sendNotificationIfRoomExists(Alarm alarm, User user) {
+        if (alarm.isRoomAlarm()) {
+            // 미션 성공 후 처리 로직과 알림 보내기 로직을 독립적으로 분리
+            // 알림을 보내는데 실패해도 모든 과정이 롤백되지 않음
+            try {
+                notificationService.sendNotificationToUsersInRoom(alarm.getId(), user.getId());
+            } catch (BaseException e) {
+                log.error(e.getMessage());
+            }
+        }
+    }
+
+    private void createMissionLog(User user, MissionCompleteReq req) {
+        Alarm alarm = alarmRepository.findById(req.getAlarmId())
+                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
         MissionLog missionLog = MissionLog.builder()
                 .alarmName(alarm.getName())
                 .missionPicLink(req.getMissionPicLink())
                 .user(user)
-                .room(room)
+                .room(alarm.getRoom())
                 .build();
 
         missionLogRepository.save(missionLog);
-
-
     }
 }
 

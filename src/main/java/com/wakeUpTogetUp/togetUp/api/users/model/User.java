@@ -66,11 +66,11 @@ public class User {
     @Column(name = "level")
     private Integer level;
 
-    @Column(name = "experience")
-    private Integer experience;
+    @Column(name = "exp_point")
+    private Integer expPoint;
 
-    @Column(name = "point")
-    private Integer point;
+    @Column(name = "coin")
+    private Integer coin;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -105,7 +105,7 @@ public class User {
 
     @Builder
     public User(Integer id, String socialId, String name, String email, LoginType loginType,
-                int level, int experience, int point
+                int level, int expPoint, int coin
     ) {
         this.id = id;
         this.socialId = socialId;
@@ -113,34 +113,51 @@ public class User {
         this.email = email;
         this.loginType = loginType;
         this.level = level;
-        this.experience = experience;
-        this.point = point;
+        this.expPoint = expPoint;
+        this.coin = coin;
     }
 
-    public void gainExperience(int experience) {
-        this.setExperience(this.getExperience() + experience);
+    public void gainExpPoint(int expPoint) {
+        this.setExpPoint(this.getExpPoint() + expPoint);
     }
 
     public boolean checkUserLevelUpAvailable(int threshold) {
-        return this.getExperience() >= threshold;
+        return this.getExpPoint() >= threshold;
+    }
+
+    public void progress() {
+        int threshold = calculateLevelUpThreshold();
+
+        if (checkUserLevelUpAvailable(threshold)) {
+            levelUp(threshold);
+        }
     }
 
     public void levelUp(int threshold) {
         // 레벨 1 증가, 경험치 초기화, 포인트 증가
         this.setLevel(this.getLevel() + 1);
-        this.setExperience(this.getExperience() - threshold);
-        this.setPoint(this.getPoint() + 25);
+        this.setExpPoint(this.getExpPoint() - threshold);
+        this.setCoin(this.getCoin() + 25);
+    }
+
+    public int calculateLevelUpThreshold() {
+        return 10 + 16 * (level - 1);
+    }
+
+    public double calculateExpPercentage() {
+        double expPercentage = ((double) expPoint / calculateLevelUpThreshold()) * 100.0;
+        return Math.round(expPercentage * 100.0) / 100.0;
     }
 
     public void purchaseAvatar(Avatar avatar) {
-        if (this.getPoint() < avatar.getPrice()) {
+        if (this.getCoin() < avatar.getPrice()) {
             throw new BaseException(Status.USER_POINT_LACKED);
         } else {
-            this.addUserPoint(-avatar.getPrice());
+            this.addCoin(-avatar.getPrice());
         }
     }
 
-    public void addUserPoint(int amount) {
-        this.setPoint(this.point + amount);
+    public void addCoin(int amount) {
+        this.setCoin(this.coin + amount);
     }
 }

@@ -2,21 +2,20 @@ package com.wakeUpTogetUp.togetUp.api.notification;
 
 import com.wakeUpTogetUp.togetUp.api.notification.vo.NotificationSendVo;
 import com.wakeUpTogetUp.togetUp.api.notification.vo.RoomMissionLogNotificationVo;
+import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
+import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserService;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
-import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +38,6 @@ public class NotificationService {
     }
 
     public void sendNotificationToUsersInRoom(Integer alarmId, Integer missionCompleteUserId) {
-
         User user = userRepository.findById(missionCompleteUserId)
                 .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
         Room room = roomRepository.findByAlarmId(alarmId)
@@ -51,15 +49,15 @@ public class NotificationService {
                 .filter(userId -> userId != user.getId())
                 .collect(Collectors.toList());
 
-        if (userIdsInRoom.size() > 0)
+        if (userIdsInRoom.size() > 0) {
             fcmService.sendMessageToTokens(
                     new RoomMissionLogNotificationVo(
                             user,
                             room,
                             fcmTokenRepository.findAllByUser_IdIn(userIdsInRoom)
-
                     )
             );
+        }
     }
 
 }

@@ -1,20 +1,27 @@
 package com.wakeUpTogetUp.togetUp.api.users.vo;
 
+import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
-@AllArgsConstructor
 public class UserStat {
     @Schema(description = "현재 레벨")
-    private int level;
+    private final int level;
 
-    @Schema(description = "현재 경험치")
-    private int experience;
+    @Schema(description = "현재 경험치(%)")
+    private final double expPercentage;
 
-    @Schema(description = "포인트")
-    private int point;
+    @Schema(description = "보유 코인")
+    private final int coin;
+
+    private UserStat(User user) {
+        this.level = user.getLevel();
+        this.expPercentage = user.calculateExpPercentage();
+        this.coin = user.getCoin();
+    }
+
+    public static UserStat from(User user) {
+        return new UserStat(user);
+    }
 }
