@@ -57,7 +57,7 @@ public class MissionService {
                 .forEach(System.out::println);
 
         if (detectedObjects.size() == 0) {
-            throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
+            throw new BaseException(Status.NO_DETECTED_OBJECT);
         }
 
         // todo: 객체 정리하고 비교할 자료구조 찾기
@@ -85,7 +85,7 @@ public class MissionService {
         List<FaceAnnotation> faceAnnotations = googleVisionService.getFaceRecognitionResult(missionImage);
 
         if (faceAnnotations.isEmpty()) {
-            throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
+            throw new BaseException(Status.NO_DETECTED_OBJECT);
         }
 
         List<FaceAnnotation> highestConfidenceFaces = faceAnnotations.stream()

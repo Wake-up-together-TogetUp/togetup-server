@@ -146,7 +146,7 @@ public class ObjectDetectionService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
+            throw new BaseException(Status.NO_DETECTED_OBJECT);
         }
     }
 }
