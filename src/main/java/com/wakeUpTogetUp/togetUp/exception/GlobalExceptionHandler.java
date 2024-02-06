@@ -2,9 +2,8 @@ package com.wakeUpTogetUp.togetUp.exception;
 
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.TypeMismatchException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,13 +15,12 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     // Catch Custom Exception(BaseException)
     @ExceptionHandler({BaseException.class})
     protected BaseResponse<Status> handleCustomException(BaseException exception) {
-        logger.debug("BaseResponse exception occurred: {}", exception.getMessage(), exception);
+        log.debug("BaseResponse exception occurred: {}", exception.getMessage(), exception);
         exception.printStackTrace();
 
         return new BaseResponse<>(exception.getStatus());
@@ -41,7 +39,7 @@ public class GlobalExceptionHandler {
             NoHandlerFoundException.class,
     })
     protected BaseResponse<Status> handleBadRequestException(Exception exception) {
-        logger.debug("Bad request exception occurred: {}",
+        log.debug("Bad request exception occurred: {}",
                 exception.getMessage(),
                 exception);
         exception.printStackTrace();
@@ -51,7 +49,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     protected BaseResponse<Status> handleNotSupportedMediaTypeException(HttpMediaTypeNotSupportedException exception) {
-        logger.debug("Bad request exception occurred: {}",
+        log.debug("Bad request exception occurred: {}",
                 exception.getMessage(),
                 exception);
         exception.printStackTrace();
@@ -61,17 +59,17 @@ public class GlobalExceptionHandler {
 
     // vallidation
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected BaseResponse validException(MethodArgumentNotValidException exception) {
+    protected BaseResponse<String> validException(MethodArgumentNotValidException exception) {
         String msg = "유효성 검사 실패 : " + exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         exception.printStackTrace();
 
-        return new BaseResponse(Status.BAD_REQUEST, msg);
+        return new BaseResponse<>(Status.BAD_REQUEST, msg);
     }
 
     // Catch all Exception
     @ExceptionHandler({Exception.class})
     protected BaseResponse<Status> handleServerException(Exception exception) {
-        logger.error("Unexpected exception occurred: {}",
+        log.error("Unexpected exception occurred: {}",
                 exception.getMessage(),
                 exception);
         exception.printStackTrace();
