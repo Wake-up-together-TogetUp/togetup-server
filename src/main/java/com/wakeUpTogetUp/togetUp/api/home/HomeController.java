@@ -7,6 +7,9 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +25,10 @@ public class HomeController {
 
     @Operation(summary = "브리핑 보드 - 알람 타임라인")
     @GetMapping("/brief-board/alarm/timeline")
+    @ApiResponse(
+            responseCode = "200",
+            description = "요청에 성공하였습니다.",
+            content = @Content(schema = @Schema(implementation = AlarmTimeLineRes.class)))
     BaseResponse<AlarmTimeLineRes> getAlarmTimeLineOfUser(
             @Parameter(hidden = true) @AuthUser Integer userId
     ) {
