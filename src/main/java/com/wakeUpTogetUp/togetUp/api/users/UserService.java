@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
     private static final int DEFAULT_USER_LEVEL = 1;
-    private static final int DEFAULT_USER_EXPERIENCE = 0;
-    private static final int DEFAULT_USER_POINT = 0;
+    private static final int DEFAULT_USER_EXPPOINT = 0;
+    private static final int DEFAULT_USER_COIN = 0;
 
     private final UserAvatarService userAvatarService;
     private final UserRepository userRepository;
@@ -43,8 +43,8 @@ public class UserService {
                         .name(socialUserRes.getName())
                         .email(socialUserRes.getEmail())
                         .level(DEFAULT_USER_LEVEL)
-                        .expPoint(DEFAULT_USER_EXPERIENCE)
-                        .coin(DEFAULT_USER_POINT)
+                        .expPoint(DEFAULT_USER_EXPPOINT)
+                        .coin(DEFAULT_USER_COIN)
                         .build());
         userAvatarService.setUserDefaultAvatar(user);
 
