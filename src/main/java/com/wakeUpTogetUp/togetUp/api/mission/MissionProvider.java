@@ -18,7 +18,9 @@ public class MissionProvider {
     private final MissionLogRepository missionLogRepository;
 
     public GetMissionWithObjectListRes getMission(int missionId) {
-        Mission mission = missionRepository.findAllByIdAndIsActive(missionId, true);
+        Mission mission = missionRepository.findByIdAndIsActive(missionId, true)
+                .orElseThrow(() -> new BaseException(Status.MISSION_NOT_FOUND));
+        
         return EntityDtoMapper.INSTANCE.toGetMissionRes(mission);
     }
 
