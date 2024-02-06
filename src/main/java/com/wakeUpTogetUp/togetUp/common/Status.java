@@ -19,7 +19,7 @@ public enum Status {
     // Mission
     NO_DETECTED_OBJECT(HttpStatus.OK, "탐지된 객체가 없습니다."),
     MISSION_FAILURE(HttpStatus.OK, "미션을 성공하지 못했습니다."),
-    MISSION_SUCCESS(HttpStatus.OK, "미션을 성공했습니다."),
+    MISSION_SUCCESS(HttpStatus.CREATED, "미션을 성공했습니다."),
 
     /**
      * 300번대(리다이렉트)

@@ -69,7 +69,7 @@ public class AlarmController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
-                    description = "요청에 성공하였습니다.",
+                    description = "생성 되었습니다.",
                     content = @Content(schema = @Schema(implementation = Integer.class))),
             @ApiResponse(responseCode = "400", description = "미션과 미션 객체 id 값이 일치하지 않습니다."),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다."),
@@ -109,7 +109,8 @@ public class AlarmController {
                     responseCode = "200",
                     description = "요청에 성공하였습니다.",
                     content = @Content(schema = @Schema(implementation = Integer.class))),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 알람 입니다.")})
+            @ApiResponse(responseCode = "409", description = "이미 보유한 아바타 입니다.")
+    })
     public BaseResponse<Integer> deleteAlarm(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @PathVariable Integer alarmId

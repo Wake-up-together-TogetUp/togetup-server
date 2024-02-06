@@ -42,7 +42,7 @@ public class UserAvatarService {
                 .orElseThrow(() -> new BaseException(Status.AVATAR_NOT_FOUND));
 
         user.purchaseAvatar(avatar);
-        this.createUserAvatar(user, avatarId);
+        createUserAvatar(user, avatarId);
         userRepository.save(user);
     }
 
