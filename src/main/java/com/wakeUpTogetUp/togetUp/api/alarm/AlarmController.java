@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import javax.validation.Valid;
@@ -35,22 +36,27 @@ public class AlarmController {
     private final AlarmProvider alarmProvider;
 
     @Operation(summary = "알람 1개 불러오기")
-    @ApiResponse(
-            responseCode = "200",
-            description = "요청에 성공하였습니다.",
-            content = @Content(schema = @Schema(implementation = GetAlarmRes.class)))
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "요청에 성공하였습니다.",
+                    content = @Content(schema = @Schema(implementation = GetAlarmRes.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 알람 입니다.")})
     @GetMapping("/{alarmId}")
-    public BaseResponse<GetAlarmRes> GetAlarm(@PathVariable Integer alarmId) {
+    public BaseResponse<GetAlarmRes> getAlarm(@PathVariable Integer alarmId) {
         return new BaseResponse<>(Status.SUCCESS, alarmProvider.getAlarmById(alarmId));
     }
 
     @Operation(summary = "유저 알람 목록 불러오기", description = "개인/그룹 알람 가져오기")
-    @ApiResponse(
-            responseCode = "200",
-            description = "요청에 성공하였습니다.",
-            content = @Content(schema = @Schema(implementation = GetAlarmRes.class)))
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "요청에 성공하였습니다.",
+                    content = @Content(schema = @Schema(implementation = GetAlarmRes.class))),
+            @ApiResponse(responseCode = "400", description = "요청 파라미터를 확인해주세요."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다.")})
     @GetMapping
-    public BaseResponse<List<GetAlarmRes>> GetAlarmsByUserId(
+    public BaseResponse<List<GetAlarmRes>> getAlarmsByUserId(
             @Parameter(description = "- 개인 : personal\n- 그룹 : group", example = "personal") String type,
             @Parameter(hidden = true) @AuthUser Integer userId
     ) {
@@ -60,6 +66,16 @@ public class AlarmController {
     @Operation(summary = "알람 생성")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "생성 되었습니다.",
+                    content = @Content(schema = @Schema(implementation = Integer.class))),
+            @ApiResponse(responseCode = "400", description = "미션과 미션 객체 id 값이 일치하지 않습니다."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 미션 입니다."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 미션 객체 입니다."),
+    })
     public BaseResponse<Integer> createAlarm(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @RequestBody @Valid PostAlarmReq postAlarmReq
@@ -69,6 +85,15 @@ public class AlarmController {
 
     @Operation(summary = "알람 수정")
     @PatchMapping("/{alarmId}")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "요청에 성공하였습니다.",
+                    content = @Content(schema = @Schema(implementation = Integer.class))),
+            @ApiResponse(responseCode = "400", description = "미션과 미션 객체 id 값이 일치하지 않습니다."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 알람 입니다."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 미션 입니다."),
+    })
     public BaseResponse<Integer> updateAlarm(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @PathVariable Integer alarmId,
@@ -79,6 +104,13 @@ public class AlarmController {
 
     @Operation(summary = "알람 삭제")
     @DeleteMapping("/{alarmId}")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "요청에 성공하였습니다.",
+                    content = @Content(schema = @Schema(implementation = Integer.class))),
+            @ApiResponse(responseCode = "409", description = "이미 보유한 아바타 입니다.")
+    })
     public BaseResponse<Integer> deleteAlarm(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @PathVariable Integer alarmId

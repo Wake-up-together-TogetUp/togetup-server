@@ -13,7 +13,6 @@ import com.wakeUpTogetUp.togetUp.api.mission.service.AzureAiService;
 import com.wakeUpTogetUp.togetUp.api.mission.service.GoogleVisionService;
 import com.wakeUpTogetUp.togetUp.api.mission.service.ObjectDetectionService;
 import com.wakeUpTogetUp.togetUp.api.notification.NotificationService;
-import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserService;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
@@ -41,7 +40,6 @@ public class MissionService {
     private final MissionLogRepository missionLogRepository;
     private final UserService userService;
     private final UserRepository userRepository;
-    private final RoomRepository roomRepository;
     private final NotificationService notificationService;
 
     // 객체 인식
@@ -57,7 +55,7 @@ public class MissionService {
                 .forEach(log::info);
 
         if (detectedObjects.isEmpty()) {
-            throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
+            throw new BaseException(Status.NO_DETECTED_OBJECT);
         }
 
         // todo: 객체 정리하고 비교할 자료구조 찾기
@@ -84,7 +82,7 @@ public class MissionService {
         List<FaceAnnotation> faceAnnotations = googleVisionService.getFaceRecognitionResult(missionImage);
 
         if (faceAnnotations.isEmpty()) {
-            throw new BaseException(Status.MISSION_OBJECT_NOT_FOUND);
+            throw new BaseException(Status.NO_DETECTED_OBJECT);
         }
 
         List<FaceAnnotation> highestConfidenceFaces = faceAnnotations.stream()
