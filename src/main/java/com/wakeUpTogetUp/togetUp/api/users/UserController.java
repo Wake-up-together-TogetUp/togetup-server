@@ -63,7 +63,10 @@ public class UserController {
     }
 
     @Operation(summary = "애플 유저 탈퇴")
-    @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다."),
+    })
     @DeleteMapping("apple")
     public BaseResponse<Status> deleteAppleUser(@Parameter(hidden = true) @AuthUser Integer userId,
                                                 @RequestBody @Valid AppleUserDeleteReq appleUserDeleteReq) throws IOException {
