@@ -136,15 +136,16 @@ public class MissionService {
         Alarm alarm = alarmRepository.findById(req.getAlarmId())
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
+        UserProgressResult progressResult = userService.userProgress(user);
         createMissionLog(user, req);
-        UserProgressResult result = userService.userProgress(user);
-        if (result.isUserLevelUp()) {
-            userAvatarService.unlockAvatarIfAvailable(user);
-        }
-        
         sendNotificationIfRoomExists(alarm, user);
 
-        return new MissionCompleteRes(UserStat.from(user));
+        boolean isNewAvatarAvailable = false;
+        if (progressResult.isUserLevelUp()) {
+            isNewAvatarAvailable = userAvatarService.unlockAvatarIfAvailableExist(user);
+        }
+
+        return new MissionCompleteRes(UserStat.from(user), progressResult.isUserLevelUp(), isNewAvatarAvailable);
     }
 
     private void sendNotificationIfRoomExists(Alarm alarm, User user) {

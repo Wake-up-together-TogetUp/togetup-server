@@ -11,7 +11,7 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +23,7 @@ public class UserAvatarService {
     private final AvatarRepository avatarRepository;
     private final UserAvatarRepository userAvatarRepository;
 
+    @Transactional(readOnly = true)
     public List<UserAvatarData> findUserAvatarList(int userId) {
         List<Avatar> avatarList = avatarRepository.findAll();
         List<UserAvatar> userAvatarList = userAvatarRepository.findAllByUser_Id(userId);
@@ -30,14 +31,13 @@ public class UserAvatarService {
         return EntityDtoMapper.INSTANCE.toUserAvatarDataList(avatarList, userAvatarList);
     }
 
-    @Transactional
-    public void unlockAvatarIfAvailable(User user) {
-        Avatar avatarAvailable = avatarRepository.findAvatarByUnlockLevel(user.getLevel())
-                .orElse(null);
 
-        if (Objects.nonNull(avatarAvailable)) {
-            unlockAvatar(user, avatarAvailable);
-        }
+    @Transactional
+    public boolean unlockAvatarIfAvailableExist(User user) {
+        Optional<Avatar> avatarAvailable = avatarRepository.findAvatarByUnlockLevel(user.getLevel());
+        avatarAvailable.ifPresent(avatar -> unlockAvatar(user, avatar));
+
+        return avatarAvailable.isPresent();
     }
 
     private void unlockAvatar(User user, Avatar avatar) {

@@ -120,7 +120,7 @@ public class MissionController {
         return new BaseResponse<>(Status.MISSION_SUCCESS, new MissionPerfomRes(imageUrl));
     }
 
-    @Operation(summary = "미션 수행 기록 생성 및 경험치, 레벨, 포인트 정산")
+    @Operation(summary = "미션 완료 - 수행 기록 생성 및 경험치, 레벨 정산 및 경우에 따라 아바타 해금")
     @PostMapping("/complete")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
