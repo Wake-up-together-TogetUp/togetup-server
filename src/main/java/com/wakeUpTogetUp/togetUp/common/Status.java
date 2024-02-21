@@ -76,7 +76,8 @@ public enum Status {
     // 공통
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 서버 에러입니다. 제보 부탁드립니다."),
     IMAGE_ANALYSIS_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 분석을 실패했습니다."),
-    FIND_USER_AVATAR_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "유저의 대표 아바타 정보를 가져오는데 실패했습니다."),
+    FIND_DEFAULT_AVATAR_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "기본 아바타를 불려오는데 실패했습니다."),
+    FIND_USER_AVATAR_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "유저의 대표 아바타 정보를 불러오는데 실패했습니다."),
     LOAD_MODEL_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "모델 객체 정보 불러오기를 실패했습니다."),
     ;
 

@@ -5,6 +5,7 @@ import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
+import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressResult;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import java.sql.Timestamp;
@@ -40,6 +41,9 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor
 @DynamicInsert
 public class User {
+
+    private static final int EXP_GAIN_PER_MISSION_COMPLETE = 10;
+    private static final int DEFAULT_LEVEL_INCREMENT = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,7 +85,6 @@ public class User {
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
-
     @OneToMany(mappedBy = "user")
     private List<FcmToken> fcmToken = new ArrayList<>();
 
@@ -102,7 +105,6 @@ public class User {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-
     @Builder
     public User(Integer id, String socialId, String name, String email, LoginType loginType,
                 int level, int expPoint, int coin
@@ -117,25 +119,30 @@ public class User {
         this.coin = coin;
     }
 
-    public void gainExpPoint(int expPoint) {
+    public UserProgressResult progress() {
+        gainExpPoint(EXP_GAIN_PER_MISSION_COMPLETE);
+
+        int threshold = calculateLevelUpThreshold();
+        boolean isUserLevelUpAvailable = isUserLevelUpAvailable(threshold);
+
+        if (isUserLevelUpAvailable) {
+            levelUp(threshold);
+        }
+
+        return new UserProgressResult(isUserLevelUpAvailable);
+    }
+
+    private void gainExpPoint(int expPoint) {
         this.setExpPoint(this.getExpPoint() + expPoint);
     }
 
-    public boolean checkUserLevelUpAvailable(int threshold) {
+    public boolean isUserLevelUpAvailable(int threshold) {
         return this.getExpPoint() >= threshold;
-    }
-
-    public void progress() {
-        int threshold = calculateLevelUpThreshold();
-
-        if (checkUserLevelUpAvailable(threshold)) {
-            levelUp(threshold);
-        }
     }
 
     public void levelUp(int threshold) {
         // 레벨 1 증가, 경험치 초기화, 포인트 증가
-        this.setLevel(this.getLevel() + 1);
+        this.setLevel(this.getLevel() + DEFAULT_LEVEL_INCREMENT);
         this.setExpPoint(this.getExpPoint() - threshold);
         this.setCoin(this.getCoin() + 25);
     }
