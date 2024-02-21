@@ -73,9 +73,6 @@ public class User {
     @Column(name = "exp_point")
     private Integer expPoint;
 
-    @Column(name = "coin")
-    private Integer coin;
-
     @Column(name = "created_at")
     private Timestamp createdAt;
 
@@ -107,7 +104,7 @@ public class User {
 
     @Builder
     public User(Integer id, String socialId, String name, String email, LoginType loginType,
-                int level, int expPoint, int coin
+                int level, int expPoint
     ) {
         this.id = id;
         this.socialId = socialId;
@@ -116,7 +113,6 @@ public class User {
         this.loginType = loginType;
         this.level = level;
         this.expPoint = expPoint;
-        this.coin = coin;
     }
 
     public UserProgressResult progress() {
@@ -144,7 +140,6 @@ public class User {
         // 레벨 1 증가, 경험치 초기화, 포인트 증가
         this.setLevel(this.getLevel() + DEFAULT_LEVEL_INCREMENT);
         this.setExpPoint(this.getExpPoint() - threshold);
-        this.setCoin(this.getCoin() + 25);
     }
 
     public int calculateLevelUpThreshold() {
@@ -154,17 +149,5 @@ public class User {
     public double calculateExpPercentage() {
         double expPercentage = ((double) expPoint / calculateLevelUpThreshold()) * 100.0;
         return Math.round(expPercentage * 100.0) / 100.0;
-    }
-
-    public void purchaseAvatar(Avatar avatar) {
-        if (this.getCoin() < avatar.getPrice()) {
-            throw new BaseException(Status.USER_POINT_LACKED);
-        } else {
-            this.addCoin(-avatar.getPrice());
-        }
-    }
-
-    public void addCoin(int amount) {
-        this.setCoin(this.coin + amount);
     }
 }
