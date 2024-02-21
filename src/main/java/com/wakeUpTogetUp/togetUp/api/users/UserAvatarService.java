@@ -41,12 +41,14 @@ public class UserAvatarService {
     }
 
     private void unlockAvatar(User user, Avatar avatar) {
-        userAvatarRepository.findByUserAndAvatar(user, avatar)
-                .ifPresent(value -> {
-                    throw new BaseException(Status.USER_AVATAR_ALREADY_EXIST);
-                });
+        if (isUserAvatarNotExist(user, avatar)) {
+            createUserAvatar(user, avatar);
+        }
+    }
 
-        createUserAvatar(user, avatar);
+    private boolean isUserAvatarNotExist(User user, Avatar avatar) {
+        return userAvatarRepository.findByUserAndAvatar(user, avatar)
+                .isEmpty();
     }
 
     private void createUserAvatar(User user, Avatar avatar) {
