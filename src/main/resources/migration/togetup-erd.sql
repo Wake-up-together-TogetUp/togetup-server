@@ -3,7 +3,6 @@ create table avatar
     id           int unsigned auto_increment
         primary key,
     theme        varchar(20)                         not null,
-    price        int unsigned                        not null,
     unlock_level int unsigned                        not null,
     created_at   timestamp default CURRENT_TIMESTAMP not null
 );
@@ -70,8 +69,7 @@ create table user
     social_id  varchar(80)                            not null,
     agree_push tinyint(1)   default 1                 not null,
     level      int unsigned default '1'               not null,
-    experience int unsigned default '0'               not null,
-    point      int unsigned default '0'               not null,
+    exp_point int unsigned default '0'               not null,
     created_at timestamp    default CURRENT_TIMESTAMP not null,
     updated_at timestamp    default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
     is_deleted tinyint(1)   default 0                 not null
