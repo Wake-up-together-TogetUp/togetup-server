@@ -13,9 +13,11 @@ import com.wakeUpTogetUp.togetUp.api.mission.service.AzureAiService;
 import com.wakeUpTogetUp.togetUp.api.mission.service.GoogleVisionService;
 import com.wakeUpTogetUp.togetUp.api.mission.service.ObjectDetectionService;
 import com.wakeUpTogetUp.togetUp.api.notification.NotificationService;
+import com.wakeUpTogetUp.togetUp.api.users.UserAvatarService;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserService;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressResult;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
@@ -39,6 +41,7 @@ public class MissionService {
     private final AlarmRepository alarmRepository;
     private final MissionLogRepository missionLogRepository;
     private final UserService userService;
+    private final UserAvatarService userAvatarService;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
@@ -133,11 +136,16 @@ public class MissionService {
         Alarm alarm = alarmRepository.findById(req.getAlarmId())
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
+        UserProgressResult progressResult = userService.userProgress(user);
         createMissionLog(user, req);
-        userService.userProgress(user);
         sendNotificationIfRoomExists(alarm, user);
 
-        return new MissionCompleteRes(UserStat.from(user));
+        boolean isNewAvatarAvailable = false;
+        if (progressResult.isUserLevelUp()) {
+            isNewAvatarAvailable = userAvatarService.unlockAvatarIfAvailableExist(user);
+        }
+
+        return new MissionCompleteRes(UserStat.from(user), progressResult.isUserLevelUp(), isNewAvatarAvailable);
     }
 
     private void sendNotificationIfRoomExists(Alarm alarm, User user) {

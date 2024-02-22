@@ -11,6 +11,7 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserAvatarService {
 
-    private final UserRepository userRepository;
     private final AvatarRepository avatarRepository;
     private final UserAvatarRepository userAvatarRepository;
 
+    @Transactional(readOnly = true)
     public List<UserAvatarData> findUserAvatarList(int userId) {
         List<Avatar> avatarList = avatarRepository.findAll();
         List<UserAvatar> userAvatarList = userAvatarRepository.findAllByUser_Id(userId);
@@ -30,38 +31,42 @@ public class UserAvatarService {
         return EntityDtoMapper.INSTANCE.toUserAvatarDataList(avatarList, userAvatarList);
     }
 
-    @Transactional
-    public void unlockAvatar(int userId, int avatarId) {
-        userAvatarRepository.findByUser_IdAndAvatar_Id(userId, avatarId)
-                .ifPresent(value -> {
-                    throw new BaseException(Status.USER_AVATAR_ALREADY_EXIST);
-                });
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
-        Avatar avatar = avatarRepository.findById(avatarId)
-                .orElseThrow(() -> new BaseException(Status.AVATAR_NOT_FOUND));
 
-        user.purchaseAvatar(avatar);
-        createUserAvatar(user, avatarId);
-        userRepository.save(user);
+    @Transactional
+    public boolean unlockAvatarIfAvailableExist(User user) {
+        Optional<Avatar> avatarAvailable = avatarRepository.findAvatarByUnlockLevel(user.getLevel());
+        avatarAvailable.ifPresent(avatar -> unlockAvatar(user, avatar));
+
+        return avatarAvailable.isPresent();
     }
 
-    @Transactional
-    public void setUserDefaultAvatar(User user) {
-        createUserAvatar(user, DEFAULT_AVATAR_ID);
-        changeUserAvatar(user.getId(), DEFAULT_AVATAR_ID);
+    private void unlockAvatar(User user, Avatar avatar) {
+        if (isUserAvatarNotExist(user, avatar)) {
+            createUserAvatar(user, avatar);
+        }
     }
 
-    @Transactional
-    public void createUserAvatar(User user, int avatarId) {
-        Avatar avatar = avatarRepository.findById(avatarId)
-                .orElseThrow(() -> new BaseException(Status.AVATAR_NOT_FOUND));
+    private boolean isUserAvatarNotExist(User user, Avatar avatar) {
+        return userAvatarRepository.findByUserAndAvatar(user, avatar)
+                .isEmpty();
+    }
 
+    private void createUserAvatar(User user, Avatar avatar) {
         UserAvatar userAvatar = UserAvatar.builder()
                 .user(user)
                 .avatar(avatar)
                 .build();
+
         userAvatarRepository.save(userAvatar);
+    }
+
+    @Transactional
+    public void setUserDefaultAvatar(User user) {
+        Avatar defaultAvatar = avatarRepository.findById(DEFAULT_AVATAR_ID)
+                .orElseThrow(() -> new BaseException(Status.FIND_DEFAULT_AVATAR_FAIL));
+
+        createUserAvatar(user, defaultAvatar);
+        changeUserAvatar(user.getId(), DEFAULT_AVATAR_ID);
     }
 
     @Transactional
@@ -69,7 +74,9 @@ public class UserAvatarService {
         List<UserAvatar> userAvatarList =
                 userAvatarRepository.findAllByUser_Id(userId);
 
-        userAvatarList.stream().filter(i -> i.getAvatar().getId() == avatarId).findAny()
+        userAvatarList.stream()
+                .filter(i -> i.getAvatar().getId() == avatarId)
+                .findAny()
                 .orElseThrow(() -> new BaseException(Status.USER_AVATAR_LOCKED));
 
         for (UserAvatar userAvatar : userAvatarList) {

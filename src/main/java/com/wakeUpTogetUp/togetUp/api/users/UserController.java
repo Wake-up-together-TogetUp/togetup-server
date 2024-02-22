@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,8 +40,8 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다.")})
     @PatchMapping("/fcm-token")
     public BaseResponse<Integer> updateFcmToken(@Parameter(hidden = true) @AuthUser Integer userId,
-                                                @Parameter(description = "디바이스토큰 id") @RequestParam(required = false) Integer fcmTokenId,
-                                                @Parameter(description = "토큰값", required = true) @RequestParam String fcmToken) {
+            @Parameter(description = "디바이스토큰 id") @RequestParam(required = false) Integer fcmTokenId,
+            @Parameter(description = "토큰값", required = true) @RequestParam String fcmToken) {
         Integer updatedFcmTokenId = userService.updateFcmToken(userId, fcmTokenId, fcmToken);
         return new BaseResponse<>(Status.SUCCESS, updatedFcmTokenId);
     }
@@ -54,7 +53,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다.")})
     @PatchMapping("/push")
     public BaseResponse<Status> updateAgreePush(@Parameter(hidden = true) @AuthUser Integer userId,
-                                                @Parameter(description = "알람동의 값", example = "true") @RequestParam() boolean agreePush) {
+            @Parameter(description = "알람동의 값", example = "true") @RequestParam() boolean agreePush) {
         userService.updateAgreePush(userId, agreePush);
         return new BaseResponse<>(Status.SUCCESS);
     }
@@ -65,7 +64,8 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다.")})
     @DeleteMapping()
-    public BaseResponse<Status> deleteKaKaoUser(@Parameter(hidden = true) @AuthUser Integer userId) {
+    public BaseResponse<Status> deleteKaKaoUser(
+            @Parameter(hidden = true) @AuthUser Integer userId) {
         userService.deleteById(userId);
         return new BaseResponse<>(Status.SUCCESS);
     }
@@ -77,7 +77,7 @@ public class UserController {
     })
     @DeleteMapping("apple")
     public BaseResponse<Status> deleteAppleUser(@Parameter(hidden = true) @AuthUser Integer userId,
-                                                @RequestBody @Valid AppleUserDeleteReq appleUserDeleteReq)
+            @RequestBody @Valid AppleUserDeleteReq appleUserDeleteReq)
             throws IOException {
         authService.disconnectApple(appleUserDeleteReq.getAuthorizationCode());
         userService.deleteById(userId);
@@ -106,22 +106,4 @@ public class UserController {
         userAvatarService.changeUserAvatar(userId, avatarId);
         return new BaseResponse<>(Status.SUCCESS);
     }
-
-    @Operation(summary = "아바타 해금")
-    @PostMapping("/avatars/{avatarId}/unlock")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
-            @ApiResponse(responseCode = "403", description = "유저가 보유하지 않은 아바타 ID 입니다."),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다."),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 아바타 입니다."),
-            @ApiResponse(responseCode = "409", description = "포인트가 부족하여 구매가 불가능합니다.")
-    })
-    public BaseResponse<Object> unlockUserAvatar(
-            @Parameter(hidden = true) @AuthUser Integer userId,
-            @PathVariable int avatarId
-    ) {
-        userAvatarService.unlockAvatar(userId, avatarId);
-        return new BaseResponse<>(Status.SUCCESS);
-    }
 }
-

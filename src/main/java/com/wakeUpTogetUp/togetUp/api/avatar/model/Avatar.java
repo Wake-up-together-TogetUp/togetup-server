@@ -26,12 +26,8 @@ public class Avatar {
     private AvatarTheme theme;
 
     @Column(columnDefinition = "INT UNSIGNED")
-    private Integer price;
-
-    @Column(columnDefinition = "INT UNSIGNED")
     private Integer unlockLevel;
 
-    // TODO : 더 좋은 방법 찾기
     @Column(columnDefinition = "TIMESTAMP")
     private String createdAt;
 

@@ -5,6 +5,7 @@ import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
+import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressResult;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import java.sql.Timestamp;
@@ -41,6 +42,9 @@ import org.hibernate.annotations.Where;
 @DynamicInsert
 public class User {
 
+    private static final int EXP_GAIN_PER_MISSION_COMPLETE = 10;
+    private static final int DEFAULT_LEVEL_INCREMENT = 1;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "INT UNSIGNED")
@@ -69,9 +73,6 @@ public class User {
     @Column(name = "exp_point")
     private Integer expPoint;
 
-    @Column(name = "coin")
-    private Integer coin;
-
     @Column(name = "created_at")
     private Timestamp createdAt;
 
@@ -80,7 +81,6 @@ public class User {
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
-
 
     @OneToMany(mappedBy = "user")
     private List<FcmToken> fcmToken = new ArrayList<>();
@@ -102,10 +102,9 @@ public class User {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-
     @Builder
     public User(Integer id, String socialId, String name, String email, LoginType loginType,
-                int level, int expPoint, int coin
+                int level, int expPoint
     ) {
         this.id = id;
         this.socialId = socialId;
@@ -114,30 +113,33 @@ public class User {
         this.loginType = loginType;
         this.level = level;
         this.expPoint = expPoint;
-        this.coin = coin;
     }
 
-    public void gainExpPoint(int expPoint) {
+    public UserProgressResult progress() {
+        gainExpPoint(EXP_GAIN_PER_MISSION_COMPLETE);
+
+        int threshold = calculateLevelUpThreshold();
+        boolean isUserLevelUpAvailable = isUserLevelUpAvailable(threshold);
+
+        if (isUserLevelUpAvailable) {
+            levelUp(threshold);
+        }
+
+        return new UserProgressResult(isUserLevelUpAvailable);
+    }
+
+    private void gainExpPoint(int expPoint) {
         this.setExpPoint(this.getExpPoint() + expPoint);
     }
 
-    public boolean checkUserLevelUpAvailable(int threshold) {
+    public boolean isUserLevelUpAvailable(int threshold) {
         return this.getExpPoint() >= threshold;
-    }
-
-    public void progress() {
-        int threshold = calculateLevelUpThreshold();
-
-        if (checkUserLevelUpAvailable(threshold)) {
-            levelUp(threshold);
-        }
     }
 
     public void levelUp(int threshold) {
         // 레벨 1 증가, 경험치 초기화, 포인트 증가
-        this.setLevel(this.getLevel() + 1);
+        this.setLevel(this.getLevel() + DEFAULT_LEVEL_INCREMENT);
         this.setExpPoint(this.getExpPoint() - threshold);
-        this.setCoin(this.getCoin() + 25);
     }
 
     public int calculateLevelUpThreshold() {
@@ -147,17 +149,5 @@ public class User {
     public double calculateExpPercentage() {
         double expPercentage = ((double) expPoint / calculateLevelUpThreshold()) * 100.0;
         return Math.round(expPercentage * 100.0) / 100.0;
-    }
-
-    public void purchaseAvatar(Avatar avatar) {
-        if (this.getCoin() < avatar.getPrice()) {
-            throw new BaseException(Status.USER_POINT_LACKED);
-        } else {
-            this.addCoin(-avatar.getPrice());
-        }
-    }
-
-    public void addCoin(int amount) {
-        this.setCoin(this.coin + amount);
     }
 }
