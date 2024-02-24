@@ -76,7 +76,7 @@ public class UserService {
     public void updateAgreePush(Integer userId, boolean agreePush) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
-        user.setAgreePush(agreePush);
+        user.changeAgreePush(agreePush);
         userRepository.save(user);
     }
 

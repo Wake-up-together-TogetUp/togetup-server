@@ -150,4 +150,10 @@ public class User {
         double expPercentage = ((double) expPoint / calculateLevelUpThreshold()) * 100.0;
         return Math.round(expPercentage * 100.0) / 100.0;
     }
+
+
+    public void changeAgreePush(boolean agreePush){
+        this.setAgreePush(agreePush);
+    }
+
 }
