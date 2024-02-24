@@ -23,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.*;
+
 @Service
 @RequiredArgsConstructor
 public class AlarmService {
@@ -33,8 +35,7 @@ public class AlarmService {
 
     @Transactional
     public Alarm createAlarm(Integer userId, PostAlarmReq postAlarmReq) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
+        User user = findExistingMember(userRepository, userId);
 
         Mission mission = null;
         MissionObject missionObject = null;

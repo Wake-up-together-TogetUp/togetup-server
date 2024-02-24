@@ -21,14 +21,18 @@ import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressResult;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.*;
 
 @Service
 @RequiredArgsConstructor
@@ -131,8 +135,8 @@ public class MissionService {
 
     @Transactional
     public MissionCompleteRes afterMissionComplete(int userId, MissionCompleteReq req) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
+        User user = findExistingMember(userRepository, userId);
+
         Alarm alarm = alarmRepository.findById(req.getAlarmId())
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 

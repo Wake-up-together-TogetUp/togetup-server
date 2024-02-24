@@ -9,12 +9,16 @@ import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressResult;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.*;
 
 @Service
 @RequiredArgsConstructor
@@ -52,8 +56,7 @@ public class UserService {
 
     public Integer updateFcmToken(Integer userId, Integer fcmTokenId, String fcmToken) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
+        User user = findExistingMember(userRepository, userId);
         FcmToken fcmTokenObject;
         if (fcmTokenId == null) {
             fcmTokenObject = FcmToken.builder()
@@ -74,8 +77,7 @@ public class UserService {
     }
 
     public void updateAgreePush(Integer userId, boolean agreePush) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
+        User user = findExistingMember(userRepository, userId);
         user.changeAgreePush(agreePush);
         userRepository.save(user);
     }

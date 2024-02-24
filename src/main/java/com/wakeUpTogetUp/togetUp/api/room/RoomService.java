@@ -31,6 +31,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.*;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -316,8 +318,7 @@ public class RoomService {
             throw new BaseException(Status.ROOM_USER_ALREADY_EXIST);
         }
 
-        User user = userRepository.findById(invitedUserId)
-                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
+        User user = findExistingMember(userRepository, invitedUserId);
 
         //그룹 만들기
         Room room = roomRepository.findById(roomId)
