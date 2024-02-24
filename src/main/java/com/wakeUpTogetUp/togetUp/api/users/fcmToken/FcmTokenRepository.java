@@ -9,5 +9,8 @@ import java.util.List;
 @Repository
 public interface FcmTokenRepository extends JpaRepository<FcmToken, Integer> {
     List<FcmToken> findAllByUser_IdIn(List<Integer> userIds);
+
     void deleteAllByValueIn(List<String> values);
+
+    boolean existsByValue(String fcmTokenValue);
 }

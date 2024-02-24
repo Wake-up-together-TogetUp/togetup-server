@@ -54,26 +54,21 @@ public class UserService {
         return user;
     }
 
-    public Integer updateFcmToken(Integer userId, Integer fcmTokenId, String fcmToken) {
-
+    public void registerFcmToken(Integer userId, String fcmTokenValue) {
         User user = findExistingMember(userRepository, userId);
-        FcmToken fcmTokenObject;
-        if (fcmTokenId == null) {
-            fcmTokenObject = FcmToken.builder()
-                    .value(fcmToken)
-                    .user(user)
-                    .build();
-        } else {
-            fcmTokenObject = fcmTokenRepository.findById(fcmTokenId).orElse(
-                    FcmToken.builder()
-                            .value(fcmToken)
-                            .user(user)
-                            .build());
-            fcmTokenObject.updateFcmToken(fcmToken);
+
+        if (!fcmTokenRepository.existsByValue(fcmTokenValue)) {
+            saveFcmToken(user, fcmTokenValue);
         }
 
-        return fcmTokenRepository.save(fcmTokenObject).getId();
+    }
 
+    private void saveFcmToken(User user, String fcmTokenValue) {
+        FcmToken fcmToken = FcmToken.builder()
+                .value(fcmTokenValue)
+                .user(user)
+                .build();
+        fcmTokenRepository.save(fcmToken);
     }
 
     public void updateAgreePush(Integer userId, boolean agreePush) {
