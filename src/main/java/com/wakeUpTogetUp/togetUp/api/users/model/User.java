@@ -8,6 +8,7 @@ import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressResult;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -150,4 +152,10 @@ public class User {
         double expPercentage = ((double) expPoint / calculateLevelUpThreshold()) * 100.0;
         return Math.round(expPercentage * 100.0) / 100.0;
     }
+
+
+    public void changeAgreePush(boolean agreePush) {
+        this.setAgreePush(agreePush);
+    }
+
 }

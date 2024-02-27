@@ -9,12 +9,16 @@ import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressResult;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.*;
 
 @Service
 @RequiredArgsConstructor
@@ -50,33 +54,26 @@ public class UserService {
         return user;
     }
 
-    public Integer updateFcmToken(Integer userId, Integer fcmTokenId, String fcmToken) {
+    public void registerFcmToken(Integer userId, String fcmTokenValue) {
+        User user = findExistingUser(userRepository, userId);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
-        FcmToken fcmTokenObject;
-        if (fcmTokenId == null) {
-            fcmTokenObject = FcmToken.builder()
-                    .value(fcmToken)
-                    .user(user)
-                    .build();
-        } else {
-            fcmTokenObject = fcmTokenRepository.findById(fcmTokenId).orElse(
-                    FcmToken.builder()
-                            .value(fcmToken)
-                            .user(user)
-                            .build());
-            fcmTokenObject.updateFcmToken(fcmToken);
+        if (!fcmTokenRepository.existsByValue(fcmTokenValue)) {
+            saveFcmToken(user, fcmTokenValue);
         }
-
-        return fcmTokenRepository.save(fcmTokenObject).getId();
 
     }
 
+    private void saveFcmToken(User user, String fcmTokenValue) {
+        FcmToken fcmToken = FcmToken.builder()
+                .value(fcmTokenValue)
+                .user(user)
+                .build();
+        fcmTokenRepository.save(fcmToken);
+    }
+
     public void updateAgreePush(Integer userId, boolean agreePush) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
-        user.setAgreePush(agreePush);
+        User user = findExistingUser(userRepository, userId);
+        user.changeAgreePush(agreePush);
         userRepository.save(user);
     }
 
