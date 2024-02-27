@@ -55,7 +55,7 @@ public class UserService {
     }
 
     public void registerFcmToken(Integer userId, String fcmTokenValue) {
-        User user = findExistingMember(userRepository, userId);
+        User user = findExistingUser(userRepository, userId);
 
         if (!fcmTokenRepository.existsByValue(fcmTokenValue)) {
             saveFcmToken(user, fcmTokenValue);
@@ -72,7 +72,7 @@ public class UserService {
     }
 
     public void updateAgreePush(Integer userId, boolean agreePush) {
-        User user = findExistingMember(userRepository, userId);
+        User user = findExistingUser(userRepository, userId);
         user.changeAgreePush(agreePush);
         userRepository.save(user);
     }

@@ -135,7 +135,7 @@ public class MissionService {
 
     @Transactional
     public MissionCompleteRes afterMissionComplete(int userId, MissionCompleteReq req) {
-        User user = findExistingMember(userRepository, userId);
+        User user = findExistingUser(userRepository, userId);
 
         Alarm alarm = alarmRepository.findById(req.getAlarmId())
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));

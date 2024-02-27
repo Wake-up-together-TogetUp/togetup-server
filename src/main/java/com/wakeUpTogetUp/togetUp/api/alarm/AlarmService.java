@@ -35,7 +35,7 @@ public class AlarmService {
 
     @Transactional
     public Alarm createAlarm(Integer userId, PostAlarmReq postAlarmReq) {
-        User user = findExistingMember(userRepository, userId);
+        User user = findExistingUser(userRepository, userId);
 
         Mission mission = null;
         MissionObject missionObject = null;

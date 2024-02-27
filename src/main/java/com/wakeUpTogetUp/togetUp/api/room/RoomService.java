@@ -318,7 +318,7 @@ public class RoomService {
             throw new BaseException(Status.ROOM_USER_ALREADY_EXIST);
         }
 
-        User user = findExistingMember(userRepository, invitedUserId);
+        User user = findExistingUser(userRepository, invitedUserId);
 
         //그룹 만들기
         Room room = roomRepository.findById(roomId)
