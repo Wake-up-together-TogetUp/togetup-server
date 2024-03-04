@@ -17,9 +17,6 @@ public class UserAvatarData {
     @Schema(description = "아바타 테마 이름")
     private String theme;
 
-    @Schema(description = "가격")
-    private int price;
-
     @Schema(description = "해금 레벨")
     private int unlockLevel;
 

@@ -143,10 +143,16 @@ INSERT INTO mission_object (id, name, kr, icon, is_active, mission_id)
 VALUES (67, 'surprise', '놀란 표정', '?', 1, 3);
 
 
--- 아바타 (임시)
-INSERT INTO avatar (id, theme, price, unlock_level, created_at)
-VALUES (1, 'NOOB_CHICK', 0, 1, '2023-10-07 20:35:51');
-INSERT INTO avatar (id, theme, price, unlock_level, created_at)
-VALUES (2, 'TWINKLING_TEDDY_BEAR', 1500, 15, '2023-10-21 03:24:06');
-INSERT INTO avatar (id, theme, price, unlock_level, created_at)
-VALUES (3, 'CUTE_BUNNY', 1500, 30, '2023-10-21 03:24:06');
+-- 아바타
+INSERT INTO avatar (id, theme, unlock_level, created_at)
+VALUES (1, 'NOOB_CHICK', 1, '2023-10-07 20:35:51');
+INSERT INTO avatar (id, theme, unlock_level, created_at)
+VALUES (2, 'TWINKLING_TEDDY_BEAR', 15, '2023-10-21 03:24:06');
+INSERT INTO avatar (id, theme, unlock_level, created_at)
+VALUES (3, 'CUTE_BUNNY', 30, '2023-10-21 03:24:06');
+INSERT INTO avatar (id, theme, unlock_level, created_at)
+VALUES (4, 'GLUTTON_PANDA', 45, '2024-02-19 23:20:00');
+INSERT INTO avatar (id, theme, unlock_level, created_at)
+VALUES (5, 'RAINY_DAY_PUPPY', 60, '2024-02-19 23:21:09');
+INSERT INTO avatar (id, theme, unlock_level, created_at)
+VALUES (6, 'PHILOSOPHER_RACCOON', 75, '2024-02-19 23:22:52');
