@@ -12,27 +12,30 @@ import com.azure.ai.vision.imageanalysis.ImageAnalysisResult;
 import com.azure.ai.vision.imageanalysis.ImageAnalysisResultDetails;
 import com.azure.ai.vision.imageanalysis.ImageAnalysisResultReason;
 import com.azure.ai.vision.imageanalysis.ImageAnalyzer;
+import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
+import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedTag;
+import com.wakeUpTogetUp.togetUp.api.mission.utils.mapper.ObjectDetectedV40Mapper;
+import com.wakeUpTogetUp.togetUp.api.mission.utils.mapper.TagDetectedV40Mapper;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.EnumSet;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class AzureVision40Service {
-    @Value("${azure.computer-vision.endpoint}")
-    private String endpoint;
 
-    @Value("${azure.computer-vision.key}")
-    private String key;
+    private final VisionServiceOptions serviceOptions;
+    private final ObjectDetectedV40Mapper objectDetectedV40Mapper;
+    private final TagDetectedV40Mapper tagDetectedV40Mapper;
 
-    public List<DetectedObject> detectObjectByVer40(MultipartFile file) throws Exception {
-        VisionServiceOptions serviceOptions = new VisionServiceOptions(new URL(endpoint), key);
+    public List<CustomDetectedObject> detectObjects(MultipartFile file) throws Exception {
         VisionSource imageSource = getVisionSource(file);
         ImageAnalysisOptions analysisOptions = getAnalysisOptions(ImageAnalysisFeature.OBJECTS);
 
@@ -49,7 +52,28 @@ public class AzureVision40Service {
             printObjectDetectionResult(result);
             printResultDetails(ImageAnalysisResultDetails.fromResult(result));
 
-            return result.getObjects();
+            return objectDetectedV40Mapper.toCustomDetectedObjects(result.getObjects());
+        }
+    }
+
+    public List<CustomDetectedTag> detectTags(MultipartFile file) throws Exception {
+        VisionSource imageSource = getVisionSource(file);
+        ImageAnalysisOptions analysisOptions = getAnalysisOptions(ImageAnalysisFeature.TAGS);
+
+        try (ImageAnalyzer analyzer = new ImageAnalyzer(serviceOptions, imageSource, analysisOptions);
+                ImageAnalysisResult result = analyzer.analyze()) {
+
+            if (result.getReason() != ImageAnalysisResultReason.ANALYZED) {
+                ImageAnalysisErrorDetails errorDetails = ImageAnalysisErrorDetails.fromResult(result);
+                printErrorDetails(errorDetails);
+
+                throw new BaseException(Status.IMAGE_ANALYSIS_FAIL);
+            }
+
+            printObjectDetectionResult(result);
+            printResultDetails(ImageAnalysisResultDetails.fromResult(result));
+
+            return tagDetectedV40Mapper.customDetectedTags(result.getTags());
         }
     }
 

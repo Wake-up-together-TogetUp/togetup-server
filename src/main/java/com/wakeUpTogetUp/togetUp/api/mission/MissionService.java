@@ -7,9 +7,11 @@ import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionCompleteReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
 import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
+import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedTag;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Emotion;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.service.AzureVision32Service;
+import com.wakeUpTogetUp.togetUp.api.mission.service.AzureVision40Service;
 import com.wakeUpTogetUp.togetUp.api.mission.service.GoogleVisionService;
 import com.wakeUpTogetUp.togetUp.api.mission.service.ObjectDetectionService;
 import com.wakeUpTogetUp.togetUp.api.notification.NotificationService;
@@ -41,6 +43,7 @@ public class MissionService {
 
     private final ObjectDetectionService objectDetectionService;
     private final AzureVision32Service azureVision32Service;
+    private final AzureVision40Service azureVision40Service;
     private final GoogleVisionService googleVisionService;
     private final AlarmRepository alarmRepository;
     private final MissionLogRepository missionLogRepository;
@@ -49,9 +52,12 @@ public class MissionService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
-    // 객체 인식
-    public List<CustomDetectedObject> getObjectDetectionResult(String object, MultipartFile missionImage) {
-        List<CustomDetectedObject> detectedObjects = azureVision32Service.detectObjects(missionImage);
+    public List<CustomDetectedObject> getObjectDetectedResult(String object, MultipartFile missionImage)
+            throws Exception {
+//        List<CustomDetectedObject> detectedObjects = azureVision32Service.detectObjects(missionImage);
+        List<CustomDetectedObject> detectedObjects = azureVision40Service.detectObjects(missionImage);
+
+        printDetectedObjects(detectedObjects);
 
         List<CustomDetectedObject> highestConfidenceObjects = detectedObjects.stream()
                 .filter(objetDetected -> objetDetected.getObjectParent().toLowerCase().contains(object))
@@ -59,14 +65,41 @@ public class MissionService {
                 .limit(3)
                 .collect(Collectors.toList());
 
-        log.info("[감지된 객체 중 목표 객체 정확도순 최대 3개]");
-        highestConfidenceObjects.forEach(obj -> log.info(obj.toString()));
+        if (highestConfidenceObjects.isEmpty()) {
+            throw new BaseException(Status.MISSION_FAILURE);
+        }
+
+        return highestConfidenceObjects;
+    }
+
+    public List<CustomDetectedTag> getTagDetectionResult(String object, MultipartFile missionImage)
+            throws Exception {
+        List<CustomDetectedTag> detectedTags = azureVision40Service.detectTags(missionImage);
+
+        printDetectedTags(detectedTags);
+
+        List<CustomDetectedTag> highestConfidenceObjects = detectedTags.stream()
+                .filter(objetDetected -> objetDetected.getName().toLowerCase().contains(object))
+                .sorted(Comparator.comparing(CustomDetectedTag::getConfidence).reversed())
+                .limit(3)
+                .collect(Collectors.toList());
 
         if (highestConfidenceObjects.isEmpty()) {
             throw new BaseException(Status.MISSION_FAILURE);
         }
 
         return highestConfidenceObjects;
+    }
+
+    private void printDetectedObjects(List<CustomDetectedObject> detectedObjects) {
+        System.out.println("detectedObjects.size() = " + detectedObjects.size());
+        detectedObjects.forEach(object -> System.out.println(object.getObject()));
+        detectedObjects.forEach(object -> System.out.println(object.getParent()));
+    }
+
+    private void printDetectedTags(List<CustomDetectedTag> tags) {
+        System.out.println("tags.size() = " + tags.size());
+        tags.forEach(tag -> System.out.println(tag.getName()));
     }
 
     // 표정 인식

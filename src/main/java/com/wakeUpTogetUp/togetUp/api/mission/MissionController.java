@@ -84,7 +84,7 @@ public class MissionController {
             throw new BaseException(Status.UNSUPPORTED_MEDIA_TYPE);
         }
 
-        List<CustomDetectedObject> detectedObjects = missionService.getObjectDetectionResult(object, missionImage);
+        List<CustomDetectedObject> detectedObjects = missionService.getObjectDetectedResult(object, missionImage);
         ImageProcessResult result = missionImageService.processODResultImage(missionImage, detectedObjects);
         String imageUrl = fileService.uploadMissionImage(missionImage, result);
 
