@@ -149,7 +149,11 @@ public class MissionService {
             isNewAvatarAvailable = userAvatarService.unlockAvatarIfAvailableExist(user);
         }
 
-        return new MissionCompleteRes(UserStat.from(user), progressResult.isUserLevelUp(), isNewAvatarAvailable);
+        return MissionCompleteRes.builder()
+                .userStat(UserStat.from(user))
+                .isUserLevelUp(progressResult.isUserLevelUp())
+                .isUserLevelUp(isNewAvatarAvailable)
+                .build();
     }
 
     private void sendNotificationIfRoomExists(Alarm alarm, User user) {
