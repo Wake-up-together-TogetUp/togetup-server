@@ -85,7 +85,7 @@ public class MissionController {
         }
 
         List<CustomDetectedObject> detectedObjects = missionService.getObjectDetectionResult(object, missionImage);
-        ImageProcessResult result = missionImageService.processODResultImage(missionImage, detectedObjects, object);
+        ImageProcessResult result = missionImageService.processODResultImage(missionImage, detectedObjects);
         String imageUrl = fileService.uploadMissionImage(missionImage, result);
 
         return new BaseResponse<>(Status.MISSION_SUCCESS, new MissionPerfomRes(imageUrl));
