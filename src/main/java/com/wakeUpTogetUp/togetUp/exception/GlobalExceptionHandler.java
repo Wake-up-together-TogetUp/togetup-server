@@ -2,6 +2,11 @@ package com.wakeUpTogetUp.togetUp.exception;
 
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.TypeMismatchException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -36,15 +41,27 @@ public class GlobalExceptionHandler {
             HttpMessageNotReadableException.class,
             MissingServletRequestParameterException.class,
             MultipartException.class,
-            NoHandlerFoundException.class,
-    })
+            NoHandlerFoundException.class})
     protected BaseResponse<Status> handleBadRequestException(Exception exception) {
-        log.debug("Bad request exception occurred: {}",
-                exception.getMessage(),
-                exception);
+        log.debug("Bad request exception occurred: {}", exception.getMessage(), exception);
         exception.printStackTrace();
 
         return new BaseResponse<>(Status.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected BaseResponse<Map> handleConstraintViolationException(ConstraintViolationException exception) {
+        log.debug("Bad request exception occurred: {}", exception.getMessage(), exception);
+        exception.printStackTrace();
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", "Validation error");
+        body.put("details", exception.getConstraintViolations().stream()
+                .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
+                .collect(Collectors.toList()));
+
+        return new BaseResponse<>(Status.BAD_REQUEST, body);
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)

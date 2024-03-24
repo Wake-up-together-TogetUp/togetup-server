@@ -11,6 +11,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionPerfomRes;
 import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
 import com.wakeUpTogetUp.togetUp.api.mission.service.MissionImageService;
 import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.common.annotation.validator.ImageFile;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.vo.ImageProcessResult;
@@ -27,6 +28,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "미션(Mission)")
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app/mission")
@@ -62,7 +65,6 @@ public class MissionController {
     }
 
     // TODO: 객체 이름이 아닌 알람 ID를 요청값으로 받게 리팩토링하기 + 그냥 리팩토링
-    // TODO: 걸린 시간 계산 aop 만들기
     @Operation(summary = "객체 탐지 미션")
     @PostMapping(value = "/object-detection/{object}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -76,14 +78,9 @@ public class MissionController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러입니다. 제보 부탁드립니다.")})
     public BaseResponse<MissionPerfomRes> recognizeObject(
             @Parameter(hidden = true) @AuthUser Integer userId,
-            @Parameter(required = true, description = "미션 수행 사진") @RequestPart MultipartFile missionImage,
+            @Parameter(required = true, description = "미션 수행 사진") @RequestPart @ImageFile MultipartFile missionImage,
             @Parameter(required = true, description = "탐지할 객체") @PathVariable String object
     ) throws Exception {
-        // TODO: 미디어 타입 검사하는 로직 추출하기
-        if (!Objects.equals(missionImage.getContentType(), MediaType.IMAGE_JPEG_VALUE)) {
-            throw new BaseException(Status.UNSUPPORTED_MEDIA_TYPE);
-        }
-
         List<CustomDetectedObject> detectedObjects = missionService.getObjectDetectedResult(object, missionImage);
         ImageProcessResult result = missionImageService.processODResultImage(missionImage, detectedObjects);
         String imageUrl = fileService.uploadMissionImage(missionImage, result);
