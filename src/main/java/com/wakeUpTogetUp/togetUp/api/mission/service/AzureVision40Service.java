@@ -24,14 +24,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class AzureAiService {
+public class AzureVision40Service {
     @Value("${azure.computer-vision.endpoint}")
     private String endpoint;
 
     @Value("${azure.computer-vision.key}")
     private String key;
 
-    // TODO : 나오는 객체비교해서 ENUM 타입 만들고 정리해서 검색해서 일치하면 미션 성공하는걸로
     public List<DetectedObject> detectObjectByVer40(MultipartFile file) throws Exception {
         VisionServiceOptions serviceOptions = new VisionServiceOptions(new URL(endpoint), key);
         VisionSource imageSource = getVisionSource(file);

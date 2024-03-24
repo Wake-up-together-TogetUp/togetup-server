@@ -47,6 +47,7 @@ public enum Status {
     INVALID_APPLE_CLAIMS(HttpStatus.BAD_REQUEST, "Apple OAuth Claims 값이 올바르지 않습니다."),
     INVALID_APPLE_TOKEN(HttpStatus.BAD_REQUEST, "Apple OAuth Identity Token 형식이 올바르지 않습니다."),
     INVALID_ROOM_HOST_ID(HttpStatus.BAD_REQUEST, "방장의 id가 아닙니다."),
+    INVALID_IMAGE(HttpStatus.BAD_REQUEST, "유효한 이미지가 아닙니다."),
 
     // FORBIDDEN
     USER_AVATAR_LOCKED(HttpStatus.FORBIDDEN, "유저가 보유하지 않은 아바타 ID 입니다."),

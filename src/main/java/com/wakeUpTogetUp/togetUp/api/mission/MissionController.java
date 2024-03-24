@@ -1,6 +1,5 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
-import com.azure.ai.vision.imageanalysis.DetectedObject;
 import com.google.cloud.vision.v1.FaceAnnotation;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.api.file.FileService;
@@ -9,6 +8,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionPerfomRes;
+import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
 import com.wakeUpTogetUp.togetUp.api.mission.service.MissionImageService;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
@@ -84,7 +84,7 @@ public class MissionController {
             throw new BaseException(Status.UNSUPPORTED_MEDIA_TYPE);
         }
 
-        List<DetectedObject> detectedObjects = missionService.getObjectDetectionResult(object, missionImage);
+        List<CustomDetectedObject> detectedObjects = missionService.getObjectDetectionResult(object, missionImage);
         ImageProcessResult result = missionImageService.processODResultImage(missionImage, detectedObjects, object);
         String imageUrl = fileService.uploadMissionImage(missionImage, result);
 
