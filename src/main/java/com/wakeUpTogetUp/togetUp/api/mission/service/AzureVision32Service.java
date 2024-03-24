@@ -4,7 +4,7 @@ import com.microsoft.azure.cognitiveservices.vision.computervision.ComputerVisio
 import com.microsoft.azure.cognitiveservices.vision.computervision.models.ImageAnalysis;
 import com.microsoft.azure.cognitiveservices.vision.computervision.models.VisualFeatureTypes;
 import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
-import com.wakeUpTogetUp.togetUp.api.mission.utils.mapper.ObjectDetectedV32Mapper;
+import com.wakeUpTogetUp.togetUp.api.mission.service.mapper.ObjectDetectedV32Mapper;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import java.io.IOException;

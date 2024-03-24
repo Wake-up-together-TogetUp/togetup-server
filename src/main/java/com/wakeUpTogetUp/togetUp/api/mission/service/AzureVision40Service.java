@@ -14,8 +14,8 @@ import com.azure.ai.vision.imageanalysis.ImageAnalysisResultReason;
 import com.azure.ai.vision.imageanalysis.ImageAnalyzer;
 import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
 import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedTag;
-import com.wakeUpTogetUp.togetUp.api.mission.utils.mapper.ObjectDetectedV40Mapper;
-import com.wakeUpTogetUp.togetUp.api.mission.utils.mapper.TagDetectedV40Mapper;
+import com.wakeUpTogetUp.togetUp.api.mission.service.mapper.ObjectDetectedV40Mapper;
+import com.wakeUpTogetUp.togetUp.api.mission.service.mapper.TagDetectedV40Mapper;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import java.io.IOException;
@@ -86,7 +86,7 @@ public class AzureVision40Service {
 
     private ImageAnalysisOptions getAnalysisOptions(ImageAnalysisFeature feature) {
         ImageAnalysisOptions analysisOptions = new ImageAnalysisOptions();
-        analysisOptions.setFeatures(EnumSet.of(feature));
+        analysisOptions.setFeatures(EnumSet.of(feature, ImageAnalysisFeature.TAGS));
 
         return analysisOptions;
     }

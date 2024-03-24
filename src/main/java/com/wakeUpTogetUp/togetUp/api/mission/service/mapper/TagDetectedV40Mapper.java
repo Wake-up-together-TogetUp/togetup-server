@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.mission.utils.mapper;
+package com.wakeUpTogetUp.togetUp.api.mission.service.mapper;
 
 import com.azure.ai.vision.imageanalysis.ContentTag;
 import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedTag;
