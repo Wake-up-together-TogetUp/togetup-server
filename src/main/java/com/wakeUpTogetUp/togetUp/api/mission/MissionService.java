@@ -9,7 +9,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
 import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Emotion;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
-import com.wakeUpTogetUp.togetUp.api.mission.model.MissionPerformResult;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.MissionPerformResult;
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.AzureVision32Service;
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.AzureVision40Service;
 import com.wakeUpTogetUp.togetUp.infra.google.vision.GoogleVisionService;

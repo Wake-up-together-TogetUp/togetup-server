@@ -1,5 +1,8 @@
-package com.wakeUpTogetUp.togetUp.api.mission.model;
+package com.wakeUpTogetUp.togetUp.api.mission.domain;
 
+import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
+import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
+import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedTag;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
