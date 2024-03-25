@@ -38,7 +38,7 @@ public class CustomFile implements AutoCloseable {
             return new CustomFile(file);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new BaseException(Status.IMAGE_IO_EXCEPTION);
+            throw new BaseException(Status.FILE_IO_EXCEPTION);
         }
     }
 

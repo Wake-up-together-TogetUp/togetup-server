@@ -82,7 +82,7 @@ public enum Status {
     FIND_DEFAULT_AVATAR_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "기본 아바타를 불려오는데 실패했습니다."),
     FIND_USER_AVATAR_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "유저의 대표 아바타 정보를 불러오는데 실패했습니다."),
     LOAD_MODEL_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "모델 객체 정보 불러오기를 실패했습니다."),
-    IMAGE_IO_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "이미지를 불러오지 못했습니다.")
+    FILE_IO_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "파일을 불러오지 못했습니다.")
 
     ;
 
