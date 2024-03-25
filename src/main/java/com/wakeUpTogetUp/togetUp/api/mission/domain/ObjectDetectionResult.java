@@ -53,12 +53,14 @@ public class ObjectDetectionResult extends VisionAnalysisResult {
     }
 
     private void printDetectedObjects() {
-        System.out.println("detectedObjects.size() = " + objects.size());
+        System.out.println("[OBJECT]");
+        System.out.println("objects.size() = " + objects.size());
         objects.forEach(object -> System.out.println(object.getName()));
         objects.forEach(object -> System.out.println(object.getName()));
     }
 
     private void printDetectedTags() {
+        System.out.println("[TAG]");
         System.out.println("tags.size() = " + tags.size());
         tags.forEach(tag -> System.out.println(tag.getName()));
     }

@@ -12,6 +12,6 @@ public class CustomDetectedTag extends CustomAnalysisEntity {
 
     @Override
     public boolean isMatchEntity(String target) {
-        return name.toLowerCase().contains(target);
+        return name.toLowerCase().contains(target.toLowerCase());
     }
 }

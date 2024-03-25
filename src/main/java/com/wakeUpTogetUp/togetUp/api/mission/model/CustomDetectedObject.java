@@ -16,7 +16,7 @@ public class CustomDetectedObject extends CustomAnalysisEntity {
 
     @Override
     public boolean isMatchEntity(String targetObject) {
-        return concatObjectAndParent().toLowerCase().contains(targetObject);
+        return concatObjectAndParent().toLowerCase().contains(targetObject.toLowerCase());
     }
 
     public String concatObjectAndParent() {
