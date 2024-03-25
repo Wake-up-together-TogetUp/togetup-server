@@ -82,13 +82,13 @@ public interface EntityDtoMapper {
 
     List<RoomUserMissionLogRes.UserLogData> toUserLogDataList(List<RoomUser> roomUser);
 
-    @Mapping(target = "icon", source = "icon")
     @Mapping(target = "name", source = "room.name")
     @Mapping(target = "intro", source = "room.intro")
     @Mapping(target = "invitationCode", source = "room.invitationCode")
     RoomDetailRes.RoomData toRoomDetailResRoomData(Alarm alarm);
 
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "icon", source = "missionObject.icon")
     @Mapping(target = "missionKr", source = "missionObject.kr")
     RoomDetailRes.AlarmData toRoomDetailResAlarmData(Alarm alarm);
 
