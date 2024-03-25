@@ -1,16 +1,17 @@
 package com.wakeUpTogetUp.togetUp.api.mission.model;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class CustomDetectedTag {
+public class CustomDetectedTag extends CustomAnalysisEntity {
+    @Builder
+    public CustomDetectedTag(String name, double confidence) {
+        super(name, confidence, new BoundingBox());
+    }
 
-    private String name;
-
-    private double confidence;
+    @Override
+    public boolean isMatchEntity(String target) {
+        return name.toLowerCase().contains(target);
+    }
 }

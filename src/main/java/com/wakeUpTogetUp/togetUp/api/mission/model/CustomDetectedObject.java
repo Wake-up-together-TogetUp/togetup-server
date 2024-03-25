@@ -1,24 +1,26 @@
 package com.wakeUpTogetUp.togetUp.api.mission.model;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class CustomDetectedObject {
-
-    private String object;
+public class CustomDetectedObject extends CustomAnalysisEntity {
 
     private String parent;
 
-    private double confidence;
-
-    private BoundingBox box;
-
-    public String getObjectParent() {
-        return object + parent;
+    @Builder
+    private CustomDetectedObject(String object, String parent, double confidence, BoundingBox box) {
+        super(object, confidence, box);
+        this.parent = parent;
     }
+
+    @Override
+    public boolean isMatchEntity(String targetObject) {
+        return concatObjectAndParent().toLowerCase().contains(targetObject);
+    }
+
+    public String concatObjectAndParent() {
+        return name + parent;
+    }
+
 }
