@@ -6,6 +6,7 @@ import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomInfoRes;
@@ -29,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -338,35 +340,30 @@ public class RoomService {
 
     public RoomInfoRes getRoomInformation(String invitationCode) {
 
-        Alarm alarm = alarmRepository.findByInvitationCode(invitationCode)
-                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
+        Room room = roomRepository.findByInvitationCode(invitationCode)
+                .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
-        Integer roomPersonnel = roomUserRepository.countByRoomId(alarm.getRoom().getId());
-        if (roomPersonnel < 1) {
+        Integer roomPersonnel = roomUserRepository.countByRoomId(room.getId());
+        if(isRoomEmpty(roomPersonnel))
             throw new BaseException(Status.ROOM_NOT_FOUND);
-        }
 
-        //dto 매핑 mapper 사용
-        RoomInfoRes roomInfoRes = new RoomInfoRes();
-        roomInfoRes.setRoomData(EntityDtoMapper.INSTANCE.toRoomInfoResRoomData(alarm));
-        roomInfoRes.setAlarmData(EntityDtoMapper.INSTANCE.toRoomInfoResAlarmData(alarm));
+        MissionObject roomMissionObject = alarmRepository.findMissionObjectByRoomId(room.getId());
 
-        //dto 매핑 - 커스텀 필드
-        roomInfoRes.getRoomData().setCreatedAt(
-                timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
-        roomInfoRes.getRoomData().setPersonnel(roomPersonnel);
 
-        // ex) 13:00 -> pm 1:00
-        roomInfoRes.getAlarmData()
-                .setAlarmTime(alarm.getAlarmTime());
+        return RoomInfoRes.builder()
+                .id(room.getId())
+                .icon(roomMissionObject.getIcon())
+                .name(room.getName())
+                .intro(room.getIntro())
+                .createdAt(timeFormatter.timestampToDotDateFormat(room.getCreatedAt()))
+                .personnel(roomPersonnel)
+                .missionObjectId(roomMissionObject.getId())
+                .missionKr(roomMissionObject.getKr())
+                .build();
+    }
 
-        // ex)  평일, 주말, 매일, 월요일, (월, 화, 수), 빈칸
-        roomInfoRes.getAlarmData().setAlarmDay(
-                timeFormatter.formatDaysOfWeek(alarm.getMonday(), alarm.getTuesday(),
-                        alarm.getWednesday(), alarm.getThursday(), alarm.getFriday(),
-                        alarm.getSaturday(), alarm.getSunday()));
-
-        return roomInfoRes;
+    public boolean isRoomEmpty(Integer roomPersonnel){
+        return roomPersonnel<=0;
     }
 
 }

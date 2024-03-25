@@ -39,7 +39,7 @@ public class RoomController {
             @ApiResponse(responseCode = "409", description = "이미 방에 들어간 멤버입니다.")
     })
     @ResponseBody
-    @PostMapping() //
+    @PostMapping()
     public BaseResponse<Status> create(@Parameter(hidden = true) @AuthUser Integer userId, @RequestBody RoomReq roomReq) {
 
         roomService.createRoom(userId, roomReq);

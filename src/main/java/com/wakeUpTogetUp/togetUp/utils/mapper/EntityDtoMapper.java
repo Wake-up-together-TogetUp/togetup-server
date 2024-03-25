@@ -15,9 +15,12 @@ import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomInfoRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
+import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.model.UserAvatar;
+
 import java.util.List;
+
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
@@ -99,17 +102,6 @@ public interface EntityDtoMapper {
     RoomDetailRes.UserData toRoomDetailUserData(RoomUser roomUser);
 
     List<RoomDetailRes.UserData> toUserDataList(List<RoomUser> roomUser);
-
-
-    @Mapping(target = "id", source = "room.id")
-    @Mapping(target = "icon", source = "icon")
-    @Mapping(target = "name", source = "room.name")
-    @Mapping(target = "intro", source = "room.intro")
-    RoomInfoRes.RoomData toRoomInfoResRoomData(Alarm alarm);
-
-
-    @Mapping(target = "missionKr", source = "missionObject.kr")
-    RoomInfoRes.AlarmData toRoomInfoResAlarmData(Alarm alarm);
 
     // Avatar
     @Mapping(source = "avatar.id", target = "avatarId")

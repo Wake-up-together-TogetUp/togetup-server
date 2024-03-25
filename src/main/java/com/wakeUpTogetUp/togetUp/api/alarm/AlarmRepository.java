@@ -1,8 +1,11 @@
 package com.wakeUpTogetUp.togetUp.api.alarm;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+
 import java.util.List;
 import java.util.Optional;
+
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -48,4 +51,8 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
             "ORDER BY a.alarmTime ASC, a.id ASC")
     List<Alarm> findTodayAlarmsByUserId(@Param("userId") Integer userId,
                                         @Param("dayOfWeek") String dayOfWeek);
+
+
+    @Query("SELECT a.missionObject FROM Alarm a WHERE a.room.id = :roomId ")
+    MissionObject findMissionObjectByRoomId(@Param("roomId") Integer roomId);
 }

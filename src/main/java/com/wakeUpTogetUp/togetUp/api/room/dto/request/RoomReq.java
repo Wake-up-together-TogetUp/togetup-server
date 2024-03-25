@@ -23,6 +23,6 @@ public class RoomReq {
     @Schema(description = "룸 설명", example = "설여대 소융이들의 방입니다.")
     private String intro;
 
-    @NotBlank(message = "룸의 알람은 공백일 수 없습니다.")
+    @NotBlank(message = "알람은 공백일 수 없습니다.")
     private AlarmCreateReq alarmCreateReq;
 }
