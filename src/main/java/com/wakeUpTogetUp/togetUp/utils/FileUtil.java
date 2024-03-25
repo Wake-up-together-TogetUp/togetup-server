@@ -1,7 +1,5 @@
 package com.wakeUpTogetUp.togetUp.utils;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -23,11 +21,7 @@ public class FileUtil {
 
     public static String generatePath(String directoryPath, String fileName) {
         String key = generateKey(fileName);
-        String dateTime = ZonedDateTime.now()
-                .format(
-                        DateTimeFormatter
-                                .ofPattern(FILE_DATE_TIME_FORMAT)
-                                .withLocale(Locale.ROOT));
+        String dateTime = DateTimeProvider.getDateTime(FILE_DATE_TIME_FORMAT);
 
         return String.format(FILE_NAME_FORMAT, directoryPath, dateTime, key);
     }
