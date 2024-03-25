@@ -31,11 +31,12 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
 
     Alarm findFirstByRoom_Id(Integer roomId);
 
-    @Query("select a from Alarm a where a.room.id IN :roomIds")
-    List<Alarm> findAllByRoomIds(@Param("roomIds") List<Integer> roomIds);
 
-    @Query("SELECT a FROM Alarm a WHERE a.room.invitationCode = :invitationCode")
-    Optional<Alarm> findByInvitationCode(@Param("invitationCode") String invitationCode);
+
+    @Query("select a from Alarm a where a.room.id IN :roomIds")
+            List<Alarm> findAllByRoomIds(@Param("roomIds") List<Integer> roomIds);
+
+    Optional<Alarm> findByUser_IdAndRoom_Id(@Param("userId") Integer userId, @Param("roomId") Integer roomId);
 
     @Query("SELECT a FROM Alarm a " +
             "WHERE (a.user.id = :userId OR a.room.id IN (" +

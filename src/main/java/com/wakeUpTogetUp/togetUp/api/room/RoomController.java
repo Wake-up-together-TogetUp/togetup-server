@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.room;
 
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmCreateReq;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
@@ -44,6 +45,24 @@ public class RoomController {
 
         roomService.createRoom(userId, roomReq);
         return new BaseResponse(Status.SUCCESS_CREATED);
+
+    }
+
+    @Operation(summary = "그룹 알람 생성 및 그룹 참가")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 방 입니다."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 미션 입니다."),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 미션 객체 입니다."),
+            @ApiResponse(responseCode = "409", description = "이미 방에 들어간 멤버입니다.")
+    })
+    @ResponseBody
+    @PostMapping("/join/{roomId}")
+    public BaseResponse<Status> join(@Parameter(hidden = true) @AuthUser Integer userId, @Parameter(description = "룸 아이디", example = "1") @PathVariable Integer roomId, @RequestBody AlarmCreateReq alarmCreateReq) {
+
+        roomService.createAlarmAndJoinRoom(roomId, userId, alarmCreateReq);
+        return new BaseResponse(Status.SUCCESS);
 
     }
 
@@ -133,7 +152,6 @@ public class RoomController {
         return new BaseResponse(Status.SUCCESS);
 
     }
-
 
 
     @Operation(summary = "초대 받은 사람에게 보이는 그룹 정보 보기 ", description = "초대 받은 사람에게 보이는 앱 내 페이지")

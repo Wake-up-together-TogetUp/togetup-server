@@ -2,6 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.room;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmService;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmCreateReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
@@ -259,15 +260,12 @@ public class RoomService {
 
 
     public RoomDetailRes getRoomDetail(Integer roomId, Integer userId) {
-        //알람 조회
-        Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
-        if (Objects.isNull(alarm)) {
-            throw new BaseException(Status.ALARM_NOT_FOUND);
-        }
+
+        Alarm alarm = alarmRepository.findByUser_IdAndRoom_Id(userId, roomId)
+                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
         //room_user 조회
-        List<RoomUser> roomUsers = roomUserRepository.findAllByRoom_IdOrderByPreference(roomId,
-                userId);
+        List<RoomUser> roomUsers = roomUserRepository.findAllByRoom_IdOrderByPreference(roomId, userId);
 
         //dto 매핑 mapper 사용
         RoomDetailRes roomDetailRes = new RoomDetailRes();
@@ -315,19 +313,27 @@ public class RoomService {
     }
 
     @Transactional
+    public void createAlarmAndJoinRoom(Integer roomId, Integer invitedUserId, AlarmCreateReq alarmCreateReq) {
+        PostAlarmReq postAlarmReq = alarmMigrationMapper.convertAlarmCreateReqToPostAlarmReq(alarmCreateReq);
+        Alarm alarm = alarmService.createAlarmDeprecated(invitedUserId, postAlarmReq);
+        alarmRepository.updateRoomIdByAlarmId(alarm.getId(), roomId);
+        joinRoom(roomId, invitedUserId, false);
+    }
+
+    @Transactional
     public void joinRoom(Integer roomId, Integer invitedUserId, boolean isHost) {
 
-        if (!isHost && roomUserRepository.existsRoomUserByRoom_IdAndUser_Id(roomId, invitedUserId)) {
-            throw new BaseException(Status.ROOM_USER_ALREADY_EXIST);
-        }
 
         User user = findExistingUser(userRepository, invitedUserId);
 
-        //그룹 만들기
+
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
-        //유저 그룹에 넣기
+        boolean isAlreadyJoin = roomUserRepository.existsRoomUserByRoom_IdAndUser_Id(roomId, invitedUserId);
+        if (isAlreadyJoin)
+            throw new BaseException(Status.ROOM_USER_ALREADY_EXIST);
+
         RoomUser roomUser = RoomUser.builder()
                 .user(user)
                 .room(room)
@@ -344,7 +350,7 @@ public class RoomService {
                 .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
         Integer roomPersonnel = roomUserRepository.countByRoomId(room.getId());
-        if(isRoomEmpty(roomPersonnel))
+        if (isRoomEmpty(roomPersonnel))
             throw new BaseException(Status.ROOM_NOT_FOUND);
 
         MissionObject roomMissionObject = alarmRepository.findMissionObjectByRoomId(room.getId());
@@ -362,8 +368,8 @@ public class RoomService {
                 .build();
     }
 
-    public boolean isRoomEmpty(Integer roomPersonnel){
-        return roomPersonnel<=0;
+    public boolean isRoomEmpty(Integer roomPersonnel) {
+        return roomPersonnel <= 0;
     }
 
 }
