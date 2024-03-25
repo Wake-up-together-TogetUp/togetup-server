@@ -67,7 +67,7 @@ public interface EntityDtoMapper {
 
     //Room
     @Mapping(target = "roomId", source = "room.id")
-    @Mapping(target = "icon", source = "icon")
+    @Mapping(target = "icon", source = "missionObject.icon")
     @Mapping(target = "name", source = "room.name")
     @Mapping(target = "mission", source = "missionObject.name")
     @Mapping(target = "kr", source = "missionObject.kr")
