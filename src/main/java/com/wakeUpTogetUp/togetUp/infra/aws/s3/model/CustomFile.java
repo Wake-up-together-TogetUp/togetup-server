@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.file.model;
+package com.wakeUpTogetUp.togetUp.infra.aws.s3.model;
 
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;

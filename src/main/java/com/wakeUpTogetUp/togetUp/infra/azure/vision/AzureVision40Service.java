@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.mission.service;
+package com.wakeUpTogetUp.togetUp.infra.azure.vision;
 
 import com.azure.ai.vision.common.ImageSourceBuffer;
 import com.azure.ai.vision.common.ImageWriter;

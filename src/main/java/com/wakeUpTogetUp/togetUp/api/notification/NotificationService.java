@@ -11,6 +11,7 @@ import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.infra.google.fcm.FcmService;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

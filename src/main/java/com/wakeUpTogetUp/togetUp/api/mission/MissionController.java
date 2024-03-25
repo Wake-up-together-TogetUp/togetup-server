@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.mission;
 
 import com.google.cloud.vision.v1.FaceAnnotation;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
-import com.wakeUpTogetUp.togetUp.api.file.FileService;
+import com.wakeUpTogetUp.togetUp.infra.aws.s3.FileService;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionCompleteReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
@@ -13,7 +13,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.service.MissionImageService;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.annotation.validator.ImageFile;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import com.wakeUpTogetUp.togetUp.api.file.model.CustomFile;
+import com.wakeUpTogetUp.togetUp.infra.aws.s3.model.CustomFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

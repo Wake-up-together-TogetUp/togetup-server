@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.utils;
 
-import com.wakeUpTogetUp.togetUp.api.file.model.ImageContentType;
+import com.wakeUpTogetUp.togetUp.infra.aws.s3.model.ImageContentType;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import lombok.AccessLevel;

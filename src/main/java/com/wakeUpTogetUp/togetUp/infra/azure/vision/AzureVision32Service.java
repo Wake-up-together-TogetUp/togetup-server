@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.mission.service;
+package com.wakeUpTogetUp.togetUp.infra.azure.vision;
 
 import com.microsoft.azure.cognitiveservices.vision.computervision.ComputerVisionClient;
 import com.microsoft.azure.cognitiveservices.vision.computervision.models.ImageAnalysis;
