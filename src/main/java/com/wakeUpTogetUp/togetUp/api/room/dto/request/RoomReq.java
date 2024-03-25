@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.room.dto.request;
 
 
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmCreateReq;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class RoomReq {
 
-    @Schema(description = "룸 이름", requiredMode = Schema.RequiredMode.REQUIRED, example = "일찍 일어나는 새들의 방")
+    @Schema(description = "룸 이름", requiredMode = Schema.RequiredMode.REQUIRED, example = "일찍 일어나자")
     @NotBlank(message = "룸 이름은 공백일 수 없습니다.")
     private String name;
 
@@ -24,5 +24,5 @@ public class RoomReq {
     private String intro;
 
     @NotBlank(message = "룸의 알람은 공백일 수 없습니다.")
-    private PostAlarmReq postAlarmReq;
+    private AlarmCreateReq alarmCreateReq;
 }

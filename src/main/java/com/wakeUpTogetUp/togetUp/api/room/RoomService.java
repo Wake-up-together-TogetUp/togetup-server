@@ -2,6 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.room;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmService;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
@@ -20,13 +21,16 @@ import com.wakeUpTogetUp.togetUp.common.Constant;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.TimeFormatter;
+import com.wakeUpTogetUp.togetUp.utils.mapper.AlarmMigrationMapper;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,25 +50,22 @@ public class RoomService {
     private final MissionLogRepository missionLogRepository;
     private final TimeFormatter timeFormatter;
     private final UserAvatarRepository userAvatarRepository;
+    private final AlarmMigrationMapper alarmMigrationMapper;
 
     @Transactional
     public void createRoom(Integer userId, RoomReq roomReq) {
 
-        //그룹 만들기
         Room room = Room.builder()
                 .name(roomReq.getName())
                 .intro(roomReq.getIntro())
                 .build();
-        //알람 만들기
-        Integer alarmId = alarmService.createAlarm(userId, roomReq.getPostAlarmReq()).getId();
 
-        //그룹 만들기
+        PostAlarmReq postAlarmReq = alarmMigrationMapper.convertAlarmCreateReqToPostAlarmReq(roomReq.getAlarmCreateReq());
+
+        Integer alarmId = alarmService.createAlarmDeprecated(userId, postAlarmReq).getId();
         Room savedRoom = roomRepository.save(room);
-
-        //그룹에 유저 넣기
         this.joinRoom(savedRoom.getId(), userId, true);
 
-        //알람에 room넣기
         alarmRepository.updateRoomIdByAlarmId(alarmId, savedRoom.getId());
 
     }
