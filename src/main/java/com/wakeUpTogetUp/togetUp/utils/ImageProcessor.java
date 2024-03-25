@@ -5,7 +5,7 @@ import static org.apache.commons.imaging.Imaging.getMetadata;
 import com.google.cloud.vision.v1.FaceAnnotation;
 import com.google.cloud.vision.v1.Vertex;
 import com.wakeUpTogetUp.togetUp.api.mission.model.BoundingBox;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
+import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -173,13 +173,13 @@ public class ImageProcessor {
 
 
     // TODO : 인식 결과 그림 그리기 하나로 통일하기
-    public byte[] drawODResultOnImage(MultipartFile file, List<CustomDetectedObject> detectedObjects)
+    public byte[] drawODResultOnImage(MultipartFile file, List<CustomAnalysisEntity> entities)
             throws IOException {
         BufferedImage originalImage = readImage(file.getBytes());
         Graphics2D g2d = originalImage.createGraphics();
 
-        for (CustomDetectedObject detectedObject : detectedObjects) {
-            BoundingBox box = detectedObject.getBox();
+        for (CustomAnalysisEntity entity : entities) {
+            BoundingBox box = entity.getBox();
 
             int minDwDh = Math.min(originalImage.getWidth(), originalImage.getHeight());
             
@@ -192,7 +192,7 @@ public class ImageProcessor {
             int fontSize = minDwDh / 25;
             g2d.setFont(new Font("Arial", Font.PLAIN, fontSize));
             g2d.drawString(
-                    detectedObject.getObject() + " : " + String.format("%.3f", detectedObject.getConfidence()),
+                    entity.getName() + " : " + String.format("%.3f", entity.getConfidence()),
                     box.getX(), box.getY() - (float) (originalImage.getHeight() / 100));
         }
         g2d.dispose();

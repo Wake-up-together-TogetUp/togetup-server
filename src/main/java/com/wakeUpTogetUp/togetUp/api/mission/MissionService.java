@@ -6,10 +6,10 @@ import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionCompleteReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedTag;
+import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Emotion;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionPerformResult;
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.AzureVision32Service;
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.AzureVision40Service;
 import com.wakeUpTogetUp.togetUp.infra.google.vision.GoogleVisionService;
@@ -52,57 +52,23 @@ public class MissionService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
-    public List<CustomDetectedObject> getObjectDetectedResult(String object, MultipartFile missionImage)
+    public List<CustomAnalysisEntity> getDetectionResult(String object, MultipartFile missionImage)
             throws Exception {
-//        List<CustomDetectedObject> detectedObjects = azureVision32Service.detectObjects(missionImage);
-        List<CustomDetectedObject> detectedObjects = azureVision40Service.detectObjects(missionImage);
+        MissionPerformResult result = MissionPerformResult.builder()
+                .object(object)
+                .analysisResult(azureVision40Service.detect(missionImage))
+                .build();
 
-        printDetectedObjects(detectedObjects);
+        // TODO: 디버그용 메서드 검증 후 삭제요망
+        result.getAnalysisResult().print();
 
-        List<CustomDetectedObject> highestConfidenceObjects = detectedObjects.stream()
-                .filter(objetDetected -> objetDetected.getObjectParent().toLowerCase().contains(object))
-                .sorted(Comparator.comparing(CustomDetectedObject::getConfidence).reversed())
-                .limit(3)
-                .collect(Collectors.toList());
-
-        if (highestConfidenceObjects.isEmpty()) {
+        if (result.isFail()) {
             throw new BaseException(Status.MISSION_FAILURE);
         }
 
-        return highestConfidenceObjects;
+        return result.getMatches();
     }
 
-    public List<CustomDetectedTag> getTagDetectionResult(String object, MultipartFile missionImage)
-            throws Exception {
-        List<CustomDetectedTag> detectedTags = azureVision40Service.detectTags(missionImage);
-
-        printDetectedTags(detectedTags);
-
-        List<CustomDetectedTag> highestConfidenceObjects = detectedTags.stream()
-                .filter(objetDetected -> objetDetected.getName().toLowerCase().contains(object))
-                .sorted(Comparator.comparing(CustomDetectedTag::getConfidence).reversed())
-                .limit(3)
-                .collect(Collectors.toList());
-
-        if (highestConfidenceObjects.isEmpty()) {
-            throw new BaseException(Status.MISSION_FAILURE);
-        }
-
-        return highestConfidenceObjects;
-    }
-
-    private void printDetectedObjects(List<CustomDetectedObject> detectedObjects) {
-        System.out.println("detectedObjects.size() = " + detectedObjects.size());
-        detectedObjects.forEach(object -> System.out.println(object.getObject()));
-        detectedObjects.forEach(object -> System.out.println(object.getParent()));
-    }
-
-    private void printDetectedTags(List<CustomDetectedTag> tags) {
-        System.out.println("tags.size() = " + tags.size());
-        tags.forEach(tag -> System.out.println(tag.getName()));
-    }
-
-    // 표정 인식
     public List<FaceAnnotation> getFaceRecognitionResult(String object, MultipartFile missionImage) {
         Emotion emotion = Emotion.fromName(object);
         List<FaceAnnotation> faceAnnotations = googleVisionService.getFaceRecognitionResult(missionImage);
@@ -139,7 +105,7 @@ public class MissionService {
         }
     }
 
-    // 모델로 객체 인식하기
+    // 모델로 객체 인식
     public void recognizeObjectByModel(String object, MultipartFile missionImage) {
         for (String objectDetected : objectDetectionService.detectObject(missionImage)) {
             log.info("objectDetected = " + objectDetected);

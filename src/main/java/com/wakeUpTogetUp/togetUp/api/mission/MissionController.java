@@ -2,13 +2,13 @@ package com.wakeUpTogetUp.togetUp.api.mission;
 
 import com.google.cloud.vision.v1.FaceAnnotation;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
+import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
 import com.wakeUpTogetUp.togetUp.infra.aws.s3.FileService;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionCompleteReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionPerfomRes;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
 import com.wakeUpTogetUp.togetUp.api.mission.service.MissionImageService;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.annotation.validator.ImageFile;
@@ -63,6 +63,7 @@ public class MissionController {
         return new BaseResponse<>(Status.SUCCESS, missionProvider.getMission(missionId));
     }
 
+    // TODO: 객체 탐지, 표정 인식 통합
     // TODO: 객체 이름이 아닌 알람 ID를 요청값으로 받게 리팩토링하기 + 그냥 리팩토링
     @Operation(summary = "객체 탐지 미션")
     @PostMapping(value = "/object-detection/{object}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -80,7 +81,7 @@ public class MissionController {
             @Parameter(required = true, description = "미션 수행 사진") @RequestPart @ImageFile MultipartFile missionImage,
             @Parameter(required = true, description = "탐지할 객체") @PathVariable String object
     ) throws Exception {
-        List<CustomDetectedObject> detectedObjects = missionService.getObjectDetectedResult(object, missionImage);
+        List<CustomAnalysisEntity> detectedObjects = missionService.getDetectionResult(object, missionImage);
         CustomFile file = missionImageService.processODResultImage(missionImage, detectedObjects);
         String imageUrl = fileService.uploadFile(file, "mission");
 
