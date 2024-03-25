@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.mission.service;
 
 import com.google.cloud.vision.v1.FaceAnnotation;
 import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
-import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.ImageProcessor;
+import com.wakeUpTogetUp.togetUp.utils.ImageProcessor;
 import com.wakeUpTogetUp.togetUp.api.file.model.CustomFile;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

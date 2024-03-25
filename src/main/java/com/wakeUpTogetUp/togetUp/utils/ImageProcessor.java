@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.utils.ImageProcessing;
+package com.wakeUpTogetUp.togetUp.utils;
 
 import static org.apache.commons.imaging.Imaging.getMetadata;
 
@@ -38,7 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class ImageProcessor {
 
-    public byte[] compress(byte[] imageToByte, float quality) throws Exception {
+    public byte[] compress(byte[] imageToByte, float quality) throws IOException {
         BufferedImage originalImage = readImage(imageToByte);
 
         ByteArrayOutputStream compressedImageStream = new ByteArrayOutputStream();
@@ -89,14 +89,12 @@ public class ImageProcessor {
     public byte[] rotate(byte[] imageToByte, int degrees) throws IOException {
         BufferedImage originalImage = readImage(imageToByte);
 
-        // 90도 회전 변환 설정
         AffineTransform transform = new AffineTransform();
         transform.rotate(Math.toRadians(degrees),
                 (double) originalImage.getWidth() / 2,
                 (double) originalImage.getHeight() / 2);
         AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
 
-        // 회전 적용
         BufferedImage rotatedImage = op.filter(originalImage, null);
 
         ByteArrayOutputStream rotatedImageStream = new ByteArrayOutputStream();
@@ -175,7 +173,6 @@ public class ImageProcessor {
 
 
     // TODO : 인식 결과 그림 그리기 하나로 통일하기
-    // 객체 인식 결과 그림 그리기
     public byte[] drawODResultOnImage(MultipartFile file, List<CustomDetectedObject> detectedObjects)
             throws IOException {
         BufferedImage originalImage = readImage(file.getBytes());
@@ -186,14 +183,12 @@ public class ImageProcessor {
 
             int minDwDh = Math.min(originalImage.getWidth(), originalImage.getHeight());
             
-            // 직사각형 그리기
             int thickness = minDwDh / 150;
             Random rand = new Random();
             g2d.setColor(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
             g2d.setStroke(new BasicStroke(thickness));
             g2d.draw(new Rectangle2D.Float(box.getX(), box.getY(), box.getW(), box.getH()));
 
-            // 사각형 왼쪽 위 글씨 쓰기
             int fontSize = minDwDh / 25;
             g2d.setFont(new Font("Arial", Font.PLAIN, fontSize));
             g2d.drawString(
@@ -209,7 +204,6 @@ public class ImageProcessor {
         return outputImageStream.toByteArray();
     }
 
-    // 객체 인식 결과 그림 그리기
     public byte[] drawFRResultOnImage(MultipartFile file, List<FaceAnnotation> faceAnnotations, String object)
             throws IOException {
         BufferedImage originalImage = readImage(file.getBytes());
@@ -227,7 +221,6 @@ public class ImageProcessor {
             int width = x2 - x1;
             int height = y2 - y1;
 
-            // 두께 결정
             int minDwDh = Math.min(originalImage.getWidth(), originalImage.getHeight());
             int thickness = minDwDh / 150;
 
@@ -236,7 +229,6 @@ public class ImageProcessor {
             g2d.setStroke(new BasicStroke(thickness));
             g2d.draw(new Rectangle2D.Float(x1, y1, width, height));
 
-            // 사각형 왼쪽 위 글씨 쓰기
             int fontSize = minDwDh / 25;
             g2d.setFont(new Font("Arial", Font.PLAIN, fontSize));
             g2d.drawString(
@@ -252,6 +244,10 @@ public class ImageProcessor {
         return outputImageStream.toByteArray();
     }
 
+    private BufferedImage readImage(byte[] data) throws IOException {
+        return ImageIO.read(new ByteArrayInputStream(data));
+    }
+
     public TiffImageMetadata getImageMetadata(MultipartFile file)
             throws IOException, ImageReadException {
         return readExifMetadata(file.getBytes());
@@ -265,9 +261,5 @@ public class ImageProcessor {
         }
         JpegImageMetadata jpegMetadata = (JpegImageMetadata) imageMetadata;
         return jpegMetadata.getExif();
-    }
-
-    private BufferedImage readImage(byte[] data) throws IOException {
-        return ImageIO.read(new ByteArrayInputStream(data));
     }
 }
