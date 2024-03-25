@@ -135,21 +135,6 @@ public class RoomController {
     }
 
 
-    @Operation(summary = "그룹에 참가")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
-            @ApiResponse(responseCode = "409", description = "이미 방에 들어간 멤버입니다."),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다."),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 방 입니다.")
-    })
-    @ResponseBody
-    @PostMapping("/join/{roomId}")
-    public BaseResponse joinRoom(@Parameter(hidden = true) @AuthUser Integer invitedUserId, @PathVariable Integer roomId) {
-
-        roomService.joinRoom(roomId, invitedUserId, false);
-        return new BaseResponse(Status.SUCCESS);
-
-    }
 
     @Operation(summary = "초대 받은 사람에게 보이는 그룹 정보 보기 ", description = "초대 받은 사람에게 보이는 앱 내 페이지")
     @ApiResponses(value = {
