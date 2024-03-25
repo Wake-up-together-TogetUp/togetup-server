@@ -13,8 +13,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.service.MissionImageService;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.annotation.validator.ImageFile;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.vo.ImageProcessResult;
+import com.wakeUpTogetUp.togetUp.api.file.model.CustomFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,7 +22,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
-import java.util.Objects;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,6 +43,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/app/mission")
 public class MissionController {
+
     private final MissionProvider missionProvider;
     private final MissionService missionService;
     private final MissionImageService missionImageService;
@@ -82,8 +81,8 @@ public class MissionController {
             @Parameter(required = true, description = "탐지할 객체") @PathVariable String object
     ) throws Exception {
         List<CustomDetectedObject> detectedObjects = missionService.getObjectDetectedResult(object, missionImage);
-        ImageProcessResult result = missionImageService.processODResultImage(missionImage, detectedObjects);
-        String imageUrl = fileService.uploadMissionImage(missionImage, result);
+        CustomFile file = missionImageService.processODResultImage(missionImage, detectedObjects);
+        String imageUrl = fileService.uploadFile(file, "mission");
 
         return new BaseResponse<>(Status.MISSION_SUCCESS, new MissionPerfomRes(imageUrl));
     }
@@ -102,17 +101,12 @@ public class MissionController {
     })
     public BaseResponse<MissionPerfomRes> recognizeFaceExpression(
             @Parameter(hidden = true) @AuthUser Integer userId,
-            @Parameter(required = true, description = "미션 수행 사진") @RequestPart MultipartFile missionImage,
+            @Parameter(required = true, description = "미션 수행 사진") @RequestPart @ImageFile MultipartFile missionImage,
             @Parameter(required = true, description = "탐지할 표정(`joy`/`sorrow`/`anger`/`surprise`)") @PathVariable String object
     ) throws Exception {
-
-        if (!Objects.equals(missionImage.getContentType(), MediaType.IMAGE_JPEG_VALUE)) {
-            throw new BaseException(Status.UNSUPPORTED_MEDIA_TYPE);
-        }
-
         List<FaceAnnotation> faceAnnotations = missionService.getFaceRecognitionResult(object, missionImage);
-        ImageProcessResult result = missionImageService.processFRResultImage(missionImage, faceAnnotations, object);
-        String imageUrl = fileService.uploadMissionImage(missionImage, result);
+        CustomFile file = missionImageService.processFRResultImage(missionImage, faceAnnotations, object);
+        String imageUrl = fileService.uploadFile(file, "mission");
 
         return new BaseResponse<>(Status.MISSION_SUCCESS, new MissionPerfomRes(imageUrl));
     }

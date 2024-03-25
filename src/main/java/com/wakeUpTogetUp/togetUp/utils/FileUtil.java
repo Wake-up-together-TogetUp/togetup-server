@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUtil {
 
-    private static final String FILE_NAME_FORMAT = "%s/%s%s-%s";
-    private static final String FILE_DATE_TIME_FORMAT = "yyyyMMddHHmmss";
+    private static final String FILE_NAME_FORMAT = "%s/%s/%s";
+    private static final String FILE_DATE_TIME_FORMAT = "yyyy/MM/dd";
 
     public static String extractExtension(String fileName) {
         FileValidator.validateFileName(fileName);
@@ -21,13 +21,18 @@ public class FileUtil {
                 .toLowerCase(Locale.ROOT);
     }
 
-    public static String generateKey(String directoryPath, String fileName) {
+    public static String generatePath(String directoryPath, String fileName) {
+        String key = generateKey(fileName);
         String dateTime = ZonedDateTime.now()
                 .format(
                         DateTimeFormatter
                                 .ofPattern(FILE_DATE_TIME_FORMAT)
                                 .withLocale(Locale.ROOT));
 
-        return String.format(FILE_NAME_FORMAT, directoryPath, dateTime, UUID.randomUUID(), fileName);
+        return String.format(FILE_NAME_FORMAT, directoryPath, dateTime, key);
+    }
+
+    public static String generateKey(String fileName) {
+        return UUID.randomUUID() + fileName;
     }
 }
