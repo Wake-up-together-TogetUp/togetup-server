@@ -31,7 +31,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -67,7 +66,7 @@ public class RoomService {
 
         Integer alarmId = alarmService.createAlarmDeprecated(userId, postAlarmReq).getId();
         Room savedRoom = roomRepository.save(room);
-        this.joinRoom(savedRoom.getId(), userId, true);
+        this.joinRoom(savedRoom.getId(), userId);
 
         alarmRepository.updateRoomIdByAlarmId(alarmId, savedRoom.getId());
 
@@ -193,23 +192,6 @@ public class RoomService {
         return roomUserMissionLogRes;
     }
 
-    @Transactional
-    public void changeRoomHost(Integer roomId, Integer userId, Integer selectedUserId) {
-
-        //host false로 바꾸기
-        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId)
-                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
-        if (!roomUser.getIsHost()) {
-            throw new BaseException(Status.INVALID_ROOM_HOST_ID);
-        }
-        roomUser.setIsHost(false);
-
-        //선택한 user를 host 지정
-        RoomUser seletedRoomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, selectedUserId)
-                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
-        seletedRoomUser.setIsHost(true);
-
-    }
 
     @Transactional
     public void leaveRoom(Integer roomId, Integer userId) {
@@ -220,42 +202,25 @@ public class RoomService {
             throw new BaseException(Status.ROOM_USER_NOT_FOUND);
         }
 
-        //방장이 방을 나갈때 방장이 양도됨.
-        if (roomUser.getIsHost()) {
-            this.findNextCreatedUser(roomId, roomUser.getId());
-        }
-
         roomUserRepository.deleteByRoom_IdAndUser_Id(roomId, userId);
+        deleteUnnecessaryRoomAndAlarm(roomId, userId);
 
     }
 
-    @Transactional
-    public void findNextCreatedUser(Integer roomId, Integer userId) {
-        List<RoomUser> orderedRoomUser = roomUserRepository.findAllByRoom_IdOrderByCreatedAt(
-                roomId);
-        //방의 마지막 멤버가 나가면 방,알람 삭제
-        if (orderedRoomUser.size() < Constant.MINIMUM_NUMBER_TO_CHANGE_HOST) {
-            deleteUnnecessaryRoomAndAlarm(roomId);
-            return;
-        }
-
-        //방장이 제일 먼저 들어온 사람인 경우 그 다음 사람이 방장이 된다.
-        Integer nextHostId = orderedRoomUser.get(0).getId();
-        if (nextHostId == userId) {
-            nextHostId = orderedRoomUser.get(1).getId();
-        }
-
-        this.changeRoomHost(roomId, userId, nextHostId);
+    public boolean isEmptyRoom(Integer roomHeadCount) {
+        return roomHeadCount == 0;
     }
 
+
     @Transactional
-    public void deleteUnnecessaryRoomAndAlarm(Integer roomId) {
-        Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
-        if (Objects.isNull(alarm)) {
-            throw new BaseException(Status.ALARM_NOT_FOUND);
-        }
+    public void deleteUnnecessaryRoomAndAlarm(Integer roomId, Integer userId) {
+        Integer roomHeadCount = roomUserRepository.countByRoomId(roomId);
+        Alarm alarm = alarmRepository.findByUser_IdAndRoom_Id(userId, roomId)
+                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
         alarmRepository.delete(alarm);
-        roomRepository.deleteById(roomId);
+            if(isEmptyRoom(roomHeadCount))
+                roomRepository.deleteById(roomId);
+
     }
 
 
@@ -270,24 +235,15 @@ public class RoomService {
         //dto 매핑 mapper 사용
         RoomDetailRes roomDetailRes = new RoomDetailRes();
         roomDetailRes.setRoomData(EntityDtoMapper.INSTANCE.toRoomDetailResRoomData(alarm));
-        roomDetailRes.setAlarmData(EntityDtoMapper.INSTANCE.toRoomDetailResAlarmData(alarm));
+        roomDetailRes.setMissionData(EntityDtoMapper.INSTANCE.toRoomDetailResMissionData(alarm));
         roomDetailRes.setUserList(EntityDtoMapper.INSTANCE.toUserDataList(roomUsers));
 
         //dto 매핑 - 커스텀 필드
-        this.setUserTheme(roomDetailRes);
+        setUserTheme(roomDetailRes);
         roomDetailRes.getRoomData().setCreatedAt(
                 timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
 
-        roomDetailRes.getRoomData().setPersonnel(roomUsers.size());
-
-        // ex) 13:00 -> pm 1:00
-        roomDetailRes.getAlarmData()
-                .setAlarmTime(timeFormatter.timeStringToAMPMFormat(alarm.getAlarmTime()));
-        // ex)  평일, 주말, 매일, 월요일, (월, 화, 수), 빈칸
-        roomDetailRes.getAlarmData().setAlarmDay(
-                timeFormatter.formatDaysOfWeek(alarm.getMonday(), alarm.getTuesday(),
-                        alarm.getWednesday(), alarm.getThursday(), alarm.getFriday(),
-                        alarm.getSaturday(), alarm.getSunday()));
+        roomDetailRes.getRoomData().setHeadCount(roomUsers.size());
 
         return roomDetailRes;
     }
@@ -317,11 +273,11 @@ public class RoomService {
         PostAlarmReq postAlarmReq = alarmMigrationMapper.convertAlarmCreateReqToPostAlarmReq(alarmCreateReq);
         Alarm alarm = alarmService.createAlarmDeprecated(invitedUserId, postAlarmReq);
         alarmRepository.updateRoomIdByAlarmId(alarm.getId(), roomId);
-        joinRoom(roomId, invitedUserId, false);
+        joinRoom(roomId, invitedUserId);
     }
 
     @Transactional
-    public void joinRoom(Integer roomId, Integer invitedUserId, boolean isHost) {
+    public void joinRoom(Integer roomId, Integer invitedUserId) {
 
 
         User user = findExistingUser(userRepository, invitedUserId);
@@ -337,7 +293,6 @@ public class RoomService {
         RoomUser roomUser = RoomUser.builder()
                 .user(user)
                 .room(room)
-                .isHost(isHost)
                 .agreePush(true)
                 .build();
 
@@ -349,8 +304,8 @@ public class RoomService {
         Room room = roomRepository.findByInvitationCode(invitationCode)
                 .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
-        Integer roomPersonnel = roomUserRepository.countByRoomId(room.getId());
-        if (isRoomEmpty(roomPersonnel))
+        Integer roomHeadCount = roomUserRepository.countByRoomId(room.getId());
+        if (isRoomEmpty(roomHeadCount))
             throw new BaseException(Status.ROOM_NOT_FOUND);
 
         MissionObject roomMissionObject = alarmRepository.findMissionObjectByRoomId(room.getId());
@@ -362,7 +317,7 @@ public class RoomService {
                 .name(room.getName())
                 .intro(room.getIntro())
                 .createdAt(timeFormatter.timestampToDotDateFormat(room.getCreatedAt()))
-                .personnel(roomPersonnel)
+                .headCount(roomHeadCount)
                 .missionObjectId(roomMissionObject.getId())
                 .missionKr(roomMissionObject.getKr())
                 .build();

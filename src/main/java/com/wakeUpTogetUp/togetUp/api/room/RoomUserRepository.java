@@ -20,9 +20,9 @@ public interface RoomUserRepository extends JpaRepository<RoomUser, Integer> {
             "WHERE ru.room.id = :roomId " +
             "ORDER BY " +
             "CASE WHEN ru.user.id = :userId THEN 0 " +
-            "WHEN ru.isHost = true THEN 1 " +
-            "ELSE 2 " +
+            "ELSE 1 " +
             "END, u.name")
+
     List<RoomUser> findAllByRoom_IdOrderByPreference(Integer roomId, Integer userId);
 
 

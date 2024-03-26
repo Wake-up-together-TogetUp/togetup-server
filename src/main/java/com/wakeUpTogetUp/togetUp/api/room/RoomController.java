@@ -112,20 +112,6 @@ public class RoomController {
 
     }
 
-    @Operation(summary = "방장 변경하기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
-            @ApiResponse(responseCode = "400", description = "방장의 id가 아닙니다."),
-            @ApiResponse(responseCode = "404", description = "그룹의 해당 멤버가 없습니다."),
-    })
-    @ResponseBody
-    @PostMapping("/{roomId}/host/{selectedUserId}")
-    public BaseResponse changeRoomHost(@Parameter(hidden = true) @AuthUser Integer userId, @PathVariable Integer roomId, @Parameter Integer selectedUserId) {
-
-        roomService.changeRoomHost(roomId, userId, selectedUserId);
-        return new BaseResponse(Status.SUCCESS);
-
-    }
 
     @Operation(summary = "그룹 디테일 보기 ", description = "그룹 디테일 보기 (설정 화면)")
     @ApiResponses(value = {

@@ -34,8 +34,6 @@ public class RoomUser {
     @Column(name = "created_at")
     private Timestamp createdAt;
 
-    @Column(name = "is_host")
-    private Boolean isHost;
 
     @Column(name = "agree_push")
     private Boolean agreePush = true;
