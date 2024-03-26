@@ -9,7 +9,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.domain.ObjectDetectionModel;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.config.ODConfig;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.utils.ImageProcessing.ImageProcessor;
+import com.wakeUpTogetUp.togetUp.utils.ImageProcessor;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;

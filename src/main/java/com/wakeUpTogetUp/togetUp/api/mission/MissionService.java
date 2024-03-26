@@ -1,16 +1,18 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
-import com.azure.ai.vision.imageanalysis.DetectedObject;
 import com.google.cloud.vision.v1.FaceAnnotation;
 import com.google.cloud.vision.v1.Likelihood;
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionCompleteReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
+import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Emotion;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
-import com.wakeUpTogetUp.togetUp.api.mission.service.AzureAiService;
-import com.wakeUpTogetUp.togetUp.api.mission.service.GoogleVisionService;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.MissionPerformResult;
+import com.wakeUpTogetUp.togetUp.infra.azure.vision.AzureVision32Service;
+import com.wakeUpTogetUp.togetUp.infra.azure.vision.AzureVision40Service;
+import com.wakeUpTogetUp.togetUp.infra.google.vision.GoogleVisionService;
 import com.wakeUpTogetUp.togetUp.api.mission.service.ObjectDetectionService;
 import com.wakeUpTogetUp.togetUp.api.notification.NotificationService;
 import com.wakeUpTogetUp.togetUp.api.users.UserAvatarService;
@@ -40,7 +42,8 @@ import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.*;
 public class MissionService {
 
     private final ObjectDetectionService objectDetectionService;
-    private final AzureAiService azureAiService;
+    private final AzureVision32Service azureVision32Service;
+    private final AzureVision40Service azureVision40Service;
     private final GoogleVisionService googleVisionService;
     private final AlarmRepository alarmRepository;
     private final MissionLogRepository missionLogRepository;
@@ -49,41 +52,23 @@ public class MissionService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
-    // 객체 인식
-    public List<DetectedObject> getObjectDetectionResult(String object, MultipartFile missionImage)
+    public List<CustomAnalysisEntity> getDetectionResult(String object, MultipartFile missionImage)
             throws Exception {
-        List<DetectedObject> detectedObjects = azureAiService.detectObjectByVer40(missionImage);
+        MissionPerformResult result = MissionPerformResult.builder()
+                .object(object)
+                .analysisResult(azureVision40Service.detect(missionImage))
+                .build();
 
-        // TODO: 디버그용 삭제
-        log.info("탐지할 객체 = " + object);
-        log.info("[감지된 객체]");
-        detectedObjects.stream()
-                .map(DetectedObject::getName)
-                .forEach(log::info);
+        // TODO: 디버그용 메서드 검증 후 삭제요망
+        result.getAnalysisResult().print();
 
-        if (detectedObjects.isEmpty()) {
-            throw new BaseException(Status.NO_DETECTED_OBJECT);
-        }
-
-        // todo: 객체 정리하고 비교할 자료구조 찾기
-        List<DetectedObject> highestConfidenceObjects = detectedObjects.stream()
-                .filter(objetDetected -> objetDetected.getName().toLowerCase().equals(object))
-                .sorted(Comparator.comparing(DetectedObject::getConfidence).reversed())
-                .limit(3)
-                .collect(Collectors.toList());
-
-        // TODO: 디버그용 삭제
-        log.info("[감지된 객체 중 목표 객체 정확도순 최대 3개]");
-        highestConfidenceObjects.forEach(obj -> log.info(obj.toString()));
-
-        if (highestConfidenceObjects.isEmpty()) {
+        if (result.isFail()) {
             throw new BaseException(Status.MISSION_FAILURE);
         }
 
-        return highestConfidenceObjects;
+        return result.getMatches();
     }
 
-    // 표정 인식
     public List<FaceAnnotation> getFaceRecognitionResult(String object, MultipartFile missionImage) {
         Emotion emotion = Emotion.fromName(object);
         List<FaceAnnotation> faceAnnotations = googleVisionService.getFaceRecognitionResult(missionImage);
@@ -120,7 +105,7 @@ public class MissionService {
         }
     }
 
-    // 모델로 객체 인식하기
+    // 모델로 객체 인식
     public void recognizeObjectByModel(String object, MultipartFile missionImage) {
         for (String objectDetected : objectDetectionService.detectObject(missionImage)) {
             log.info("objectDetected = " + objectDetected);

@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.notification;
+package com.wakeUpTogetUp.togetUp.infra.google.fcm;
 
 import com.google.api.core.ApiFuture;
 import com.google.firebase.messaging.*;

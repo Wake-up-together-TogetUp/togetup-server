@@ -1,11 +1,11 @@
-package com.wakeUpTogetUp.togetUp.utils.ImageProcessing;
+package com.wakeUpTogetUp.togetUp.utils;
 
 import static org.apache.commons.imaging.Imaging.getMetadata;
 
-import com.azure.ai.vision.common.BoundingBox;
-import com.azure.ai.vision.imageanalysis.DetectedObject;
 import com.google.cloud.vision.v1.FaceAnnotation;
 import com.google.cloud.vision.v1.Vertex;
+import com.wakeUpTogetUp.togetUp.api.mission.model.BoundingBox;
+import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -38,15 +38,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class ImageProcessor {
 
-    public byte[] compress(byte[] imageToByte, float quality) throws Exception {
-        System.out.println("[압축]");
-
+    public byte[] compress(byte[] imageToByte, float quality) throws IOException {
         BufferedImage originalImage = readImage(imageToByte);
 
         ByteArrayOutputStream compressedImageStream = new ByteArrayOutputStream();
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
 
-        // 압축
         if (writers.hasNext()) {
             ImageWriter writer = writers.next();
             ImageWriteParam param = writer.getDefaultWriteParam();
@@ -68,29 +65,20 @@ public class ImageProcessor {
     }
 
     public byte[] resize(byte[] imageToByte, double ratio) throws IOException {
-        System.out.println("[리사이즈]");
-
         BufferedImage originalImage = readImage(imageToByte);
 
         int scaledWidth = (int) (originalImage.getWidth() * ratio);
         int scaledHeight = (int) (originalImage.getHeight() * ratio);
 
-        // 이미지 품질 설정
-        // Image.SCALE_DEFAULT : 기본 이미지 스케일링 알고리즘 사용
-        // Image.SCALE_FAST : 이미지 부드러움보다 속도 우선
-        // Image.SCALE_REPLICATE : ReplicateScaleFilter 클래스로 구체화 된 이미지 크기 조절 알고리즘
-        // Image.SCALE_SMOOTH : 속도보다 이미지 부드러움을 우선
-        // Image.SCALE_AREA_AVERAGING : 평균 알고리즘 사용
-        Image resizeImage = originalImage.getScaledInstance(scaledWidth, scaledHeight,
-                Image.SCALE_FAST);
-        BufferedImage newImage = new BufferedImage(scaledWidth, scaledHeight,
-                BufferedImage.TYPE_INT_RGB);
+        Image resizeImage = originalImage
+                .getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_FAST);
+        BufferedImage newImage =
+                new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
 
         Graphics gp = newImage.getGraphics();
         gp.drawImage(resizeImage, 0, 0, null);
         gp.dispose();
 
-        // byte 배열로 변환
         ByteArrayOutputStream compressedImageStream = new ByteArrayOutputStream();
         ImageIO.write(newImage, "jpg", compressedImageStream);
         compressedImageStream.close();
@@ -101,14 +89,12 @@ public class ImageProcessor {
     public byte[] rotate(byte[] imageToByte, int degrees) throws IOException {
         BufferedImage originalImage = readImage(imageToByte);
 
-        // 90도 회전 변환 설정
         AffineTransform transform = new AffineTransform();
         transform.rotate(Math.toRadians(degrees),
                 (double) originalImage.getWidth() / 2,
                 (double) originalImage.getHeight() / 2);
         AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
 
-        // 회전 적용
         BufferedImage rotatedImage = op.filter(originalImage, null);
 
         ByteArrayOutputStream rotatedImageStream = new ByteArrayOutputStream();
@@ -118,7 +104,6 @@ public class ImageProcessor {
         return rotatedImageStream.toByteArray();
     }
 
-    // TODO: 개선
     public byte[] orientImage(byte[] imageToByte, TiffImageMetadata metadata)
             throws IOException, ImageReadException {
         TiffField orientationField = metadata != null
@@ -166,14 +151,14 @@ public class ImageProcessor {
                 break;
         }
 
-        AffineTransformOp op = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
+        AffineTransformOp op =
+                new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
         BufferedImage rotatedImage = op.filter(originalImage, null);
 
         // AffineTransformOp에 의해 반환된 BufferedImage의 타입이 원본과 다를 수 있어 때로 약간의 색상 변화나 문제가 발생할 수 있다.
         // 새로운 BufferedImage를 생성하고 그 위에 결과 이미지를 그린다.
-        BufferedImage newImage = new BufferedImage(
-                rotatedImage.getWidth(), rotatedImage.getHeight(),
-                BufferedImage.TYPE_INT_RGB);
+        BufferedImage newImage =
+                new BufferedImage(rotatedImage.getWidth(), rotatedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
 
         Graphics2D g = newImage.createGraphics();
         g.drawImage(rotatedImage, 0, 0, null);
@@ -188,30 +173,26 @@ public class ImageProcessor {
 
 
     // TODO : 인식 결과 그림 그리기 하나로 통일하기
-    // 객체 인식 결과 그림 그리기
-    public byte[] drawODResultOnImage(MultipartFile file, List<DetectedObject> detectedObjects, String object)
+    public byte[] drawODResultOnImage(MultipartFile file, List<CustomAnalysisEntity> entities)
             throws IOException {
         BufferedImage originalImage = readImage(file.getBytes());
-
         Graphics2D g2d = originalImage.createGraphics();
 
-        for (DetectedObject detectedObject : detectedObjects) {
-            BoundingBox box = detectedObject.getBoundingBox();
+        for (CustomAnalysisEntity entity : entities) {
+            BoundingBox box = entity.getBox();
 
-            // 두께 결정
             int minDwDh = Math.min(originalImage.getWidth(), originalImage.getHeight());
+            
             int thickness = minDwDh / 150;
-
             Random rand = new Random();
             g2d.setColor(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
             g2d.setStroke(new BasicStroke(thickness));
             g2d.draw(new Rectangle2D.Float(box.getX(), box.getY(), box.getW(), box.getH()));
 
-            // 사각형 왼쪽 위 글씨 쓰기
             int fontSize = minDwDh / 25;
             g2d.setFont(new Font("Arial", Font.PLAIN, fontSize));
             g2d.drawString(
-                    object + " : " + String.format("%.3f", detectedObject.getConfidence()),
+                    entity.getName() + " : " + String.format("%.3f", entity.getConfidence()),
                     box.getX(), box.getY() - (float) (originalImage.getHeight() / 100));
         }
         g2d.dispose();
@@ -223,7 +204,6 @@ public class ImageProcessor {
         return outputImageStream.toByteArray();
     }
 
-    // 객체 인식 결과 그림 그리기
     public byte[] drawFRResultOnImage(MultipartFile file, List<FaceAnnotation> faceAnnotations, String object)
             throws IOException {
         BufferedImage originalImage = readImage(file.getBytes());
@@ -241,7 +221,6 @@ public class ImageProcessor {
             int width = x2 - x1;
             int height = y2 - y1;
 
-            // 두께 결정
             int minDwDh = Math.min(originalImage.getWidth(), originalImage.getHeight());
             int thickness = minDwDh / 150;
 
@@ -250,7 +229,6 @@ public class ImageProcessor {
             g2d.setStroke(new BasicStroke(thickness));
             g2d.draw(new Rectangle2D.Float(x1, y1, width, height));
 
-            // 사각형 왼쪽 위 글씨 쓰기
             int fontSize = minDwDh / 25;
             g2d.setFont(new Font("Arial", Font.PLAIN, fontSize));
             g2d.drawString(
@@ -266,6 +244,10 @@ public class ImageProcessor {
         return outputImageStream.toByteArray();
     }
 
+    private BufferedImage readImage(byte[] data) throws IOException {
+        return ImageIO.read(new ByteArrayInputStream(data));
+    }
+
     public TiffImageMetadata getImageMetadata(MultipartFile file)
             throws IOException, ImageReadException {
         return readExifMetadata(file.getBytes());
@@ -279,9 +261,5 @@ public class ImageProcessor {
         }
         JpegImageMetadata jpegMetadata = (JpegImageMetadata) imageMetadata;
         return jpegMetadata.getExif();
-    }
-
-    private BufferedImage readImage(byte[] data) throws IOException {
-        return ImageIO.read(new ByteArrayInputStream(data));
     }
 }

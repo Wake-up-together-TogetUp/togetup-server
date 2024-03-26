@@ -47,6 +47,9 @@ public enum Status {
     INVALID_APPLE_CLAIMS(HttpStatus.BAD_REQUEST, "Apple OAuth Claims 값이 올바르지 않습니다."),
     INVALID_APPLE_TOKEN(HttpStatus.BAD_REQUEST, "Apple OAuth Identity Token 형식이 올바르지 않습니다."),
     INVALID_ROOM_HOST_ID(HttpStatus.BAD_REQUEST, "방장의 id가 아닙니다."),
+    INVALID_IMAGE(HttpStatus.BAD_REQUEST, "유효한 이미지가 아닙니다."),
+    INVALID_FILE_NAME_EXCEPTION(HttpStatus.BAD_REQUEST, "이미지 파일 이름이 유효하지 않습니다."),
+    INVALID_FILE_CONTENT_TYPE_EXCEPTION(HttpStatus.BAD_REQUEST, "이미지 컨텐트 타입이 유효하지 않습니다."),
 
     // FORBIDDEN
     USER_AVATAR_LOCKED(HttpStatus.FORBIDDEN, "유저가 보유하지 않은 아바타 ID 입니다."),
@@ -79,6 +82,8 @@ public enum Status {
     FIND_DEFAULT_AVATAR_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "기본 아바타를 불려오는데 실패했습니다."),
     FIND_USER_AVATAR_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "유저의 대표 아바타 정보를 불러오는데 실패했습니다."),
     LOAD_MODEL_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "모델 객체 정보 불러오기를 실패했습니다."),
+    FILE_IO_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "파일을 불러오지 못했습니다.")
+
     ;
 
     private final HttpStatus httpStatus;

@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.mission.service;
+package com.wakeUpTogetUp.togetUp.infra.google.vision;
 
 import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.FaceAnnotation;
