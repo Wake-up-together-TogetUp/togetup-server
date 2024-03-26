@@ -23,9 +23,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @ToString
 @Entity
+@SQLDelete(sql = "UPDATE alarm SET is_activated = false WHERE id = ?")
+@Where(clause = "is_activated = true")
 @Table(name = "alarm")
 @DynamicInsert
 @Data
