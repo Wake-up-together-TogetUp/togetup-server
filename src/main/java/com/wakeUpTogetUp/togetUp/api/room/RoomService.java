@@ -239,24 +239,15 @@ public class RoomService {
         //dto 매핑 mapper 사용
         RoomDetailRes roomDetailRes = new RoomDetailRes();
         roomDetailRes.setRoomData(EntityDtoMapper.INSTANCE.toRoomDetailResRoomData(alarm));
-        roomDetailRes.setAlarmData(EntityDtoMapper.INSTANCE.toRoomDetailResAlarmData(alarm));
+        roomDetailRes.setMissionData(EntityDtoMapper.INSTANCE.toRoomDetailResMissionData(alarm));
         roomDetailRes.setUserList(EntityDtoMapper.INSTANCE.toUserDataList(roomUsers));
 
         //dto 매핑 - 커스텀 필드
-        this.setUserTheme(roomDetailRes);
+        setUserTheme(roomDetailRes);
         roomDetailRes.getRoomData().setCreatedAt(
                 timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
 
         roomDetailRes.getRoomData().setPersonnel(roomUsers.size());
-
-        // ex) 13:00 -> pm 1:00
-        roomDetailRes.getAlarmData()
-                .setAlarmTime(timeFormatter.timeStringToAMPMFormat(alarm.getAlarmTime()));
-        // ex)  평일, 주말, 매일, 월요일, (월, 화, 수), 빈칸
-        roomDetailRes.getAlarmData().setAlarmDay(
-                timeFormatter.formatDaysOfWeek(alarm.getMonday(), alarm.getTuesday(),
-                        alarm.getWednesday(), alarm.getThursday(), alarm.getFriday(),
-                        alarm.getSaturday(), alarm.getSunday()));
 
         return roomDetailRes;
     }

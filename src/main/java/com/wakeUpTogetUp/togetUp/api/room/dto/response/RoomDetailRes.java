@@ -20,8 +20,8 @@ public class RoomDetailRes {
     @Schema(description = "룸 정보")
     private RoomData roomData;
 
-    @Schema(description = "알람 정보")
-    private AlarmData alarmData;
+    @Schema(description = "미션 정보")
+    private MissionData missionData;
 
     @Schema(description = "룸의 유저들 정보 리스트")
     private List<RoomDetailRes.UserData> userList;
@@ -52,23 +52,14 @@ public class RoomDetailRes {
 
     @Builder
     @Data
-    public static class AlarmData {
+    public static class MissionData {
 
-        @Schema(description = "룸에서 울리는 알람아이디", example = "2")
-        private Integer id;
 
         @Schema(description = "미션 아이콘", example = "⏰")
         private String icon;
 
         @Schema(description = "미션의 한국말", example = "자동차")
         private String missionKr;
-
-        @Schema(description = "알람 시간", example = "pm 13:00")
-        private String alarmTime;
-
-        @Schema(description = "그룹알람 울리는 날", example = "주중")
-        private String alarmDay;
-
 
     }
 
