@@ -46,9 +46,8 @@ public class AlarmCreateReq {
     @Schema(description = "일요일 울림 여부", defaultValue = "false", example = "false")
     private boolean sunday;
 
-
-    @Schema(description = "진동 활성화 여부", defaultValue = "true", example = "true")
-    private boolean isVibrate;
+    @Schema(description = "진동 활성화 여부", defaultValue = "true", example = "true",name = "isVibrate")
+    private Boolean isVibrate;
 
     @Schema(description = "미션 id", requiredMode = RequiredMode.REQUIRED, example = "2")
     private Integer missionId;
