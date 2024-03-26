@@ -67,7 +67,7 @@ public class RoomService {
 
         Integer alarmId = alarmService.createAlarmDeprecated(userId, postAlarmReq).getId();
         Room savedRoom = roomRepository.save(room);
-        this.joinRoom(savedRoom.getId(), userId, true);
+        this.joinRoom(savedRoom.getId(), userId);
 
         alarmRepository.updateRoomIdByAlarmId(alarmId, savedRoom.getId());
 
@@ -278,11 +278,11 @@ public class RoomService {
         PostAlarmReq postAlarmReq = alarmMigrationMapper.convertAlarmCreateReqToPostAlarmReq(alarmCreateReq);
         Alarm alarm = alarmService.createAlarmDeprecated(invitedUserId, postAlarmReq);
         alarmRepository.updateRoomIdByAlarmId(alarm.getId(), roomId);
-        joinRoom(roomId, invitedUserId, false);
+        joinRoom(roomId, invitedUserId);
     }
 
     @Transactional
-    public void joinRoom(Integer roomId, Integer invitedUserId, boolean isHost) {
+    public void joinRoom(Integer roomId, Integer invitedUserId) {
 
 
         User user = findExistingUser(userRepository, invitedUserId);
