@@ -33,6 +33,7 @@ public class AlarmService {
     private final MissionRepository missionRepository;
     private final MissionObjectRepository missionObjectRepository;
 
+    @Deprecated
     @Transactional
     public Alarm createAlarmDeprecated(Integer userId, PostAlarmReq postAlarmReq) {
         User user = findExistingUser(userRepository, userId);
