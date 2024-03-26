@@ -205,16 +205,24 @@ public class RoomService {
 
 
         roomUserRepository.deleteByRoom_IdAndUser_Id(roomId, userId);
+        Integer roomHeadCount = roomUserRepository.countByRoomId(roomId);
+        if (isEmptyRoom(roomHeadCount))
+            deleteUnnecessaryRoomAndAlarm(roomId, userId);
 
+    }
+
+    public boolean isEmptyRoom(Integer roomHeadCount) {
+        return roomHeadCount == 0;
     }
 
 
     @Transactional
-    public void deleteUnnecessaryRoomAndAlarm(Integer roomId) {
-        Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
-        if (Objects.isNull(alarm)) {
-            throw new BaseException(Status.ALARM_NOT_FOUND);
-        }
+    public void deleteUnnecessaryRoomAndAlarm(Integer roomId, Integer userId) {
+        System.out.println("룸 "+ roomId+"  "+userId);
+
+        Alarm alarm = alarmRepository.findByUser_IdAndRoom_Id(userId, roomId)
+                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
+
         alarmRepository.delete(alarm);
         roomRepository.deleteById(roomId);
     }
