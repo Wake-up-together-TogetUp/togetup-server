@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.mission.service.mapper;
+package com.wakeUpTogetUp.togetUp.infra.azure.vision.mapper;
 
 import com.azure.ai.vision.imageanalysis.ContentTag;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomDetectedTag;
@@ -17,7 +17,7 @@ public class TagDetectedV40Mapper {
 
     private CustomDetectedTag toCustomDetectedTag(ContentTag tag) {
         return CustomDetectedTag.builder()
-                .name(tag.getName())
+                .tagName(tag.getName())
                 .confidence(tag.getConfidence())
                 .build();
     }

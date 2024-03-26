@@ -1,6 +1,6 @@
-package com.wakeUpTogetUp.togetUp.api.mission.service.mapper;
+package com.wakeUpTogetUp.togetUp.infra.azure.vision.mapper;
 
-import com.microsoft.azure.cognitiveservices.vision.computervision.models.DetectedObject;
+import com.azure.ai.vision.imageanalysis.DetectedObject;
 import com.wakeUpTogetUp.togetUp.api.mission.model.BoundingBox;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomDetectedObject;
 import java.util.List;
@@ -8,8 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ObjectDetectedV32Mapper {
-
+public class ObjectDetectedV40Mapper {
     public List<CustomDetectedObject> toCustomDetectedObjects(List<DetectedObject> objects) {
         return objects.stream()
                 .map(this::toCustomDetectedObject)
@@ -17,19 +16,15 @@ public class ObjectDetectedV32Mapper {
     }
 
     private CustomDetectedObject toCustomDetectedObject(DetectedObject detectedObject) {
-        String parent = detectedObject.parent() != null
-                ? detectedObject.parent().objectProperty()
-                : null;
-
         return CustomDetectedObject.builder()
-                .object(detectedObject.objectProperty())
-                .parent(parent)
-                .confidence(detectedObject.confidence())
+                .objectName(detectedObject.getName())
+                .parent(null)
+                .confidence(detectedObject.getConfidence())
                 .box(BoundingBox.builder()
-                        .x(detectedObject.rectangle().x())
-                        .y(detectedObject.rectangle().y())
-                        .w(detectedObject.rectangle().w())
-                        .h(detectedObject.rectangle().h())
+                        .x(detectedObject.getBoundingBox().getX())
+                        .y(detectedObject.getBoundingBox().getY())
+                        .w(detectedObject.getBoundingBox().getW())
+                        .h(detectedObject.getBoundingBox().getH())
                         .build())
                 .build();
     }

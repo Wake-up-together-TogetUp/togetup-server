@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.MODULE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoundingBox {
     private int x;
