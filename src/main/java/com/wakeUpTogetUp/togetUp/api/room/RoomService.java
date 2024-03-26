@@ -193,23 +193,6 @@ public class RoomService {
         return roomUserMissionLogRes;
     }
 
-    @Transactional
-    public void changeRoomHost(Integer roomId, Integer userId, Integer selectedUserId) {
-
-        //host false로 바꾸기
-        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId)
-                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
-        if (!roomUser.getIsHost()) {
-            throw new BaseException(Status.INVALID_ROOM_HOST_ID);
-        }
-        roomUser.setIsHost(false);
-
-        //선택한 user를 host 지정
-        RoomUser seletedRoomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, selectedUserId)
-                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
-        seletedRoomUser.setIsHost(true);
-
-    }
 
     @Transactional
     public void leaveRoom(Integer roomId, Integer userId) {
@@ -220,33 +203,11 @@ public class RoomService {
             throw new BaseException(Status.ROOM_USER_NOT_FOUND);
         }
 
-        //방장이 방을 나갈때 방장이 양도됨.
-        if (roomUser.getIsHost()) {
-            this.findNextCreatedUser(roomId, roomUser.getId());
-        }
 
         roomUserRepository.deleteByRoom_IdAndUser_Id(roomId, userId);
 
     }
 
-    @Transactional
-    public void findNextCreatedUser(Integer roomId, Integer userId) {
-        List<RoomUser> orderedRoomUser = roomUserRepository.findAllByRoom_IdOrderByCreatedAt(
-                roomId);
-        //방의 마지막 멤버가 나가면 방,알람 삭제
-        if (orderedRoomUser.size() < Constant.MINIMUM_NUMBER_TO_CHANGE_HOST) {
-            deleteUnnecessaryRoomAndAlarm(roomId);
-            return;
-        }
-
-        //방장이 제일 먼저 들어온 사람인 경우 그 다음 사람이 방장이 된다.
-        Integer nextHostId = orderedRoomUser.get(0).getId();
-        if (nextHostId == userId) {
-            nextHostId = orderedRoomUser.get(1).getId();
-        }
-
-        this.changeRoomHost(roomId, userId, nextHostId);
-    }
 
     @Transactional
     public void deleteUnnecessaryRoomAndAlarm(Integer roomId) {
@@ -337,7 +298,6 @@ public class RoomService {
         RoomUser roomUser = RoomUser.builder()
                 .user(user)
                 .room(room)
-                .isHost(isHost)
                 .agreePush(true)
                 .build();
 
