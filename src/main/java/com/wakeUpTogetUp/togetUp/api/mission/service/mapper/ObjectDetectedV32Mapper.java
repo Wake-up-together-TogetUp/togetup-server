@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.mission.service.mapper;
 
 import com.microsoft.azure.cognitiveservices.vision.computervision.models.DetectedObject;
 import com.wakeUpTogetUp.togetUp.api.mission.model.BoundingBox;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomDetectedObject;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;

@@ -1,16 +1,17 @@
-package com.wakeUpTogetUp.togetUp.api.mission.model;
+package com.wakeUpTogetUp.togetUp.api.mission.domain;
 
+import com.wakeUpTogetUp.togetUp.api.mission.model.BoundingBox;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class CustomDetectedObject extends CustomAnalysisEntity {
 
-    private String parent;
+    private final String parent;
 
     @Builder
-    private CustomDetectedObject(String object, String parent, double confidence, BoundingBox box) {
-        super(object, confidence, box);
+    private CustomDetectedObject(String objectName, String parent, double confidence, BoundingBox box) {
+        super(objectName, confidence, box);
         this.parent = parent;
     }
 
@@ -20,7 +21,7 @@ public class CustomDetectedObject extends CustomAnalysisEntity {
     }
 
     public String concatObjectAndParent() {
-        return name + parent;
+        return targetName + parent;
     }
 
 }

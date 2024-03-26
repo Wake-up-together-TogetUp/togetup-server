@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.mission.service;
 
 import com.google.cloud.vision.v1.FaceAnnotation;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomAnalysisEntity;
 import com.wakeUpTogetUp.togetUp.utils.ImageProcessor;
 import com.wakeUpTogetUp.togetUp.infra.aws.s3.model.CustomFile;
 import java.io.IOException;

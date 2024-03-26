@@ -3,7 +3,7 @@ package com.wakeUpTogetUp.togetUp.infra.azure.vision;
 import com.microsoft.azure.cognitiveservices.vision.computervision.ComputerVisionClient;
 import com.microsoft.azure.cognitiveservices.vision.computervision.models.ImageAnalysis;
 import com.microsoft.azure.cognitiveservices.vision.computervision.models.VisualFeatureTypes;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomDetectedObject;
 import com.wakeUpTogetUp.togetUp.api.mission.service.mapper.ObjectDetectedV32Mapper;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;

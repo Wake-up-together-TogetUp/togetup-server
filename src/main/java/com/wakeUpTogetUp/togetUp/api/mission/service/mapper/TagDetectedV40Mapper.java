@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.mission.service.mapper;
 
 import com.azure.ai.vision.imageanalysis.ContentTag;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedTag;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomDetectedTag;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;

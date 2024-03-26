@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.mission;
 
 import com.google.cloud.vision.v1.FaceAnnotation;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomAnalysisEntity;
 import com.wakeUpTogetUp.togetUp.infra.aws.s3.FileService;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionCompleteReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;

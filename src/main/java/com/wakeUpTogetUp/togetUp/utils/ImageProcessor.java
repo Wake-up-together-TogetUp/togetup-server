@@ -5,7 +5,7 @@ import static org.apache.commons.imaging.Imaging.getMetadata;
 import com.google.cloud.vision.v1.FaceAnnotation;
 import com.google.cloud.vision.v1.Vertex;
 import com.wakeUpTogetUp.togetUp.api.mission.model.BoundingBox;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomAnalysisEntity;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -192,7 +192,7 @@ public class ImageProcessor {
             int fontSize = minDwDh / 25;
             g2d.setFont(new Font("Arial", Font.PLAIN, fontSize));
             g2d.drawString(
-                    entity.getName() + " : " + String.format("%.3f", entity.getConfidence()),
+                    entity.getTargetName() + " : " + String.format("%.3f", entity.getConfidence()),
                     box.getX(), box.getY() - (float) (originalImage.getHeight() / 100));
         }
         g2d.dispose();

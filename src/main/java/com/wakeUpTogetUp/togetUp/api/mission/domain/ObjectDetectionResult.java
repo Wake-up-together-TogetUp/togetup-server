@@ -1,8 +1,5 @@
 package com.wakeUpTogetUp.togetUp.api.mission.domain;
 
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedTag;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,13 +52,13 @@ public class ObjectDetectionResult extends VisionAnalysisResult {
     private void printDetectedObjects() {
         System.out.println("[OBJECT]");
         System.out.println("objects.size() = " + objects.size());
-        objects.forEach(object -> System.out.println(object.getName()));
-        objects.forEach(object -> System.out.println(object.getName()));
+        objects.forEach(object -> System.out.println(object.getTargetName()));
+        objects.forEach(object -> System.out.println(object.getTargetName()));
     }
 
     private void printDetectedTags() {
         System.out.println("[TAG]");
         System.out.println("tags.size() = " + tags.size());
-        tags.forEach(tag -> System.out.println(tag.getName()));
+        tags.forEach(tag -> System.out.println(tag.getTargetName()));
     }
 }

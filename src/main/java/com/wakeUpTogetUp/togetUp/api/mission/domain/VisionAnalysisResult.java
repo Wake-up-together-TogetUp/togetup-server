@@ -1,6 +1,5 @@
 package com.wakeUpTogetUp.togetUp.api.mission.domain;
 
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
 import java.util.List;
 
 public abstract class VisionAnalysisResult {
