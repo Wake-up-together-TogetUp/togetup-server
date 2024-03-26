@@ -89,9 +89,6 @@ public class RoomDetailRes {
         @Schema(description = "유저의 레벨", example = "1")
         private Integer level;
 
-        @Schema(description = "방장인지 여부", example = "true")
-        private Boolean isHost;
-
 
     }
 }
