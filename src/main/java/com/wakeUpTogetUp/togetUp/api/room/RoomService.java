@@ -31,7 +31,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -247,7 +246,7 @@ public class RoomService {
         roomDetailRes.getRoomData().setCreatedAt(
                 timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
 
-        roomDetailRes.getRoomData().setPersonnel(roomUsers.size());
+        roomDetailRes.getRoomData().setHeadCount(roomUsers.size());
 
         return roomDetailRes;
     }
@@ -308,8 +307,8 @@ public class RoomService {
         Room room = roomRepository.findByInvitationCode(invitationCode)
                 .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
-        Integer roomPersonnel = roomUserRepository.countByRoomId(room.getId());
-        if (isRoomEmpty(roomPersonnel))
+        Integer roomHeadCount = roomUserRepository.countByRoomId(room.getId());
+        if (isRoomEmpty(roomHeadCount))
             throw new BaseException(Status.ROOM_NOT_FOUND);
 
         MissionObject roomMissionObject = alarmRepository.findMissionObjectByRoomId(room.getId());
@@ -321,7 +320,7 @@ public class RoomService {
                 .name(room.getName())
                 .intro(room.getIntro())
                 .createdAt(timeFormatter.timestampToDotDateFormat(room.getCreatedAt()))
-                .personnel(roomPersonnel)
+                .headCount(roomHeadCount)
                 .missionObjectId(roomMissionObject.getId())
                 .missionKr(roomMissionObject.getKr())
                 .build();

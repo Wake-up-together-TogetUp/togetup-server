@@ -2,11 +2,8 @@ package com.wakeUpTogetUp.togetUp.api.room.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.time.LocalTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,7 +34,7 @@ public class RoomInfoRes {
     private String createdAt;
 
     @Schema(description = "함께하는 인원수", example = "6")
-    private Integer personnel;
+    private Integer headCount;
 
     @Schema(description = "미션 객체 id", example = "1")
     private Integer missionObjectId;
