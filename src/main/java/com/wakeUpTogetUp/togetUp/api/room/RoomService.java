@@ -2,9 +2,12 @@ package com.wakeUpTogetUp.togetUp.api.room;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmService;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmCreateReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomInfoRes;
@@ -20,13 +23,17 @@ import com.wakeUpTogetUp.togetUp.common.Constant;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.TimeFormatter;
+import com.wakeUpTogetUp.togetUp.utils.mapper.AlarmMigrationMapper;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,25 +53,22 @@ public class RoomService {
     private final MissionLogRepository missionLogRepository;
     private final TimeFormatter timeFormatter;
     private final UserAvatarRepository userAvatarRepository;
+    private final AlarmMigrationMapper alarmMigrationMapper;
 
     @Transactional
     public void createRoom(Integer userId, RoomReq roomReq) {
 
-        //그룹 만들기
         Room room = Room.builder()
                 .name(roomReq.getName())
                 .intro(roomReq.getIntro())
                 .build();
-        //알람 만들기
-        Integer alarmId = alarmService.createAlarm(userId, roomReq.getPostAlarmReq()).getId();
 
-        //그룹 만들기
+        PostAlarmReq postAlarmReq = alarmMigrationMapper.convertAlarmCreateReqToPostAlarmReq(roomReq.getAlarmCreateReq());
+
+        Integer alarmId = alarmService.createAlarmDeprecated(userId, postAlarmReq).getId();
         Room savedRoom = roomRepository.save(room);
-
-        //그룹에 유저 넣기
         this.joinRoom(savedRoom.getId(), userId, true);
 
-        //알람에 room넣기
         alarmRepository.updateRoomIdByAlarmId(alarmId, savedRoom.getId());
 
     }
@@ -256,15 +260,12 @@ public class RoomService {
 
 
     public RoomDetailRes getRoomDetail(Integer roomId, Integer userId) {
-        //알람 조회
-        Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
-        if (Objects.isNull(alarm)) {
-            throw new BaseException(Status.ALARM_NOT_FOUND);
-        }
+
+        Alarm alarm = alarmRepository.findByUser_IdAndRoom_Id(userId, roomId)
+                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
         //room_user 조회
-        List<RoomUser> roomUsers = roomUserRepository.findAllByRoom_IdOrderByPreference(roomId,
-                userId);
+        List<RoomUser> roomUsers = roomUserRepository.findAllByRoom_IdOrderByPreference(roomId, userId);
 
         //dto 매핑 mapper 사용
         RoomDetailRes roomDetailRes = new RoomDetailRes();
@@ -312,19 +313,27 @@ public class RoomService {
     }
 
     @Transactional
+    public void createAlarmAndJoinRoom(Integer roomId, Integer invitedUserId, AlarmCreateReq alarmCreateReq) {
+        PostAlarmReq postAlarmReq = alarmMigrationMapper.convertAlarmCreateReqToPostAlarmReq(alarmCreateReq);
+        Alarm alarm = alarmService.createAlarmDeprecated(invitedUserId, postAlarmReq);
+        alarmRepository.updateRoomIdByAlarmId(alarm.getId(), roomId);
+        joinRoom(roomId, invitedUserId, false);
+    }
+
+    @Transactional
     public void joinRoom(Integer roomId, Integer invitedUserId, boolean isHost) {
 
-        if (!isHost && roomUserRepository.existsRoomUserByRoom_IdAndUser_Id(roomId, invitedUserId)) {
-            throw new BaseException(Status.ROOM_USER_ALREADY_EXIST);
-        }
 
         User user = findExistingUser(userRepository, invitedUserId);
 
-        //그룹 만들기
+
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
-        //유저 그룹에 넣기
+        boolean isAlreadyJoin = roomUserRepository.existsRoomUserByRoom_IdAndUser_Id(roomId, invitedUserId);
+        if (isAlreadyJoin)
+            throw new BaseException(Status.ROOM_USER_ALREADY_EXIST);
+
         RoomUser roomUser = RoomUser.builder()
                 .user(user)
                 .room(room)
@@ -337,35 +346,30 @@ public class RoomService {
 
     public RoomInfoRes getRoomInformation(String invitationCode) {
 
-        Alarm alarm = alarmRepository.findByInvitationCode(invitationCode)
-                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
+        Room room = roomRepository.findByInvitationCode(invitationCode)
+                .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
-        Integer roomPersonnel = roomUserRepository.countByRoomId(alarm.getRoom().getId());
-        if (roomPersonnel < 1) {
+        Integer roomPersonnel = roomUserRepository.countByRoomId(room.getId());
+        if (isRoomEmpty(roomPersonnel))
             throw new BaseException(Status.ROOM_NOT_FOUND);
-        }
 
-        //dto 매핑 mapper 사용
-        RoomInfoRes roomInfoRes = new RoomInfoRes();
-        roomInfoRes.setRoomData(EntityDtoMapper.INSTANCE.toRoomInfoResRoomData(alarm));
-        roomInfoRes.setAlarmData(EntityDtoMapper.INSTANCE.toRoomInfoResAlarmData(alarm));
+        MissionObject roomMissionObject = alarmRepository.findMissionObjectByRoomId(room.getId());
 
-        //dto 매핑 - 커스텀 필드
-        roomInfoRes.getRoomData().setCreatedAt(
-                timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
-        roomInfoRes.getRoomData().setPersonnel(roomPersonnel);
 
-        // ex) 13:00 -> pm 1:00
-        roomInfoRes.getAlarmData()
-                .setAlarmTime(alarm.getAlarmTime());
+        return RoomInfoRes.builder()
+                .id(room.getId())
+                .icon(roomMissionObject.getIcon())
+                .name(room.getName())
+                .intro(room.getIntro())
+                .createdAt(timeFormatter.timestampToDotDateFormat(room.getCreatedAt()))
+                .personnel(roomPersonnel)
+                .missionObjectId(roomMissionObject.getId())
+                .missionKr(roomMissionObject.getKr())
+                .build();
+    }
 
-        // ex)  평일, 주말, 매일, 월요일, (월, 화, 수), 빈칸
-        roomInfoRes.getAlarmData().setAlarmDay(
-                timeFormatter.formatDaysOfWeek(alarm.getMonday(), alarm.getTuesday(),
-                        alarm.getWednesday(), alarm.getThursday(), alarm.getFriday(),
-                        alarm.getSaturday(), alarm.getSunday()));
-
-        return roomInfoRes;
+    public boolean isRoomEmpty(Integer roomPersonnel) {
+        return roomPersonnel <= 0;
     }
 
 }

@@ -30,8 +30,7 @@ public class RoomDetailRes {
     @Data
     public static class RoomData {
 
-        @Schema(description = "룸이 가지고 있는 알람의 아이콘", example = "⏰")
-        private String icon;
+
 
         @Schema(description = "room name", example = "설여대 기상방")
         private String name;
@@ -57,6 +56,9 @@ public class RoomDetailRes {
 
         @Schema(description = "룸에서 울리는 알람아이디", example = "2")
         private Integer id;
+
+        @Schema(description = "미션 아이콘", example = "⏰")
+        private String icon;
 
         @Schema(description = "미션의 한국말", example = "자동차")
         private String missionKr;

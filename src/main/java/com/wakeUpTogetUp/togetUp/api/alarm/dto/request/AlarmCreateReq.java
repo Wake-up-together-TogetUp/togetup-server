@@ -13,22 +13,12 @@ import lombok.Setter;
 
 @Schema(description = "알람 생성 request")
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(staticName = "of")
-public class PostAlarmReq {
+public class AlarmCreateReq {
     @Schema(description = "알람 이름", requiredMode = RequiredMode.REQUIRED, example = "기상")
     @NotBlank(message = "알람 이름은 공백일 수 없습니다.")
     private String name;
-
-    @Schema(description = "아이콘", defaultValue = "⏰", example = "⏰")
-    private String icon;
-
-    @Schema(description = "다시울림 간격", defaultValue = "5", example = "5")
-    private Integer snoozeInterval;
-
-    @Schema(description = "다시울림 횟수", defaultValue = "3", example = "3")
-    private Integer snoozeCnt;
 
     @Schema(description = "알람 시간", requiredMode = RequiredMode.REQUIRED, example = "06:00:00")
     @NotNull(message = "알람 시간은 공백일 수 없습니다.")
@@ -36,31 +26,29 @@ public class PostAlarmReq {
     private String alarmTime;
 
     @Schema(description = "월요일 울림 여부", defaultValue = "false", example = "false")
-    private Boolean monday;
+    private boolean monday;
 
     @Schema(description = "화요일 울림 여부", defaultValue = "false", example = "false")
-    private Boolean tuesday;
+    private boolean tuesday;
 
     @Schema(description = "수요일 울림 여부", defaultValue = "false", example = "false")
-    private Boolean wednesday;
+    private boolean wednesday;
 
     @Schema(description = "목요일 울림 여부", defaultValue = "false", example = "false")
-    private Boolean thursday;
+    private boolean thursday;
 
     @Schema(description = "금요일 울림 여부", defaultValue = "false", example = "false")
-    private Boolean friday;
+    private boolean friday;
 
     @Schema(description = "토요일 울림 여부", defaultValue = "false", example = "false")
-    private Boolean saturday;
+    private boolean saturday;
 
     @Schema(description = "일요일 울림 여부", defaultValue = "false", example = "false")
-    private Boolean sunday;
+    private boolean sunday;
 
-    @Schema(description = "다시울림 활성화 여부", defaultValue = "true", example = "true")
-    private Boolean isSnoozeActivated;
 
     @Schema(description = "진동 활성화 여부", defaultValue = "true", example = "true")
-    private Boolean isVibrate;
+    private boolean isVibrate;
 
     @Schema(description = "미션 id", requiredMode = RequiredMode.REQUIRED, example = "2")
     private Integer missionId;

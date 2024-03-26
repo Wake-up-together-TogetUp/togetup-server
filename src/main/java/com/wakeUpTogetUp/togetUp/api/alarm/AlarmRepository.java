@@ -1,8 +1,11 @@
 package com.wakeUpTogetUp.togetUp.api.alarm;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+
 import java.util.List;
 import java.util.Optional;
+
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,11 +31,12 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
 
     Alarm findFirstByRoom_Id(Integer roomId);
 
-    @Query("select a from Alarm a where a.room.id IN :roomIds")
-    List<Alarm> findAllByRoomIds(@Param("roomIds") List<Integer> roomIds);
 
-    @Query("SELECT a FROM Alarm a WHERE a.room.invitationCode = :invitationCode")
-    Optional<Alarm> findByInvitationCode(@Param("invitationCode") String invitationCode);
+
+    @Query("select a from Alarm a where a.room.id IN :roomIds")
+            List<Alarm> findAllByRoomIds(@Param("roomIds") List<Integer> roomIds);
+
+    Optional<Alarm> findByUser_IdAndRoom_Id(@Param("userId") Integer userId, @Param("roomId") Integer roomId);
 
     @Query("SELECT a FROM Alarm a " +
             "WHERE (a.user.id = :userId OR a.room.id IN (" +
@@ -48,4 +52,8 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
             "ORDER BY a.alarmTime ASC, a.id ASC")
     List<Alarm> findTodayAlarmsByUserId(@Param("userId") Integer userId,
                                         @Param("dayOfWeek") String dayOfWeek);
+
+
+    @Query("SELECT a.missionObject FROM Alarm a WHERE a.room.id = :roomId ")
+    MissionObject findMissionObjectByRoomId(@Param("roomId") Integer roomId);
 }
