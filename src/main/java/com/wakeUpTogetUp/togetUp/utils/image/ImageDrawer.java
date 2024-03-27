@@ -14,7 +14,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
@@ -38,7 +37,7 @@ public class ImageDrawer extends ImageUtil {
         this.color = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
         int minWH = Math.min(image.getWidth(), image.getHeight());
         this.thickness = minWH / 150;
-        this.fontSize = minWH / 20;
+        this.fontSize = minWH / 23;
     }
 
     private void setOrientedImage(MultipartFile file) {
@@ -56,28 +55,6 @@ public class ImageDrawer extends ImageUtil {
         String format = ImageContentType
                 .getByContentType(file.getContentType())
                 .getExtension();
-
-
-
-        /**
-         *
-         */
-
-        System.out.println("X = " + entities.get(0).getBox().getX());
-        System.out.println("Y = " + entities.get(0).getBox().getY());
-
-        File outputFile2 = new File("src/main/resources/images/image_drawn.jpg");
-        try {
-            ImageIO.write(image, "jpg", outputFile2);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error saving the image file: " + e.getMessage());
-        }
-
-        /**
-         *
-         */
-
 
         try (ByteArrayOutputStream outputImageStream = new ByteArrayOutputStream()) {
             ImageIO.write(image, format, outputImageStream);
