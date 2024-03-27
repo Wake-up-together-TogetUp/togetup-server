@@ -139,7 +139,6 @@ public class User {
     }
 
     public void levelUp(int threshold) {
-        // 레벨 1 증가, 경험치 초기화, 포인트 증가
         this.setLevel(this.getLevel() + DEFAULT_LEVEL_INCREMENT);
         this.setExpPoint(this.getExpPoint() - threshold);
     }

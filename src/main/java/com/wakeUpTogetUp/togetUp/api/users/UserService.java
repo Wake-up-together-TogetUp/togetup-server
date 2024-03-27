@@ -34,12 +34,10 @@ public class UserService {
 
     public User getSignedUser(SocialUserRes socialUserRes, LoginType loginType) {
         User savedUser = userRepository.findBySocialId(socialUserRes.getId()).orElse(null);
-        //유저가 있으면 아이디 반환
         if (Objects.nonNull(savedUser)) {
             return savedUser;
         }
 
-        // 유저 저장
         User user = userRepository.save(
                 User.builder()
                         .socialId(socialUserRes.getId())
@@ -82,7 +80,6 @@ public class UserService {
         userRepository.findById(userId).orElseThrow(() -> new BaseException(Status.USER_NOT_FOUND));
         userRepository.deleteById(userId);
 
-        //roomUser 삭제
         Integer roomUserNumber = roomUserRepository.countByUserId(userId);
 
         if (roomUserNumber > 0) {
