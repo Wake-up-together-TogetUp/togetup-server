@@ -18,10 +18,6 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class Notification {
 
-//    @PrePersist
-//    void prePersist() {
-//        this.createdAt = TimestampFormatter.format(new Timestamp(System.currentTimeMillis()));
-//    }
 
     @Builder
     public Notification(String title, String content, Room room, FcmToken fcmToken) {
@@ -47,7 +43,6 @@ public class Notification {
     @JoinColumn(name = "roomId",columnDefinition = "INT UNSIGNED")
     private Room room;
 
-    // TODO : 맞는지 확인!
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fcmTokenId",columnDefinition = "INT UNSIGNED")
     private FcmToken fcmToken;
