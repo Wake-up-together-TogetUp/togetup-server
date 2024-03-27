@@ -7,9 +7,8 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionCompleteReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomAnalysisEntity;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
-import com.wakeUpTogetUp.togetUp.infra.azure.vision.AzureVision32Service;
-import com.wakeUpTogetUp.togetUp.infra.azure.vision.AzureVision40Service;
-import com.wakeUpTogetUp.togetUp.infra.google.vision.GoogleVisionService;
+import com.wakeUpTogetUp.togetUp.api.mission.model.MissionType;
+import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.notification.NotificationService;
 import com.wakeUpTogetUp.togetUp.api.users.UserAvatarService;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
@@ -37,9 +36,7 @@ public class MissionService {
 
     private final int MAX_MATCHES_LIMIT = 3;
 
-    private final AzureVision32Service azureVision32Service;
-    private final AzureVision40Service azureVision40Service;
-    private final GoogleVisionService googleVisionService;
+    private final VisionServiceFactory visionServiceFactory;
     private final AlarmRepository alarmRepository;
     private final MissionLogRepository missionLogRepository;
     private final UserService userService;
@@ -47,25 +44,11 @@ public class MissionService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
-    public List<CustomAnalysisEntity> getDetectionResult(String object, MultipartFile missionImage) {
+    public List<CustomAnalysisEntity> getMissionResult(MissionType type, String object, MultipartFile missionImage) {
         VisionAnalysisResult result =
-                azureVision32Service.getObjectDetectionResult(missionImage)
-                        .target(object)
-                        .build();
-        result.print();
-
-        if (result.isFail()) {
-            throw new BaseException(Status.MISSION_FAILURE);
-        }
-
-        return result.getMatches(MAX_MATCHES_LIMIT);
-    }
-
-    public List<CustomAnalysisEntity> getFaceRecognitionResult(String object, MultipartFile missionImage) {
-        VisionAnalysisResult result =
-                googleVisionService.getFaceRecognitionResult(missionImage)
-                        .target(object)
-                        .build();
+                visionServiceFactory
+                        .getVisionService(type)
+                        .getResult(missionImage, object);
         result.print();
 
         if (result.isFail()) {

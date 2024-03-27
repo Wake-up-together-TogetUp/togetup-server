@@ -3,7 +3,8 @@ package com.wakeUpTogetUp.togetUp.infra.google.vision;
 import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.Feature.Type;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.FaceAnnotationRecognitionResult;
-import com.wakeUpTogetUp.togetUp.api.mission.domain.FaceAnnotationRecognitionResult.FaceAnnotationRecognitionResultBuilder;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.VisionAnalysisResult;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.VisionService;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.infra.google.vision.mapper.GoogleVisionMapper;
@@ -14,12 +15,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-public class GoogleVisionService {
+public class GoogleVisionService implements VisionService {
+
     private final CloudVisionTemplate cloudVisionTemplate;
 
     private final GoogleVisionMapper googleVisionMapper;
 
-    public FaceAnnotationRecognitionResultBuilder getFaceRecognitionResult(MultipartFile file) {
+    @Override
+    public VisionAnalysisResult getResult(MultipartFile file, String target) {
         AnnotateImageResponse response =
                 cloudVisionTemplate.analyzeImage(file.getResource(), Type.FACE_DETECTION);
 
@@ -28,6 +31,8 @@ public class GoogleVisionService {
         }
 
         return FaceAnnotationRecognitionResult.builder()
-                .faceAnnotations(googleVisionMapper.toCustomRecognizedEmotions(response.getFaceAnnotationsList()));
+                .target(target)
+                .faceAnnotations(googleVisionMapper.toCustomRecognizedEmotions(response.getFaceAnnotationsList()))
+                .build();
     }
 }

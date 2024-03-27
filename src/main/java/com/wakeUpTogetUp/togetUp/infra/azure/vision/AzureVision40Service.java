@@ -13,12 +13,12 @@ import com.azure.ai.vision.imageanalysis.ImageAnalysisResultDetails;
 import com.azure.ai.vision.imageanalysis.ImageAnalysisResultReason;
 import com.azure.ai.vision.imageanalysis.ImageAnalyzer;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.ObjectDetectionResult;
-import com.wakeUpTogetUp.togetUp.api.mission.domain.ObjectDetectionResult.ObjectDetectionResultBuilder;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.VisionAnalysisResult;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.VisionService;
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.mapper.ObjectDetectedV40Mapper;
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.mapper.TagDetectedV40Mapper;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.utils.file.FileUtil;
 import com.wakeUpTogetUp.togetUp.utils.image.ImageProcessor;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -29,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class AzureVision40Service {
+public class AzureVision40Service implements VisionService {
 
     private final int IMAGE_SIZE_LIMIT = 10;
 
@@ -38,7 +38,7 @@ public class AzureVision40Service {
     private final ObjectDetectedV40Mapper objectDetectedV40Mapper;
     private final TagDetectedV40Mapper tagDetectedV40Mapper;
 
-    public ObjectDetectionResultBuilder getObjectDetectionResult(MultipartFile file) {
+    public VisionAnalysisResult getResult(MultipartFile file, String target) {
         byte[] data = ImageProcessor.compressUntil(file, IMAGE_SIZE_LIMIT);
 
         try (ImageAnalyzer analyzer = new ImageAnalyzer(serviceOptions, getVisionSource(data),
@@ -50,8 +50,10 @@ public class AzureVision40Service {
             printResultDetails(ImageAnalysisResultDetails.fromResult(result));
 
             return ObjectDetectionResult.builder()
+                    .target(target)
                     .objects(objectDetectedV40Mapper.toCustomDetectedObjects(result.getObjects()))
-                    .tags(tagDetectedV40Mapper.customDetectedTags(result.getTags()));
+                    .tags(tagDetectedV40Mapper.customDetectedTags(result.getTags()))
+                    .build();
         } catch (IOException e) {
             throw new BaseException(Status.INVALID_IMAGE);
         } catch (Exception e) {
