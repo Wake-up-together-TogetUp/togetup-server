@@ -40,9 +40,8 @@ public class ImageProcessor extends ImageUtil {
         // TODO: 디버그용 삭제
         System.out.println("[압축]");
         System.out.println("original size: " + data.length);
-        // TODO: 무한루프 빠지지 않게 처리하기
-        // TODO: 최적의 quality 찾기
-        while (data.length >= sizeLimit) {
+        int cnt = 1;
+        while (data.length >= sizeLimit && cnt++ <= 3) {
             data = compress(data, 0.5f, contentType);
             System.out.println(data.length);
         }
