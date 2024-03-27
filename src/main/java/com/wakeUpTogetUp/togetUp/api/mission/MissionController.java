@@ -6,13 +6,14 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionPerfomRes;
+import com.wakeUpTogetUp.togetUp.api.mission.service.MissionProvider;
+import com.wakeUpTogetUp.togetUp.api.mission.service.MissionService;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.annotation.validator.ImageFile;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -59,7 +60,10 @@ public class MissionController {
         return new BaseResponse<>(Status.SUCCESS, missionProvider.getMission(missionId));
     }
 
-    @Operation(summary = "미션 수행 결과 불러오기")
+    @Operation(summary = "미션 수행 결과 불러오기",
+            description = "미션 이름을 기반으로 미션을 수행합니다.\n"
+                    + "- 사용 가능 미션 이름: `direct-registration`/`object-detection`/`expression-recognition`\n"
+                    + "- 직접 촬영 미션(direct-registration)의 경우 object 필드가 필수적이지 않습니다.")
     @PostMapping(value = "/{missionName}/result", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
@@ -73,11 +77,8 @@ public class MissionController {
     public BaseResponse<MissionPerfomRes> recognizeObject(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @Parameter(required = true, description = "미션 수행 사진") @RequestPart @ImageFile MultipartFile missionImage,
-            @Parameter(required = true, description = "미션 이름", examples = {
-                    @ExampleObject(value = "direct-registration"),
-                    @ExampleObject(value = "object-detection"),
-                    @ExampleObject(value = "expression-recognition")}) @PathVariable String missionName,
-            @Parameter(required = true, description = "탐지할 미션 객체") @RequestParam String object
+            @Parameter(description = "미션 이름") @PathVariable String missionName,
+            @Parameter(description = "탐지할 미션 객체") @RequestParam(required = false) String object
     ) {
         MissionPerfomRes response = missionFacade.performMission(missionImage, missionName, object);
         return new BaseResponse<>(Status.MISSION_SUCCESS, response);
