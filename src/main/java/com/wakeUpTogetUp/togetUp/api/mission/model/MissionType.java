@@ -9,7 +9,7 @@ public enum MissionType {
 
     DIRECT_REGISTRATION("direct-registration"),
     OBJECT_DETECTION("object-detection"),
-    EXPRESSION_RECOGNITION("face-recognition");
+    EXPRESSION_RECOGNITION("expression-recognition");
 
     @Getter
     private final String name;
