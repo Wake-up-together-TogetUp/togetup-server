@@ -13,10 +13,12 @@ import com.azure.ai.vision.imageanalysis.ImageAnalysisResultDetails;
 import com.azure.ai.vision.imageanalysis.ImageAnalysisResultReason;
 import com.azure.ai.vision.imageanalysis.ImageAnalyzer;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.ObjectDetectionResult;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.ObjectDetectionResult.ObjectDetectionResultBuilder;
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.mapper.ObjectDetectedV40Mapper;
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.mapper.TagDetectedV40Mapper;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.utils.ImageProcessor;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import lombok.AccessLevel;
@@ -28,42 +30,55 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class AzureVision40Service {
 
+    private final int IMAGE_SIZE_LIMIT = 10;
+
     private final VisionServiceOptions serviceOptions;
     private final ImageAnalysisOptions analysisOptions;
     private final ObjectDetectedV40Mapper objectDetectedV40Mapper;
     private final TagDetectedV40Mapper tagDetectedV40Mapper;
 
-    public ObjectDetectionResult detect(MultipartFile file) throws Exception {
-        VisionSource imageSource = getVisionSource(file);
+    public ObjectDetectionResultBuilder getObjectDetectionResult(MultipartFile file) {
+        byte[] data = ImageProcessor.compressUntil(file, IMAGE_SIZE_LIMIT);
 
-        try (ImageAnalyzer analyzer = new ImageAnalyzer(serviceOptions, imageSource, analysisOptions);
+        try (ImageAnalyzer analyzer = new ImageAnalyzer(serviceOptions, getVisionSource(data),
+                analysisOptions);
                 ImageAnalysisResult result = analyzer.analyze()) {
 
-            if (result.getReason() != ImageAnalysisResultReason.ANALYZED) {
-                ImageAnalysisErrorDetails errorDetails = ImageAnalysisErrorDetails.fromResult(result);
-                printErrorDetails(errorDetails);
-
-                throw new BaseException(Status.IMAGE_ANALYSIS_FAIL);
-            }
-
+            catchNotAnalyzedError(result);
             printDetectionResult(result);
             printResultDetails(ImageAnalysisResultDetails.fromResult(result));
 
             return ObjectDetectionResult.builder()
                     .objects(objectDetectedV40Mapper.toCustomDetectedObjects(result.getObjects()))
-                    .tags(tagDetectedV40Mapper.customDetectedTags(result.getTags()))
-                    .build();
+                    .tags(tagDetectedV40Mapper.customDetectedTags(result.getTags()));
+        } catch (IOException e) {
+            throw new BaseException(Status.INVALID_IMAGE);
+        } catch (Exception e) {
+            throw new BaseException(Status.INTERNAL_SERVER_ERROR);
         }
     }
 
-    private VisionSource getVisionSource(MultipartFile file) throws IOException {
+    private VisionSource getVisionSource(byte[] data) {
         ImageSourceBuffer imageSourceBuffer = new ImageSourceBuffer();
 
         try (ImageWriter imageWriter = imageSourceBuffer.getWriter()) {
-            imageWriter.write(ByteBuffer.wrap(file.getBytes()));
+            imageWriter.write(ByteBuffer.wrap(data));
         }
 
         return VisionSource.fromImageSourceBuffer(imageSourceBuffer);
+    }
+
+    private void catchNotAnalyzedError(ImageAnalysisResult result) {
+        if (isNotAnalyzed(result)) {
+            ImageAnalysisErrorDetails errorDetails = ImageAnalysisErrorDetails.fromResult(result);
+            printErrorDetails(errorDetails);
+
+            throw new BaseException(Status.IMAGE_ANALYSIS_FAIL);
+        }
+    }
+
+    private boolean isNotAnalyzed(ImageAnalysisResult result) {
+        return result.getReason() != ImageAnalysisResultReason.ANALYZED;
     }
 
     private void printDetectionResult(ImageAnalysisResult result) {
