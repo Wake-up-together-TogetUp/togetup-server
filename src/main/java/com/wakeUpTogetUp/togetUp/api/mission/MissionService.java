@@ -1,18 +1,15 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
-import com.google.cloud.vision.v1.FaceAnnotation;
-import com.google.cloud.vision.v1.Likelihood;
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+import com.wakeUpTogetUp.togetUp.api.mission.domain.VisionAnalysisResult;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionCompleteReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomAnalysisEntity;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
-import com.wakeUpTogetUp.togetUp.api.mission.domain.MissionPerformResult;
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.AzureVision32Service;
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.AzureVision40Service;
 import com.wakeUpTogetUp.togetUp.infra.google.vision.GoogleVisionService;
-import com.wakeUpTogetUp.togetUp.api.mission.service.ObjectDetectionService;
 import com.wakeUpTogetUp.togetUp.api.notification.NotificationService;
 import com.wakeUpTogetUp.togetUp.api.users.UserAvatarService;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
@@ -23,9 +20,7 @@ import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +35,8 @@ import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.*;
 @Slf4j
 public class MissionService {
 
-    private final ObjectDetectionService objectDetectionService;
+    private final int MAX_MATCHES_LIMIT = 3;
+
     private final AzureVision32Service azureVision32Service;
     private final AzureVision40Service azureVision40Service;
     private final GoogleVisionService googleVisionService;
@@ -51,70 +47,32 @@ public class MissionService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
-    public List<CustomAnalysisEntity> getDetectionResult(String object, MultipartFile missionImage)
-            throws Exception {
-        MissionPerformResult result = MissionPerformResult.builder()
-                .object(object)
-                .analysisResult(azureVision40Service.detect(missionImage))
-                .build();
-
-        // TODO: 디버그용 메서드 검증 후 삭제요망
-        result.getAnalysisResult().print();
+    public List<CustomAnalysisEntity> getDetectionResult(String object, MultipartFile missionImage) {
+        VisionAnalysisResult result =
+                azureVision32Service.getObjectDetectionResult(missionImage)
+                        .target(object)
+                        .build();
+        result.print();
 
         if (result.isFail()) {
             throw new BaseException(Status.MISSION_FAILURE);
         }
 
-        return result.getMatches();
+        return result.getMatches(MAX_MATCHES_LIMIT);
     }
 
-    public List<FaceAnnotation> getFaceRecognitionResult(String object, MultipartFile missionImage) {
-        Emotion emotion = Emotion.fromName(object);
-        List<FaceAnnotation> faceAnnotations = googleVisionService.getFaceRecognitionResult(missionImage);
+    public List<CustomAnalysisEntity> getFaceRecognitionResult(String object, MultipartFile missionImage) {
+        VisionAnalysisResult result =
+                googleVisionService.getFaceRecognitionResult(missionImage)
+                        .target(object)
+                        .build();
+        result.print();
 
-        if (faceAnnotations.isEmpty()) {
-            throw new BaseException(Status.NO_DETECTED_OBJECT);
-        }
-
-        List<FaceAnnotation> highestConfidenceFaces = faceAnnotations.stream()
-                .filter(face -> getLikelihood(emotion, face).getNumber() >= 3)
-                .sorted(Comparator.comparing(FaceAnnotation::getDetectionConfidence).reversed())
-                .limit(3)
-                .collect(Collectors.toList());
-
-        if (highestConfidenceFaces.isEmpty()) {
+        if (result.isFail()) {
             throw new BaseException(Status.MISSION_FAILURE);
         }
 
-        return highestConfidenceFaces;
-    }
-
-    private Likelihood getLikelihood(Emotion emotion, FaceAnnotation face) {
-        switch (emotion) {
-            case JOY:
-                return face.getJoyLikelihood();
-            case SORROW:
-                return face.getSorrowLikelihood();
-            case ANGER:
-                return face.getAngerLikelihood();
-            case SURPRISE:
-                return face.getSurpriseLikelihood();
-            default:
-                throw new BaseException(Status.INVALID_OBJECT_NAME);
-        }
-    }
-
-    // 모델로 객체 인식
-    public void recognizeObjectByModel(String object, MultipartFile missionImage) {
-        for (String objectDetected : objectDetectionService.detectObject(missionImage)) {
-            log.info("objectDetected = " + objectDetected);
-
-            if (objectDetected.equals(object)) {
-                return;
-            }
-        }
-
-        throw new BaseException(Status.MISSION_FAILURE);
+        return result.getMatches(MAX_MATCHES_LIMIT);
     }
 
     @Transactional
@@ -142,8 +100,6 @@ public class MissionService {
 
     private void sendNotificationIfRoomExists(Alarm alarm, User user) {
         if (alarm.isRoomAlarm()) {
-            // 미션 성공 후 처리 로직과 알림 보내기 로직을 독립적으로 분리
-            // 알림을 보내는데 실패해도 모든 과정이 롤백되지 않음
             try {
                 notificationService.sendNotificationToUsersInRoom(alarm.getId(), user.getId());
             } catch (BaseException e) {
@@ -166,4 +122,3 @@ public class MissionService {
         missionLogRepository.save(missionLog);
     }
 }
-
