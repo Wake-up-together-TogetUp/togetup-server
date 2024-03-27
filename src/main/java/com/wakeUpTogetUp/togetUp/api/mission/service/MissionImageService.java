@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.mission;
+package com.wakeUpTogetUp.togetUp.api.mission.service;
 
 import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomAnalysisEntity;
 import com.wakeUpTogetUp.togetUp.utils.file.FileUtil;

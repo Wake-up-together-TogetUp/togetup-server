@@ -5,7 +5,7 @@ import com.microsoft.azure.cognitiveservices.vision.computervision.models.ImageA
 import com.microsoft.azure.cognitiveservices.vision.computervision.models.VisualFeatureTypes;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.ObjectDetectionResult;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.VisionAnalysisResult;
-import com.wakeUpTogetUp.togetUp.api.mission.domain.VisionService;
+import com.wakeUpTogetUp.togetUp.api.mission.service.VisionService;
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.mapper.ObjectDetectedV32Mapper;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;

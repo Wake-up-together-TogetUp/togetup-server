@@ -1,6 +1,5 @@
-package com.wakeUpTogetUp.togetUp.api.mission;
+package com.wakeUpTogetUp.togetUp.api.mission.service;
 
-import com.wakeUpTogetUp.togetUp.api.mission.domain.VisionService;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionType;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;

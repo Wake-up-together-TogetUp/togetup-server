@@ -14,7 +14,7 @@ import com.azure.ai.vision.imageanalysis.ImageAnalysisResultReason;
 import com.azure.ai.vision.imageanalysis.ImageAnalyzer;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.ObjectDetectionResult;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.VisionAnalysisResult;
-import com.wakeUpTogetUp.togetUp.api.mission.domain.VisionService;
+import com.wakeUpTogetUp.togetUp.api.mission.service.VisionService;
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.mapper.ObjectDetectedV40Mapper;
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.mapper.TagDetectedV40Mapper;
 import com.wakeUpTogetUp.togetUp.common.Status;

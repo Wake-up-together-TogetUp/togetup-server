@@ -15,12 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class MissionFacade {
 
     private final MissionImageStrategyFactory missionImageStrategyFactory;
-    private final MissionProvider missionProvider;
     private final FileService fileService;
 
     public MissionPerfomRes performMission(MultipartFile missionImage, String missionName, String object) {
         MissionType type = MissionType.getByName(missionName);
-        missionProvider.validateMissionObject(type, object);
 
         CustomFile file = missionImageStrategyFactory
                 .getStrategy(type)

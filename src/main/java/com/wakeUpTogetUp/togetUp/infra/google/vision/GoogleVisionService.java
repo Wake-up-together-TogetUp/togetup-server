@@ -4,7 +4,7 @@ import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.Feature.Type;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.FaceAnnotationRecognitionResult;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.VisionAnalysisResult;
-import com.wakeUpTogetUp.togetUp.api.mission.domain.VisionService;
+import com.wakeUpTogetUp.togetUp.api.mission.service.VisionService;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.infra.google.vision.mapper.GoogleVisionMapper;
