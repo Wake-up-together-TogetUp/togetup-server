@@ -6,10 +6,10 @@ import java.util.Arrays;
 
 public enum ImageContentType {
     JPG("image/jpeg", "jpg"),
-    JPEG("image/jpeg", "jpeg"),
-    PNG("image/png", "png"),
-    WEBP("image/webp", "webp"),
-    HEIF("application/octet-stream", "heic");
+    JPEG("image/jpeg", "jpeg");
+//    PNG("image/png", "png"),
+//    WEBP("image/webp", "webp"),
+//    HEIF("application/octet-stream", "heic");
 
     private final String contentType;
     private final String extension;
