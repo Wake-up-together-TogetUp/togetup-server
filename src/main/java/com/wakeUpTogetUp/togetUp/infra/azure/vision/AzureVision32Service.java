@@ -9,7 +9,7 @@ import com.wakeUpTogetUp.togetUp.infra.azure.vision.mapper.ObjectDetectedV32Mapp
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.mapper.TagDetectedV32Mapper;
-import com.wakeUpTogetUp.togetUp.utils.ImageProcessor;
+import com.wakeUpTogetUp.togetUp.utils.image.ImageProcessor;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

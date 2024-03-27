@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.utils;
+package com.wakeUpTogetUp.togetUp.utils.image;
 
 import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomAnalysisEntity;
 import com.wakeUpTogetUp.togetUp.api.mission.model.BoundingBox;
@@ -6,6 +6,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.model.Coord;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.infra.aws.s3.model.ImageContentType;
+import com.wakeUpTogetUp.togetUp.utils.FileUtil;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
