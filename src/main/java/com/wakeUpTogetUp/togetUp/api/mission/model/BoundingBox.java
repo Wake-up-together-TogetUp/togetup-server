@@ -11,11 +11,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.MODULE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoundingBox {
-    private int x;
 
-    private int y;
+    private Coord coord;
 
     private int w;
 
     private int h;
+
+    public int getX() {
+        return coord.getX();
+    }
+
+    public int getY() {
+        return coord.getY();
+    }
 }
