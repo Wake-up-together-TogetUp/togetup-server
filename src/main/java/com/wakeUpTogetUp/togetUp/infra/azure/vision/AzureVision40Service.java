@@ -18,6 +18,7 @@ import com.wakeUpTogetUp.togetUp.infra.azure.vision.mapper.ObjectDetectedV40Mapp
 import com.wakeUpTogetUp.togetUp.infra.azure.vision.mapper.TagDetectedV40Mapper;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.utils.file.FileUtil;
 import com.wakeUpTogetUp.togetUp.utils.image.ImageProcessor;
 import java.io.IOException;
 import java.nio.ByteBuffer;

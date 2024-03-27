@@ -8,7 +8,6 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionPerfomRes;
-import com.wakeUpTogetUp.togetUp.api.mission.service.MissionImageService;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.annotation.validator.ImageFile;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
