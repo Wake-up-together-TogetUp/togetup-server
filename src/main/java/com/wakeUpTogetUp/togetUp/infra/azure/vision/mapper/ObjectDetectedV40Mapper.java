@@ -3,6 +3,7 @@ package com.wakeUpTogetUp.togetUp.infra.azure.vision.mapper;
 import com.azure.ai.vision.imageanalysis.DetectedObject;
 import com.wakeUpTogetUp.togetUp.api.mission.model.BoundingBox;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomDetectedObject;
+import com.wakeUpTogetUp.togetUp.api.mission.model.Coord;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
@@ -16,13 +17,16 @@ public class ObjectDetectedV40Mapper {
     }
 
     private CustomDetectedObject toCustomDetectedObject(DetectedObject detectedObject) {
+        Coord coord = new Coord(
+                detectedObject.getBoundingBox().getX(),
+                detectedObject.getBoundingBox().getY());
+
         return CustomDetectedObject.builder()
-                .objectName(detectedObject.getName())
+                .name(detectedObject.getName())
                 .parent(null)
                 .confidence(detectedObject.getConfidence())
                 .box(BoundingBox.builder()
-                        .x(detectedObject.getBoundingBox().getX())
-                        .y(detectedObject.getBoundingBox().getY())
+                        .coord(coord)
                         .w(detectedObject.getBoundingBox().getW())
                         .h(detectedObject.getBoundingBox().getH())
                         .build())

@@ -5,13 +5,18 @@ import lombok.Getter;
 
 @Getter
 public class CustomDetectedTag extends CustomAnalysisEntity {
+
+    private final String name;
+
     @Builder
-    public CustomDetectedTag(String tagName, double confidence) {
-        super(tagName, confidence, null);
+    public CustomDetectedTag(String name, double confidence) {
+        super(confidence, null);
+        this.name = name;
     }
 
     @Override
-    public boolean isMatchEntity(String target) {
-        return targetName.toLowerCase().contains(target.toLowerCase());
+    protected boolean isMatchEntity(Object target) {
+        return name.toLowerCase()
+                .contains(target.toString().toLowerCase());
     }
 }

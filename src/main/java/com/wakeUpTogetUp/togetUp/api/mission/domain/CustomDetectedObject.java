@@ -7,21 +7,23 @@ import lombok.Getter;
 @Getter
 public class CustomDetectedObject extends CustomAnalysisEntity {
 
+    private final String name;
     private final String parent;
 
     @Builder
-    private CustomDetectedObject(String objectName, String parent, double confidence, BoundingBox box) {
-        super(objectName, confidence, box);
+    private CustomDetectedObject(String name, String parent, double confidence, BoundingBox box) {
+        super(confidence, box);
+        this.name = name;
         this.parent = parent;
     }
 
     @Override
-    public boolean isMatchEntity(String targetObject) {
-        return concatObjectAndParent().toLowerCase().contains(targetObject.toLowerCase());
+    public boolean isMatchEntity(Object target) {
+        return concatObjectAndParent()
+                .contains(target.toString().toLowerCase());
     }
 
     public String concatObjectAndParent() {
-        return targetName + parent;
+        return (name + parent).toLowerCase();
     }
-
 }
