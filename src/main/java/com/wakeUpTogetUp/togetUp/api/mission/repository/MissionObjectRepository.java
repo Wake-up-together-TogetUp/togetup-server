@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.mission;
+package com.wakeUpTogetUp.togetUp.api.mission.repository;
 
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import org.springframework.data.jpa.repository.JpaRepository;

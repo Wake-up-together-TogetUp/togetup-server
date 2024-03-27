@@ -1,10 +1,13 @@
-package com.wakeUpTogetUp.togetUp.api.mission;
+package com.wakeUpTogetUp.togetUp.api.mission.service;
 
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionType;
+import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionLogRepository;
+import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionObjectRepository;
+import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionRepository;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
@@ -41,6 +44,10 @@ public class MissionProvider {
     }
 
     public void validateMissionObject(MissionType type, String object) {
+        if (object == null) {
+            throw new BaseException(Status.BAD_REQUEST_PARAM);
+        }
+
         if (isNotExistMissionObjectName(type.getName(), object)) {
             throw new BaseException(Status.MISSION_NOT_FOUND);
         }

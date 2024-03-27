@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.mission;
+package com.wakeUpTogetUp.togetUp.api.mission.service;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
@@ -8,6 +8,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomAnalysisEntity;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionType;
+import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.notification.NotificationService;
 import com.wakeUpTogetUp.togetUp.api.users.UserAvatarService;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
@@ -44,10 +45,10 @@ public class MissionService {
     private final NotificationService notificationService;
 
     public List<CustomAnalysisEntity> getMissionResult(MissionType type, String object, MultipartFile missionImage) {
-        VisionAnalysisResult result =
-                visionServiceFactory
-                        .getVisionService(type)
-                        .getResult(missionImage, object);
+        VisionAnalysisResult result = visionServiceFactory
+                .getVisionService(type)
+                .getResult(missionImage, object);
+
         result.print();
 
         if (result.isFail()) {

@@ -5,7 +5,7 @@ import com.wakeUpTogetUp.togetUp.api.alarm.AlarmService;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmCreateReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
-import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
+import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
@@ -31,7 +31,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
