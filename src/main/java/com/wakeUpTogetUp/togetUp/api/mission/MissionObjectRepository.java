@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MissionObjectRepository extends JpaRepository<MissionObject, Integer> {
 
+    boolean existsByMission_NameAndName(String missionName, String name);
 }

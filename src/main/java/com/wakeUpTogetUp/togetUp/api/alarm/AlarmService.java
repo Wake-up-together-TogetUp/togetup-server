@@ -47,7 +47,7 @@ public class AlarmService {
 
             if (postAlarmReq.getMissionObjectId() != null) {
                 missionObject = missionObjectRepository.findById(postAlarmReq.getMissionObjectId())
-                        .orElseThrow(() -> new BaseException(Status.OBJECT_NOT_FOUND));
+                        .orElseThrow(() -> new BaseException(Status.MISSION_OBJECT_NOT_FOUND));
 
                 if (missionObject.getMission().getId() != mission.getId()) {
                     throw new BaseException(Status.MISSION_ID_NOT_MATCH);

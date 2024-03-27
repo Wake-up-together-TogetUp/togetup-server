@@ -8,7 +8,6 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomAnalysisEntity;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionType;
-import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.notification.NotificationService;
 import com.wakeUpTogetUp.togetUp.api.users.UserAvatarService;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
