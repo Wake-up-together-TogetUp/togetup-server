@@ -1,7 +1,8 @@
-package com.wakeUpTogetUp.togetUp.utils;
+package com.wakeUpTogetUp.togetUp.utils.file;
 
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.utils.DateTimeProvider;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.UUID;

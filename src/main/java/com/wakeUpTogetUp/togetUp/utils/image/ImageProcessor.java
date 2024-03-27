@@ -3,7 +3,7 @@ package com.wakeUpTogetUp.togetUp.utils.image;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.infra.aws.s3.model.ImageContentType;
-import com.wakeUpTogetUp.togetUp.utils.FileUtil;
+import com.wakeUpTogetUp.togetUp.utils.file.FileUtil;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;

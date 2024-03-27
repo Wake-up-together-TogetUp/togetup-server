@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.mission.service;
 
 import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomAnalysisEntity;
-import com.wakeUpTogetUp.togetUp.utils.FileUtil;
+import com.wakeUpTogetUp.togetUp.utils.file.FileUtil;
 import com.wakeUpTogetUp.togetUp.utils.image.ImageDrawer;
 import com.wakeUpTogetUp.togetUp.infra.aws.s3.model.CustomFile;
 import java.util.List;

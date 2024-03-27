@@ -4,7 +4,7 @@ import static org.apache.commons.imaging.Imaging.getMetadata;
 
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.utils.FileUtil;
+import com.wakeUpTogetUp.togetUp.utils.file.FileUtil;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
