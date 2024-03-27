@@ -11,4 +11,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BaseException extends RuntimeException {
     private Status status;
+
+    public BaseException(String message, Throwable cause, Status status) {
+        super(message, cause);
+        this.status = status;
+    }
+
+    public BaseException(Throwable cause, Status status) {
+        super(cause);
+        this.status = status;
+    }
 }

@@ -1,71 +1,89 @@
 package com.wakeUpTogetUp.togetUp.utils;
 
-import static org.apache.commons.imaging.Imaging.getMetadata;
-
-import com.google.cloud.vision.v1.FaceAnnotation;
-import com.google.cloud.vision.v1.Vertex;
-import com.wakeUpTogetUp.togetUp.api.mission.model.BoundingBox;
-import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomAnalysisEntity;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.infra.aws.s3.model.ImageContentType;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.imaging.ImageReadException;
-import org.apache.commons.imaging.common.ImageMetadata;
-import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
 import org.apache.commons.imaging.formats.tiff.TiffField;
 import org.apache.commons.imaging.formats.tiff.TiffImageMetadata;
 import org.apache.commons.imaging.formats.tiff.constants.TiffTagConstants;
-import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-@Component
-public class ImageProcessor {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class ImageProcessor extends ImageUtil {
 
-    public byte[] compress(byte[] imageToByte, float quality) throws IOException {
-        BufferedImage originalImage = readImage(imageToByte);
+    public static byte[] compressUntil(MultipartFile file, int sizeOfMB) {
+        ImageContentType contentType = ImageContentType.getByContentType(file.getContentType());
+        byte[] data = FileUtil.getBytes(file);
+        int sizeLimit = 1024 * 1024 * sizeOfMB;
 
-        ByteArrayOutputStream compressedImageStream = new ByteArrayOutputStream();
-        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
-
-        if (writers.hasNext()) {
-            ImageWriter writer = writers.next();
-            ImageWriteParam param = writer.getDefaultWriteParam();
-
-            if (param.canWriteCompressed()) {
-                param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-                param.setCompressionQuality(quality); // 0.0 to 1.0
-            }
-
-            writer.setOutput(ImageIO.createImageOutputStream(compressedImageStream));
-            writer.write(null, new IIOImage(originalImage, null, null), param);
-            writer.dispose();
-        } else {
-            throw new IllegalStateException("No writers found");
+        if (data.length < sizeLimit) {
+            return data;
         }
-        compressedImageStream.close();
 
-        return compressedImageStream.toByteArray();
+        // TODO: 디버그용 삭제
+        System.out.println("[압축]");
+        System.out.println("original size: " + data.length);
+        // TODO: 무한루프 빠지지 않게 처리하기
+        // TODO: 최적의 quality 찾기
+        while (data.length >= sizeLimit) {
+            data = compress(data, 0.5f, contentType);
+            System.out.println(data.length);
+        }
+
+        TiffImageMetadata metadata = getImageMetadata(file);
+        return orientByteImage(data, metadata, contentType);
     }
 
-    public byte[] resize(byte[] imageToByte, double ratio) throws IOException {
-        BufferedImage originalImage = readImage(imageToByte);
+    private static byte[] compress(byte[] imageByte, float quality, ImageContentType contentType) {
+        BufferedImage originalImage = readImage(imageByte);
+
+        try (ByteArrayOutputStream compressedImageStream = new ByteArrayOutputStream()) {
+            Iterator<ImageWriter> writers =
+                    ImageIO.getImageWritersByFormatName(contentType.getExtension());
+
+            if (writers.hasNext()) {
+                ImageWriter writer = writers.next();
+                ImageWriteParam param = writer.getDefaultWriteParam();
+                setCompressImageWriterParam(param, quality);
+
+                writer.setOutput(ImageIO.createImageOutputStream(compressedImageStream));
+                writer.write(null, new IIOImage(originalImage, null, null), param);
+                writer.dispose();
+            } else {
+                throw new IllegalStateException("No writers found");
+            }
+
+            return compressedImageStream.toByteArray();
+        } catch (IOException e) {
+            throw new BaseException(IMAGE_WRITE_ERROR_MESSAGE, e, Status.INVALID_IMAGE);
+        }
+    }
+
+    private static void setCompressImageWriterParam(ImageWriteParam param, float quality) {
+        if (param.canWriteCompressed()) {
+            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            param.setCompressionQuality(quality);
+        }
+    }
+
+    public static byte[] resize(byte[] imageByte, double ratio) throws IOException {
+        BufferedImage originalImage = readImage(imageByte);
 
         int scaledWidth = (int) (originalImage.getWidth() * ratio);
         int scaledHeight = (int) (originalImage.getHeight() * ratio);
@@ -86,8 +104,8 @@ public class ImageProcessor {
         return compressedImageStream.toByteArray();
     }
 
-    public byte[] rotate(byte[] imageToByte, int degrees) throws IOException {
-        BufferedImage originalImage = readImage(imageToByte);
+    public static byte[] rotate(byte[] imageByte, int degrees) throws IOException {
+        BufferedImage originalImage = readImage(imageByte);
 
         AffineTransform transform = new AffineTransform();
         transform.rotate(Math.toRadians(degrees),
@@ -104,14 +122,56 @@ public class ImageProcessor {
         return rotatedImageStream.toByteArray();
     }
 
-    public byte[] orientImage(byte[] imageToByte, TiffImageMetadata metadata)
-            throws IOException, ImageReadException {
-        TiffField orientationField = metadata != null
-                ? metadata.findField(TiffTagConstants.TIFF_TAG_ORIENTATION)
-                : null;
-        int orientation = orientationField != null ? orientationField.getIntValue() : 1;
+    protected static byte[] orientByteImage(byte[] imageByte, TiffImageMetadata metadata, ImageContentType contentType) {
+        int orientation = getOrientation(metadata);
+        BufferedImage originalImage = readImage(imageByte);
+        BufferedImage rotatedImage = transformImage(originalImage, orientation);
 
-        BufferedImage originalImage = readImage(imageToByte);
+        BufferedImage newImage = new BufferedImage(
+                rotatedImage.getWidth(),
+                rotatedImage.getHeight(),
+                BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D g = newImage.createGraphics();
+        g.drawImage(rotatedImage, 0, 0, null);
+        g.dispose();
+
+        try (ByteArrayOutputStream rotatedImageStream = new ByteArrayOutputStream();) {
+            ImageIO.write(newImage, contentType.getExtension(), rotatedImageStream);
+            return rotatedImageStream.toByteArray();
+        } catch (IOException e) {
+            throw new BaseException(IMAGE_WRITE_ERROR_MESSAGE, e, Status.INVALID_IMAGE);
+        }
+    }
+
+    protected static BufferedImage orientImage(BufferedImage image, TiffImageMetadata metadata) {
+        int orientation = getOrientation(metadata);
+        image = transformImage(image, orientation);
+
+        BufferedImage newImage = new BufferedImage(
+                image.getWidth(),
+                image.getHeight(),
+                BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D g = newImage.createGraphics();
+        g.drawImage(image, 0, 0, null);
+
+        return newImage;
+    }
+
+    private static int getOrientation(TiffImageMetadata metadata) {
+        try {
+            TiffField tiffField = metadata != null
+                    ? metadata.findField(TiffTagConstants.TIFF_TAG_ORIENTATION)
+                    : null;
+
+            return tiffField != null ? tiffField.getIntValue() : 1;
+        } catch (ImageReadException e) {
+            throw new BaseException(e, Status.INVALID_IMAGE);
+        }
+    }
+
+    private static BufferedImage transformImage(BufferedImage originalImage, int orientation) {
         AffineTransform affineTransform = new AffineTransform();
 
         switch (orientation) {
@@ -151,115 +211,8 @@ public class ImageProcessor {
                 break;
         }
 
-        AffineTransformOp op =
-                new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
-        BufferedImage rotatedImage = op.filter(originalImage, null);
+        AffineTransformOp op = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
 
-        // AffineTransformOp에 의해 반환된 BufferedImage의 타입이 원본과 다를 수 있어 때로 약간의 색상 변화나 문제가 발생할 수 있다.
-        // 새로운 BufferedImage를 생성하고 그 위에 결과 이미지를 그린다.
-        BufferedImage newImage =
-                new BufferedImage(rotatedImage.getWidth(), rotatedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-
-        Graphics2D g = newImage.createGraphics();
-        g.drawImage(rotatedImage, 0, 0, null);
-        g.dispose();
-
-        ByteArrayOutputStream rotatedImageStream = new ByteArrayOutputStream();
-        ImageIO.write(newImage, "jpg", rotatedImageStream);
-        rotatedImageStream.close();
-
-        return rotatedImageStream.toByteArray();
-    }
-
-
-    // TODO : 인식 결과 그림 그리기 하나로 통일하기
-    public byte[] drawODResultOnImage(MultipartFile file, List<CustomAnalysisEntity> entities)
-            throws IOException {
-        BufferedImage originalImage = readImage(file.getBytes());
-        Graphics2D g2d = originalImage.createGraphics();
-
-        for (CustomAnalysisEntity entity : entities) {
-            BoundingBox box = entity.getBox();
-
-            int minDwDh = Math.min(originalImage.getWidth(), originalImage.getHeight());
-            
-            int thickness = minDwDh / 150;
-            Random rand = new Random();
-            g2d.setColor(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
-            g2d.setStroke(new BasicStroke(thickness));
-            g2d.draw(new Rectangle2D.Float(box.getX(), box.getY(), box.getW(), box.getH()));
-
-            int fontSize = minDwDh / 25;
-            g2d.setFont(new Font("Arial", Font.PLAIN, fontSize));
-            g2d.drawString(
-                    entity.getTargetName() + " : " + String.format("%.3f", entity.getConfidence()),
-                    box.getX(), box.getY() - (float) (originalImage.getHeight() / 100));
-        }
-        g2d.dispose();
-
-        var outputImageStream = new ByteArrayOutputStream();
-        ImageIO.write(originalImage, "jpg", outputImageStream);
-        outputImageStream.close();
-
-        return outputImageStream.toByteArray();
-    }
-
-    public byte[] drawFRResultOnImage(MultipartFile file, List<FaceAnnotation> faceAnnotations, String object)
-            throws IOException {
-        BufferedImage originalImage = readImage(file.getBytes());
-
-        Graphics2D g2d = originalImage.createGraphics();
-
-        for (FaceAnnotation face : faceAnnotations) {
-            List<Vertex> coord = face.getBoundingPoly().getVerticesList();
-
-            int x1 = coord.get(0).getX();
-            int y1 = coord.get(0).getY();
-            int x2 = coord.get(2).getX();
-            int y2 = coord.get(2).getY();
-
-            int width = x2 - x1;
-            int height = y2 - y1;
-
-            int minDwDh = Math.min(originalImage.getWidth(), originalImage.getHeight());
-            int thickness = minDwDh / 150;
-
-            Random rand = new Random();
-            g2d.setColor(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
-            g2d.setStroke(new BasicStroke(thickness));
-            g2d.draw(new Rectangle2D.Float(x1, y1, width, height));
-
-            int fontSize = minDwDh / 25;
-            g2d.setFont(new Font("Arial", Font.PLAIN, fontSize));
-            g2d.drawString(
-                    object,
-                    x1, y1 - (float) (originalImage.getHeight() / 100));
-        }
-        g2d.dispose();
-
-        var outputImageStream = new ByteArrayOutputStream();
-        ImageIO.write(originalImage, "jpg", outputImageStream);
-        outputImageStream.close();
-
-        return outputImageStream.toByteArray();
-    }
-
-    private BufferedImage readImage(byte[] data) throws IOException {
-        return ImageIO.read(new ByteArrayInputStream(data));
-    }
-
-    public TiffImageMetadata getImageMetadata(MultipartFile file)
-            throws IOException, ImageReadException {
-        return readExifMetadata(file.getBytes());
-    }
-
-    private TiffImageMetadata readExifMetadata(byte[] jpegData)
-            throws IOException, ImageReadException {
-        ImageMetadata imageMetadata = getMetadata(jpegData);
-        if (imageMetadata == null) {
-            return null;
-        }
-        JpegImageMetadata jpegMetadata = (JpegImageMetadata) imageMetadata;
-        return jpegMetadata.getExif();
+        return op.filter(originalImage, null);
     }
 }
