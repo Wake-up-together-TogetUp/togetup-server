@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.utils;
+package com.wakeUpTogetUp.togetUp.utils.file;
 
 import com.wakeUpTogetUp.togetUp.infra.aws.s3.model.ImageContentType;
 import com.wakeUpTogetUp.togetUp.common.Status;

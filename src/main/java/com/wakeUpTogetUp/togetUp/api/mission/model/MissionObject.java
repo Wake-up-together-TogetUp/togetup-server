@@ -21,9 +21,11 @@ public class MissionObject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "INT UNSIGNED")
     private Integer id;
-    // todo : enum 처리하기
+
     private String name;
+
     private String kr;
+
     private String icon;
 
     @ManyToOne(fetch = FetchType.LAZY)

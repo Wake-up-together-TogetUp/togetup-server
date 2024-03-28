@@ -1,16 +1,19 @@
 package com.wakeUpTogetUp.togetUp.api.mission.domain;
 
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class VisionAnalysisResult {
+
+    protected final String targetName;
+
+    public abstract boolean isFail();
 
     public abstract List<CustomAnalysisEntity> getEntities();
 
-    protected abstract boolean isFail(String object);
+    public abstract List<CustomAnalysisEntity> getMatches(int size);
 
-    protected abstract List<CustomAnalysisEntity> getMatches(String object, int size);
-
-    // TODO: 디버그용 삭제요망
     public abstract void print();
 }

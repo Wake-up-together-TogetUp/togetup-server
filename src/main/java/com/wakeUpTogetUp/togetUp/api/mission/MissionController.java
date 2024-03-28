@@ -1,19 +1,16 @@
 package com.wakeUpTogetUp.togetUp.api.mission;
 
-import com.google.cloud.vision.v1.FaceAnnotation;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
-import com.wakeUpTogetUp.togetUp.infra.aws.s3.FileService;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionCompleteReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionPerfomRes;
-import com.wakeUpTogetUp.togetUp.api.mission.service.MissionImageService;
+import com.wakeUpTogetUp.togetUp.api.mission.service.MissionProvider;
+import com.wakeUpTogetUp.togetUp.api.mission.service.MissionService;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.annotation.validator.ImageFile;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
-import com.wakeUpTogetUp.togetUp.infra.aws.s3.model.CustomFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,10 +42,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/app/mission")
 public class MissionController {
 
+    private final MissionFacade missionFacade;
     private final MissionProvider missionProvider;
     private final MissionService missionService;
-    private final MissionImageService missionImageService;
-    private final FileService fileService;
 
     @Operation(summary = "미션 목록 가져오기")
     @GetMapping("/{missionId}")
@@ -63,10 +60,11 @@ public class MissionController {
         return new BaseResponse<>(Status.SUCCESS, missionProvider.getMission(missionId));
     }
 
-    // TODO: 객체 탐지, 표정 인식 통합
-    // TODO: 객체 이름이 아닌 알람 ID를 요청값으로 받게 리팩토링하기 + 그냥 리팩토링
-    @Operation(summary = "객체 탐지 미션")
-    @PostMapping(value = "/object-detection/{object}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "미션 수행 결과 불러오기",
+            description = "미션 이름을 기반으로 미션을 수행합니다.\n"
+                    + "- 사용 가능 미션 이름: `direct-registration`/`object-detection`/`expression-recognition`\n"
+                    + "- 직접 촬영 미션(direct-registration)의 경우 object 필드가 필수적이지 않습니다.")
+    @PostMapping(value = "/{missionName}/result", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
             @ApiResponse(
@@ -79,37 +77,11 @@ public class MissionController {
     public BaseResponse<MissionPerfomRes> recognizeObject(
             @Parameter(hidden = true) @AuthUser Integer userId,
             @Parameter(required = true, description = "미션 수행 사진") @RequestPart @ImageFile MultipartFile missionImage,
-            @Parameter(required = true, description = "탐지할 객체") @PathVariable String object
-    ) throws Exception {
-        List<CustomAnalysisEntity> detectedObjects = missionService.getDetectionResult(object, missionImage);
-        CustomFile file = missionImageService.processODResultImage(missionImage, detectedObjects);
-        String imageUrl = fileService.uploadFile(file, "mission");
-
-        return new BaseResponse<>(Status.MISSION_SUCCESS, new MissionPerfomRes(imageUrl));
-    }
-
-    @Operation(summary = "표정 인식 미션")
-    @PostMapping(value = "/face-recognition/{object}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "미션을 성공하였습니다.",
-                    content = @Content(schema = @Schema(implementation = MissionPerfomRes.class))),
-            @ApiResponse(responseCode = "200", description = "탐지된 객체가 없습니다."),
-            @ApiResponse(responseCode = "200", description = "미션을 성공하지 못했습니다."),
-            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러입니다. 제보 부탁드립니다.")
-    })
-    public BaseResponse<MissionPerfomRes> recognizeFaceExpression(
-            @Parameter(hidden = true) @AuthUser Integer userId,
-            @Parameter(required = true, description = "미션 수행 사진") @RequestPart @ImageFile MultipartFile missionImage,
-            @Parameter(required = true, description = "탐지할 표정(`joy`/`sorrow`/`anger`/`surprise`)") @PathVariable String object
-    ) throws Exception {
-        List<FaceAnnotation> faceAnnotations = missionService.getFaceRecognitionResult(object, missionImage);
-        CustomFile file = missionImageService.processFRResultImage(missionImage, faceAnnotations, object);
-        String imageUrl = fileService.uploadFile(file, "mission");
-
-        return new BaseResponse<>(Status.MISSION_SUCCESS, new MissionPerfomRes(imageUrl));
+            @Parameter(description = "미션 이름") @PathVariable String missionName,
+            @Parameter(description = "탐지할 미션 객체") @RequestParam(required = false) String object
+    ) {
+        MissionPerfomRes response = missionFacade.performMission(missionImage, missionName, object);
+        return new BaseResponse<>(Status.MISSION_SUCCESS, response);
     }
 
     @Operation(summary = "미션 완료 - 수행 기록 생성 및 경험치, 레벨 정산 및 경우에 따라 아바타 해금")
