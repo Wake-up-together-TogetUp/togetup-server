@@ -97,7 +97,7 @@ public class AppleLoginServiceImpl implements SocialLoginService {
         return appleClient.findAppleToken(appleTokenReq);
     }
 
-    // TODO: deprecated된 메소드 수정하기
+
     public String createClientSecret() throws IOException {
 
         Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
