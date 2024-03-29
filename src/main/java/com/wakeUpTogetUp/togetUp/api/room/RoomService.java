@@ -179,30 +179,27 @@ public class RoomService {
     @Transactional
     public void leaveRoom(Integer roomId, Integer userId) {
 
-        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId)
-                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
-        if (Objects.isNull(roomUser)) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
+
+        if(!room.isUserInRoom(userId)) {
             throw new BaseException(Status.ROOM_USER_NOT_FOUND);
         }
 
         roomUserRepository.deleteByRoom_IdAndUser_Id(roomId, userId);
-        deleteUnnecessaryRoomAndAlarm(roomId, userId);
+        deleteUnnecessaryRoomAndAlarm(room, userId);
 
     }
 
-    public boolean isEmptyRoom(Integer roomHeadCount) {
-        return roomHeadCount == 0;
-    }
 
 
     @Transactional
-    public void deleteUnnecessaryRoomAndAlarm(Integer roomId, Integer userId) {
-        Integer roomHeadCount = roomUserRepository.countByRoomId(roomId);
-        Alarm alarm = alarmRepository.findByUser_IdAndRoom_Id(userId, roomId)
+    public void deleteUnnecessaryRoomAndAlarm(Room room, Integer userId) {
+        Alarm alarm = alarmRepository.findByUser_IdAndRoom_Id(userId, room.getId())
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
         alarmRepository.delete(alarm);
-            if(isEmptyRoom(roomHeadCount))
-                roomRepository.deleteById(roomId);
+            if(room.isEmptyRoom())
+                roomRepository.delete(room);
 
     }
 
