@@ -5,7 +5,7 @@ import com.wakeUpTogetUp.togetUp.api.alarm.AlarmService;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmCreateReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
-import com.wakeUpTogetUp.togetUp.api.mission.MissionLogRepository;
+import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
@@ -75,13 +75,10 @@ public class RoomService {
 
     public List<RoomRes> getRoomList(Integer userId) {
 
-        //userId로 roomId list 가져오기- createdAt 내림차순으로 가져옴
         List<Integer> roomIdsByUserId = roomUserRepository.findAllRoomIdsByUserId(userId);
 
-        //roomId를 포함하는 알람리스트 가져오기
         List<Alarm> alarmList = alarmRepository.findAllByRoomIds(roomIdsByUserId);
 
-        //room에 들어온 순서대로 정렬
         List<Alarm> sortedAlarmList = roomIdsByUserId.stream()
                 .flatMap(roomId -> alarmList.stream()
                         .filter(alarm -> alarm.getRoom().getId().equals(roomId)))
@@ -97,26 +94,20 @@ public class RoomService {
         LocalDateTime localDateTime = timeFormatter.stringToLocalDateTime(localDateTimeString);
         List<RoomUser> roomUserList = roomUserRepository.findAllByRoom_IdOrderByPreference(roomId,
                 userId);
-        //크기가 0이면 예외처리
         if (roomUserList.isEmpty()) {
             throw new BaseException(Status.ROOM_USER_NOT_FOUND);
         }
-        //룸이름, userId,userName 매핑 (항상 반환하는 정보)
         RoomUserMissionLogRes roomUserMissionLogRes = new RoomUserMissionLogRes();
         roomUserMissionLogRes.setName(roomUserList.get(0).getRoom().getName());
 
-        //테마 찾기
-//        UserAvatar userAvatar = userAvatarRepository.findByUser_Id(userId);
-//        roomUserMissionLogRes.setTheme(AvatarTheme.valueOf(userAvatar.getAvatar().getTheme()).getValue());
+
         UserAvatar userAvatar = userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userId)
                 .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL));
 
         roomUserMissionLogRes.setTheme(userAvatar.getAvatar().getTheme().getValue());
-
         roomUserMissionLogRes.setUserLogList(
                 EntityDtoMapper.INSTANCE.toUserLogDataList(roomUserList));
 
-        //isMyLog, missionPicLink, userCompleteType 는 각케이스에 맞게 설정
         return setUserLogData(roomUserMissionLogRes, userId, roomId, localDateTime);
 
     }
@@ -139,15 +130,14 @@ public class RoomService {
             }
             return roomUserMissionLogRes;
         }
-        //missionLog에서 날짜로 가져옴 .
-        List<MissionLog> missionLogList = missionLogRepository.findAllByRoom_IdAndCreatedAtContaining(
-                roomId, localDateTime.toLocalDate());
-        //오늘인지 아닌지
+
+        List<MissionLog> missionLogList = missionLogRepository.findAllByRoom_IdAndCreatedAtContaining(roomId, localDateTime.toLocalDate());
+
         boolean isToday = localDateTime.toLocalDate().isEqual(LocalDate.now());
 
-        // for 문돌면서 : 유저 Id로 비교 :
+
         for (RoomUserMissionLogRes.UserLogData userLogData : roomUserMissionLogRes.getUserLogList()) {
-            // 유저 Id가 있으면 (미션 수행한 기록이 있으면) -> 미션 수행사진 매핑
+
             if (userLogData.getUserId() == userId) {
                 userLogData.setIsMyLog(true);
             } else {
@@ -159,29 +149,22 @@ public class RoomService {
                     userLogData.setUserCompleteType(UserCompleteType.SUCCESS);
                 }
             }
-            //유저 Id가 없으면 (미션 수행한 기록이 없으면)
-            // -> 오늘날짜이고 알람끝나기 전이면 waiting. 오늘날짜이고 알람이 끝나면 fail (다시울림 포함해서 알람이 끝나면)
-            //과거 : fail
             if (Objects.isNull(userLogData.getMissionPicLink())) {
                 if (isToday) {
-                    //알람의 다시 울림 시간을 계산함.
                     Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
                     LocalTime alarmLocalTime = alarm.getAlarmTime();
                     LocalTime alarmOffTime = alarmLocalTime.withMinute(alarmLocalTime.getMinute()
                             + alarm.getSnoozeCnt() * alarm.getSnoozeInterval());
-                    //알람이 끝나기 전인지 여부
                     boolean isBeforeAlarmEnd = localDateTime.toLocalTime().isBefore(alarmOffTime);
-
-                    //알람이 끝나기 전이라면 waiting 상태로 설정
                     if (isBeforeAlarmEnd) {
                         userLogData.setMissionPicLink(Constant.ROOM_USER_MISSION_IMG_WAITING);
                         userLogData.setUserCompleteType(UserCompleteType.WAITING);
-                    } else { //알람이 끝났다면 실패상태로 설정
+                    } else {
                         userLogData.setMissionPicLink(Constant.ROOM_USER_MISSION_IMG_FAIL);
                         userLogData.setUserCompleteType(UserCompleteType.FAIL);
                     }
 
-                } else {//오늘이 아니라 과거라면 실패
+                } else {
                     userLogData.setMissionPicLink(Constant.ROOM_USER_MISSION_IMG_FAIL);
                     userLogData.setUserCompleteType(UserCompleteType.FAIL);
                 }
@@ -229,16 +212,13 @@ public class RoomService {
         Alarm alarm = alarmRepository.findByUser_IdAndRoom_Id(userId, roomId)
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
-        //room_user 조회
         List<RoomUser> roomUsers = roomUserRepository.findAllByRoom_IdOrderByPreference(roomId, userId);
 
-        //dto 매핑 mapper 사용
         RoomDetailRes roomDetailRes = new RoomDetailRes();
         roomDetailRes.setRoomData(EntityDtoMapper.INSTANCE.toRoomDetailResRoomData(alarm));
         roomDetailRes.setMissionData(EntityDtoMapper.INSTANCE.toRoomDetailResMissionData(alarm));
         roomDetailRes.setUserList(EntityDtoMapper.INSTANCE.toUserDataList(roomUsers));
 
-        //dto 매핑 - 커스텀 필드
         setUserTheme(roomDetailRes);
         roomDetailRes.getRoomData().setCreatedAt(
                 timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));

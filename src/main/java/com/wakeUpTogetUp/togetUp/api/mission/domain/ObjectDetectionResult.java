@@ -1,25 +1,35 @@
 package com.wakeUpTogetUp.togetUp.api.mission.domain;
 
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomAnalysisEntity;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedObject;
-import com.wakeUpTogetUp.togetUp.api.mission.model.CustomDetectedTag;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Builder;
-import lombok.Getter;
 
-@Getter
 public class ObjectDetectionResult extends VisionAnalysisResult {
 
     private final List<CustomDetectedObject> objects;
-
     private final List<CustomDetectedTag> tags;
 
     @Builder
-    private ObjectDetectionResult(List<CustomDetectedObject> objects, List<CustomDetectedTag> tags) {
+    private ObjectDetectionResult(String target, List<CustomDetectedObject> objects, List<CustomDetectedTag> tags) {
+        super(target);
         this.objects = objects;
         this.tags = tags;
+    }
+
+    @Override
+    public boolean isFail() {
+        return !hasAnyMatchTag() && !hasAnyMatchObject();
+    }
+
+    private boolean hasAnyMatchTag() {
+        return tags.stream()
+                .anyMatch(tag -> tag.isMatchEntity(targetName));
+    }
+
+    private boolean hasAnyMatchObject() {
+        return objects.stream()
+                .anyMatch(object -> object.isMatchEntity(targetName));
     }
 
     @Override
@@ -30,22 +40,14 @@ public class ObjectDetectionResult extends VisionAnalysisResult {
     }
 
     @Override
-    public boolean isFail(String targetObject) {
-        return tags.stream()
-                .noneMatch(tag -> tag.isMatchEntity(targetObject));
-    }
-
-    @Override
-    public List<CustomAnalysisEntity> getMatches(String targetObject, int size) {
+    public List<CustomAnalysisEntity> getMatches(int size) {
         return objects.stream()
-                .filter(object -> object.isMatchEntity(targetObject))
+                .filter(object -> object.isMatchEntity(targetName))
                 .sorted(Comparator.comparing(CustomDetectedObject::getConfidence).reversed())
                 .limit(size)
                 .collect(Collectors.toList());
     }
 
-
-    // TODO: 디버그용 검증 후 삭제요망
     @Override
     public void print() {
         printDetectedObjects();
@@ -53,15 +55,18 @@ public class ObjectDetectionResult extends VisionAnalysisResult {
     }
 
     private void printDetectedObjects() {
-        System.out.println("[OBJECT]");
+        System.out.println("\n[OBJECT]");
         System.out.println("objects.size() = " + objects.size());
-        objects.forEach(object -> System.out.println(object.getName()));
-        objects.forEach(object -> System.out.println(object.getName()));
+        objects.forEach(object -> {
+            System.out.println();
+            System.out.println("object = " + object.getName());
+            System.out.println("parent = " + object.getParent());});
     }
 
     private void printDetectedTags() {
-        System.out.println("[TAG]");
+        System.out.println("\n[TAG]");
         System.out.println("tags.size() = " + tags.size());
+        System.out.println();
         tags.forEach(tag -> System.out.println(tag.getName()));
     }
 }

@@ -21,7 +21,7 @@ public class AlarmMigrationMapper {
                 alarmCreateReq.isSaturday(),
                 alarmCreateReq.isSunday(),
                 true,
-                alarmCreateReq.isVibrate(),
+                alarmCreateReq.getIsVibrate(),
                 alarmCreateReq.getMissionId(),
                 alarmCreateReq.getMissionObjectId()
         );

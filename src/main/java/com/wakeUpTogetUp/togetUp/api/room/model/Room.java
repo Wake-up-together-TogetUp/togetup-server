@@ -40,9 +40,7 @@ public class Room {
 
     @Column(name = "topic")
     private String topic;
-    /**
-     * todo uuid
-     */
+
     @Column(name = "invitation_code", length = 10)
     private String invitationCode;
 

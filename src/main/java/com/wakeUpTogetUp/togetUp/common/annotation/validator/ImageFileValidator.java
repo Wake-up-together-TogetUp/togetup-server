@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.common.annotation.validator;
 
-import com.wakeUpTogetUp.togetUp.utils.FileValidator;
+import com.wakeUpTogetUp.togetUp.utils.file.FileValidator;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import org.springframework.web.multipart.MultipartFile;

@@ -80,7 +80,6 @@ public class UserAvatarService {
                 .orElseThrow(() -> new BaseException(Status.USER_AVATAR_LOCKED));
 
         for (UserAvatar userAvatar : userAvatarList) {
-            // 해당 아바타이면 활성화, 나머지 비활성화
             userAvatar.setIsActive(userAvatar.getAvatar().getId() == avatarId);
             userAvatarRepository.save(userAvatar);
         }

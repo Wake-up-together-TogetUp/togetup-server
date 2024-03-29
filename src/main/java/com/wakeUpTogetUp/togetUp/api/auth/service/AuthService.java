@@ -33,10 +33,9 @@ public class AuthService {
     @Transactional
     public LoginRes socialLogin(SocialLoginReq socialLoginReq) {
 
-        //각 소셜로그인에 맞는 서비스 가져오기
+
         SocialLoginService loginService = this.getLoginService(socialLoginReq.getLoginType());
 
-        //소셜로그인 유저 정보 가져오기
         SocialUserRes socialUserRes = loginService.getUserInfo(
                 socialLoginReq.getOauthAccessToken());
         log.info("socialUserResponse {} ", socialUserRes.toString());
@@ -45,10 +44,8 @@ public class AuthService {
             socialUserRes.setName(socialLoginReq.getUserName());
         }
 
-        //저장된 유저 or 저장한유저의 id 가져오기
         User user = userService.getSignedUser(socialUserRes, socialLoginReq.getLoginType());
 
-        //accessToken 만들기
         String accessToken = jwtService.generateAccessToken(user.getId());
 
         return LoginRes.builder()

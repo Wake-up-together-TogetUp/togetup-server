@@ -5,8 +5,8 @@ import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmTimeLineRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
-import com.wakeUpTogetUp.togetUp.api.mission.MissionObjectRepository;
-import com.wakeUpTogetUp.togetUp.api.mission.MissionRepository;
+import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionObjectRepository;
+import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
@@ -47,7 +47,7 @@ public class AlarmService {
 
             if (postAlarmReq.getMissionObjectId() != null) {
                 missionObject = missionObjectRepository.findById(postAlarmReq.getMissionObjectId())
-                        .orElseThrow(() -> new BaseException(Status.OBJECT_NOT_FOUND));
+                        .orElseThrow(() -> new BaseException(Status.MISSION_OBJECT_NOT_FOUND));
 
                 if (missionObject.getMission().getId() != mission.getId()) {
                     throw new BaseException(Status.MISSION_ID_NOT_MATCH);
