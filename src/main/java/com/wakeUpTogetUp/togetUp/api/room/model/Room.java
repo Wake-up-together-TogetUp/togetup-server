@@ -77,6 +77,14 @@ public class Room {
         this.invitationCode = UUID.randomUUID().toString().substring(0, Constant.INVITATION_CODE_LENGTH);
     }
 
+    public boolean isEmptyRoom() {
+        return this.roomUsers.size() == 0;
+    }
+
+    public boolean isUserInRoom(Integer userId) {
+        return roomUsers.stream()
+                .anyMatch(roomUser -> userId == roomUser.getUser().getId());
+    }
 
 }
 

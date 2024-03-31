@@ -66,7 +66,7 @@ public class RoomService {
 
         Integer alarmId = alarmService.createAlarmDeprecated(userId, postAlarmReq).getId();
         Room savedRoom = roomRepository.save(room);
-        this.joinRoom(savedRoom.getId(), userId, true);
+        this.joinRoom(savedRoom.getId(), userId);
 
         alarmRepository.updateRoomIdByAlarmId(alarmId, savedRoom.getId());
 
@@ -175,66 +175,32 @@ public class RoomService {
         return roomUserMissionLogRes;
     }
 
-    @Transactional
-    public void changeRoomHost(Integer roomId, Integer userId, Integer selectedUserId) {
-
-        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId)
-                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
-        if (!roomUser.getIsHost()) {
-            throw new BaseException(Status.INVALID_ROOM_HOST_ID);
-        }
-        roomUser.setIsHost(false);
-
-
-        RoomUser seletedRoomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, selectedUserId)
-                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
-        seletedRoomUser.setIsHost(true);
-
-    }
 
     @Transactional
     public void leaveRoom(Integer roomId, Integer userId) {
 
-        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId)
-                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
-        if (Objects.isNull(roomUser)) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
+
+        if(!room.isUserInRoom(userId)) {
             throw new BaseException(Status.ROOM_USER_NOT_FOUND);
         }
 
-
-        if (roomUser.getIsHost()) {
-            this.findNextCreatedUser(roomId, roomUser.getId());
-        }
-
         roomUserRepository.deleteByRoom_IdAndUser_Id(roomId, userId);
+        deleteUnnecessaryRoomAndAlarm(room, userId);
 
     }
 
-    @Transactional
-    public void findNextCreatedUser(Integer roomId, Integer userId) {
-        List<RoomUser> orderedRoomUser = roomUserRepository.findAllByRoom_IdOrderByCreatedAt(
-                roomId);
-        if (orderedRoomUser.size() < Constant.MINIMUM_NUMBER_TO_CHANGE_HOST) {
-            deleteUnnecessaryRoomAndAlarm(roomId);
-            return;
-        }
 
-        Integer nextHostId = orderedRoomUser.get(0).getId();
-        if (nextHostId == userId) {
-            nextHostId = orderedRoomUser.get(1).getId();
-        }
-
-        this.changeRoomHost(roomId, userId, nextHostId);
-    }
 
     @Transactional
-    public void deleteUnnecessaryRoomAndAlarm(Integer roomId) {
-        Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
-        if (Objects.isNull(alarm)) {
-            throw new BaseException(Status.ALARM_NOT_FOUND);
-        }
+    public void deleteUnnecessaryRoomAndAlarm(Room room, Integer userId) {
+        Alarm alarm = alarmRepository.findByUser_IdAndRoom_Id(userId, room.getId())
+                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
         alarmRepository.delete(alarm);
-        roomRepository.deleteById(roomId);
+            if(room.isEmptyRoom())
+                roomRepository.delete(room);
+
     }
 
 
@@ -247,21 +213,14 @@ public class RoomService {
 
         RoomDetailRes roomDetailRes = new RoomDetailRes();
         roomDetailRes.setRoomData(EntityDtoMapper.INSTANCE.toRoomDetailResRoomData(alarm));
-        roomDetailRes.setAlarmData(EntityDtoMapper.INSTANCE.toRoomDetailResAlarmData(alarm));
+        roomDetailRes.setMissionData(EntityDtoMapper.INSTANCE.toRoomDetailResMissionData(alarm));
         roomDetailRes.setUserList(EntityDtoMapper.INSTANCE.toUserDataList(roomUsers));
 
-        this.setUserTheme(roomDetailRes);
+        setUserTheme(roomDetailRes);
         roomDetailRes.getRoomData().setCreatedAt(
                 timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
 
-        roomDetailRes.getRoomData().setPersonnel(roomUsers.size());
-
-        roomDetailRes.getAlarmData()
-                .setAlarmTime(timeFormatter.timeStringToAMPMFormat(alarm.getAlarmTime()));
-        roomDetailRes.getAlarmData().setAlarmDay(
-                timeFormatter.formatDaysOfWeek(alarm.getMonday(), alarm.getTuesday(),
-                        alarm.getWednesday(), alarm.getThursday(), alarm.getFriday(),
-                        alarm.getSaturday(), alarm.getSunday()));
+        roomDetailRes.getRoomData().setHeadCount(roomUsers.size());
 
         return roomDetailRes;
     }
@@ -291,11 +250,11 @@ public class RoomService {
         PostAlarmReq postAlarmReq = alarmMigrationMapper.convertAlarmCreateReqToPostAlarmReq(alarmCreateReq);
         Alarm alarm = alarmService.createAlarmDeprecated(invitedUserId, postAlarmReq);
         alarmRepository.updateRoomIdByAlarmId(alarm.getId(), roomId);
-        joinRoom(roomId, invitedUserId, false);
+        joinRoom(roomId, invitedUserId);
     }
 
     @Transactional
-    public void joinRoom(Integer roomId, Integer invitedUserId, boolean isHost) {
+    public void joinRoom(Integer roomId, Integer invitedUserId) {
 
 
         User user = findExistingUser(userRepository, invitedUserId);
@@ -311,7 +270,6 @@ public class RoomService {
         RoomUser roomUser = RoomUser.builder()
                 .user(user)
                 .room(room)
-                .isHost(isHost)
                 .agreePush(true)
                 .build();
 
@@ -323,8 +281,8 @@ public class RoomService {
         Room room = roomRepository.findByInvitationCode(invitationCode)
                 .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
-        Integer roomPersonnel = roomUserRepository.countByRoomId(room.getId());
-        if (isRoomEmpty(roomPersonnel))
+        Integer roomHeadCount = roomUserRepository.countByRoomId(room.getId());
+        if (isRoomEmpty(roomHeadCount))
             throw new BaseException(Status.ROOM_NOT_FOUND);
 
         MissionObject roomMissionObject = alarmRepository.findMissionObjectByRoomId(room.getId());
@@ -336,7 +294,7 @@ public class RoomService {
                 .name(room.getName())
                 .intro(room.getIntro())
                 .createdAt(timeFormatter.timestampToDotDateFormat(room.getCreatedAt()))
-                .personnel(roomPersonnel)
+                .headCount(roomHeadCount)
                 .missionObjectId(roomMissionObject.getId())
                 .missionKr(roomMissionObject.getKr())
                 .build();
