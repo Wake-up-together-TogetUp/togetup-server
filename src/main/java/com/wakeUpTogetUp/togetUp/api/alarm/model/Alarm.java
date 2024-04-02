@@ -4,6 +4,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
+
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -17,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,8 +30,8 @@ import org.hibernate.annotations.Where;
 
 @ToString
 @Entity
-@SQLDelete(sql = "UPDATE alarm SET is_activated = false WHERE id = ?")
-@Where(clause = "is_activated = true")
+@SQLDelete(sql = "UPDATE alarm SET is_deleted = true WHERE id = ?")
+@Where(clause = "is_deleted = false")
 @Table(name = "alarm")
 @DynamicInsert
 @Data
@@ -67,6 +69,7 @@ public class Alarm {
     private Boolean isSnoozeActivated;
     private Boolean isVibrate;
     private Boolean isActivated;
+    private Boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", columnDefinition = "INT UNSIGNED")
@@ -105,6 +108,7 @@ public class Alarm {
         setIsVibrate(isVibrate);
         setIsSnoozeActivated(isSnoozeActivated);
         setIsActivated(isActivated);
+        setIsDeleted(false);
         setMission(mission);
         setMissionObject(missionObject);
     }
