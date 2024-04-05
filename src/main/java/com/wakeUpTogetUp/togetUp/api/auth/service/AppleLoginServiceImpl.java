@@ -17,6 +17,7 @@ import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -27,6 +28,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -47,6 +49,9 @@ public class AppleLoginServiceImpl implements SocialLoginService {
     private final AppleClient appleClient;
     private final PublicKeyGenerator publicKeyGenerator;
     private final AppleClaimsValidator appleClaimsValidator;
+
+    private static final String APPLE_PRIVATE_RELAY_DOMAIN = "@privaterelay.appleid.com";
+
     @Value("${oauth.apple.client-id}")
     private String clientId;
     @Value("${oauth.apple.iss}")
@@ -69,8 +74,9 @@ public class AppleLoginServiceImpl implements SocialLoginService {
         Claims claims = appleJwtParser.parsePublicKeyAndGetClaims(accessToken, publicKey);
 
         validateClaims(claims);
+        String sanitizedEmail = sanitizeEmail(claims.get("email", String.class));
 
-        AppleLoginRes appleLoginRes = new AppleLoginRes(claims.getSubject(), claims.get("email", String.class));
+        AppleLoginRes appleLoginRes = new AppleLoginRes(claims.getSubject(), sanitizedEmail);
 
         return SocialUserRes.builder()
                 .id(appleLoginRes.getId())
@@ -83,6 +89,10 @@ public class AppleLoginServiceImpl implements SocialLoginService {
             throw new BaseException(Status.INVALID_APPLE_CLAIMS);
 
         }
+    }
+
+    private String sanitizeEmail(String email) {
+        return (email != null && email.endsWith(APPLE_PRIVATE_RELAY_DOMAIN)) ? "" : email;
     }
 
     public AppleTokenRes getAppleToken(String authorizationCode) throws IOException {
