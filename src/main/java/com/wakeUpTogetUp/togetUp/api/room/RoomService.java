@@ -40,7 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.*;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RoomService {
 
@@ -73,107 +72,12 @@ public class RoomService {
     }
 
 
-    public List<RoomRes> getRoomList(Integer userId) {
-
-        List<Integer> roomIdsByUserId = roomUserRepository.findAllRoomIdsByUserId(userId);
-
-        List<Alarm> alarmList = alarmRepository.findAllByRoomIds(roomIdsByUserId);
-
-        List<Alarm> sortedAlarmList = roomIdsByUserId.stream()
-                .flatMap(roomId -> alarmList.stream()
-                        .filter(alarm -> alarm.getRoom().getId().equals(roomId)))
-                .collect(Collectors.toList());
-
-        return EntityDtoMapper.INSTANCE.toRoomResList(sortedAlarmList);
-    }
 
 
-    public RoomUserMissionLogRes getRoomUserLogList(Integer userId, Integer roomId,
-                                                    String localDateTimeString) {
-
-        LocalDateTime localDateTime = timeFormatter.stringToLocalDateTime(localDateTimeString);
-        List<RoomUser> roomUserList = roomUserRepository.findAllByRoom_IdOrderByPreference(roomId,
-                userId);
-        if (roomUserList.isEmpty()) {
-            throw new BaseException(Status.ROOM_USER_NOT_FOUND);
-        }
-        RoomUserMissionLogRes roomUserMissionLogRes = new RoomUserMissionLogRes();
-        roomUserMissionLogRes.setName(roomUserList.get(0).getRoom().getName());
 
 
-        UserAvatar userAvatar = userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userId)
-                .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL));
-
-        roomUserMissionLogRes.setTheme(userAvatar.getAvatar().getTheme().getValue());
-        roomUserMissionLogRes.setUserLogList(
-                EntityDtoMapper.INSTANCE.toUserLogDataList(roomUserList));
-
-        return setUserLogData(roomUserMissionLogRes, userId, roomId, localDateTime);
-
-    }
-
-    public RoomUserMissionLogRes setUserLogData(RoomUserMissionLogRes roomUserMissionLogRes,
-                                                Integer userId, Integer roomId, LocalDateTime localDateTime) {
-
-        boolean isAlarmActive = alarmRepository.findFirstByRoom_Id(roomId)
-                .getDayOfWeekValue(localDateTime.getDayOfWeek());
-        if (!isAlarmActive) {
-            for (RoomUserMissionLogRes.UserLogData userLogData : roomUserMissionLogRes.getUserLogList()) {
-                userLogData.setUserCompleteType(UserCompleteType.NOT_MISSION);
-                userLogData.setMissionPicLink(Constant.ROOM_USER_MISSION_IMG_NOT_MISSION);
-                if (userLogData.getUserId() == userId) {
-                    userLogData.setIsMyLog(true);
-                } else {
-                    userLogData.setIsMyLog(false);
-                }
-
-            }
-            return roomUserMissionLogRes;
-        }
-
-        List<MissionLog> missionLogList = missionLogRepository.findAllByRoom_IdAndCreatedAtContaining(roomId, localDateTime.toLocalDate());
-
-        boolean isToday = localDateTime.toLocalDate().isEqual(LocalDate.now());
 
 
-        for (RoomUserMissionLogRes.UserLogData userLogData : roomUserMissionLogRes.getUserLogList()) {
-
-            if (userLogData.getUserId() == userId) {
-                userLogData.setIsMyLog(true);
-            } else {
-                userLogData.setIsMyLog(false);
-            }
-            for (MissionLog missionLog : missionLogList) {
-                if (userLogData.getUserId() == missionLog.getUser().getId()) {
-                    userLogData.setMissionPicLink(missionLog.getMissionPicLink());
-                    userLogData.setUserCompleteType(UserCompleteType.SUCCESS);
-                }
-            }
-            if (Objects.isNull(userLogData.getMissionPicLink())) {
-                if (isToday) {
-                    Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
-                    LocalTime alarmLocalTime = alarm.getAlarmTime();
-                    LocalTime alarmOffTime = alarmLocalTime.withMinute(alarmLocalTime.getMinute()
-                            + alarm.getSnoozeCnt() * alarm.getSnoozeInterval());
-                    boolean isBeforeAlarmEnd = localDateTime.toLocalTime().isBefore(alarmOffTime);
-                    if (isBeforeAlarmEnd) {
-                        userLogData.setMissionPicLink(Constant.ROOM_USER_MISSION_IMG_WAITING);
-                        userLogData.setUserCompleteType(UserCompleteType.WAITING);
-                    } else {
-                        userLogData.setMissionPicLink(Constant.ROOM_USER_MISSION_IMG_FAIL);
-                        userLogData.setUserCompleteType(UserCompleteType.FAIL);
-                    }
-
-                } else {
-                    userLogData.setMissionPicLink(Constant.ROOM_USER_MISSION_IMG_FAIL);
-                    userLogData.setUserCompleteType(UserCompleteType.FAIL);
-                }
-            }
-
-        }
-
-        return roomUserMissionLogRes;
-    }
 
 
     @Transactional
@@ -204,35 +108,9 @@ public class RoomService {
     }
 
 
-    public RoomDetailRes getRoomDetail(Integer roomId, Integer userId) {
 
-        Alarm alarm = alarmRepository.findByUser_IdAndRoom_Id(userId, roomId)
-                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
-        List<RoomUser> roomUsers = roomUserRepository.findAllByRoom_IdOrderByPreference(roomId, userId);
 
-        RoomDetailRes roomDetailRes = new RoomDetailRes();
-        roomDetailRes.setRoomData(EntityDtoMapper.INSTANCE.toRoomDetailResRoomData(alarm));
-        roomDetailRes.setMissionData(EntityDtoMapper.INSTANCE.toRoomDetailResMissionData(alarm));
-        roomDetailRes.setUserList(EntityDtoMapper.INSTANCE.toUserDataList(roomUsers));
-
-        setUserTheme(roomDetailRes);
-        roomDetailRes.getRoomData().setCreatedAt(
-                timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
-
-        roomDetailRes.getRoomData().setHeadCount(roomUsers.size());
-
-        return roomDetailRes;
-    }
-
-    public void setUserTheme(RoomDetailRes roomDetailRes) {
-
-        roomDetailRes.getUserList().forEach(userData -> userData.setTheme(
-                userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userData.getUserId())
-                        .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL))
-                        .getAvatar().getTheme().getValue()));
-
-    }
 
 
     @Transactional
@@ -276,32 +154,7 @@ public class RoomService {
         roomUserRepository.save(roomUser);
     }
 
-    public RoomInfoRes getRoomInformation(String invitationCode) {
-
-        Room room = roomRepository.findByInvitationCode(invitationCode)
-                .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
-
-        Integer roomHeadCount = roomUserRepository.countByRoomId(room.getId());
-        if (isRoomEmpty(roomHeadCount))
-            throw new BaseException(Status.ROOM_NOT_FOUND);
-
-        MissionObject roomMissionObject = alarmRepository.findMissionObjectByRoomId(room.getId());
 
 
-        return RoomInfoRes.builder()
-                .id(room.getId())
-                .icon(roomMissionObject.getIcon())
-                .name(room.getName())
-                .intro(room.getIntro())
-                .createdAt(timeFormatter.timestampToDotDateFormat(room.getCreatedAt()))
-                .headCount(roomHeadCount)
-                .missionObjectId(roomMissionObject.getId())
-                .missionKr(roomMissionObject.getKr())
-                .build();
-    }
-
-    public boolean isRoomEmpty(Integer roomPersonnel) {
-        return roomPersonnel <= 0;
-    }
 
 }

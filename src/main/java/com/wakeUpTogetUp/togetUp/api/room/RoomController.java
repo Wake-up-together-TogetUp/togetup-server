@@ -30,7 +30,7 @@ import java.util.List;
 public class RoomController {
 
     private final RoomService roomService;
-    private final MissionLogRepository missionLogRepository;
+    private final RoomQueryService roomQueryService;
 
     @Operation(summary = "그룹과 그룹 알람 생성")
     @ApiResponses(value = {
@@ -75,7 +75,7 @@ public class RoomController {
     public BaseResponse<List<RoomRes>> getList(@Parameter(hidden = true) @AuthUser Integer userId) {
 
 
-        return new BaseResponse(Status.SUCCESS, roomService.getRoomList(userId));
+        return new BaseResponse(Status.SUCCESS, roomQueryService.getRoomList(userId));
 
     }
 
@@ -94,7 +94,7 @@ public class RoomController {
     ) {
 
 
-        return new BaseResponse(Status.SUCCESS, roomService.getRoomUserLogList(userId, roomId, localDateTime));
+        return new BaseResponse(Status.SUCCESS, roomQueryService.getRoomUserLogList(userId, roomId, localDateTime));
 
     }
 
@@ -122,7 +122,7 @@ public class RoomController {
     public BaseResponse<RoomDetailRes> getRoomDetail(@Parameter(hidden = true) @AuthUser Integer userId, @PathVariable Integer roomId) {
 
 
-        return new BaseResponse(Status.SUCCESS, roomService.getRoomDetail(roomId, userId));
+        return new BaseResponse(Status.SUCCESS, roomQueryService.getRoomDetail(roomId, userId));
 
     }
 
@@ -151,7 +151,7 @@ public class RoomController {
     public BaseResponse<RoomInfoRes> getRoomIntro(@RequestParam() String invitationCode) {
 
 
-        return new BaseResponse(Status.SUCCESS, roomService.getRoomInformation(invitationCode));
+        return new BaseResponse(Status.SUCCESS, roomQueryService.getRoomInformation(invitationCode));
 
     }
 
