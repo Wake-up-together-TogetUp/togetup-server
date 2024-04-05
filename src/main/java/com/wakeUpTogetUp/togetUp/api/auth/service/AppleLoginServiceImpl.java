@@ -74,9 +74,9 @@ public class AppleLoginServiceImpl implements SocialLoginService {
         Claims claims = appleJwtParser.parsePublicKeyAndGetClaims(accessToken, publicKey);
 
         validateClaims(claims);
-        String sanitizedEmail = sanitizeEmail(claims.get("email", String.class));
+        String filteredEmail = filterPrivateEmail(claims.get("email", String.class));
 
-        AppleLoginRes appleLoginRes = new AppleLoginRes(claims.getSubject(), sanitizedEmail);
+        AppleLoginRes appleLoginRes = new AppleLoginRes(claims.getSubject(), filteredEmail);
 
         return SocialUserRes.builder()
                 .id(appleLoginRes.getId())
@@ -91,7 +91,7 @@ public class AppleLoginServiceImpl implements SocialLoginService {
         }
     }
 
-    private String sanitizeEmail(String email) {
+    private String filterPrivateEmail(String email) {
         return (email != null && email.endsWith(APPLE_PRIVATE_RELAY_DOMAIN)) ? "" : email;
     }
 
