@@ -64,7 +64,7 @@ create table user
     id         int unsigned auto_increment
         primary key,
     name       varchar(10)                            null,
-    email      varchar(30)                            null,
+    email      varchar(320)                            null,
     login_type varchar(20)                            not null,
     social_id  varchar(80)                            not null,
     agree_push tinyint(1)   default 1                 not null,
@@ -94,6 +94,7 @@ create table alarm
     is_snooze_activated tinyint(1)  default 1   not null,
     is_vibrate          tinyint(1)  default 1   not null,
     is_activated        tinyint(1)  default 1   not null,
+    is_deleted          tinyint(1)  default 0   not null
     user_id             int unsigned            null,
     mission_id          int unsigned            not null,
     mission_object_id   int unsigned            null,
@@ -151,7 +152,6 @@ create table room_user
     created_at timestamp  default CURRENT_TIMESTAMP not null,
     room_id    int unsigned                         null,
     user_id    int unsigned                         not null,
-    is_host    tinyint(1) default 0                 null,
     agree_push tinyint(1) default 1                 null,
     constraint room_user_ibfk_1
         foreign key (room_id) references room (id),
