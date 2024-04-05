@@ -2,6 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.room.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.common.Constant;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -44,10 +45,13 @@ public class Room {
     @Column(name = "invitation_code", length = 10)
     private String invitationCode;
 
-    // @JsonIgnore
+
     @OneToMany(mappedBy = "room")
     private List<RoomUser> roomUsers = new ArrayList<>();
 
+
+    @OneToMany(mappedBy = "room")
+    private List<Alarm> alarms = new ArrayList<>();
 
     @Column(name = "created_at")
     private Timestamp createdAt;

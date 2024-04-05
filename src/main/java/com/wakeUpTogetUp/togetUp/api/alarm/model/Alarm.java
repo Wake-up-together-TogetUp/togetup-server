@@ -83,7 +83,7 @@ public class Alarm {
     @JoinColumn(name = "mission_object_id")
     private MissionObject missionObject;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
 
