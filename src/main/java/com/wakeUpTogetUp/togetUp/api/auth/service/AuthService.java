@@ -50,7 +50,7 @@ public class AuthService {
 
         return LoginRes.builder()
                 .userId(user.getId())
-                .userName(socialUserRes.getName())
+                .userName(user.getName())
                 .email(socialUserRes.getEmail())
                 .accessToken(accessToken)
                 .avatarId(userAvatarService.getUserAvatarId(user.getId()))
