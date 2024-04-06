@@ -21,7 +21,7 @@ import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
@@ -32,7 +32,7 @@ import org.hibernate.annotations.Where;
 @SQLDelete(sql = "UPDATE alarm SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 @DynamicInsert
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -44,18 +44,9 @@ public class Alarm {
     private Integer id;
 
     private String name;
-
     private String icon;
-
-    @Column(columnDefinition = "TINYINT")
-    private Integer snoozeInterval;
-
-    @Column(columnDefinition = "TINYINT")
-    private Integer snoozeCnt;
-
     @Column(columnDefinition = "TIME")
     private LocalTime alarmTime;
-
     private Boolean monday;
     private Boolean tuesday;
     private Boolean wednesday;
@@ -63,8 +54,6 @@ public class Alarm {
     private Boolean friday;
     private Boolean saturday;
     private Boolean sunday;
-
-    private Boolean isSnoozeActivated;
     private Boolean isVibrate;
     private Boolean isActivated;
     private Boolean isDeleted;
@@ -86,15 +75,11 @@ public class Alarm {
     private Room room;
 
     @Builder
-    private Alarm(String name, String icon, Integer snoozeInterval, Integer snoozeCnt,
-            LocalTime alarmTime, Boolean monday, Boolean tuesday, Boolean wednesday,
-            Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday,
-            Boolean isSnoozeActivated, Boolean isVibrate, User user, Mission mission,
-            MissionObject missionObject) {
+    private Alarm(String name, String icon, LocalTime alarmTime, Boolean monday, Boolean tuesday,
+            Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday,
+            Boolean isVibrate, User user, Mission mission, MissionObject missionObject) {
         this.name = name;
         this.icon = icon;
-        this.snoozeInterval = snoozeInterval;
-        this.snoozeCnt = snoozeCnt;
         this.alarmTime = alarmTime;
         this.monday = monday;
         this.tuesday = tuesday;
@@ -103,23 +88,19 @@ public class Alarm {
         this.friday = friday;
         this.saturday = saturday;
         this.sunday = sunday;
-        this.isSnoozeActivated = isSnoozeActivated;
         this.isVibrate = isVibrate;
         this.user = user;
         this.mission = mission;
         this.missionObject = missionObject;
     }
 
-    public static Alarm create(String name, String icon, Integer snoozeInterval, Integer snoozeCnt,
-            LocalTime alarmTime, Boolean monday, Boolean tuesday, Boolean wednesday,
-            Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday,
-            Boolean isSnoozeActivated, Boolean isVibrate, User user, Mission mission,
+    public static Alarm create(String name, String icon, LocalTime alarmTime, Boolean monday,
+            Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday,
+            Boolean sunday, Boolean isVibrate, User user, Mission mission,
             MissionObject missionObject) {
         return Alarm.builder()
                 .name(name)
                 .icon(icon)
-                .snoozeInterval(snoozeInterval)
-                .snoozeCnt(snoozeCnt)
                 .alarmTime(alarmTime)
                 .monday(monday)
                 .tuesday(tuesday)
@@ -128,7 +109,6 @@ public class Alarm {
                 .friday(friday)
                 .saturday(saturday)
                 .sunday(sunday)
-                .isSnoozeActivated(isSnoozeActivated)
                 .isVibrate(isVibrate)
                 .user(user)
                 .mission(mission)
@@ -136,16 +116,13 @@ public class Alarm {
                 .build();
     }
 
-    public void modifyProperties(String name, String icon,
-            Integer snoozeInterval, Integer snoozeCnt, LocalTime alarmTime, Boolean monday,
+    public void modifyProperties(String name, String icon, LocalTime alarmTime, Boolean monday,
             Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday,
-            Boolean sunday, Boolean isVibrate, Boolean isSnoozeActivated, Boolean isActivated,
-            Mission mission, MissionObject missionObject) {
+            Boolean sunday, Boolean isVibrate, Boolean isActivated, Mission mission,
+            MissionObject missionObject) {
         this.name = name;
         this.icon = icon;
         this.isVibrate = isVibrate;
-        this.snoozeInterval = snoozeInterval;
-        this.snoozeCnt = snoozeCnt;
         this.alarmTime = alarmTime;
         this.monday = monday;
         this.tuesday = tuesday;
@@ -154,7 +131,6 @@ public class Alarm {
         this.friday = friday;
         this.saturday = saturday;
         this.sunday = sunday;
-        this.isSnoozeActivated = isSnoozeActivated;
         this.isActivated = isActivated;
         this.isDeleted = false;
         this.mission = mission;
@@ -188,9 +164,5 @@ public class Alarm {
 
     public boolean isRoomAlarm() {
         return Objects.nonNull(room);
-    }
-
-    public boolean isOneTimeAlarm() {
-        return !(monday || tuesday || wednesday || thursday || friday || saturday || sunday);
     }
 }

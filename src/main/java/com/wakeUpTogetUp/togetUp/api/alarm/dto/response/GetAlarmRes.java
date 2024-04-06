@@ -28,12 +28,6 @@ public class GetAlarmRes {
     @Schema(description = "아이콘", example = "⏰")
     private String icon;
 
-    @Schema(description = "다시울림 간격", example = "5")
-    private Integer snoozeInterval;
-
-    @Schema(description = "다시울림 횟수", example = "3")
-    private Integer snoozeCnt;
-
     @Schema(description = "알람 시간", example = "06:00:00")
     private LocalTime alarmTime;
 
@@ -57,9 +51,6 @@ public class GetAlarmRes {
 
     @Schema(description = "일요일 울림 여부", example = "false")
     private Boolean sunday;
-
-    @Schema(description = "다시울림 활성화 여부", example = "true", defaultValue = "true")
-    private Boolean isSnoozeActivated;
 
     @Schema(description = "진동 활성화 여부", example = "true")
     private Boolean isVibrate;

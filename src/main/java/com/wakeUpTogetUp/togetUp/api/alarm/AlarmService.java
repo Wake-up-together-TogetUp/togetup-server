@@ -53,8 +53,6 @@ public class AlarmService {
         Alarm alarm = Alarm.create(
                 postAlarmReq.getName(),
                 missionObject.getIcon(),
-                postAlarmReq.getSnoozeInterval(),
-                postAlarmReq.getSnoozeCnt(),
                 LocalTime.parse(postAlarmReq.getAlarmTime()),
                 postAlarmReq.getMonday(),
                 postAlarmReq.getTuesday(),
@@ -63,7 +61,6 @@ public class AlarmService {
                 postAlarmReq.getFriday(),
                 postAlarmReq.getSaturday(),
                 postAlarmReq.getSunday(),
-                postAlarmReq.getIsSnoozeActivated(),
                 postAlarmReq.getIsVibrate(),
                 user, mission, missionObject);
 
@@ -73,7 +70,7 @@ public class AlarmService {
     @Transactional
     public Alarm updateAlarm(Integer userId, Integer alarmId, PatchAlarmReq patchAlarmReq) {
         // 알람 수정
-        Alarm alarm = alarmRepository.findById(alarmId, userId)
+        Alarm alarm = alarmRepository.findByIdAndUser_Id(alarmId, userId)
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
         Mission mission = null;
         MissionObject missionObject = null;
@@ -95,8 +92,6 @@ public class AlarmService {
         alarm.modifyProperties(
                 patchAlarmReq.getName(),
                 patchAlarmReq.getIcon(),
-                patchAlarmReq.getSnoozeInterval(),
-                patchAlarmReq.getSnoozeCnt(),
                 LocalTime.parse(patchAlarmReq.getAlarmTime()),
                 patchAlarmReq.getMonday(),
                 patchAlarmReq.getTuesday(),
@@ -106,7 +101,6 @@ public class AlarmService {
                 patchAlarmReq.getSaturday(),
                 patchAlarmReq.getSunday(),
                 patchAlarmReq.getIsVibrate(),
-                patchAlarmReq.getIsSnoozeActivated(),
                 patchAlarmReq.getIsActivated(),
                 mission,
                 missionObject
