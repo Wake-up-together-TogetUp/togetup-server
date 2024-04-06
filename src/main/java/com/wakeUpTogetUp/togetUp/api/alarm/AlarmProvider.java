@@ -3,12 +3,17 @@ package com.wakeUpTogetUp.togetUp.api.alarm;
 import static com.wakeUpTogetUp.togetUp.common.Constant.GET_ALARM_MODE_GROUP;
 import static com.wakeUpTogetUp.togetUp.common.Constant.GET_ALARM_MODE_PERSONAL;
 
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmTimeLineRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
-import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
+import com.wakeUpTogetUp.togetUp.api.users.UserValidationService;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import com.wakeUpTogetUp.togetUp.utils.DateTimeProvider;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,19 +21,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AlarmProvider {
-    private final UserRepository userRepository;
+
+    private final UserValidationService userValidationService;
     private final AlarmRepository alarmRepository;
 
-    /**
-     * 유저 아이디로 개인 알람 리스트 가져오기
-     *
-     * @param userId
-     * @return
-     */
     public List<GetAlarmRes> getAlarmsByUserIdOrderByDate(Integer userId, String type) {
-        // 유저 id 유무 확인
-        userRepository.findById(userId).orElseThrow(
-                () -> new BaseException(Status.USER_NOT_FOUND));
+        userValidationService.validateUserExist(userId);
 
         if (type.equals(GET_ALARM_MODE_PERSONAL)) {
             List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNullOrderByAlarmTime(userId);
@@ -41,17 +39,35 @@ public class AlarmProvider {
         }
     }
 
-    /**
-     * 알람 아이디로 알람 가져오기
-     *
-     * @param alarmId
-     * @return
-     */
     public GetAlarmRes getAlarmById(Integer alarmId) {
-        // 알람 가져오기
         Alarm alarm = alarmRepository.findById(alarmId)
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
         return EntityDtoMapper.INSTANCE.toAlarmRes(alarm);
+    }
+
+    public AlarmTimeLineRes getAlarmTimeLineByUserId(Integer userId) {
+        LocalDate today = DateTimeProvider.getCurrentDateInSeoul();
+        String dayOfWeek = today.getDayOfWeek().name();
+
+        List<Alarm> todayAlarms = alarmRepository.findTodayAlarmsByUserId(userId, dayOfWeek);
+        AlarmSimpleRes nextAlarm = EntityDtoMapper.INSTANCE.toAlarmSimpleRes(getNextAlarm(todayAlarms));
+        List<AlarmSimpleRes> alarmSimpleResList = EntityDtoMapper.INSTANCE.toAlarmSimpleResList(todayAlarms);
+
+        return AlarmTimeLineRes.builder()
+                .today(today)
+                .dayOfWeek(dayOfWeek)
+                .nextAlarm(nextAlarm)
+                .todayAlarmList(alarmSimpleResList)
+                .build();
+    }
+
+    private Alarm getNextAlarm(List<Alarm> alarms) {
+        LocalTime now = LocalTime.now();
+
+        return alarms.stream()
+                .filter(alarm -> alarm.getAlarmTime().isAfter(now))
+                .findFirst()
+                .orElse(null);
     }
 }
