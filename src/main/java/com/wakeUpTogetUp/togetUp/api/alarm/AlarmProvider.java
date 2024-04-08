@@ -15,6 +15,7 @@ import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -49,25 +50,25 @@ public class AlarmProvider {
     public AlarmTimeLineRes getAlarmTimeLineByUserId(Integer userId) {
         LocalDate today = DateTimeProvider.getCurrentDateInSeoul();
         String dayOfWeek = today.getDayOfWeek().name();
+        List<Alarm> todayAlarms = alarmRepository.findOrderedTodayAlarmsByUserId(userId, dayOfWeek);
 
-        List<Alarm> todayAlarms = alarmRepository.findTodayAlarmsByUserId(userId, dayOfWeek);
-        AlarmSimpleRes nextAlarm = EntityDtoMapper.INSTANCE.toAlarmSimpleRes(getNextAlarm(todayAlarms));
+        AlarmSimpleRes nextAlarmRes =
+                EntityDtoMapper.INSTANCE.toAlarmSimpleRes(getNextAlarm(todayAlarms).orElse(null));
         List<AlarmSimpleRes> alarmSimpleResList = EntityDtoMapper.INSTANCE.toAlarmSimpleResList(todayAlarms);
 
         return AlarmTimeLineRes.builder()
                 .today(today)
                 .dayOfWeek(dayOfWeek)
-                .nextAlarm(nextAlarm)
+                .nextAlarm(nextAlarmRes)
                 .todayAlarmList(alarmSimpleResList)
                 .build();
     }
 
-    private Alarm getNextAlarm(List<Alarm> alarms) {
+    private Optional<Alarm> getNextAlarm(List<Alarm> alarms) {
         LocalTime now = LocalTime.now();
 
         return alarms.stream()
                 .filter(alarm -> alarm.getAlarmTime().isAfter(now))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 }

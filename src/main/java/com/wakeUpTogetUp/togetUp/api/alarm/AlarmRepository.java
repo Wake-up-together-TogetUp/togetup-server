@@ -49,7 +49,7 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
             "a.thursday = FALSE AND a.friday = FALSE AND a.saturday = FALSE AND a.sunday = FALSE)) " +
             "AND a.isActivated = TRUE " +
             "ORDER BY a.alarmTime ASC, a.id ASC")
-    List<Alarm> findTodayAlarmsByUserId(@Param("userId") Integer userId, @Param("dayOfWeek") String dayOfWeek);
+    List<Alarm> findOrderedTodayAlarmsByUserId(@Param("userId") Integer userId, @Param("dayOfWeek") String dayOfWeek);
 
     @Query("SELECT a.missionObject FROM Alarm a WHERE a.room.id = :roomId ")
     MissionObject findMissionObjectByRoomId(@Param("roomId") Integer roomId);
