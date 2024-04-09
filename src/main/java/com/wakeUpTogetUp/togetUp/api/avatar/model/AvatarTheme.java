@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.avatar;
+package com.wakeUpTogetUp.togetUp.api.avatar.model;
 
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.avatar.vo;
+package com.wakeUpTogetUp.togetUp.api.avatar.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserAvatarData {
+public class UserAvatarResponse {
 
     @Schema(description = "아바타 Id")
     private int avatarId;

@@ -10,8 +10,6 @@ public class AlarmMigrationMapper {
         return PostAlarmReq.of(
                 alarmCreateReq.getName(),
                 "⏰",
-                5,
-                3,
                 alarmCreateReq.getAlarmTime(),
                 alarmCreateReq.isMonday(),
                 alarmCreateReq.isTuesday(),
@@ -20,11 +18,9 @@ public class AlarmMigrationMapper {
                 alarmCreateReq.isFriday(),
                 alarmCreateReq.isSaturday(),
                 alarmCreateReq.isSunday(),
-                true,
                 alarmCreateReq.getIsVibrate(),
                 alarmCreateReq.getMissionId(),
                 alarmCreateReq.getMissionObjectId()
         );
     }
-
 }

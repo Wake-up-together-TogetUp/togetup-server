@@ -2,13 +2,10 @@ package com.wakeUpTogetUp.togetUp.api.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
-import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
+import com.wakeUpTogetUp.togetUp.api.avatar.model.UserAvatar;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressResult;
-import com.wakeUpTogetUp.togetUp.common.Status;
-import com.wakeUpTogetUp.togetUp.exception.BaseException;
-
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -25,7 +22,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

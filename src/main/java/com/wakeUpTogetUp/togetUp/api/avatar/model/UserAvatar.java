@@ -1,7 +1,6 @@
-package com.wakeUpTogetUp.togetUp.api.users.model;
+package com.wakeUpTogetUp.togetUp.api.avatar.model;
 
-import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
-
+import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,19 +11,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
-@Data
 @Entity
 @Table(name = "user_avatar")
 @DynamicInsert
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class UserAvatar {
 
     @Id
@@ -46,8 +43,12 @@ public class UserAvatar {
     private LocalDateTime createdAt;
 
     @Builder
-    public UserAvatar(User user, Avatar avatar) {
+    private UserAvatar(User user, Avatar avatar) {
         this.user = user;
         this.avatar = avatar;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 }

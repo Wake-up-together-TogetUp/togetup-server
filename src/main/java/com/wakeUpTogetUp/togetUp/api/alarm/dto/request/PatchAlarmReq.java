@@ -18,14 +18,6 @@ public class PatchAlarmReq {
     @NotNull(message = "null 값일 수 없습니다.")
     private String icon;
 
-    @Schema(description = "다시울림 간격", example = "5")
-    @NotNull(message = "null 값일 수 없습니다.")
-    private Integer snoozeInterval;
-
-    @Schema(description = "다시울림 횟수", example = "3")
-    @NotNull(message = "null 값일 수 없습니다.")
-    private Integer snoozeCnt;
-
     @Schema(description = "알람 시간", example = "06:00")
     @NotNull(message = "null 값일 수 없습니다.")
     @Pattern(regexp = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$", message = "HH:mm 형식이 아닙니다.")
@@ -58,10 +50,6 @@ public class PatchAlarmReq {
     @Schema(description = "일요일 울림 여부", example = "false")
     @NotNull(message = "null 값일 수 없습니다.")
     private Boolean sunday;
-
-    @Schema(description = "다시울림 활성화 여부", example = "true", defaultValue = "true")
-    @NotNull(message = "null 값일 수 없습니다.")
-    private Boolean isSnoozeActivated;
 
     @Schema(description = "진동 활성화 여부", example = "true")
     @NotNull(message = "null 값일 수 없습니다.")

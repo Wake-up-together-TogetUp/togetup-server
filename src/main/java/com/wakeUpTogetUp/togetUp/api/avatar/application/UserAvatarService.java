@@ -1,12 +1,13 @@
-package com.wakeUpTogetUp.togetUp.api.users;
+package com.wakeUpTogetUp.togetUp.api.avatar.application;
 
 import static com.wakeUpTogetUp.togetUp.common.Constant.DEFAULT_AVATAR_ID;
 
-import com.wakeUpTogetUp.togetUp.api.avatar.AvatarRepository;
+import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.UserAvatarResponse;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
-import com.wakeUpTogetUp.togetUp.api.avatar.vo.UserAvatarData;
+import com.wakeUpTogetUp.togetUp.api.avatar.model.UserAvatar;
+import com.wakeUpTogetUp.togetUp.api.avatar.repository.AvatarRepository;
+import com.wakeUpTogetUp.togetUp.api.avatar.repository.UserAvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
-import com.wakeUpTogetUp.togetUp.api.users.model.UserAvatar;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
@@ -22,9 +23,10 @@ public class UserAvatarService {
 
     private final AvatarRepository avatarRepository;
     private final UserAvatarRepository userAvatarRepository;
+    private final UserAvatarValidationService userAvatarValidationService;
 
     @Transactional(readOnly = true)
-    public List<UserAvatarData> findUserAvatarList(int userId) {
+    public List<UserAvatarResponse> findUserAvatarList(int userId) {
         List<Avatar> avatarList = avatarRepository.findAll();
         List<UserAvatar> userAvatarList = userAvatarRepository.findAllByUser_Id(userId);
 
@@ -41,14 +43,9 @@ public class UserAvatarService {
     }
 
     private void unlockAvatar(User user, Avatar avatar) {
-        if (isUserAvatarNotExist(user, avatar)) {
+        if (userAvatarValidationService.isUserAvatarNotExist(user.getId(), avatar.getId())) {
             createUserAvatar(user, avatar);
         }
-    }
-
-    private boolean isUserAvatarNotExist(User user, Avatar avatar) {
-        return userAvatarRepository.findByUserAndAvatar(user, avatar)
-                .isEmpty();
     }
 
     private void createUserAvatar(User user, Avatar avatar) {
