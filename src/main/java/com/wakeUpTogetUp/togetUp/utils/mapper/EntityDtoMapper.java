@@ -3,8 +3,10 @@ package com.wakeUpTogetUp.togetUp.utils.mapper;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.AvatarSpeechResponse;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.UserAvatarResponse;
+import com.wakeUpTogetUp.togetUp.api.avatar.model.AvatarSpeech;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionObjectRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
@@ -115,4 +117,5 @@ public interface EntityDtoMapper {
                 .anyMatch(userAvatar -> userAvatar.getAvatar().getId().equals(avatar.getId())));
     }
 
+    AvatarSpeechResponse toAvatarSpeechResponse(AvatarSpeech avatarSpeech);
 }
