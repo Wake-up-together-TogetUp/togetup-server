@@ -153,8 +153,8 @@ public class RoomService {
                 if (isToday) {
                     Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
                     LocalTime alarmLocalTime = alarm.getAlarmTime();
-                    LocalTime alarmOffTime = alarmLocalTime.withMinute(alarmLocalTime.getMinute()
-                            + alarm.getSnoozeCnt() * alarm.getSnoozeInterval());
+                    // todo: 해당 부분 검토 요망
+                    LocalTime alarmOffTime = alarmLocalTime.withMinute(alarmLocalTime.getMinute());
                     boolean isBeforeAlarmEnd = localDateTime.toLocalTime().isBefore(alarmOffTime);
                     if (isBeforeAlarmEnd) {
                         userLogData.setMissionPicLink(Constant.ROOM_USER_MISSION_IMG_WAITING);

@@ -24,13 +24,7 @@ public class PostAlarmReq {
     @Schema(description = "아이콘", defaultValue = "⏰", example = "⏰")
     private String icon;
 
-    @Schema(description = "다시울림 간격", defaultValue = "5", example = "5")
-    private Integer snoozeInterval;
-
-    @Schema(description = "다시울림 횟수", defaultValue = "3", example = "3")
-    private Integer snoozeCnt;
-
-    @Schema(description = "알람 시간", requiredMode = RequiredMode.REQUIRED, example = "06:00:00")
+    @Schema(description = "알람 시간", requiredMode = RequiredMode.REQUIRED, example = "06:00")
     @NotNull(message = "알람 시간은 공백일 수 없습니다.")
     @Pattern(regexp = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$", message = "HH:mm 형식이 아닙니다.")
     private String alarmTime;
@@ -55,9 +49,6 @@ public class PostAlarmReq {
 
     @Schema(description = "일요일 울림 여부", defaultValue = "false", example = "false")
     private Boolean sunday;
-
-    @Schema(description = "다시울림 활성화 여부", defaultValue = "true", example = "true")
-    private Boolean isSnoozeActivated;
 
     @Schema(description = "진동 활성화 여부", defaultValue = "true", example = "true")
     private Boolean isVibrate;

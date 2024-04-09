@@ -9,7 +9,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Schema(description = "알람 생성 request")
 @Getter
@@ -20,7 +19,7 @@ public class AlarmCreateReq {
     @NotBlank(message = "알람 이름은 공백일 수 없습니다.")
     private String name;
 
-    @Schema(description = "알람 시간", requiredMode = RequiredMode.REQUIRED, example = "06:00:00")
+    @Schema(description = "알람 시간", requiredMode = RequiredMode.REQUIRED, example = "06:00")
     @NotNull(message = "알람 시간은 공백일 수 없습니다.")
     @Pattern(regexp = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$", message = "HH:mm 형식이 아닙니다.")
     private String alarmTime;

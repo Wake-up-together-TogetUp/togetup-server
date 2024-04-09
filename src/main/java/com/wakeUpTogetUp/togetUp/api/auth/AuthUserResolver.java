@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.auth;
 
+import com.wakeUpTogetUp.togetUp.api.users.UserValidationService;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
@@ -16,7 +17,9 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 @RequiredArgsConstructor
 public class AuthUserResolver implements HandlerMethodArgumentResolver {
+
     private final JwtService jwtService;
+    private final UserValidationService userValidationService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -27,15 +30,23 @@ public class AuthUserResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        if (webRequest.getHeader("Authorization") == null)
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+            NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+        if (webRequest.getHeader("Authorization") == null) {
             throw new BaseException(Status.UNAUTHORIZED);
-        String jwt = webRequest.getHeader("Authorization").replace("Bearer", "").trim();
-        if (jwt.isEmpty())
-            throw new BaseException(Status.UNAUTHORIZED);
+        }
 
-        return jwtService.getUserId(jwt);
+        String jwt = webRequest.getHeader("Authorization")
+                .replace("Bearer", "")
+                .trim();
+        if (jwt.isEmpty()) {
+            throw new BaseException(Status.UNAUTHORIZED);
+        }
+
+        Integer userId = jwtService.getUserId(jwt);
+        userValidationService.validateUserExist(userId);
+
+        return userId;
     }
-
 }
 
