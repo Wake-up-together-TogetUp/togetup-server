@@ -144,15 +144,15 @@ VALUES (67, 'surprise', '놀란 표정', '?', 1, 3);
 
 
 -- 아바타
-INSERT INTO avatar (id, theme, unlock_level, created_at)
-VALUES (1, 'NOOB_CHICK', 1, '2023-10-07 20:35:51');
-INSERT INTO avatar (id, theme, unlock_level, created_at)
-VALUES (2, 'TWINKLING_TEDDY_BEAR', 15, '2023-10-21 03:24:06');
-INSERT INTO avatar (id, theme, unlock_level, created_at)
-VALUES (3, 'CUTE_BUNNY', 30, '2023-10-21 03:24:06');
-INSERT INTO avatar (id, theme, unlock_level, created_at)
-VALUES (4, 'GLUTTON_PANDA', 45, '2024-02-19 23:20:00');
-INSERT INTO avatar (id, theme, unlock_level, created_at)
-VALUES (5, 'RAINY_DAY_PUPPY', 60, '2024-02-19 23:21:09');
-INSERT INTO avatar (id, theme, unlock_level, created_at)
-VALUES (6, 'PHILOSOPHER_RACCOON', 75, '2024-02-19 23:22:52');
+INSERT INTO avatar (id, theme, theme_kr, unlock_level, created_at)
+VALUES (1, 'SENIOR_CHICK', '선임 병아리', 1, '2023-10-07 20:35:51');
+INSERT INTO avatar (id, theme, theme_kr, unlock_level, created_at)
+VALUES (2, 'ASTRONAUT_BEAR', '우주비행사 곰돌이', 15, '2023-10-21 03:24:06');
+INSERT INTO avatar (id, theme, theme_kr, unlock_level, created_at)
+VALUES (3, 'LOVELY_BUNNY', '러블리 토끼', 30, '2023-10-21 03:24:06');
+INSERT INTO avatar (id, theme, theme_kr, unlock_level, created_at)
+VALUES (4, 'GLUTTON_PANDA', '먹보 판다', 45, '2024-02-19 23:20:00');
+INSERT INTO avatar (id, theme, theme_kr, unlock_level, created_at)
+VALUES (5, 'RAINY_DAY_PUPPY', '비오는 날 강아지', 60, '2024-02-19 23:21:09');
+INSERT INTO avatar (id, theme, theme_kr, unlock_level, created_at)
+VALUES (6, 'PHILOSOPHER_RACCOON', '철학자 너구리', 75, '2024-02-19 23:22:52');
