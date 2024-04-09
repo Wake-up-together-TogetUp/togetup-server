@@ -54,10 +54,15 @@ public class RoomQueryRepositoryImpl implements RoomQueryRepository {
     }
 
     @Override
-    public List<RoomUser> findAllByRoomId(Integer roomId) {
+    public List<RoomUser> findAllByRoomIdOrderByUserIdAndUserName(Integer userId, Integer roomId) {
         return entityManager.createQuery(
-                        "SELECT ru FROM RoomUser ru WHERE ru.room.id = :roomId", RoomUser.class)
+                        "SELECT ru " +
+                                "FROM RoomUser ru " +
+                                "WHERE ru.room.id = :roomId " +
+                                "ORDER BY CASE WHEN ru.user.id = :userId " +
+                                "THEN 0 ELSE 1 END, ru.user.name ASC ", RoomUser.class)
                 .setParameter("roomId", roomId)
+                .setParameter("userId", userId)
                 .getResultList();
     }
 

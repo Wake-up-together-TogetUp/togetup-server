@@ -9,12 +9,13 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface RoomQueryRepository{
+public interface RoomQueryRepository {
 
     Optional<Room> findById(Integer roomId);
+
     List<RoomRes> findRoomsOrderedByJoinTime(@Param("userId") Integer userId);
 
-    List<RoomUser> findAllByRoomId(Integer roomId);
+    List<RoomUser> findAllByRoomIdOrderByUserIdAndUserName(Integer userId, Integer roomId);
 
     Optional<Room> findByInvitationCode(String invitationCode);
 }

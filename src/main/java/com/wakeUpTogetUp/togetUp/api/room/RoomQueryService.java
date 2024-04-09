@@ -42,13 +42,13 @@ public class RoomQueryService {
                 .getAvatar()
                 .getTheme();
 
-        List<UserLogData> roomUserMissionLogRes = getUserLogData(roomId,localDate);
+        List<UserLogData> roomUserMissionLogRes = getUserLogData(userId,roomId,localDate);
 
         return RoomUserMissionLogRes.of(room.getName(), theme.toString(), roomUserMissionLogRes);
     }
 
-    public List<UserLogData> getUserLogData(int roomId,LocalDate localDate){
-        List<RoomUser> roomUsers = roomQueryRepository.findAllByRoomId(roomId);
+    public List<UserLogData> getUserLogData(Integer userId, Integer roomId,LocalDate localDate){
+        List<RoomUser> roomUsers = roomQueryRepository.findAllByRoomIdOrderByUserIdAndUserName(userId,roomId);
         List<MissionLog> missionLogs = missionLogRepository.findAllByRoomIdAndDate(roomId,localDate);
 
 
