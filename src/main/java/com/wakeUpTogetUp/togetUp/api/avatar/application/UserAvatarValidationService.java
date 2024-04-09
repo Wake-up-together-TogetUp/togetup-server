@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.avatar.application;
 
+import com.wakeUpTogetUp.togetUp.api.avatar.model.UserAvatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.repository.UserAvatarRepository;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserAvatarValidationService {
 
+    private final AvatarValidationService avatarValidationService;
+
     private final UserAvatarRepository userAvatarRepository;
 
     public boolean isUserAvatarNotExist(int userId, int avatarId) {
@@ -18,12 +21,13 @@ public class UserAvatarValidationService {
     }
 
     public void validateUserAvatarActive(int userId, int avatarId) {
-        if (isThisUserAvatarNotActive(userId, avatarId)) {
+        avatarValidationService.validateAvatarExist(avatarId);
+
+        UserAvatar userAvatar = userAvatarRepository.findByUser_IdAndAvatar_Id(userId, avatarId)
+                .orElseThrow(() -> new BaseException(Status.USER_AVATAR_LOCKED));
+
+        if (!userAvatar.getIsActive()) {
             throw new BaseException(Status.USER_AVATAR_NOT_ACTIVE);
         }
-    }
-
-    private boolean isThisUserAvatarNotActive(int userId, int avatarId) {
-        return !userAvatarRepository.existsByUser_IdAndAvatar_IdAndIsActiveIsTrue(userId, avatarId);
     }
 }
