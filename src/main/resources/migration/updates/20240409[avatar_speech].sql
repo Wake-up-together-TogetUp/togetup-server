@@ -7,4 +7,3 @@ create table avatar_speech
     constraint avatar_speech_avatar_id_fk
         foreign key (avatar_id) references avatar (id)
 );
-
