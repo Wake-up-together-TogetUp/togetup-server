@@ -69,6 +69,7 @@ public enum Status {
     // CONFLICT
     USER_AVATAR_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 보유한 아바타 입니다."),
     ROOM_USER_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 방에 들어간 멤버입니다."),
+    USER_AVATAR_NOT_ACTIVE(HttpStatus.CONFLICT, "현재 활성화된 유저 아바타가 아닙니다."),
 
     // UNSUPPORTED MEDIA TYPE
     UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "지원하지 않는 파일 확장자 입니다."),

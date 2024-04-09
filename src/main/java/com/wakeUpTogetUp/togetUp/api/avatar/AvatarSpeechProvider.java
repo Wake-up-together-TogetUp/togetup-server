@@ -19,7 +19,7 @@ public class AvatarSpeechProvider {
     private final Random rand = new Random();
 
     public AvatarSpeechResponse getUserAvatarSpeech(int userId, int avatarId) {
-        userAvatarValidationService.validateUserHasAvatar(userId, avatarId);
+        userAvatarValidationService.validateUserAvatarActive(userId, avatarId);
         AvatarSpeech avatarSpeech = getAvatarRandomSpeech(avatarId);
 
         return EntityDtoMapper.INSTANCE.toAvatarSpeechResponse(avatarSpeech);

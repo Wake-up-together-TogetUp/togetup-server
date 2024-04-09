@@ -11,14 +11,18 @@ public class UserAvatarValidationService {
 
     private final UserAvatarRepository userAvatarRepository;
 
-    public void validateUserHasAvatar(int userId, int avatarId) {
-        if (isUserAvatarNotExist(userId, avatarId)) {
-            throw new BaseException(Status.USER_AVATAR_LOCKED);
-        }
-    }
-
     public boolean isUserAvatarNotExist(int userId, int avatarId) {
         return userAvatarRepository.findByUser_IdAndAvatar_Id(userId, avatarId)
                 .isEmpty();
+    }
+
+    public void validateUserAvatarActive(int userId, int avatarId) {
+        if (isThisUserAvatarNotActive(userId, avatarId)) {
+            throw new BaseException(Status.USER_AVATAR_NOT_ACTIVE);
+        }
+    }
+
+    private boolean isThisUserAvatarNotActive(int userId, int avatarId) {
+        return !userAvatarRepository.existsByUser_IdAndAvatar_IdAndIsActiveIsTrue(userId, avatarId);
     }
 }

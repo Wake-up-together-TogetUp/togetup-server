@@ -14,6 +14,8 @@ public interface UserAvatarRepository extends JpaRepository<UserAvatar, Integer>
 
     Optional<UserAvatar> findByUser_IdAndIsActiveIsTrue(int userId);
 
+    boolean existsByUser_IdAndAvatar_IdAndIsActiveIsTrue(int userId, int avatarId);
+
     List<UserAvatar> findAllByUser_Id(Integer userId);
 
 }
