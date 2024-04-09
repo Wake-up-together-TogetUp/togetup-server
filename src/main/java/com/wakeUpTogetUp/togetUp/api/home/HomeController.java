@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.home;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.AlarmService;
+import com.wakeUpTogetUp.togetUp.api.alarm.AlarmProvider;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmTimeLineRes;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.api.avatar.AvatarSpeechProvider;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/app/home")
 public class HomeController {
 
-    private final AlarmService alarmService;
+    private final AlarmProvider alarmProvider;
     private final AvatarSpeechProvider avatarSpeechProvider;
 
     @Operation(summary = "브리핑 보드 - 알람 타임라인")
@@ -37,7 +37,7 @@ public class HomeController {
     BaseResponse<AlarmTimeLineRes> getAlarmTimeLineOfUser(
             @Parameter(hidden = true) @AuthUser Integer userId
     ) {
-        return new BaseResponse<>(Status.SUCCESS, alarmService.getAlarmTimeLineByUserId(userId));
+        return new BaseResponse<>(Status.SUCCESS, alarmProvider.getAlarmTimeLineByUserId(userId));
     }
 
     @Operation(summary = "아바타 대사 불러오기")
