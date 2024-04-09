@@ -22,6 +22,7 @@ public class UserAvatarService {
 
     private final AvatarRepository avatarRepository;
     private final UserAvatarRepository userAvatarRepository;
+    private final UserAvatarValidationService userAvatarValidationService;
 
     @Transactional(readOnly = true)
     public List<UserAvatarResponse> findUserAvatarList(int userId) {
@@ -41,14 +42,9 @@ public class UserAvatarService {
     }
 
     private void unlockAvatar(User user, Avatar avatar) {
-        if (isUserAvatarNotExist(user, avatar)) {
+        if (userAvatarValidationService.isUserAvatarNotExist(user.getId(), avatar.getId())) {
             createUserAvatar(user, avatar);
         }
-    }
-
-    private boolean isUserAvatarNotExist(User user, Avatar avatar) {
-        return userAvatarRepository.findByUserAndAvatar(user, avatar)
-                .isEmpty();
     }
 
     private void createUserAvatar(User user, Avatar avatar) {
