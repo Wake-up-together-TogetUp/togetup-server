@@ -14,8 +14,11 @@ public class UserAvatarResponse {
     @Schema(description = "아바타 Id")
     private int avatarId;
 
-    @Schema(description = "아바타 테마 이름")
+    @Schema(description = "아바타 테마 EN")
     private String theme;
+
+    @Schema(description = "아바타 테마 KR")
+    private String themeKr;
 
     @Schema(description = "해금 레벨")
     private int unlockLevel;

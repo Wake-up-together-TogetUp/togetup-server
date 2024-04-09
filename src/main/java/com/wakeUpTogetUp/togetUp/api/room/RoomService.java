@@ -102,7 +102,7 @@ public class RoomService {
         UserAvatar userAvatar = userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userId)
                 .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL));
 
-        roomUserMissionLogRes.setTheme(userAvatar.getAvatar().getTheme().getValue());
+        roomUserMissionLogRes.setTheme(userAvatar.getAvatar().getThemeKr());
         roomUserMissionLogRes.setUserLogList(
                 EntityDtoMapper.INSTANCE.toUserLogDataList(roomUserList));
 
@@ -228,7 +228,7 @@ public class RoomService {
         roomDetailRes.getUserList().forEach(userData -> userData.setTheme(
                 userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userData.getUserId())
                         .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL))
-                        .getAvatar().getTheme().getValue()));
+                        .getAvatar().getThemeKr()));
 
     }
 
