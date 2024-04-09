@@ -4,7 +4,7 @@ import static com.wakeUpTogetUp.togetUp.common.Constant.DEFAULT_AVATAR_ID;
 
 import com.wakeUpTogetUp.togetUp.api.avatar.AvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
-import com.wakeUpTogetUp.togetUp.api.avatar.vo.UserAvatarData;
+import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.UserAvatarResponse;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.users.model.UserAvatar;
 import com.wakeUpTogetUp.togetUp.common.Status;
@@ -24,7 +24,7 @@ public class UserAvatarService {
     private final UserAvatarRepository userAvatarRepository;
 
     @Transactional(readOnly = true)
-    public List<UserAvatarData> findUserAvatarList(int userId) {
+    public List<UserAvatarResponse> findUserAvatarList(int userId) {
         List<Avatar> avatarList = avatarRepository.findAll();
         List<UserAvatar> userAvatarList = userAvatarRepository.findAllByUser_Id(userId);
 

@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.users;
 
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.api.auth.service.AuthService;
-import com.wakeUpTogetUp.togetUp.api.avatar.vo.UserAvatarData;
+import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.UserAvatarResponse;
 import com.wakeUpTogetUp.togetUp.api.users.dto.request.AppleUserDeleteReq;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
@@ -80,7 +80,7 @@ public class UserController {
     @Operation(summary = "아바타 목록 가져오기")
     @GetMapping("/avatars")
 
-    public BaseResponse<List<UserAvatarData>> getUserAvatarList(
+    public BaseResponse<List<UserAvatarResponse>> getUserAvatarList(
             @Parameter(hidden = true) @AuthUser Integer userId
     ) {
         return new BaseResponse<>(Status.SUCCESS, userAvatarService.findUserAvatarList(userId));
