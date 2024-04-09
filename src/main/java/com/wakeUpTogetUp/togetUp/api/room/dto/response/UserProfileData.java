@@ -1,9 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.room.dto.response;
 
-import com.wakeUpTogetUp.togetUp.api.avatar.AvatarTheme;
-import com.wakeUpTogetUp.togetUp.api.room.UserCompleteType;
+import com.wakeUpTogetUp.togetUp.api.avatar.model.AvatarTheme;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

@@ -1,14 +1,14 @@
 package com.wakeUpTogetUp.togetUp.api.room;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
-import com.wakeUpTogetUp.togetUp.api.avatar.AvatarTheme;
+import com.wakeUpTogetUp.togetUp.api.avatar.model.AvatarTheme;
+import com.wakeUpTogetUp.togetUp.api.avatar.repository.UserAvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.*;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
-import com.wakeUpTogetUp.togetUp.api.users.UserAvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
