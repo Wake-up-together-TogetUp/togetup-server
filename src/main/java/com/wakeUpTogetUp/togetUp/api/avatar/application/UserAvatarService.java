@@ -4,10 +4,10 @@ import static com.wakeUpTogetUp.togetUp.common.Constant.DEFAULT_AVATAR_ID;
 
 import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.UserAvatarResponse;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
+import com.wakeUpTogetUp.togetUp.api.avatar.model.UserAvatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.repository.AvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.avatar.repository.UserAvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
-import com.wakeUpTogetUp.togetUp.api.users.model.UserAvatar;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
