@@ -2,6 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.avatar;
 
 import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.AvatarSpeechResponse;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.AvatarSpeech;
+import com.wakeUpTogetUp.togetUp.api.avatar.repository.AvatarSpeechRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserAvatarValidationService;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import java.util.List;

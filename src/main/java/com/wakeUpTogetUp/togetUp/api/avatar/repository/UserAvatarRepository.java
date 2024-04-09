@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.users;
+package com.wakeUpTogetUp.togetUp.api.avatar.repository;
 
 import com.wakeUpTogetUp.togetUp.api.users.model.UserAvatar;
 import java.util.List;

@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.users;
 
+import com.wakeUpTogetUp.togetUp.api.avatar.repository.UserAvatarRepository;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import lombok.RequiredArgsConstructor;
