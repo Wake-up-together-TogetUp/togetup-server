@@ -1,7 +1,10 @@
 package com.wakeUpTogetUp.togetUp.api.users;
 
+import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.findExistingUser;
+
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.SocialUserRes;
+import com.wakeUpTogetUp.togetUp.api.avatar.application.UserAvatarService;
 import com.wakeUpTogetUp.togetUp.api.room.RoomUserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenRepository;
@@ -9,16 +12,12 @@ import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressResult;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.*;
 
 @Service
 @RequiredArgsConstructor

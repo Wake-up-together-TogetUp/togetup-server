@@ -48,10 +48,13 @@ application-oauth.properties
 *.json
 
 ### log files ###
-logs
+**/logs
 
 ### apple
 AuthKey_M992KTZK9V.p8
 
 ### result image file ###
 **/src/main/**/images/
+
+### generated ###
+**/src/main/generated/**

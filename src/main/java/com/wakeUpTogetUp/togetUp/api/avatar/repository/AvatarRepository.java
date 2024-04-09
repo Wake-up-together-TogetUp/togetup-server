@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.avatar;
+package com.wakeUpTogetUp.togetUp.api.avatar.repository;
 
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
 import java.util.Optional;

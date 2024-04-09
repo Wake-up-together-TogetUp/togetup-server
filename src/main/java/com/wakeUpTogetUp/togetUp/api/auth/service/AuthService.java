@@ -5,7 +5,7 @@ import com.wakeUpTogetUp.togetUp.api.auth.dto.request.SocialLoginReq;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.AppleTokenRes;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.LoginRes;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.SocialUserRes;
-import com.wakeUpTogetUp.togetUp.api.users.UserAvatarService;
+import com.wakeUpTogetUp.togetUp.api.avatar.application.UserAvatarService;
 import com.wakeUpTogetUp.togetUp.api.users.UserService;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
