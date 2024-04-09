@@ -2,10 +2,9 @@ package com.wakeUpTogetUp.togetUp.api.room;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmCreateReq;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
-import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomInfoRes;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomInviteInfoRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
@@ -19,8 +18,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "그룹(Room)")
@@ -31,6 +32,7 @@ public class RoomController {
 
     private final RoomService roomService;
     private final RoomQueryService roomQueryService;
+    private final RoomQueryRepository roomQueryRepository;
 
     @Operation(summary = "그룹과 그룹 알람 생성")
     @ApiResponses(value = {
@@ -75,7 +77,7 @@ public class RoomController {
     public BaseResponse<List<RoomRes>> getList(@Parameter(hidden = true) @AuthUser Integer userId) {
 
 
-        return new BaseResponse(Status.SUCCESS, roomQueryService.getRoomList(userId));
+        return new BaseResponse(Status.SUCCESS, roomQueryRepository.findRoomsOrderedByJoinTime(userId));
 
     }
 
@@ -89,12 +91,14 @@ public class RoomController {
     @Operation(summary = "그룹게시판의 미션기록 불러오기", description = "그룹의 멤버의 미션기록 보기")
     @GetMapping("/user/mission-log")
     public BaseResponse<RoomUserMissionLogRes> getRoomLogDetailByDate(@Parameter(hidden = true) @AuthUser Integer userId,
-                                                                      @Parameter(description = "룸 아이디", example = "1") Integer roomId,
-                                                                      @Parameter(description = "기록을 가져올 날의 LocalDateTime String 값", example = "2023-09-20 11:55:38") String localDateTime
+                                                                      @Parameter(description = "룸 아이디", example = "1") @RequestParam Integer roomId,
+                                                                      @Parameter(description = "기록을 가져올 날의 LocalDate 값", example = "2023-09-20")
+                                                                      @RequestParam("localDate")
+                                                                      @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate localDate
     ) {
 
 
-        return new BaseResponse(Status.SUCCESS, roomQueryService.getRoomUserLogList(userId, roomId, localDateTime));
+        return new BaseResponse(Status.SUCCESS, roomQueryService.getRoomUserLogList(userId, roomId, localDate));
 
     }
 
@@ -143,12 +147,12 @@ public class RoomController {
     @Operation(summary = "초대 받은 사람에게 보이는 그룹 정보 보기 ", description = "초대 받은 사람에게 보이는 앱 내 페이지")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.",
-                    content = @Content(schema = @Schema(implementation = RoomInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = RoomInviteInfoRes.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 알람 입니다."),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 룸입니다.")
     })
     @GetMapping("/information")
-    public BaseResponse<RoomInfoRes> getRoomIntro(@RequestParam() String invitationCode) {
+    public BaseResponse<RoomInviteInfoRes> getRoomIntro(@RequestParam() String invitationCode) {
 
 
         return new BaseResponse(Status.SUCCESS, roomQueryService.getRoomInformation(invitationCode));

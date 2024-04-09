@@ -1,32 +1,23 @@
 package com.wakeUpTogetUp.togetUp.api.room;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
-import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+import com.wakeUpTogetUp.togetUp.api.avatar.AvatarTheme;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionLogRepository;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomInfoRes;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.*;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.UserAvatarRepository;
-import com.wakeUpTogetUp.togetUp.api.users.model.UserAvatar;
-import com.wakeUpTogetUp.togetUp.common.Constant;
+import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.utils.TimeFormatter;
-import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
@@ -34,169 +25,100 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoomQueryService {
 
-    private final RoomRepository roomRepository;
-    private final RoomUserRepository roomUserRepository;
     private final AlarmRepository alarmRepository;
-    private final TimeFormatter timeFormatter;
     private final UserAvatarRepository userAvatarRepository;
+    private final RoomQueryRepository roomQueryRepository;
+    private final UserRepository userRepository;
     private final MissionLogRepository missionLogRepository;
-    public List<RoomRes> getRoomList(Integer userId) {
 
-        List<Integer> roomIdsByUserId = roomUserRepository.findAllRoomIdsByUserId(userId);
 
-        List<Alarm> alarmList = alarmRepository.findAllByRoomIds(roomIdsByUserId);
+    public RoomUserMissionLogRes getRoomUserLogList(Integer userId, Integer roomId, LocalDate localDate) {
 
-        List<Alarm> sortedAlarmList = roomIdsByUserId.stream()
-                .flatMap(roomId -> alarmList.stream()
-                        .filter(alarm -> alarm.getRoom().getId().equals(roomId)))
-                .collect(Collectors.toList());
+        Room room = roomQueryRepository.findById(roomId)
+                .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
-        return EntityDtoMapper.INSTANCE.toRoomResList(sortedAlarmList);
+        AvatarTheme theme = userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userId)
+                .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL))
+                .getAvatar()
+                .getTheme();
+
+        List<UserLogData> roomUserMissionLogRes = getUserLogData(roomId,localDate);
+
+        return RoomUserMissionLogRes.of(room.getName(), theme.toString(), roomUserMissionLogRes);
     }
 
-    public RoomUserMissionLogRes getRoomUserLogList(Integer userId, Integer roomId,
-                                                    String localDateTimeString) {
-
-        LocalDateTime localDateTime = timeFormatter.stringToLocalDateTime(localDateTimeString);
-        List<RoomUser> roomUserList = roomUserRepository.findAllByRoom_IdOrderByPreference(roomId,
-                userId);
-        if (roomUserList.isEmpty()) {
-            throw new BaseException(Status.ROOM_USER_NOT_FOUND);
-        }
-        RoomUserMissionLogRes roomUserMissionLogRes = new RoomUserMissionLogRes();
-        roomUserMissionLogRes.setName(roomUserList.get(0).getRoom().getName());
+    public List<UserLogData> getUserLogData(int roomId,LocalDate localDate){
+        List<RoomUser> roomUsers = roomQueryRepository.findAllByRoomId(roomId);
+        List<MissionLog> missionLogs = missionLogRepository.findAllByRoomIdAndDate(roomId,localDate);
 
 
-        UserAvatar userAvatar = userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userId)
-                .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL));
+        List<UserLogData> userLogDataList = roomUsers.stream().map(roomUser -> {
+            String missionPicLink = missionLogs.stream()
+                    .filter(missionLog -> missionLog.getUser().getId().equals(roomUser.getUser().getId()))
+                    .findAny()
+                    .map(MissionLog::getMissionPicLink)
+                    .orElse("");
 
-        roomUserMissionLogRes.setTheme(userAvatar.getAvatar().getTheme().getValue());
-        roomUserMissionLogRes.setUserLogList(
-                EntityDtoMapper.INSTANCE.toUserLogDataList(roomUserList));
+            return UserLogData.of(
+                    roomUser.getUser().getId(),
+                    roomUser.getUser().getName(),
+                    missionPicLink
+            );
+        }).collect(Collectors.toList());
 
-        return setUserLogData(roomUserMissionLogRes, userId, roomId, localDateTime);
+        return userLogDataList;
 
     }
 
-    public RoomUserMissionLogRes setUserLogData(RoomUserMissionLogRes roomUserMissionLogRes,
-                                                Integer userId, Integer roomId, LocalDateTime localDateTime) {
-
-        boolean isAlarmActive = alarmRepository.findFirstByRoom_Id(roomId)
-                .getDayOfWeekValue(localDateTime.getDayOfWeek());
-        if (!isAlarmActive) {
-            for (RoomUserMissionLogRes.UserLogData userLogData : roomUserMissionLogRes.getUserLogList()) {
-                userLogData.setUserCompleteType(UserCompleteType.NOT_MISSION);
-                userLogData.setMissionPicLink(Constant.ROOM_USER_MISSION_IMG_NOT_MISSION);
-                if (userLogData.getUserId() == userId) {
-                    userLogData.setIsMyLog(true);
-                } else {
-                    userLogData.setIsMyLog(false);
-                }
-
-            }
-            return roomUserMissionLogRes;
-        }
-
-        List<MissionLog> missionLogList = missionLogRepository.findAllByRoom_IdAndCreatedAtContaining(roomId, localDateTime.toLocalDate());
-
-        boolean isToday = localDateTime.toLocalDate().isEqual(LocalDate.now());
-
-
-        for (RoomUserMissionLogRes.UserLogData userLogData : roomUserMissionLogRes.getUserLogList()) {
-
-            if (userLogData.getUserId() == userId) {
-                userLogData.setIsMyLog(true);
-            } else {
-                userLogData.setIsMyLog(false);
-            }
-            for (MissionLog missionLog : missionLogList) {
-                if (userLogData.getUserId() == missionLog.getUser().getId()) {
-                    userLogData.setMissionPicLink(missionLog.getMissionPicLink());
-                    userLogData.setUserCompleteType(UserCompleteType.SUCCESS);
-                }
-            }
-            if (Objects.isNull(userLogData.getMissionPicLink())) {
-                if (isToday) {
-                    Alarm alarm = alarmRepository.findFirstByRoom_Id(roomId);
-                    LocalTime alarmLocalTime = alarm.getAlarmTime();
-                    LocalTime alarmOffTime = alarmLocalTime.withMinute(alarmLocalTime.getMinute()
-                            + alarm.getSnoozeCnt() * alarm.getSnoozeInterval());
-                    boolean isBeforeAlarmEnd = localDateTime.toLocalTime().isBefore(alarmOffTime);
-                    if (isBeforeAlarmEnd) {
-                        userLogData.setMissionPicLink(Constant.ROOM_USER_MISSION_IMG_WAITING);
-                        userLogData.setUserCompleteType(UserCompleteType.WAITING);
-                    } else {
-                        userLogData.setMissionPicLink(Constant.ROOM_USER_MISSION_IMG_FAIL);
-                        userLogData.setUserCompleteType(UserCompleteType.FAIL);
-                    }
-
-                } else {
-                    userLogData.setMissionPicLink(Constant.ROOM_USER_MISSION_IMG_FAIL);
-                    userLogData.setUserCompleteType(UserCompleteType.FAIL);
-                }
-            }
-
-        }
-
-        return roomUserMissionLogRes;
-    }
 
     public RoomDetailRes getRoomDetail(Integer roomId, Integer userId) {
 
-        Alarm alarm = alarmRepository.findByUser_IdAndRoom_Id(userId, roomId)
-                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
+        RoomDetailRes.RoomData roomData = getRoomData(roomId);
+        RoomDetailRes.MissionData missionData = getMissionData(roomId);
+        List<UserProfileData> userProfileData = userRepository.findUserProfileDataByRoomIdOrderedByUserIdAndName(userId, roomId);
 
-        List<RoomUser> roomUsers = roomUserRepository.findAllByRoom_IdOrderByPreference(roomId, userId);
+        return RoomDetailRes.of(
+                roomData,
+                missionData,
+                userProfileData
+        );
 
-        RoomDetailRes roomDetailRes = new RoomDetailRes();
-        roomDetailRes.setRoomData(EntityDtoMapper.INSTANCE.toRoomDetailResRoomData(alarm));
-        roomDetailRes.setMissionData(EntityDtoMapper.INSTANCE.toRoomDetailResMissionData(alarm));
-        roomDetailRes.setUserList(EntityDtoMapper.INSTANCE.toUserDataList(roomUsers));
 
-        setUserTheme(roomDetailRes);
-        roomDetailRes.getRoomData().setCreatedAt(
-                timeFormatter.timestampToDotDateFormat(alarm.getRoom().getCreatedAt()));
-
-        roomDetailRes.getRoomData().setHeadCount(roomUsers.size());
-
-        return roomDetailRes;
     }
 
-    public RoomInfoRes getRoomInformation(String invitationCode) {
-
-        Room room = roomRepository.findByInvitationCode(invitationCode)
+    public RoomDetailRes.RoomData getRoomData(Integer roomId) {
+        Room room = roomQueryRepository.findById(roomId)
                 .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
+        return RoomDetailRes.RoomData.of(
+                room.getName(),
+                room.getIntro(),
+                room.getCreatedAt().toLocalDateTime().toLocalDate(),
+                room.getRoomUsers().size(),
+                room.getInvitationCode()
+        );
+    }
 
-        Integer roomHeadCount = roomUserRepository.countByRoomId(room.getId());
-        if (isRoomEmpty(roomHeadCount))
-            throw new BaseException(Status.ROOM_NOT_FOUND);
+    public RoomDetailRes.MissionData getMissionData(Integer roomId){
+        MissionObject roomMissionObject = alarmRepository.findMissionObjectByRoomId(roomId);
+        return RoomDetailRes.MissionData.of(roomMissionObject.getIcon(), roomMissionObject.getKr());
+    }
 
+    public RoomInviteInfoRes getRoomInformation(String invitationCode) {
+
+        Room room = roomQueryRepository.findByInvitationCode(invitationCode)
+                .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
         MissionObject roomMissionObject = alarmRepository.findMissionObjectByRoomId(room.getId());
-
-
-        return RoomInfoRes.builder()
-                .id(room.getId())
-                .icon(roomMissionObject.getIcon())
-                .name(room.getName())
-                .intro(room.getIntro())
-                .createdAt(timeFormatter.timestampToDotDateFormat(room.getCreatedAt()))
-                .headCount(roomHeadCount)
-                .missionObjectId(roomMissionObject.getId())
-                .missionKr(roomMissionObject.getKr())
-                .build();
+        return RoomInviteInfoRes.of(
+                room.getId(),
+                roomMissionObject.getIcon(),
+                room.getName(),
+                room.getIntro(),
+                room.getCreatedAt(),
+                room.getRoomUsers().size(),
+                roomMissionObject.getId(),
+                roomMissionObject.getKr()
+        );
     }
 
-    public boolean isRoomEmpty(Integer roomPersonnel) {
-        return roomPersonnel <= 0;
-    }
-
-    public void setUserTheme(RoomDetailRes roomDetailRes) {
-
-        roomDetailRes.getUserList().forEach(userData -> userData.setTheme(
-                userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userData.getUserId())
-                        .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL))
-                        .getAvatar().getTheme().getValue()));
-
-    }
 
 }

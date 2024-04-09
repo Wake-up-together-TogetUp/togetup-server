@@ -8,14 +8,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+
 
 @Schema(description = "룸정보 조회 요청 api 응답")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @Builder
-public class RoomInfoRes {
+public class RoomInviteInfoRes {
 
 
     @Schema(description = "룸아이디", example = "1")
@@ -31,7 +33,7 @@ public class RoomInfoRes {
     private String intro;
 
     @Schema(description = "room 개설일", example = "2020.02.03")
-    private String createdAt;
+    private LocalDate createdAt;
 
     @Schema(description = "함께하는 인원수", example = "6")
     private Integer headCount;
@@ -42,5 +44,7 @@ public class RoomInfoRes {
     @Schema(description = "미션의 한국말", example = "자동차")
     private String missionKr;
 
-
+    public static RoomInviteInfoRes of(Integer id, String icon, String name, String intro, Timestamp createdAt, Integer headCount, Integer missionObjectId, String missionKr) {
+        return new RoomInviteInfoRes(id, icon, name, intro, createdAt.toLocalDateTime().toLocalDate(), headCount, missionObjectId, missionKr);
+    }
 }
