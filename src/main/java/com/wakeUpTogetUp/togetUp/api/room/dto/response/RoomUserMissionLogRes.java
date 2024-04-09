@@ -1,11 +1,12 @@
 package com.wakeUpTogetUp.togetUp.api.room.dto.response;
 
-import com.wakeUpTogetUp.togetUp.api.avatar.AvatarTheme;
 import com.wakeUpTogetUp.togetUp.api.room.UserCompleteType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Schema(description = "room의 멤버들의 미션로그 api 응답")
