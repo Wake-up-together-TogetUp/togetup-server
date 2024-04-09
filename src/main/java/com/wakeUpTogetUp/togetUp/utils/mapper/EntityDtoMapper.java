@@ -12,10 +12,6 @@ import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomInfoRes;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
-import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.model.UserAvatar;
 
@@ -68,39 +64,6 @@ public interface EntityDtoMapper {
 
     List<GetMissionLogRes> toMissionLogResList(List<MissionLog> missionLogList);
 
-    //Room
-    @Mapping(target = "roomId", source = "room.id")
-    @Mapping(target = "icon", source = "missionObject.icon")
-    @Mapping(target = "name", source = "room.name")
-    @Mapping(target = "mission", source = "missionObject.name")
-    @Mapping(target = "kr", source = "missionObject.kr")
-    RoomRes toRoomRes(Alarm alarm);
-
-    List<RoomRes> toRoomResList(List<Alarm> alarmList);
-
-
-    @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "userName", source = "user.name")
-    RoomUserMissionLogRes.UserLogData toUserLogData(RoomUser roomUser);
-
-    List<RoomUserMissionLogRes.UserLogData> toUserLogDataList(List<RoomUser> roomUser);
-
-    @Mapping(target = "name", source = "room.name")
-    @Mapping(target = "intro", source = "room.intro")
-    @Mapping(target = "invitationCode", source = "room.invitationCode")
-    RoomDetailRes.RoomData toRoomDetailResRoomData(Alarm alarm);
-
-
-    @Mapping(target = "icon", source = "missionObject.icon")
-    @Mapping(target = "missionKr", source = "missionObject.kr")
-    RoomDetailRes.MissionData toRoomDetailResMissionData(Alarm alarm);
-
-    @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "userName", source = "user.name")
-    @Mapping(target = "level", source = "user.level")
-    RoomDetailRes.UserData toRoomDetailUserData(RoomUser roomUser);
-
-    List<RoomDetailRes.UserData> toUserDataList(List<RoomUser> roomUser);
 
     // Avatar
     @Mapping(source = "avatar.id", target = "avatarId")

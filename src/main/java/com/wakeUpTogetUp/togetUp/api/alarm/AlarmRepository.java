@@ -29,8 +29,6 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
     @Query("update Alarm a set a.room.id = :roomId where a.id = :alarmId")
     void updateRoomIdByAlarmId(@Param("alarmId") Integer alarmId, @Param("roomId") Integer roomId);
 
-    Alarm findFirstByRoom_Id(Integer roomId);
-
 
 
     @Query("select a from Alarm a where a.room.id IN :roomIds")
