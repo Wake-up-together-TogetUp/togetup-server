@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.avatar;
+package com.wakeUpTogetUp.togetUp.api.avatar.application;
 
 import com.wakeUpTogetUp.togetUp.api.avatar.repository.AvatarRepository;
 import com.wakeUpTogetUp.togetUp.common.Status;

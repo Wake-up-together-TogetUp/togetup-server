@@ -3,7 +3,7 @@ package com.wakeUpTogetUp.togetUp.api.home;
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmProvider;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmTimeLineRes;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
-import com.wakeUpTogetUp.togetUp.api.avatar.AvatarSpeechProvider;
+import com.wakeUpTogetUp.togetUp.api.avatar.application.AvatarSpeechProvider;
 import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.AvatarSpeechResponse;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;

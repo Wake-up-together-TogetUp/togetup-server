@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.users;
+package com.wakeUpTogetUp.togetUp.api.avatar.application;
 
 import static com.wakeUpTogetUp.togetUp.common.Constant.DEFAULT_AVATAR_ID;
 
