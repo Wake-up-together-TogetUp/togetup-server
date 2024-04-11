@@ -14,9 +14,7 @@ import java.time.LocalDate;
 
 @Schema(description = "룸정보 조회 요청 api 응답")
 @Getter
-@Setter
-@AllArgsConstructor(staticName = "of")
-@Builder
+@AllArgsConstructor()
 public class RoomInviteInfoRes {
 
 
