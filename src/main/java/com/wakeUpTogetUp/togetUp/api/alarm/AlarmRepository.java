@@ -31,6 +31,8 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer> {
 
     Alarm findFirstByRoom_Id(Integer roomId);
 
+
+
     @Query("select a from Alarm a where a.room.id IN :roomIds")
             List<Alarm> findAllByRoomIds(@Param("roomIds") List<Integer> roomIds);
 
