@@ -14,8 +14,7 @@ public interface MissionLogRepository extends JpaRepository<MissionLog, Integer>
     @Query("SELECT MCL FROM MissionLog MCL WHERE MCL.user.id = :userId")
     List<MissionLog> findAllByUserId(@Param("userId") Integer userId);
 
-
-    List<MissionLog> findAllByRoom_IdAndCreatedAtContaining(Integer roomId, LocalDate localDate);
-
-
+    @Query("SELECT ml FROM MissionLog ml WHERE ml.room.id = :roomId " +
+            "AND CAST(ml.createdAt AS LocalDate) = :localDate")
+    List<MissionLog> findAllByRoomIdAndDate(@Param("roomId") Integer roomId, @Param("localDate") LocalDate localDate);
 }

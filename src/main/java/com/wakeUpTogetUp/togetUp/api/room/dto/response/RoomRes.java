@@ -7,8 +7,8 @@ import lombok.*;
 @Schema(description = "룸리스트 요청 api 응답")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class RoomRes {
 

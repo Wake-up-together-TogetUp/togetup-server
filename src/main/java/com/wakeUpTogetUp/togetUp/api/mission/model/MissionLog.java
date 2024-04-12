@@ -8,6 +8,8 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.Instant;
+
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -39,7 +41,7 @@ public class MissionLog {
     private String missionPicLink;
 
     @Column(name = "created_at",columnDefinition = "Timestamp")
-    private String createdAt = TimeFormatter.timestampFormat(new Timestamp(System.currentTimeMillis()));
+    private Timestamp createdAt = Timestamp.from(Instant.now());
 
     @Column(name = "is_deleted")
     private Boolean isDeleted = false;
