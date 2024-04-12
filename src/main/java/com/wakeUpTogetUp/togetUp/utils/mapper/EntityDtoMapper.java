@@ -69,7 +69,6 @@ public interface EntityDtoMapper {
 
     // Avatar
     @Mapping(source = "avatar.id", target = "avatarId")
-    @Mapping(source = "avatar.theme.value", target = "theme")
     UserAvatarResponse toUserAvatarData(Avatar avatar, @Context List<UserAvatar> userAvatarList);
 
     List<UserAvatarResponse> toUserAvatarDataList(List<Avatar> avatarList,

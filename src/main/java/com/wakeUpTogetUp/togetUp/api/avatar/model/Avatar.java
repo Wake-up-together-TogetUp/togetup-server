@@ -2,23 +2,20 @@ package com.wakeUpTogetUp.togetUp.api.avatar.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
-@Setter
-@Getter
 @Entity
 @Table(name = "avatar")
 @DynamicInsert
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Avatar {
 
     @Id
@@ -26,8 +23,9 @@ public class Avatar {
     @Column(columnDefinition = "INT UNSIGNED")
     private Integer id;
 
-    @Enumerated(EnumType.STRING)
-    private AvatarTheme theme;
+    private String theme;
+
+    private String themeKr;
 
     @Column(columnDefinition = "INT UNSIGNED")
     private Integer unlockLevel;

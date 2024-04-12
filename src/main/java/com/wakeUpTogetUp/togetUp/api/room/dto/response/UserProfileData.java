@@ -1,6 +1,5 @@
 package com.wakeUpTogetUp.togetUp.api.room.dto.response;
 
-import com.wakeUpTogetUp.togetUp.api.avatar.model.AvatarTheme;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
@@ -19,10 +18,10 @@ public class UserProfileData {
     @Schema(description = "유저의 레벨", example = "1")
     private Integer level;
 
-    public UserProfileData(Integer userId, String userName, AvatarTheme avatarTheme, Integer level) {
+    public UserProfileData(Integer userId, String userName, String avatarTheme, Integer level) {
         this.userId = userId;
         this.userName = userName;
-        this.theme = avatarTheme.getValue();
+        this.theme = avatarTheme;
         this.level = level;
     }
 }

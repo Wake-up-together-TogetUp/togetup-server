@@ -1,24 +1,26 @@
 package com.wakeUpTogetUp.togetUp.api.room;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
-import com.wakeUpTogetUp.togetUp.api.avatar.model.AvatarTheme;
 import com.wakeUpTogetUp.togetUp.api.avatar.repository.UserAvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionLogRepository;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.*;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomInviteInfoRes;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.UserLogData;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.UserProfileData;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 @Service
@@ -37,14 +39,14 @@ public class RoomQueryService {
         Room room = roomQueryRepository.findById(roomId)
                 .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
-        AvatarTheme theme = userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userId)
+        String theme = userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userId)
                 .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL))
                 .getAvatar()
                 .getTheme();
 
         List<UserLogData> roomUserMissionLogRes = getUserLogData(userId,roomId,localDate);
 
-        return RoomUserMissionLogRes.of(room.getName(), theme.toString(), roomUserMissionLogRes);
+        return RoomUserMissionLogRes.of(room.getName(), theme, roomUserMissionLogRes);
     }
 
     public List<UserLogData> getUserLogData(Integer userId, Integer roomId,LocalDate localDate){
