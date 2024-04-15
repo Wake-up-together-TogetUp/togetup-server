@@ -11,8 +11,7 @@ public class UserProfileData {
 
     @Schema(description = "유저 이름", example = "조혜온")
     private String userName;
-
-    @Schema(description = "- 신입 병아리 \n - 눈을 반짝이는 곰돌이 \n - 깜찍한 토끼", example = "신입 병아리")
+    @Schema(description = "- SENIOR_CHICK \n - ASTRONAUT_BEAR \n - LOVELY_BUNNY \n - RAINY_DAY_PUPPY \n - PHILOSOPHER_RACCOON", example = "GLUTTON_PANDA")
     private String theme;
 
     @Schema(description = "유저의 레벨", example = "1")
