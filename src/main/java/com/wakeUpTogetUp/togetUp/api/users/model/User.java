@@ -83,6 +83,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<FcmToken> fcmToken = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<UserAvatar> userAvatar = new ArrayList<>();
 
