@@ -14,7 +14,7 @@ public class RoomUserMissionLogRes {
     @Schema(description = "room name", example = "설여대 기상방")
     private String name;
 
-    @Schema(description = "- 신입 병아리 \n - 눈을 반짝이는 곰돌이 \n - 깜찍한 토끼", example = "신입 병아리")
+    @Schema(description = "- SENIOR_CHICK \n - ASTRONAUT_BEAR \n - LOVELY_BUNNY \n - RAINY_DAY_PUPPY \n - PHILOSOPHER_RACCOON", example = "GLUTTON_PANDA")
     private String theme;
 
     private List<UserLogData> userLogList;
