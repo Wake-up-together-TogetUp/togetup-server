@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class NotificationEventListener {
+public class NotificationEventHandler {
     private final FcmService fcmService;
 
     @Async()
