@@ -53,14 +53,11 @@ public class NotificationService {
                 .collect(Collectors.toList());
 
         if (userIdsInRoom.size() > 0) {
-
-            fcmService.sendMessageToTokens(
-                    new RoomMissionLogNotificationVo(
-                            user,
-                            room,
-                            fcmTokenRepository.findAllByUser_IdIn(userIdsInRoom)
-                    )
-            );
+            notificationEventPublisher.publishNotificationSendEvent(new RoomMissionLogNotificationVo(
+                    user,
+                    room,
+                    fcmTokenRepository.findAllByUser_IdIn(userIdsInRoom)
+            ));
         }
     }
 
