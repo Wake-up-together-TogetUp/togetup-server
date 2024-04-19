@@ -1,0 +1,66 @@
+name: TogetUp-Server-Dev CI/CD
+on:
+  push:
+    branches:[ "main", "env/cd" ]
+
+env:
+  S3_BUCKET_NAME: togetup-storage
+  FILE_PATH: /home/ubuntu/app/
+  FILE_NAME: TogetUp-0.0.1-SNAPSHOT.jar
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Get CurrentTime
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYY-MM-DDTHH-mm-ss
+          utcOffset: "+09:00"
+
+      - name: Show Current Time
+        run: echo "CurrentTime=${{steps.current-time.outputs.formattedTime}}"
+        shell: bash
+
+      - name:  make application-dev.yml
+        run: |
+          #mkdir -p ./src/main/resources
+          cd ./src/main/resources
+          touch ./application-dev.yaml
+          echo "${{ secrets.TOGETUP_PROD_APPLICATION }}" >> ./application-dev.yaml
+        shell: bash
+
+      - name: Build with Gradle
+        run: ./gradlew build -x test
+
+      - name: Deploy
+        uses: easingthemes/ssh-deploy@v5.0.0
+        with:
+          REMOTE_HOST: ${{ secrets.EC2_HOST }}
+          REMOTE_USER: ${{ secrets.EC2_USERNAME }}
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          REMOTE_PORT: 22
+          SOURCE: 'build/libs/${{env.FILE_NAME}}'
+          TARGET: '${{env.FILE_PATH}}'
+          SCRIPT_AFTER: |
+            pid=$(ps aux | grep "${{env.FILE_NAME}}" | grep -v grep | awk '{print $2}')
+            echo "pid : $pid"
+            echo "jar : ${{env.FILE_PATH}}${{env.FILE_NAME}}"
+            if [ -n "$pid" ]; then
+              kill -9 $pid  
+            fi
+            nohup java -jar ${{env.FILE_PATH}}${{env.FILE_NAME}} 2>&1 &
+
+
+
