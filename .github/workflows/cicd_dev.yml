@@ -56,7 +56,7 @@ jobs:
           script: |
             SOURCE_DIR=source/build/libs
             FILE_NAME=TogetUp-0.0.1-SNAPSHOT.jar
-            PID=`ps -ef | grep occupying | grep sudo | grep -v "bash -c" | awk '{print $2}
+            PID=$(ps aux | grep $FILE_NAME | grep -v grep | awk '{print $2}')
             echo "PID : $PID"
             
             if [ -z "$PID" ]; then
