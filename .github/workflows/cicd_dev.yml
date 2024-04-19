@@ -68,7 +68,7 @@ jobs:
             
             echo "#### RUN $SOURCE_DIR/$FILE_NAME ####"
             cd app
-            sudo nohup java -jar  $SOURCE_DIR/$FILE_NAME  2>&1 &
+            sudo nohup java -jar  $FILE_NAME  2>&1 &
             echo "pid : $pid"
 
 
