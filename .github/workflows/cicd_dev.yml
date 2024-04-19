@@ -1,8 +1,7 @@
 name: TogetUp-Server-Dev CI/CD
 on:
   push:
-    branches:[ "main", "env/cd" ]
-
+    branches: [ "main", "env/cd" ]
 env:
   S3_BUCKET_NAME: togetup-storage
   FILE_PATH: /home/ubuntu/app/
