@@ -59,6 +59,7 @@ jobs:
             pid=$(ps aux | grep "${{env.FILE_NAME}}" | grep -v grep | awk '{print $2}')
             echo "pid : $pid"
             echo "jar : ${{env.FILE_PATH}}${{env.FILE_NAME}}"
+            sudo su 
             if [ -n "$pid" ]; then
               kill -9 $pid  
             fi
