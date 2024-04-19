@@ -55,7 +55,7 @@ jobs:
           port: 22
           source: "build/libs/TogetUp-0.0.1-SNAPSHOT.jar"
           target: "/home/ubuntu/app/"
-          rm: true
+          rm: false
 
       - name: Deploy
         uses: appleboy/ssh-action@master
