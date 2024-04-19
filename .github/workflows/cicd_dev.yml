@@ -55,19 +55,19 @@ jobs:
           port: 22
           script: |
             SOURCE_DIR=source/build/libs
-            FILE_NAME: TogetUp-0.0.1-SNAPSHOT.jar
+            FILE_NAME=TogetUp-0.0.1-SNAPSHOT.jar
             pid=$(ps aux | grep $FILE_NAME | grep -v grep | awk '{print $2}')
             echo "pid : $pid"
             
-            if [ -z "$PID" ]; then
+            if [ -z "$pid" ]; then
                     echo "#### THERE IS NO PROCESS ####"
             else
-                    echo "#### KILL $PID ####"
-                    sudo kill $PID
+                    echo "#### KILL $pid ####"
+                    sudo kill $pid
             fi
             
             echo "#### RUN $SOURCE_DIR/$FILE_NAME ####"
-            
+            cd app
             sudo nohup java  -jar $SOURCE_DIR/$FILE_NAME > /dev/null 2>&1 &
 
 
