@@ -54,7 +54,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           source: "build/libs/TogetUp-0.0.1-SNAPSHOT.jar"
-          target: "home/ubuntu/app"
+          target: "/home/ubuntu/app"
           strip_components: 2
           rm: false
 
