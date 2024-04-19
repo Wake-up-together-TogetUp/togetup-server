@@ -49,13 +49,11 @@ jobs:
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
-          REMOTE_HOST: ${{ secrets.EC2_HOST }}
-          REMOTE_USER: ${{ secrets.EC2_USERNAME }}
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          REMOTE_PORT: 22
-          SOURCE: 'build/libs/${{env.FILE_NAME}}'
-          TARGET: '${{env.FILE_PATH}}'
-          SCRIPT_AFTER: |
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
             SOURCE_DIR=source/build/libs
             FILE_NAME: TogetUp-0.0.1-SNAPSHOT.jar
             pid=$(ps aux | grep $FILE_NAME | grep -v grep | awk '{print $2}')
