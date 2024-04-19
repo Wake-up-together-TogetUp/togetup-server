@@ -57,7 +57,7 @@ jobs:
             SOURCE_DIR=source/build/libs
             FILE_NAME=TogetUp-0.0.1-SNAPSHOT.jar
             PID=`ps -ef | grep occupying | grep sudo | grep -v "bash -c" | awk '{print $2}
-            echo "pid : $pid"
+            echo "PID : $PID"
             
             if [ -z "$PID" ]; then
                     echo "#### THERE IS NO PROCESS ####"
@@ -69,6 +69,6 @@ jobs:
             echo "#### RUN $SOURCE_DIR/$FILE_NAME ####"
             cd app
             sudo nohup java -jar  $FILE_NAME  2>&1 &
-            echo "pid : $pid"
+            echo "PID : $PID"
 
 
