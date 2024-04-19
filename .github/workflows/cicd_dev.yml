@@ -56,14 +56,14 @@ jobs:
           script: |
             SOURCE_DIR=source/build/libs
             FILE_NAME=TogetUp-0.0.1-SNAPSHOT.jar
-            pid=$(ps aux | grep $FILE_NAME | grep -v grep | awk '{print $2}')
+            PID=`ps -ef | grep occupying | grep sudo | grep -v "bash -c" | awk '{print $2}
             echo "pid : $pid"
             
-            if [ -z "$pid" ]; then
+            if [ -z "$PID" ]; then
                     echo "#### THERE IS NO PROCESS ####"
             else
-                    echo "#### KILL $pid ####"
-                    sudo kill $pid
+                    echo "#### KILL $PID ####"
+                    sudo kill $PID
             fi
             
             echo "#### RUN $SOURCE_DIR/$FILE_NAME ####"
