@@ -20,7 +20,7 @@ class OpenApiConfig {
                 .description(Constant.API_DESCRIPTION);
 
         return new OpenAPI()
-                .addServersItem(new Server().url("https://togetup.shop"))
+                .addServersItem(new Server().url("https://togetup.site"))
                 .addServersItem(new Server().url("http://localhost:9010"))
                 .info(info)
                 .addSecurityItem(new SecurityRequirement().addList(Constant.BEARER))
