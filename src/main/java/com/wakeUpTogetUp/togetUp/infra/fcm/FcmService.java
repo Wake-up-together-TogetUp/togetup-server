@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.infra.fcm;
 
 import com.google.api.core.ApiFuture;
 import com.google.firebase.messaging.*;
-import com.wakeUpTogetUp.togetUp.api.notification.vo.NotificationSendVo;
+import com.wakeUpTogetUp.togetUp.api.notification.vo.NotificationSendEvent;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenDeleteEvent;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +24,11 @@ public class FcmService {
     private final ApplicationEventPublisher eventPublisher;
 
 
-    public void sendMessageToTokens(NotificationSendVo notificationSendVo) {
+    public void sendMessageToTokens(NotificationSendEvent notificationSendEvent) {
 
-        MulticastMessage message = getPreconfiguredMessageToTokens(notificationSendVo);
+        MulticastMessage message = getPreconfiguredMessageToTokens(notificationSendEvent);
         ApiFuture<BatchResponse> response = sendAndGetResponse(message);
-        deleteInvalidToken(response, notificationSendVo.getFcmTokens().stream()
+        deleteInvalidToken(response, notificationSendEvent.getFcmTokens().stream()
                 .map(FcmToken::getValue)
                 .collect(Collectors.toList()));
     }
@@ -74,28 +74,28 @@ public class FcmService {
     }
 
 
-    private MulticastMessage getPreconfiguredMessageToTokens(NotificationSendVo notificationSendVo) {
-        return getPreconfiguredMulticastMessageBuilder(notificationSendVo).addAllTokens(notificationSendVo.getFcmTokens().stream()
+    private MulticastMessage getPreconfiguredMessageToTokens(NotificationSendEvent notificationSendEvent) {
+        return getPreconfiguredMulticastMessageBuilder(notificationSendEvent).addAllTokens(notificationSendEvent.getFcmTokens().stream()
                         .map(FcmToken::getValue)
                         .collect(Collectors.toList()))
                 .build();
     }
 
-    private Message.Builder getPreconfiguredMessageBuilder(NotificationSendVo notificationSendVo) {
+    private Message.Builder getPreconfiguredMessageBuilder(NotificationSendEvent notificationSendEvent) {
         return Message.builder()
                 .setNotification(Notification.builder()
-                        .setTitle(notificationSendVo.getTitle())
-                        .setBody(notificationSendVo.getBody())
+                        .setTitle(notificationSendEvent.getTitle())
+                        .setBody(notificationSendEvent.getBody())
                         .build());
     }
 
-    private MulticastMessage.Builder getPreconfiguredMulticastMessageBuilder(NotificationSendVo notificationSendVo) {
+    private MulticastMessage.Builder getPreconfiguredMulticastMessageBuilder(NotificationSendEvent notificationSendEvent) {
         return MulticastMessage.builder()
                 .setNotification(Notification.builder()
-                        .setTitle(notificationSendVo.getTitle())
-                        .setBody(notificationSendVo.getBody())
+                        .setTitle(notificationSendEvent.getTitle())
+                        .setBody(notificationSendEvent.getBody())
                         .build())
-                .putAllData(notificationSendVo.getDataMap());
+                .putAllData(notificationSendEvent.getDataMap());
     }
 
 }

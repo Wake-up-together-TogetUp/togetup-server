@@ -7,16 +7,15 @@ import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RoomMissionLogNotificationVo extends NotificationSendVo {
+public class RoomMissionLogNotificationEvent extends NotificationSendEvent {
     private static final String title = "%s님이 미션을 완료했어요!";
     private static final String body = "%s 그룹";
 
-    public RoomMissionLogNotificationVo(User user, Room room, List<FcmToken> fcmTokens) {
+    public RoomMissionLogNotificationEvent(User user, Room room, List<FcmToken> fcmTokens) {
         super(fcmTokens, String.format(title, user.getName()), String.format(body, room.getName()), createDataMap(room.getId()));
 
     }

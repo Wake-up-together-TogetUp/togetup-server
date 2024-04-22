@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.notification;
 
-import com.wakeUpTogetUp.togetUp.api.notification.vo.NotificationSendVo;
+import com.wakeUpTogetUp.togetUp.api.notification.vo.NotificationSendEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 public class NotificationEventPublisher {
     private final ApplicationEventPublisher eventPublisher;
 
-    public void publishNotificationSendEvent(NotificationSendVo notificationSendVo) {
-        eventPublisher.publishEvent(notificationSendVo);
+    public void publishNotificationSendEvent(NotificationSendEvent notificationSendEvent) {
+        eventPublisher.publishEvent(notificationSendEvent);
     }
 }
 

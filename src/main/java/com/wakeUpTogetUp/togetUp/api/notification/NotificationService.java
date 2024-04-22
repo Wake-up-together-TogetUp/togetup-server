@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.notification;
 
-import com.wakeUpTogetUp.togetUp.api.notification.vo.NotificationSendVo;
-import com.wakeUpTogetUp.togetUp.api.notification.vo.RoomMissionLogNotificationVo;
+import com.wakeUpTogetUp.togetUp.api.notification.vo.NotificationSendEvent;
+import com.wakeUpTogetUp.togetUp.api.notification.vo.RoomMissionLogNotificationEvent;
 import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
@@ -31,7 +31,7 @@ public class NotificationService {
     private final NotificationEventPublisher notificationEventPublisher;
 
     public void sendNotificationToAllUsers(String title, String body) {
-        notificationEventPublisher.publishNotificationSendEvent(new NotificationSendVo(
+        notificationEventPublisher.publishNotificationSendEvent(new NotificationSendEvent(
                 fcmTokenRepository.findAllByUser_IdIn(userService.getAgreedNotiUsersIds()),
                 title,
                 body,
@@ -53,7 +53,7 @@ public class NotificationService {
                 .collect(Collectors.toList());
 
         if (userIdsInRoom.size() > 0) {
-            notificationEventPublisher.publishNotificationSendEvent(new RoomMissionLogNotificationVo(
+            notificationEventPublisher.publishNotificationSendEvent(new RoomMissionLogNotificationEvent(
                     user,
                     room,
                     fcmTokenRepository.findAllByUser_IdIn(userIdsInRoom)
