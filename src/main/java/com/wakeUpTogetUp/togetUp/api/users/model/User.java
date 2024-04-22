@@ -80,6 +80,7 @@ public class User {
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<FcmToken> fcmToken = new ArrayList<>();
 
