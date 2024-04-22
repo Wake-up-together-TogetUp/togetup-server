@@ -2,6 +2,7 @@ package com.wakeUpTogetUp.togetUp.infra.fcm;
 
 import com.google.api.core.ApiFuture;
 import com.google.firebase.messaging.*;
+import com.wakeUpTogetUp.togetUp.api.event.EventPublisher;
 import com.wakeUpTogetUp.togetUp.api.notification.vo.NotificationSendEvent;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenDeleteEvent;
@@ -21,7 +22,6 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class FcmService {
     private final FirebaseMessaging firebaseMessaging;
-    private final ApplicationEventPublisher eventPublisher;
 
 
     public void sendMessageToTokens(NotificationSendEvent notificationSendEvent) {
@@ -59,7 +59,7 @@ public class FcmService {
 
                         });
 
-                eventPublisher.publishEvent(new FcmTokenDeleteEvent(failedDeviceTokens));
+                EventPublisher.raise(new FcmTokenDeleteEvent(failedDeviceTokens));
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
