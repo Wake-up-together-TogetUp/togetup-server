@@ -36,7 +36,7 @@ jobs:
         run: |
           #mkdir -p ./src/main/resources
           cd ./src/main/resources
-          touch ./application-dev.yaml
+          touch ./application.yaml
           echo "${{ secrets.TOGETUP_DEV_APPLICATION }}" >> ./application.yaml
           cat ./application.yaml
         shell: bash
