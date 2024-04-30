@@ -1,7 +1,8 @@
 package com.wakeUpTogetUp.togetUp.api.notification;
 
-import com.wakeUpTogetUp.togetUp.api.notification.vo.NotificationSendVo;
-import com.wakeUpTogetUp.togetUp.api.notification.vo.RoomMissionLogNotificationVo;
+import com.wakeUpTogetUp.togetUp.api.event.EventPublisher;
+import com.wakeUpTogetUp.togetUp.api.notification.vo.NotificationSendEvent;
+import com.wakeUpTogetUp.togetUp.api.notification.vo.RoomMissionLogNotificationEvent;
 import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
@@ -11,10 +12,12 @@ import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.infra.google.fcm.FcmService;
+import com.wakeUpTogetUp.togetUp.infra.fcm.FcmService;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,14 +31,13 @@ public class NotificationService {
     private final FcmTokenRepository fcmTokenRepository;
 
     public void sendNotificationToAllUsers(String title, String body) {
-        fcmService.sendMessageToTokens(
-                new NotificationSendVo(
-                        fcmTokenRepository.findAllByUser_IdIn(userService.getAgreedNotiUsersIds()),
-                        title,
-                        body,
-                        Map.of(DataKeyType.LINK.getKey(), DataValueType.HOME.toString())
-                )
-        );
+        EventPublisher.raise(new NotificationSendEvent(
+                fcmTokenRepository.findAllByUser_IdIn(userService.getAgreedNotiUsersIds()),
+                title,
+                body,
+                Map.of(DataKeyType.LINK.getKey(), DataValueType.HOME.toString())
+        ));
+
     }
 
     public void sendNotificationToUsersInRoom(Integer alarmId, Integer missionCompleteUserId) {
@@ -51,13 +53,11 @@ public class NotificationService {
                 .collect(Collectors.toList());
 
         if (userIdsInRoom.size() > 0) {
-            fcmService.sendMessageToTokens(
-                    new RoomMissionLogNotificationVo(
-                            user,
-                            room,
-                            fcmTokenRepository.findAllByUser_IdIn(userIdsInRoom)
-                    )
-            );
+            EventPublisher.raise(new RoomMissionLogNotificationEvent(
+                    user,
+                    room,
+                    fcmTokenRepository.findAllByUser_IdIn(userIdsInRoom)
+            ));
         }
     }
 

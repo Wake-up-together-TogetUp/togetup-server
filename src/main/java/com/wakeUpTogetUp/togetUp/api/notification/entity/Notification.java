@@ -19,17 +19,9 @@ import java.sql.Timestamp;
 public class Notification {
 
 
-    @Builder
-    public Notification(String title, String content, Room room, FcmToken fcmToken) {
-        this.title = title;
-        this.content = content;
-        this.room = room;
-        this.fcmToken = fcmToken;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column( columnDefinition = "INT UNSIGNED")
+    @Column(columnDefinition = "INT UNSIGNED")
     private Integer id;
 
     private String title;
@@ -40,10 +32,10 @@ public class Notification {
     private String createdAt = TimeFormatter.timestampFormat(new Timestamp(System.currentTimeMillis()));
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "roomId",columnDefinition = "INT UNSIGNED")
+    @JoinColumn(name = "roomId", columnDefinition = "INT UNSIGNED")
     private Room room;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fcmTokenId",columnDefinition = "INT UNSIGNED")
+    @JoinColumn(name = "fcmTokenId", columnDefinition = "INT UNSIGNED")
     private FcmToken fcmToken;
 }

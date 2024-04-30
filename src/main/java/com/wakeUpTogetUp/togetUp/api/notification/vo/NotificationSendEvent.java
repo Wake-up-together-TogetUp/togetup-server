@@ -8,13 +8,13 @@ import lombok.ToString;
 
 @ToString
 @Getter
-public class NotificationSendVo {
+public class NotificationSendEvent {
     private final List<FcmToken> fcmTokens;
     private final String title;
     private final String body;
     private final Map<String, String> dataMap;
 
-    public NotificationSendVo(List<FcmToken> fcmTokens, String title, String body, Map<String, String> dataMap) {
+    public NotificationSendEvent(List<FcmToken> fcmTokens, String title, String body, Map<String, String> dataMap) {
         this.fcmTokens = fcmTokens;
         this.title = title;
         this.body = body;

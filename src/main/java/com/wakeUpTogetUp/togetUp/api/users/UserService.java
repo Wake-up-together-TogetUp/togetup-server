@@ -12,9 +12,11 @@ import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressResult;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +68,11 @@ public class UserService {
                 .user(user)
                 .build();
         fcmTokenRepository.save(fcmToken);
+    }
+
+    @Transactional
+    public void deleteFcmTokens(List<String> fcmTokenValues) {
+        fcmTokenRepository.deleteByValueIn(fcmTokenValues);
     }
 
     public void updateAgreePush(Integer userId, boolean agreePush) {

@@ -52,7 +52,7 @@ public class AlarmService {
 
         Alarm alarm = Alarm.create(
                 postAlarmReq.getName(),
-                missionObject.getIcon(),
+                postAlarmReq.getIcon(),
                 LocalTime.parse(postAlarmReq.getAlarmTime()),
                 postAlarmReq.getMonday(),
                 postAlarmReq.getTuesday(),
