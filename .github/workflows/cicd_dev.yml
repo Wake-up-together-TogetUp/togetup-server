@@ -32,24 +32,21 @@ jobs:
         run: echo "CurrentTime=${{steps.current-time.outputs.formattedTime}}"
         shell: bash
 
-      - name: Manual echo test
+
+      - name: make application.properties
         run: |
-          echo 'simple:test' >> application.yaml
-          cat application.yaml
+          ## create application.yml
+          mkdir -p ./src/main/resources
+          cd ./src/main/resources
+          touch ./application.yaml
+          echo "Debug: Checking directory and files"  # Debug: List directory contents
+          ls -al
+          echo "Debug: Showing environment variables"  # Debug: Print environment info
+          env
+          echo "${{ secrets.TOGETUP_PROD_APPLICATION }}" >> ./application.yaml
+          cat ./application.yaml  # Consider security implications
         shell: bash
-#      - name: make application.properties
-#        run: |
-#          ## create application.yml
-#          mkdir -p ./src/main/resources
-#          cd ./src/main/resources
-#          touch ./application.yaml
-#          echo "Debug: Checking directory and files"  # Debug: List directory contents
-#          ls -al
-#          echo "Debug: Showing environment variables"  # Debug: Print environment info
-#          env
-#          echo "${{ secrets.TOGETUP_PROD_APPLICATION }}" >> ./application.yaml
-#          cat ./application.yaml  # Consider security implications
-#        shell: bash
+
 
 #      - name: Grant execute permission for gradlew
 #        run: chmod +x gradlew
