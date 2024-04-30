@@ -37,7 +37,7 @@ jobs:
           #mkdir -p ./src/main/resources
           cd ./src/main/resources
           touch ./application-dev.yaml
-          echo "${{ secrets.TOGETUP_PROD_APPLICATION }}" >> ./application-dev.yaml
+          echo "${{ secrets.TOGETUP_DEV_APPLICATION }}" >> ./application-dev.yaml
         shell: bash
 
       - name: Grant execute permission for gradlew
