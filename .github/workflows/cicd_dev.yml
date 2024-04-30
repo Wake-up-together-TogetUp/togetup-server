@@ -32,12 +32,12 @@ jobs:
         run: echo "CurrentTime=${{steps.current-time.outputs.formattedTime}}"
         shell: bash
 
-      - name:  make application-dev.yml
+      - name:  make application.yml
         run: |
           #mkdir -p ./src/main/resources
           cd ./src/main/resources
           touch ./application.yaml
-          echo "${{ secrets.TOGETUP_DEV_APPLICATION }}" >> ./application.yaml
+          echo "${{ secrets.TOGETUP_PROD_APPLICATION }}" >> ./application.yaml
           cat ./application.yaml
         shell: bash
 
