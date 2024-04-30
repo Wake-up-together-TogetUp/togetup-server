@@ -36,6 +36,7 @@ jobs:
         run: |
           cd ./src/main/resources
           touch ./application.yaml
+          echo "${{ secrets.TOGETUP_PROD_APPLICATION }}" >> ./application.yaml
           cat ./application.yaml
         shell: bash
 
