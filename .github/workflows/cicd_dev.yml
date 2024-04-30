@@ -43,48 +43,47 @@ jobs:
           cat ./application.yaml
         shell: bash
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-#      - name: Grant execute permission for gradlew
-#        run: chmod +x gradlew
-#
-#      - name: Build with Gradle
-#        run: ./gradlew build
-#
-#      - name: Deliver File
-#        uses: appleboy/scp-action@master
-#        with:
-#          host: ${{ secrets.EC2_HOST }}
-#          username: ${{ secrets.EC2_USERNAME }}
-#          key: ${{ secrets.EC2_SSH_KEY }}
-#          port: 22
-#          source: "build/libs/TogetUp-0.0.1-SNAPSHOT.jar"
-#          target: "/home/ubuntu/app"
-#          strip_components: 2
-#          overwrite: true
-#
-#      - name: Deploy
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.EC2_HOST }}
-#          username: ${{ secrets.EC2_USERNAME }}
-#          key: ${{ secrets.EC2_SSH_KEY }}
-#          port: 22
-#          script: |
-#            SOURCE_DIR=home/ubuntu/app/
-#            FILE_NAME=TogetUp-0.0.1-SNAPSHOT.jar
-#            PID=$(ps aux | grep $FILE_NAME | grep -v grep | awk '{print $2}')
-#            echo "PID : $PID"
-#
-#            if [ -z "$PID" ]; then
-#                    echo "#### THERE IS NO PROCESS ####"
-#            else
-#                    echo "#### KILL $PID ####"
-#                    sudo kill $PID
-#            fi
-#
-#            echo "#### RUN $SOURCE_DIR/$FILE_NAME ####"
-#            cd app
-#            sudo nohup java -jar  $FILE_NAME  2>&1 &
-#            echo "PID : $PID"
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Deliver File
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          source: "build/libs/TogetUp-0.0.1-SNAPSHOT.jar"
+          target: "/home/ubuntu/app"
+          strip_components: 2
+          overwrite: true
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            SOURCE_DIR=home/ubuntu/app/
+            FILE_NAME=TogetUp-0.0.1-SNAPSHOT.jar
+            PID=$(ps aux | grep $FILE_NAME | grep -v grep | awk '{print $2}')
+            echo "PID : $PID"
+
+            if [ -z "$PID" ]; then
+                    echo "#### THERE IS NO PROCESS ####"
+            else
+                    echo "#### KILL $PID ####"
+                    sudo kill $PID
+            fi
+
+            echo "#### RUN $SOURCE_DIR/$FILE_NAME ####"
+            cd app
+            sudo nohup java -jar  $FILE_NAME  2>&1 &
+            echo "PID : $PID"
 
 
