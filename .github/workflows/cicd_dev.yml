@@ -33,7 +33,7 @@ jobs:
         shell: bash
 
 
-      - name: make application.properties
+      - name: make application.yml
         run: |
           ## create application.yml
           mkdir -p ./src/main/resources
