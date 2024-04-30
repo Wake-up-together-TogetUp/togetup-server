@@ -38,8 +38,12 @@ jobs:
           mkdir -p ./src/main/resources
           cd ./src/main/resources
           touch ./application.yaml
-          echo "${{ secrets.TOGETUP_DEV_APPLICATION }}" >> ./application.yaml
-          cat ./application.yaml
+          echo "Debug: Checking directory and files"  # Debug: List directory contents
+          ls -al
+          echo "Debug: Showing environment variables"  # Debug: Print environment info
+          env
+          echo "${{ secrets.TOGETUP_PROD_APPLICATION }}" >> ./application.yaml
+          cat ./application.yaml  # Consider security implications
         shell: bash
 
       - name: Grant execute permission for gradlew
