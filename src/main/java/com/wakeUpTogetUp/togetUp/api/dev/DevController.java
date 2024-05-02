@@ -18,8 +18,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,8 +32,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "A-개발용")
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/app/a-dev")
+@RequiredArgsConstructor
+@Validated
 public class DevController {
 
     private final DevService devService;
@@ -88,14 +91,18 @@ public class DevController {
             @ApiResponse(responseCode = "200",
                     description = "요청에 성공했습니다.",
                     content = @Content(schema = @Schema(implementation = AppStoreUrlRes.class))),
+            @ApiResponse(responseCode = "400", description = "데이터 내의 최신 버전보다 높은 버전입니다."),
             @ApiResponse(responseCode = "500", description = "앱 최신버전 정보를 불러오는데 실패했습니다.")
     })
     @GetMapping("/version/check")
     public BaseResponse<AppStoreUrlRes> checkAppVersion(
-            @Parameter @RequestParam String currentAppVersion
+            @Parameter @RequestParam
+            @Pattern(regexp = "^\\d+\\.\\d+\\.\\d+$", message = "앱 버전 포맷이 유효하지 않습니다.")
+            String currentAppVersion
     ) {
         AppStoreUrlRes response = appVersionProvider.getAppVersionCheckResult(currentAppVersion);
 
         return new BaseResponse<>(Status.SUCCESS, response);
     }
 }
+
