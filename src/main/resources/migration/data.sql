@@ -222,3 +222,6 @@ INSERT INTO avatar_speech (id, speech, `condition`, avatar_id) VALUES (67, '비 
 INSERT INTO avatar_speech (id, speech, `condition`, avatar_id) VALUES (68, '비가 오면, 저는 항상 창가에 앉아 빗방울을 세곤 해요. 당신도 같이 해보실래요?', 'DEFAULT', 5);
 INSERT INTO avatar_speech (id, speech, `condition`, avatar_id) VALUES (69, '비가 내리는 소리, 들어보셨나요? 저는 그 소리가 좋아요. 마음을 진정시켜주거든요.', 'DEFAULT', 5);
 INSERT INTO avatar_speech (id, speech, `condition`, avatar_id) VALUES (70, '비가 오는 날은 집 안에서 코를 박고 자는 것도 좋지만, 가끔은 밖의 세상도 탐험해야죠!', 'DEFAULT', 5);
+
+-- 앱 버전 히스토리
+INSERT INTO app_version_history (version, app_store_url, created_at) VALUES ('1.0.0', '미정', '2024-05-02 13:28:03');
