@@ -12,7 +12,7 @@ create table avatar_speech
     id          int unsigned auto_increment primary key,
     speech      varchar(60)                   not null,
     `condition` varchar(20) default 'DEFAULT' not null,
-    avatar_id   int unsigned null,
+    avatar_id   int unsigned                  null,
     constraint avatar_speech_avatar_id_fk
         foreign key (avatar_id) references avatar (id)
 );
@@ -46,7 +46,7 @@ create table room
     name                   varchar(10)                          not null,
     intro                  varchar(30)                          null,
     topic                  varchar(100)                         null,
-    invitation_code        varchar(10)                         null,
+    invitation_code        varchar(10)                          null,
     created_at             timestamp  default CURRENT_TIMESTAMP not null,
     updated_at             timestamp  default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP,
     latest_completion_time timestamp                            null,
@@ -74,12 +74,12 @@ create table user
     id         int unsigned auto_increment
         primary key,
     name       varchar(10)                            null,
-    email      varchar(320)                            null,
+    email      varchar(320)                           null,
     login_type varchar(20)                            not null,
     social_id  varchar(80)                            not null,
     agree_push tinyint(1)   default 1                 not null,
     level      int unsigned default '1'               not null,
-    exp_point int unsigned default '0'               not null,
+    exp_point  int unsigned default '0'               not null,
     created_at timestamp    default CURRENT_TIMESTAMP not null,
     updated_at timestamp    default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
     is_deleted tinyint(1)   default 0                 not null
@@ -104,7 +104,7 @@ create table alarm
     is_snooze_activated tinyint(1)  default 1   not null,
     is_vibrate          tinyint(1)  default 1   not null,
     is_activated        tinyint(1)  default 1   not null,
-    is_deleted          tinyint(1)  default 0   not null
+    is_deleted          tinyint(1)  default 0   not null,
     user_id             int unsigned            null,
     mission_id          int unsigned            not null,
     mission_object_id   int unsigned            null,
@@ -194,3 +194,10 @@ create index avatar_id
 
 create index user_id
     on user_avatar (user_id);
+
+create table app_version_history
+(
+    version       varchar(10) primary key             not null,
+    app_store_url varchar(500)                        not null,
+    created_at    timestamp default CURRENT_TIMESTAMP not null
+);
