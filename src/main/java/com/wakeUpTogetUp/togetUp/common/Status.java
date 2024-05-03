@@ -83,10 +83,10 @@ public enum Status {
     IMAGE_ANALYSIS_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 분석을 실패했습니다."),
     FIND_DEFAULT_AVATAR_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "기본 아바타를 불려오는데 실패했습니다."),
     FIND_USER_AVATAR_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "유저의 대표 아바타 정보를 불러오는데 실패했습니다."),
+    GET_AVATAR_DEFAULT_SPEECH_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "아바타 기본 대사를 불러오지 못했습니다."),
     LOAD_MODEL_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "모델 객체 정보 불러오기를 실패했습니다."),
     FILE_IO_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "파일을 불러오지 못했습니다."),
     GET_LATEST_APP_VERSION_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "앱 최신버전 정보를 불러오는데 실패했습니다.")
-
     ;
 
     private final HttpStatus httpStatus;
