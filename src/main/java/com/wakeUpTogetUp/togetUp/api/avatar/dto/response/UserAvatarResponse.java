@@ -20,6 +20,9 @@ public class UserAvatarResponse {
     @Schema(description = "아바타 테마 KR")
     private String themeKr;
 
+    @Schema(description = "아바타 기본 대사")
+    private String defaultSpeech;
+
     @Schema(description = "해금 레벨")
     private int unlockLevel;
 

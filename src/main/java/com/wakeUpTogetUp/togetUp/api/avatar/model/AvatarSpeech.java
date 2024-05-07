@@ -10,9 +10,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.Getter;
 
 @Entity
+@Table(name = "avatar_speech")
 @Getter
 public class AvatarSpeech {
 
@@ -31,4 +33,8 @@ public class AvatarSpeech {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "avatar_id")
     private Avatar avatar;
+
+    public boolean isDefaultSpeech() {
+        return AvatarSpeechCondition.DEFAULT.equals(condition);
+    }
 }

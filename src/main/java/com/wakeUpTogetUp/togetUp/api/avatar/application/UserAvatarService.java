@@ -33,7 +33,6 @@ public class UserAvatarService {
         return EntityDtoMapper.INSTANCE.toUserAvatarDataList(avatarList, userAvatarList);
     }
 
-
     @Transactional
     public boolean unlockAvatarIfAvailableExist(User user) {
         Optional<Avatar> avatarAvailable = avatarRepository.findAvatarByUnlockLevel(user.getLevel());
@@ -78,10 +77,10 @@ public class UserAvatarService {
 
         for (UserAvatar userAvatar : userAvatarList) {
             userAvatar.setIsActive(userAvatar.getAvatar().getId() == avatarId);
-            userAvatarRepository.save(userAvatar);
         }
     }
 
+    @Transactional(readOnly = true)
     public int getUserAvatarId(int userId) {
         return userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userId)
                 .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL))

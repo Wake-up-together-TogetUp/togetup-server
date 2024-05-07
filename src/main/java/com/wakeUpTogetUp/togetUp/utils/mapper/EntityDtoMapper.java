@@ -14,10 +14,6 @@ import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectLi
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomUserMissionLogRes;
-import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import java.util.List;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
@@ -71,14 +67,16 @@ public interface EntityDtoMapper {
     @Mapping(source = "avatar.id", target = "avatarId")
     UserAvatarResponse toUserAvatarData(Avatar avatar, @Context List<UserAvatar> userAvatarList);
 
-    List<UserAvatarResponse> toUserAvatarDataList(List<Avatar> avatarList,
-                                              @Context List<UserAvatar> userAvatarList);
+    List<UserAvatarResponse> toUserAvatarDataList(List<Avatar> avatarList, @Context List<UserAvatar> userAvatarList);
 
     @AfterMapping
-    default void setIsUnlockedStatus(@MappingTarget UserAvatarResponse target, Avatar avatar,
-                                     @Context List<UserAvatar> userAvatarList) {
-        target.setIsUnlocked(userAvatarList.stream()
-                .anyMatch(userAvatar -> userAvatar.getAvatar().getId().equals(avatar.getId())));
+    default void setIsUnlockedStatus(
+            @MappingTarget UserAvatarResponse target,
+            Avatar avatar,
+            @Context List<UserAvatar> userAvatarList) {
+        target.setIsUnlocked(
+                userAvatarList.stream()
+                        .anyMatch(userAvatar -> userAvatar.getAvatar().getId().equals(avatar.getId())));
     }
 
     AvatarSpeechResponse toAvatarSpeechResponse(AvatarSpeech avatarSpeech);
