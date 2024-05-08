@@ -1,7 +1,9 @@
 name: TogetUp-Server-Dev CI/CD
 on:
+  pull_request:
+    branches: [ "main" ]
   push:
-    branches: [  "env/cd"   ]
+    branches: [ "main", "env/CICD" ]
 
 env:
   S3_BUCKET_NAME: togetup-storage
@@ -84,10 +86,10 @@ jobs:
 
             echo "#### RUNNING $SOURCE_DIR/$FILE_NAME ####"
             cd $SOURCE_DIR
-            sudo nohup java -jar $FILE_NAME 2>&1 &
+            sudo nohup java -jar $FILE_NAME >  nohup.out 2> nohup.err < /dev/null &
             echo "New PID after restart: $(ps aux | grep $FILE_NAME | grep -v grep | awk '{print $2}')"
             sleep 30
-            ^c
+
 
 
 
