@@ -86,8 +86,7 @@ jobs:
             cd $SOURCE_DIR
             sudo nohup java -jar $FILE_NAME 2> nohup.out 2> nohup.err < /dev/null &
             echo "New PID after restart: $(ps aux | grep $FILE_NAME | grep -v grep | awk '{print $2}')"
-            sleep 30
-            ^c
+            
 
 
 
