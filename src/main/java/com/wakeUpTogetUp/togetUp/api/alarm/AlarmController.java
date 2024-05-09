@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.alarm;
 
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmsDeactivateReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PatchAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
@@ -116,6 +117,21 @@ public class AlarmController {
             @PathVariable Integer alarmId
     ) {
         return new BaseResponse<>(Status.SUCCESS, alarmService.deleteAlarm(alarmId));
+    }
+
+    @Operation(summary = "알람 일괄 비활성화")
+    @PatchMapping("/deactivate")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "403", description = "접근 권한이 없는 알람입니다.")
+    })
+    public BaseResponse<Void> deactivateAlarms(
+            @Parameter(hidden = true) @AuthUser Integer userId,
+            @RequestBody AlarmsDeactivateReq request
+    ) {
+        alarmService.deactivateAlarms(request.getAlarmIds(), userId);
+
+        return new BaseResponse<>(Status.SUCCESS);
     }
 }
 
