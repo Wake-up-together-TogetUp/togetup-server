@@ -24,12 +24,10 @@ jobs:
           distribution: 'temurin'
 
       - name: make application.yml
-        uses: actions/checkout@v3
         run: |
-          mkdir -p ./src/main/resources
           cd ./src/main/resources
           touch ./application.yml
-          echo "${{ secrets.TOGETUP_DEV_APPLICATION }}" >> ./application.yml
+          echo "${{ secrets.TOGETUP_DEV_APPLICATION }}" > ./application.yml
           cat ./application.yml
         shell: bash
 
