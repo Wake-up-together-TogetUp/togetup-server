@@ -25,10 +25,9 @@ jobs:
 
       - name: make application.yml
         run: |
-          cd ./src/main/resources
-          touch ./application.yml
-          echo "${{ secrets.TOGETUP_DEV_APPLICATION }}" > ./application.yml
-          cat ./application.yml
+          touch ./src/main/resources/application.yml
+          echo "${{ secrets.TOGETUP_DEV_APPLICATION }}" > ./src/main/resources/application.yml
+          cat ./src/main/resources/application.yml
         shell: bash
 
       - name: Grant execute permission for gradlew
