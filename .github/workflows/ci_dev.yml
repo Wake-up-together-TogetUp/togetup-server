@@ -25,7 +25,8 @@ jobs:
 
       - uses : actions/checkout@v3
       - run: touch ./src/main/resources/application.yml
-      - run: echo "${{ secrets.TOGETUP_DEV_APPLICAION }}" > ./src/main/resources/application.yml
+      - run: echo ${{ secrets.TOGETUP_DEV_APPLICATION }}
+      - run: echo "${{ secrets.TOGETUP_DEV_APPLICATION }}" > ./src/main/resources/application.yml
       - run: cat ./src/main/resources/application.yml
 
       - name: Grant execute permission for gradlew
