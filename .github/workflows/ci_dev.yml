@@ -25,7 +25,6 @@ jobs:
 
       - name: make application.yml
         run: |
-          mkdir -p ./src/main/resources
           cd ./src/main/resources
           touch ./application.yml
           echo "${{ secrets.TOGETUP_DEV_APPLICATION }}" >> ./application.yml
