@@ -23,11 +23,12 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - uses : actions/checkout@v3
-      - run: touch ./src/main/resources/application.yml
-      - run: echo ${{ secrets.TOGETUP_DEV_APPLICATION }}
-      - run: echo "${{ secrets.TOGETUP_DEV_APPLICATION }}" > ./src/main/resources/application.yml
-      - run: cat ./src/main/resources/application.yml
+      - name: make application.yml
+        run: |
+          touch ./src/main/resources/application.yml
+          echo "${{ secrets.TOGETUP_DEV_APPLICATION }}" > ./src/main/resources/application.yml
+          cat ./src/main/resources/application.yml
+        shell: bash
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
