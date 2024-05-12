@@ -1,27 +1,30 @@
 package com.wakeUpTogetUp.togetUp.api.alarm;
 
+import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.findExistingUser;
+
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PatchAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
-import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionObjectRepository;
-import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
+import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionObjectRepository;
+import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.*;
-
 @Service
 @RequiredArgsConstructor
 public class AlarmService {
+
+    private final AlarmValidationService alarmValidationService;
 
     private final AlarmRepository alarmRepository;
     private final UserRepository userRepository;
@@ -116,5 +119,11 @@ public class AlarmService {
         alarmRepository.delete(alarm);
 
         return alarm.getId();
+    }
+
+    @Transactional
+    public void deactivateAlarms(List<Integer> alarmIds, Integer userId) {
+        alarmValidationService.validateUserAlarms(userId, alarmIds);
+        alarmRepository.deactivateAlarms(alarmIds);
     }
 }

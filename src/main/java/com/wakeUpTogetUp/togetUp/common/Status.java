@@ -11,12 +11,10 @@ public enum Status {
     /**
      * 200번대(성공)
      */
-    // 공통
     SUCCESS(HttpStatus.OK, "요청에 성공하였습니다."),
     SUCCESS_CREATED(HttpStatus.CREATED, "생성 되었습니다."),
     SUCCESS_NO_CONTENT(HttpStatus.NO_CONTENT, "결과 데이터가 없습니다."),
 
-    // Mission
     NO_DETECTED_OBJECT(HttpStatus.OK, "탐지된 객체가 없습니다."),
     MISSION_FAILURE(HttpStatus.OK, "미션을 성공하지 못했습니다."),
     MISSION_SUCCESS(HttpStatus.CREATED, "미션을 성공했습니다."),
@@ -55,6 +53,7 @@ public enum Status {
     // FORBIDDEN
     USER_AVATAR_LOCKED(HttpStatus.FORBIDDEN, "유저가 보유하지 않은 아바타 ID 입니다."),
     USER_POINT_LACKED(HttpStatus.FORBIDDEN, "포인트가 부족하여 구매가 불가능합니다."),
+    USER_ALARM_ACCESS_DENIED(HttpStatus.FORBIDDEN, "접근 권한이 없는 알람입니다."),
 
     // NOT FOUND
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 유저 입니다."),
