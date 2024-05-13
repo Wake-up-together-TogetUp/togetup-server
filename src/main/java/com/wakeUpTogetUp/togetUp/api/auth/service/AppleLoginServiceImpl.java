@@ -18,10 +18,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.time.LocalDateTime;
@@ -50,6 +47,8 @@ public class AppleLoginServiceImpl implements SocialLoginService {
     private final PublicKeyGenerator publicKeyGenerator;
     private final AppleClaimsValidator appleClaimsValidator;
 
+    @Value("${my.path.auth}")
+    private String authFilePath;
     private static final String APPLE_PRIVATE_RELAY_DOMAIN = "@privaterelay.appleid.com";
 
     @Value("${oauth.apple.client-id}")
@@ -124,8 +123,14 @@ public class AppleLoginServiceImpl implements SocialLoginService {
     }
 
     private PrivateKey getPrivateKey() throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream("AuthKey_M992KTZK9V.p8");
+        String filePath = authFilePath.replace("file:", "");
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            throw new BaseException(Status.FILE_NOT_FOUND);
+        }
+
+        InputStream inputStream = new FileInputStream(file);
 
         if (inputStream == null) {
             throw new BaseException(Status.FILE_NOT_FOUND);
