@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.users;
 
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.UserProfileData;
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

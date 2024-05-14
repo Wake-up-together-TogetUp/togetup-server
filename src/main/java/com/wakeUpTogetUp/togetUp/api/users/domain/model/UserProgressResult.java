@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.users.vo;
+package com.wakeUpTogetUp.togetUp.api.users.domain.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -6,5 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class UserProgressResult {
-	private final boolean isUserLevelUp;
+
+    private final boolean isUserLevelUp;
 }

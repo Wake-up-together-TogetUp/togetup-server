@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.dev;
 
 
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 import com.wakeUpTogetUp.togetUp.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

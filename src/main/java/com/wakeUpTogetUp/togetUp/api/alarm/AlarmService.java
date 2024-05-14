@@ -10,7 +10,7 @@ import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionObjectRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import java.time.LocalTime;

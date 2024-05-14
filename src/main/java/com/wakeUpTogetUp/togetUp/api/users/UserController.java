@@ -2,6 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.users;
 
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.api.auth.service.AuthService;
+import com.wakeUpTogetUp.togetUp.api.avatar.application.UserAvatarQueryService;
 import com.wakeUpTogetUp.togetUp.api.avatar.application.UserAvatarService;
 import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.UserAvatarResponse;
 import com.wakeUpTogetUp.togetUp.api.users.dto.request.AppleUserDeleteReq;
@@ -34,6 +35,7 @@ public class UserController {
 
     private final UserService userService;
     private final UserAvatarService userAvatarService;
+    private final UserAvatarQueryService userAvatarQueryService;
     private final AuthService authService;
 
     @Operation(summary = "fcmToken 등록")
@@ -41,7 +43,9 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다.")})
     @PostMapping("/fcm-token")
-    public BaseResponse<Integer> updateFcmToken(@Parameter(hidden = true) @AuthUser Integer userId, @Parameter(description = "토큰값", required = true) @RequestParam String fcmToken) {
+    public BaseResponse<Integer> updateFcmToken(
+            @Parameter(hidden = true) @AuthUser Integer userId,
+            @Parameter(description = "토큰값", required = true) @RequestParam String fcmToken) {
         userService.registerFcmToken(userId, fcmToken);
         return new BaseResponse<>(Status.SUCCESS_CREATED);
     }
@@ -52,8 +56,9 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다.")})
     @PatchMapping("/push")
-    public BaseResponse<Status> updateAgreePush(@Parameter(hidden = true) @AuthUser Integer userId,
-                                                @Parameter(description = "알람동의 값", example = "true") @RequestParam() boolean agreePush) {
+    public BaseResponse<Status> updateAgreePush(
+            @Parameter(hidden = true) @AuthUser Integer userId,
+            @Parameter(description = "알람동의 값", example = "true") @RequestParam boolean agreePush) {
         userService.updateAgreePush(userId, agreePush);
         return new BaseResponse<>(Status.SUCCESS);
     }
@@ -76,9 +81,9 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다."),
     })
     @DeleteMapping("apple")
-    public BaseResponse<Status> deleteAppleUser(@Parameter(hidden = true) @AuthUser Integer userId,
-                                                @RequestBody @Valid AppleUserDeleteReq appleUserDeleteReq)
-            throws IOException {
+    public BaseResponse<Status> deleteAppleUser(
+            @Parameter(hidden = true) @AuthUser Integer userId,
+            @RequestBody @Valid AppleUserDeleteReq appleUserDeleteReq) throws IOException {
         authService.disconnectApple(appleUserDeleteReq.getAuthorizationCode());
         userService.deleteById(userId);
         return new BaseResponse<>(Status.SUCCESS);
@@ -86,18 +91,16 @@ public class UserController {
 
     @Operation(summary = "아바타 목록 가져오기")
     @GetMapping("/avatars")
-
     public BaseResponse<List<UserAvatarResponse>> getUserAvatarList(
             @Parameter(hidden = true) @AuthUser Integer userId
     ) {
-        return new BaseResponse<>(Status.SUCCESS, userAvatarService.findUserAvatarList(userId));
+        return new BaseResponse<>(Status.SUCCESS, userAvatarQueryService.findUserAvatarList(userId));
     }
 
     @Operation(summary = "아바타 변경")
     @PatchMapping("/avatars/{avatarId}/change")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "403", description = "유저가 보유하지 않은 아바타 ID 입니다.")})
     public BaseResponse<Object> updateUserAvatar(
             @Parameter(hidden = true) @AuthUser Integer userId,
