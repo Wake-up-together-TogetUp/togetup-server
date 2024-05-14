@@ -5,6 +5,7 @@ import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.findExisting
 import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.avatar.application.UserAvatarService;
+import com.wakeUpTogetUp.togetUp.api.avatar.application.model.UnlockAvatarResult;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomAnalysisEntity;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.VisionAnalysisResult;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionCompleteReq;
@@ -13,8 +14,8 @@ import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionType;
 import com.wakeUpTogetUp.togetUp.api.mission.repository.MissionLogRepository;
 import com.wakeUpTogetUp.togetUp.api.notification.NotificationService;
+import com.wakeUpTogetUp.togetUp.api.users.UserProgressService;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
-import com.wakeUpTogetUp.togetUp.api.users.UserService;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressResult;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
@@ -32,15 +33,17 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class MissionService {
 
-    private final int MAX_MATCHES_LIMIT = 3;
+    private static final int MAX_MATCHES_LIMIT = 3;
+
+    private final UserProgressService userProgressService = new UserProgressService();
 
     private final VisionServiceFactory visionServiceFactory;
+    private final UserAvatarService userAvatarService;
+    private final NotificationService notificationService;
+
     private final AlarmRepository alarmRepository;
     private final MissionLogRepository missionLogRepository;
-    private final UserService userService;
-    private final UserAvatarService userAvatarService;
     private final UserRepository userRepository;
-    private final NotificationService notificationService;
 
     public List<CustomAnalysisEntity> getMissionResult(MissionType type, String object, MultipartFile missionImage) {
         VisionAnalysisResult result = visionServiceFactory
@@ -63,19 +66,21 @@ public class MissionService {
         Alarm alarm = alarmRepository.findById(req.getAlarmId())
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
-        UserProgressResult progressResult = userService.userProgress(user);
+        UserProgressResult progressResult = userProgressService.progress(user);
+
+        boolean isAvatarUnlocked = false;
+        if (progressResult.isUserLevelUp()) {
+            UnlockAvatarResult unlockAvatarResult = userAvatarService.attemptToUnlockAvatar(user);
+            isAvatarUnlocked = unlockAvatarResult.isUnlocked();
+        }
+
         createMissionLog(user, req);
         sendNotificationIfRoomExists(alarm, user);
-
-        boolean isNewAvatarAvailable = false;
-        if (progressResult.isUserLevelUp()) {
-            isNewAvatarAvailable = userAvatarService.unlockAvatarIfAvailableExist(user);
-        }
 
         return MissionCompleteRes.builder()
                 .userStat(UserStat.from(user))
                 .isUserLevelUp(progressResult.isUserLevelUp())
-                .isUserLevelUp(isNewAvatarAvailable)
+                .isAvatarUnlockAvailable(isAvatarUnlocked)
                 .build();
     }
 
