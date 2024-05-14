@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class AzureVision40Service implements VisionService {
 
-    private final int IMAGE_SIZE_LIMIT = 10;
+    private final static int IMAGE_SIZE_LIMIT = 10;
 
     private final VisionServiceOptions serviceOptions;
     private final ImageAnalysisOptions analysisOptions;
@@ -46,8 +46,8 @@ public class AzureVision40Service implements VisionService {
                 ImageAnalysisResult result = analyzer.analyze()) {
 
             catchNotAnalyzedError(result);
-            printDetectionResult(result);
-            printResultDetails(ImageAnalysisResultDetails.fromResult(result));
+            // printDetectionResult(result);
+            // printResultDetails(ImageAnalysisResultDetails.fromResult(result));
 
             return ObjectDetectionResult.builder()
                     .target(target)
@@ -85,11 +85,13 @@ public class AzureVision40Service implements VisionService {
     }
 
     private void printDetectionResult(ImageAnalysisResult result) {
+        System.out.println("\n\n[분석 결과]");
         System.out.println(" Image height = " + result.getImageHeight());
         System.out.println(" Image width = " + result.getImageWidth());
         System.out.println(" Model version = " + result.getModelVersion());
 
         if (result.getObjects() != null) {
+            System.out.println();
             System.out.println(" Objects:");
             for (DetectedObject detectedObject : result.getObjects()) {
                 System.out.println(detectedObject.toString());
@@ -97,6 +99,7 @@ public class AzureVision40Service implements VisionService {
         }
 
         if (result.getTags() != null) {
+            System.out.println();
             System.out.println(" Tags:");
             for (ContentTag tag : result.getTags()) {
                 System.out.println(tag.toString());
@@ -105,6 +108,7 @@ public class AzureVision40Service implements VisionService {
     }
 
     private void printResultDetails(ImageAnalysisResultDetails resultDetails) {
+        System.out.println("\n[상세 결과]");
         System.out.println(" Result details:");
         System.out.println("   Image ID = " + resultDetails.getImageId());
         System.out.println("   Result ID = " + resultDetails.getResultId());

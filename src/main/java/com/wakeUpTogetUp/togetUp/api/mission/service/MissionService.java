@@ -32,7 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class MissionService {
 
-    private final int MAX_MATCHES_LIMIT = 3;
+    private static final int MAX_MATCHES_LIMIT = 3;
 
     private final VisionServiceFactory visionServiceFactory;
     private final AlarmRepository alarmRepository;
