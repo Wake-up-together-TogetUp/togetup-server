@@ -35,7 +35,7 @@ public class MissionService {
 
     private static final int MAX_MATCHES_LIMIT = 3;
 
-    private final UserProgressService userProgressService = new UserProgressService();
+    private final UserProgressService userProgressService;
 
     private final VisionServiceFactory visionServiceFactory;
     private final UserAvatarService userAvatarService;
