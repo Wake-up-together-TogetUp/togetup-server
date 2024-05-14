@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.avatar.application;
 
 import static com.wakeUpTogetUp.togetUp.common.Constant.DEFAULT_AVATAR_ID;
 
-import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.UserAvatarResponse;
+import com.wakeUpTogetUp.togetUp.api.avatar.application.model.UnlockAvatarResult;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.UserAvatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.repository.AvatarRepository;
@@ -10,7 +10,6 @@ import com.wakeUpTogetUp.togetUp.api.avatar.repository.UserAvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -19,33 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserAvatarService {
 
     private final AvatarRepository avatarRepository;
     private final UserAvatarRepository userAvatarRepository;
     private final UserAvatarValidationService userAvatarValidationService;
-
-    @Transactional(readOnly = true)
-    public List<UserAvatarResponse> findUserAvatarList(int userId) {
-        List<Avatar> avatarList = avatarRepository.findAll();
-        List<UserAvatar> userAvatarList = userAvatarRepository.findAllByUser_Id(userId);
-
-        return EntityDtoMapper.INSTANCE.toUserAvatarDataList(avatarList, userAvatarList);
-    }
-
-    @Transactional
-    public boolean unlockAvatarIfAvailableExist(User user) {
-        Optional<Avatar> avatarAvailable = avatarRepository.findAvatarByUnlockLevel(user.getLevel());
-        avatarAvailable.ifPresent(avatar -> unlockAvatar(user, avatar));
-
-        return avatarAvailable.isPresent();
-    }
-
-    private void unlockAvatar(User user, Avatar avatar) {
-        if (userAvatarValidationService.isUserAvatarNotExist(user.getId(), avatar.getId())) {
-            createUserAvatar(user, avatar);
-        }
-    }
 
     private void createUserAvatar(User user, Avatar avatar) {
         UserAvatar userAvatar = UserAvatar.builder()
@@ -56,7 +34,6 @@ public class UserAvatarService {
         userAvatarRepository.save(userAvatar);
     }
 
-    @Transactional
     public void setUserDefaultAvatar(User user) {
         Avatar defaultAvatar = avatarRepository.findById(DEFAULT_AVATAR_ID)
                 .orElseThrow(() -> new BaseException(Status.FIND_DEFAULT_AVATAR_FAIL));
@@ -65,10 +42,8 @@ public class UserAvatarService {
         changeUserAvatar(user.getId(), DEFAULT_AVATAR_ID);
     }
 
-    @Transactional
     public void changeUserAvatar(int userId, int avatarId) {
-        List<UserAvatar> userAvatarList =
-                userAvatarRepository.findAllByUser_Id(userId);
+        List<UserAvatar> userAvatarList = userAvatarRepository.findAllByUser_Id(userId);
 
         userAvatarList.stream()
                 .filter(i -> i.getAvatar().getId() == avatarId)
@@ -80,11 +55,20 @@ public class UserAvatarService {
         }
     }
 
-    @Transactional(readOnly = true)
-    public int getUserAvatarId(int userId) {
-        return userAvatarRepository.findByUser_IdAndIsActiveIsTrue(userId)
-                .orElseThrow(() -> new BaseException(Status.FIND_USER_AVATAR_FAIL))
-                .getAvatar()
-                .getId();
+    public UnlockAvatarResult attemptToUnlockAvatar(User user) {
+        Optional<Avatar> avatarAvailable = avatarRepository.findAvatarByUnlockLevel(user.getLevel());
+
+        if (avatarAvailable.isPresent()) {
+            unlockAvatar(user, avatarAvailable.get());
+            return new UnlockAvatarResult(true);
+        }
+
+        return new UnlockAvatarResult(false);
+    }
+
+    private void unlockAvatar(User user, Avatar avatar) {
+        if (userAvatarValidationService.isUserAvatarNotExist(user.getId(), avatar.getId())) {
+            createUserAvatar(user, avatar);
+        }
     }
 }

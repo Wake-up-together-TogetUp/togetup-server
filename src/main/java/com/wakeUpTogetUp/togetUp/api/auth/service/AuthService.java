@@ -5,7 +5,7 @@ import com.wakeUpTogetUp.togetUp.api.auth.dto.request.SocialLoginReq;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.AppleTokenRes;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.LoginRes;
 import com.wakeUpTogetUp.togetUp.api.auth.dto.response.SocialUserRes;
-import com.wakeUpTogetUp.togetUp.api.avatar.application.UserAvatarService;
+import com.wakeUpTogetUp.togetUp.api.avatar.application.UserAvatarQueryService;
 import com.wakeUpTogetUp.togetUp.api.users.UserService;
 import com.wakeUpTogetUp.togetUp.api.users.model.User;
 import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
@@ -27,7 +27,7 @@ public class AuthService {
     private final List<SocialLoginService> loginServices;
     private final JwtService jwtService;
     private final UserService userService;
-    private final UserAvatarService userAvatarService;
+    private final UserAvatarQueryService userAvatarQueryService;
     private final AppleLoginServiceImpl appleLoginService;
 
     @Transactional
@@ -53,7 +53,7 @@ public class AuthService {
                 .userName(user.getName())
                 .email(socialUserRes.getEmail())
                 .accessToken(accessToken)
-                .avatarId(userAvatarService.getUserAvatarId(user.getId()))
+                .avatarId(userAvatarQueryService.getUserAvatarId(user.getId()))
                 .userStat(UserStat.from(user))
                 .build();
     }
