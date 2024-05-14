@@ -5,8 +5,8 @@ import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.dev.dto.response.AppStoreUrlRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.request.MissionCompleteReq;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionCompleteRes;
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
-import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
+import com.wakeUpTogetUp.togetUp.api.users.domain.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,13 +68,15 @@ public class DevController {
             @Parameter(hidden = true) @AuthUser Integer userId,
             @RequestBody @Valid MissionCompleteReq missionCompleteReq
     ) {
-        User user = new User(userId,
-                "1234",
-                "이예원",
-                "example@gmail.com",
-                LoginType.KAKAO,
-                30,
-                3);
+        User user = User.builder()
+                .id(userId)
+                .socialId("1234")
+                .name("이예원")
+                .email("example@gmail.com")
+                .loginType(LoginType.KAKAO)
+                .expPoint(30)
+                .level(3)
+                .build();
 
         MissionCompleteRes response = MissionCompleteRes.builder()
                 .userStat(UserStat.from(user))

@@ -5,7 +5,7 @@ import com.wakeUpTogetUp.togetUp.api.notification.DataKeyType;
 import com.wakeUpTogetUp.togetUp.api.notification.DataValueType;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 
 import java.util.HashMap;
 import java.util.List;

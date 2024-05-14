@@ -1,12 +1,11 @@
-package com.wakeUpTogetUp.togetUp.api.users.vo;
+package com.wakeUpTogetUp.togetUp.api.users.domain.vo;
 
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 @Getter
 public class UserStat {
-
     @Schema(description = "현재 레벨")
     private final int level;
 
@@ -15,7 +14,7 @@ public class UserStat {
 
     private UserStat(User user) {
         this.level = user.getLevel();
-        this.expPercentage = user.calculateExpPercentage();
+        this.expPercentage = user.getExpPercentage();
     }
 
     public static UserStat from(User user) {

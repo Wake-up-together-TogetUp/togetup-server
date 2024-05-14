@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.auth.dto.response;
 
-import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
+import com.wakeUpTogetUp.togetUp.api.users.domain.vo.UserStat;
 import lombok.*;
 
 @Builder

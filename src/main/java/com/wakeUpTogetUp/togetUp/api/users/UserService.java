@@ -8,8 +8,7 @@ import com.wakeUpTogetUp.togetUp.api.avatar.application.UserAvatarService;
 import com.wakeUpTogetUp.togetUp.api.room.RoomUserRepository;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmTokenRepository;
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
-import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressResult;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 
@@ -59,7 +58,6 @@ public class UserService {
         if (!fcmTokenRepository.existsByValue(fcmTokenValue)) {
             saveFcmToken(user, fcmTokenValue);
         }
-
     }
 
     private void saveFcmToken(User user, String fcmTokenValue) {
@@ -91,13 +89,6 @@ public class UserService {
         if (roomUserNumber > 0) {
             roomUserRepository.deleteByUserId(userId);
         }
-    }
-
-    public UserProgressResult userProgress(User user) {
-        UserProgressResult result = user.progress();
-        userRepository.save(user);
-
-        return result;
     }
 
     public List<Integer> getAgreedNotiUsersIds() {
