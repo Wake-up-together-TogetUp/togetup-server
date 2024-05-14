@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.UserAvatar;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
-import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.domain.model.UserProgressResult;
+import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.PostConstruct;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -20,6 +18,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -106,7 +105,7 @@ public class User {
     }
 
     @Builder
-    public User(Integer id, String socialId, String name, String email, LoginType loginType, int level, int expPoint) {
+    private User(Integer id, String socialId, String name, String email, LoginType loginType, int level, int expPoint) {
         this.id = id;
         this.socialId = socialId;
         this.name = name;
@@ -114,9 +113,10 @@ public class User {
         this.loginType = loginType;
         this.level = level;
         this.expPoint = expPoint;
+        initExpPercentage();
     }
 
-    @PostConstruct
+    @PostLoad
     private void initExpPercentage() {
         updateExpPercentage(UserProgressCalculator.calculateLevelUpThreshold(this));
     }
