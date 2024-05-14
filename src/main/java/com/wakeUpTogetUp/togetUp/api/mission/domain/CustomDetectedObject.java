@@ -1,5 +1,8 @@
 package com.wakeUpTogetUp.togetUp.api.mission.domain;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.wakeUpTogetUp.togetUp.api.mission.model.BoundingBox;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,12 +21,18 @@ public class CustomDetectedObject extends CustomAnalysisEntity {
     }
 
     @Override
-    public boolean isMatchEntity(Object target) {
-        return concatObjectAndParent()
-                .contains(target.toString().toLowerCase());
+    public boolean isMatchEntity(Object targetPattern) {
+        Pattern pattern = (Pattern) targetPattern;
+        Matcher matcher = pattern.matcher(concatObjectAndParent().toLowerCase());
+        
+        return matcher.find();
     }
 
     public String concatObjectAndParent() {
-        return (name + parent).toLowerCase();
+        return isParentNull() ?  name : (name + " " + parent);
+    }
+
+    private boolean isParentNull() {
+        return parent == null;
     }
 }

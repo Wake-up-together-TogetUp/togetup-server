@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class AzureVision32Service implements VisionService {
 
-    private final int IMAGE_SIZE_LIMIT = 4;
+    private final static int IMAGE_SIZE_LIMIT = 4;
 
     private final ComputerVisionClient client;
     private final ObjectDetectedV32Mapper objectDetectedV32Mapper;
