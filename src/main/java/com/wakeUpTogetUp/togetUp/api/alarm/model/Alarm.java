@@ -3,7 +3,7 @@ package com.wakeUpTogetUp.togetUp.api.alarm.model;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -16,7 +16,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;

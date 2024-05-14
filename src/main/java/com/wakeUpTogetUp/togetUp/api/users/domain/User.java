@@ -1,11 +1,11 @@
-package com.wakeUpTogetUp.togetUp.api.users.model;
+package com.wakeUpTogetUp.togetUp.api.users.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
 import com.wakeUpTogetUp.togetUp.api.avatar.model.UserAvatar;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
-import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressResult;
+import com.wakeUpTogetUp.togetUp.api.users.domain.model.UserProgressResult;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;

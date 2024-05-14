@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.users.fcmToken;
 
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 

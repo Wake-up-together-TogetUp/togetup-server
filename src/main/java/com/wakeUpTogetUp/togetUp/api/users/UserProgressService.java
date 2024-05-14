@@ -2,8 +2,8 @@ package com.wakeUpTogetUp.togetUp.api.users;
 
 import org.springframework.stereotype.Service;
 
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
-import com.wakeUpTogetUp.togetUp.api.users.vo.UserProgressResult;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
+import com.wakeUpTogetUp.togetUp.api.users.domain.model.UserProgressResult;
 
 @Service
 public class UserProgressService {

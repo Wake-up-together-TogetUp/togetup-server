@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.users.vo;
+package com.wakeUpTogetUp.togetUp.api.users.domain.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

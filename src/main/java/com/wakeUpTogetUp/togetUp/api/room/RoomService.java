@@ -11,7 +11,7 @@ import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.mapper.AlarmMigrationMapper;

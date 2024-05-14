@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.mission.dto.response;
 
-import com.wakeUpTogetUp.togetUp.api.users.vo.UserStat;
+import com.wakeUpTogetUp.togetUp.api.users.domain.vo.UserStat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

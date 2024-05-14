@@ -1,6 +1,8 @@
-package com.wakeUpTogetUp.togetUp.api.users.model;
+package com.wakeUpTogetUp.togetUp.api.users.domain;
 
 import java.util.function.Function;
+
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 
 public class UserProgressCalculator {
 

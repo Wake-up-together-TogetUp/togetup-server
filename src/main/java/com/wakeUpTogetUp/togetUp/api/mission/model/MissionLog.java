@@ -1,8 +1,8 @@
 package com.wakeUpTogetUp.togetUp.api.mission.model;
 
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
-import com.wakeUpTogetUp.togetUp.utils.TimeFormatter;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
+
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 

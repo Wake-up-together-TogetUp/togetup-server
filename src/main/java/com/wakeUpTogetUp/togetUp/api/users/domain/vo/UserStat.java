@@ -1,6 +1,6 @@
-package com.wakeUpTogetUp.togetUp.api.users.vo;
+package com.wakeUpTogetUp.togetUp.api.users.domain.vo;
 
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 

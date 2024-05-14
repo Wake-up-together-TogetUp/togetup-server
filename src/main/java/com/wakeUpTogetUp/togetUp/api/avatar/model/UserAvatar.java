@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.avatar.model;
 
-import com.wakeUpTogetUp.togetUp.api.users.model.User;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
