@@ -6,5 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class UserProgressResult {
-	private final boolean isUserLevelUp;
+
+    private final boolean isUserLevelUp;
 }

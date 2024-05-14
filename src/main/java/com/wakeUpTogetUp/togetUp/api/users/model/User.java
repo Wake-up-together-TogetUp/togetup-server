@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.PostConstruct;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -21,6 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,9 +42,6 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor
 @DynamicInsert
 public class User {
-
-    private static final int EXP_GAIN_PER_MISSION_COMPLETE = 10;
-    private static final int DEFAULT_LEVEL_INCREMENT = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,6 +70,9 @@ public class User {
 
     @Column(name = "exp_point")
     private Integer expPoint;
+
+    @Transient
+    private double expPercentage;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -103,9 +106,7 @@ public class User {
     }
 
     @Builder
-    public User(Integer id, String socialId, String name, String email, LoginType loginType,
-                int level, int expPoint
-    ) {
+    public User(Integer id, String socialId, String name, String email, LoginType loginType, int level, int expPoint) {
         this.id = id;
         this.socialId = socialId;
         this.name = name;
@@ -115,44 +116,53 @@ public class User {
         this.expPoint = expPoint;
     }
 
-    public UserProgressResult progress() {
-        gainExpPoint(EXP_GAIN_PER_MISSION_COMPLETE);
+    @PostConstruct
+    private void initExpPercentage() {
+        updateExpPercentage(UserProgressCalculator.calculateLevelUpThreshold(this));
+    }
 
-        int threshold = calculateLevelUpThreshold();
-        boolean isUserLevelUpAvailable = isUserLevelUpAvailable(threshold);
+    public UserProgressResult progress(int gainedExpPoint) {
+        gainExpPoint(gainedExpPoint);
 
-        if (isUserLevelUpAvailable) {
-            levelUp(threshold);
+        int currentThreshold = UserProgressCalculator.calculateLevelUpThreshold(this);
+        int currentLevel = this.level;
+
+        if (isUserLevelUpAvailable(currentThreshold)) {
+            levelUp(currentThreshold);
+
+            int newThreshold = UserProgressCalculator.calculateLevelUpThreshold(this);
+            updateExpPercentage(newThreshold);
+        } else {
+            updateExpPercentage(currentThreshold);
         }
 
-        return new UserProgressResult(isUserLevelUpAvailable);
+        boolean isUserLevelUp = getLevel() > currentLevel;
+        return new UserProgressResult(isUserLevelUp);
     }
 
-    private void gainExpPoint(int expPoint) {
-        this.setExpPoint(this.getExpPoint() + expPoint);
+    private void gainExpPoint(int point) {
+        this.expPoint = this.expPoint + point;
     }
 
-    public boolean isUserLevelUpAvailable(int threshold) {
-        return this.getExpPoint() >= threshold;
+    private boolean isUserLevelUpAvailable(int threshold) {
+        return this.expPoint >= threshold;
     }
 
-    public void levelUp(int threshold) {
-        this.setLevel(this.getLevel() + DEFAULT_LEVEL_INCREMENT);
-        this.setExpPoint(this.getExpPoint() - threshold);
+    private void levelUp(int threshold) {
+        this.level++;
+        this.expPoint -= threshold;
     }
 
-    public int calculateLevelUpThreshold() {
-        return 10 + 16 * (level - 1);
+    private void updateExpPercentage(int threshold) {
+        this.expPercentage = calculateExpPercentage(threshold);
     }
 
-    public double calculateExpPercentage() {
-        double expPercentage = ((double) expPoint / calculateLevelUpThreshold()) * 100.0;
+    private double calculateExpPercentage(int threshold) {
+        double expPercentage = ((double) this.expPoint / threshold) * 100.0;
         return Math.round(expPercentage * 100.0) / 100.0;
     }
-
 
     public void changeAgreePush(boolean agreePush) {
         this.setAgreePush(agreePush);
     }
-
 }

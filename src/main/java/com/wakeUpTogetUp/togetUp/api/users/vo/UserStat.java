@@ -6,7 +6,6 @@ import lombok.Getter;
 
 @Getter
 public class UserStat {
-
     @Schema(description = "현재 레벨")
     private final int level;
 
@@ -15,7 +14,7 @@ public class UserStat {
 
     private UserStat(User user) {
         this.level = user.getLevel();
-        this.expPercentage = user.calculateExpPercentage();
+        this.expPercentage = user.getExpPercentage();
     }
 
     public static UserStat from(User user) {
