@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.avatar.model;
+package com.wakeUpTogetUp.togetUp.api.avatar.domain;
 
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;

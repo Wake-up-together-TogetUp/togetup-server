@@ -1,8 +1,8 @@
 package com.wakeUpTogetUp.togetUp.api.avatar.application;
 
+import com.wakeUpTogetUp.togetUp.api.avatar.domain.Avatar;
+import com.wakeUpTogetUp.togetUp.api.avatar.domain.UserAvatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.UserAvatarResponse;
-import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
-import com.wakeUpTogetUp.togetUp.api.avatar.model.UserAvatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.repository.AvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.avatar.repository.UserAvatarRepository;
 import com.wakeUpTogetUp.togetUp.common.Status;

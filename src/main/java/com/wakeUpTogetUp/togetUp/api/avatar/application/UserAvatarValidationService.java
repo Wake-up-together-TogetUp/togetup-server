@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.avatar.application;
 
-import com.wakeUpTogetUp.togetUp.api.avatar.model.UserAvatar;
+import com.wakeUpTogetUp.togetUp.api.avatar.domain.UserAvatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.repository.UserAvatarRepository;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;

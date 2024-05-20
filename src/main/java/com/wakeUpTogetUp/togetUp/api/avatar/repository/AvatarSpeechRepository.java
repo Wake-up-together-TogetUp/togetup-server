@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.avatar.repository;
 
-import com.wakeUpTogetUp.togetUp.api.avatar.model.AvatarSpeech;
+import com.wakeUpTogetUp.togetUp.api.avatar.domain.AvatarSpeech;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
