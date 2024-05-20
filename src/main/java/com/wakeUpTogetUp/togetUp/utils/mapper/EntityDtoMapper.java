@@ -4,7 +4,6 @@ import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.Avatar;
-import com.wakeUpTogetUp.togetUp.api.avatar.domain.AvatarSpeech;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.UserAvatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.AvatarSpeechResponse;
 import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.UserAvatarResponse;
@@ -79,5 +78,5 @@ public interface EntityDtoMapper {
                         .anyMatch(userAvatar -> userAvatar.getAvatar().getId().equals(avatar.getId())));
     }
 
-    AvatarSpeechResponse toAvatarSpeechResponse(AvatarSpeech avatarSpeech);
+    AvatarSpeechResponse toAvatarSpeechResponse(String speech);
 }

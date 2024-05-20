@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.avatar.application;
 
+import com.wakeUpTogetUp.togetUp.api.avatar.application.strategy.SpeechStrategy;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.AvatarSpeech;
 import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.AvatarSpeechResponse;
 import com.wakeUpTogetUp.togetUp.api.avatar.repository.AvatarSpeechRepository;
@@ -16,17 +17,22 @@ public class AvatarSpeechProvider {
     private final AvatarSpeechRepository avatarSpeechRepository;
     private final AvatarValidationService avatarValidationService;
     private final UserAvatarValidationService userAvatarValidationService;
-    private final Random rand = new Random();
+
+    private final SpeechStrategyFactory speechStrategyFactory;
+
+    private final Random random = new Random();
 
     public AvatarSpeechResponse getUserAvatarSpeech(int userId, int avatarId) {
         userAvatarValidationService.validateUserAvatarActive(userId, avatarId);
-        AvatarSpeech avatarSpeech = getAvatarRandomSpeech(avatarId);
+        AvatarSpeech avatarSpeech = getRandomAvatarSpeech(avatarId);
+        String speech = makeSpeechByCondition(avatarSpeech);
 
-        return EntityDtoMapper.INSTANCE.toAvatarSpeechResponse(avatarSpeech);
+        return EntityDtoMapper.INSTANCE.toAvatarSpeechResponse(speech);
     }
-    private AvatarSpeech getAvatarRandomSpeech(int avatarId) {
+
+    private AvatarSpeech getRandomAvatarSpeech(int avatarId) {
         List<AvatarSpeech> avatarSpeeches = getSpeechesOfAvatar(avatarId);
-        int randomIndex = rand.nextInt(avatarSpeeches.size());
+        int randomIndex = random.nextInt(avatarSpeeches.size());
 
         return avatarSpeeches.get(randomIndex);
     }
@@ -34,5 +40,10 @@ public class AvatarSpeechProvider {
     private List<AvatarSpeech> getSpeechesOfAvatar(int avatarId) {
         avatarValidationService.validateAvatarExist(avatarId);
         return avatarSpeechRepository.findAllByAvatar_Id(avatarId);
+    }
+
+    public String makeSpeechByCondition(AvatarSpeech avatarSpeech) {
+        SpeechStrategy strategy = speechStrategyFactory.getStrategy(avatarSpeech.getCondition());
+        return strategy.makeSpeech(avatarSpeech);
     }
 }
