@@ -5,6 +5,9 @@ public enum AvatarSpeechCondition {
     DEFAULT,
     NONE,
     FOOD,
-    TIME
+    TIME,
+    NEW_MOON,
+    HALF_MOON,
+    FULL_MOON
     ;
 }

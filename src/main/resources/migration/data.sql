@@ -108,15 +108,14 @@ INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('막내야 �
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('야야 참아\\n그래도 내가 니 선배양~', 'NONE', 1);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('야야 밥은 내가 쏜당~', 'NONE', 1);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('나랑 같이 우주탐험 하지 않을래?', 'DEFAULT', 2);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('우주는 엄청 넓고 어둡구나…\\n저 너머에는 뭐가 있을까?', 'NONE', 2);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('달이 꼭 노릇노릇한 빵 같은걸!\\n우리도 든든하게 먹고 힘내자~', 'NONE', 2);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('오늘은 달이 밝네~\\n왠지 미션을 잘 끝낼 수 있을 것 같아!', 'NONE', 2);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('모든 미션 완료!\\n다음에는 뭘 할지 기대되는걸?', 'NONE', 2);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('우주는 엄청 넓고 어둡구나…\\n저 너머에는 뭐가 있을까?', 'NEW_MOON', 2);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('달이 꼭 노릇노릇한 빵 같은걸!\\n우리도 든든하게 먹고 힘내자~', 'HALF_MOON', 2);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('오늘은 달이 밝네~\\n왠지 미션을 잘 끝낼 수\\n있을 것 같아!', 'FULL_MOON', 2);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('반짝반짝 작은별~\\n보석처럼 예쁘다…', 'NONE', 2);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('저기 은하수가 보여!\\n가서 헤엄치고 싶다~', 'NONE', 2);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('내 우주선?\\n직접 만든거야! 멋있지?', 'NONE', 2);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('안녕!\\n친구와 미션을 함께하니 더 의욕이 생긴다~', 'NONE', 2);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('우주에서 별을 찾는 미션이 있는데,\\n같이 할래?', 'NONE', 2);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('안녕!\\n친구와 미션을 함께하니\\n더 의욕이 생긴다~', 'NONE', 2);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('우주에서 별을 찾는 미션이\\n있는데, 같이 할래?', 'NONE', 2);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('우주 모험은 언제나 즐거워!', 'NONE', 2);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('사랑을 나누어 드릴게요...', 'DEFAULT', 3);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('누군가에게 내 마음을 전해줄 수 있을까?\\n장미도, 케이크도 다 준비했어요!', 'NONE', 3);
@@ -133,7 +132,7 @@ INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('당신은 �
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('사랑스러운 고민에 빠져,\\n준비한 마음을 정말 줘도 될지 생각 중이에요.', 'NONE', 3);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('꽃다발의 리본을 예쁘게 묶었어요,\\n친구들에게 전할 사랑처럼요.', 'NONE', 3);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('먹는게 세상에서 제일 좋아~', 'DEFAULT', 4);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('실은 나, 얼마나 배가 고픈지로 \\n지금 몇 시인지 알 수 있어~\\n꼬르륵~ 현재 %d시야,,', 'NONE', 4);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('실은 나, 얼마나 배가 고픈지로\\n지금 시간을 알 수 있어~\\n꼬르륵~ 현재 %d시 %d분 이야,,', 'TIME', 4);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('나 지금 대나무 냄새 느껴졌어,,\\n혹시 숨기고있는거 아니지!\\n같이 먹자구~~ ', 'NONE', 4);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('요즘 매일같이 닭가슴살을 먹고 있는데에.. 이제 한동안은 쳐다도 보기 싫어! ', 'NONE', 4);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('저녁밥 먹고 디저트로 뭘 먹을지 정하질 못하겠어~ 앗, 그래! 둘 다 먹으면 되겠다아!', 'NONE', 4);
@@ -143,12 +142,12 @@ INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('나 오늘�
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('이번 여름,,, 달라진 모습 기대해줘', 'NONE', 4);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('냉장고안에 있는 초콜릿,, 내꺼다 건들 ㄴ', 'NONE', 4);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('오늘 저녁은 %s 어때~~???', 'FOOD', 4);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('점심으로 가볍게 샌드위치먹을까??', 'NONE', 4);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('치느님 영접할때가 되었어,, 치느님이 날 부르고 있어,,,,', 'NONE', 4);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('맛없는걸로 배 채우는건 바보같은 짓이야,,, 한끼 한끼가 소중하다구,,', 'NONE', 4);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('대나무는 윗 부분보다는,, 아랫 부분이야,,,', 'NONE', 4);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('우웩,, 나뭇잎은,, 먹기싫어요,,,', 'NONE', 4);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('나무 올라타는건 힘들어,,, 하지만 운동은 해야하니까', 'NONE', 4);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('내일 점심으론\\n가볍게 %s 먹을까??', 'FOOD', 4);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('치느님 영접할때가 되었어,,,\\n치느님이 날 부르고 있어,,!', 'NONE', 4);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('맛없는걸로 배 채우는건\\n바보같은 짓이야,,,\\n한끼 한끼가 소중하다구,,', 'NONE', 4);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('대나무는 윗 부분보다는,,\\n아랫 부분이야,,,', 'NONE', 4);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('우웩,,\\n나뭇잎은,, 먹기싫어요,,,', 'NONE', 4);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('나무 올라타는건 힘들어,,,\\n하지만 운동은 해야하니까', 'NONE', 4);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('요즘 나 김밥 안에 오이는 먹을수 있짜나 이제 나도 어른일지도,,,', 'NONE', 4);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('커피는 너무 써,,, 초코라떼 먹어야지~~~', 'NONE', 4);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('저와 비오는 날을 함께 해요!', 'DEFAULT', 5);
@@ -165,10 +164,10 @@ INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('비가 오�
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('널 철학의 세계로 인도하지...', 'DEFAULT', 6);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('삶이 있는 한 희망은 있다.', 'NONE', 6);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('언제나 현재에 집중할수\\n있다면 행복할것이다.', 'NONE', 6);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('신은 용기있는자를 결코 버리지 않는다.', 'NONE', 6);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('행복한 삶을 살기위해 필요한 것은 거의 없다.', 'NONE', 6);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('신은 용기 있는 자를\\n결코 버리지 않는다.', 'NONE', 6);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('행복한 삶을 살기 위해\\n필요한 것은 거의 없다.', 'NONE', 6);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('절대 어제를 후회하지 마라.\\n인생은 오늘의 나 안에 있고\\n내일은 스스로 만드는 것이다', 'NONE', 6);
-INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('한번의 실패와 영원한 실패를 혼동하지 마라.', 'NONE', 6);
+INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('한번의 실패와 영원한 실패를\\n혼동하지 마라.', 'NONE', 6);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('피할수 없으면 즐겨라.', 'NONE', 6);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('오랫동안 꿈을 그리는 사람은\\n마침내 그 꿈을 닮아 간다.', 'NONE', 6);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('평생 살 것처럼 꿈을 꾸어라.\\n그리고 내일 죽을 것처럼 오늘을 살아라.', 'NONE', 6);
@@ -180,5 +179,7 @@ INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('겨울이 �
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('인생을 다시 산다면 다음번에는\\n더 많은 실수를 저지르리라.', 'NONE', 6);
 INSERT INTO avatar_speech (speech, `condition`, avatar_id) VALUES ('인생에 뜻을 세우는데 있어 늦은 때라곤 없다.', 'NONE', 6);
 
+
 -- 앱 버전 히스토리
-INSERT INTO app_version_history (version, app_store_url, created_at) VALUES ('1.0.0', '미정', '2024-05-02 13:28:03');
+INSERT INTO app_version_history (version, app_store_url, created_at) VALUES ('1.0.0', 'https://apps.apple.com/kr/app/togetup/id6477523543', '2024-05-02 13:28:03');
+INSERT INTO app_version_history (version, app_store_url, created_at) VALUES ('1.0.1', 'https://apps.apple.com/kr/app/togetup/id6477523543', '2024-05-02 13:28:03');
