@@ -3,6 +3,7 @@ package com.wakeUpTogetUp.togetUp.api.avatar.application;
 import com.wakeUpTogetUp.togetUp.api.avatar.application.strategy.BasicSpeechStrategy;
 import com.wakeUpTogetUp.togetUp.api.avatar.application.strategy.FoodSpeechStrategy;
 import com.wakeUpTogetUp.togetUp.api.avatar.application.strategy.SpeechStrategy;
+import com.wakeUpTogetUp.togetUp.api.avatar.application.strategy.TimeSpeechStrategy;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.AvatarSpeechCondition;
 import java.util.EnumMap;
 import java.util.Map;
@@ -16,12 +17,14 @@ public class SpeechStrategyFactory {
     private static final Map<AvatarSpeechCondition, SpeechStrategy> strategies = new EnumMap<>(AvatarSpeechCondition.class);
     private final BasicSpeechStrategy basicSpeechStrategy;
     private final FoodSpeechStrategy foodSpeechStrategy;
+    private final TimeSpeechStrategy timeSpeechStrategy;
 
     @PostConstruct
     public void init() {
         strategies.put(AvatarSpeechCondition.DEFAULT, basicSpeechStrategy);
         strategies.put(AvatarSpeechCondition.NONE, basicSpeechStrategy);
         strategies.put(AvatarSpeechCondition.FOOD, foodSpeechStrategy);
+        strategies.put(AvatarSpeechCondition.TIME, timeSpeechStrategy);
     }
 
     public SpeechStrategy getStrategy(AvatarSpeechCondition condition) {

@@ -4,6 +4,7 @@ public enum AvatarSpeechCondition {
 
     DEFAULT,
     NONE,
-    FOOD
+    FOOD,
+    TIME
     ;
 }
