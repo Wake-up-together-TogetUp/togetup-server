@@ -1,4 +1,4 @@
-name: TogetUp-Server-Dev CI/CD
+name: TogetUp-Server-Prod CI/CD
 on:
   push:
     branches: [ "product","env/prod" ]
