@@ -3,6 +3,7 @@ on:
   push:
     branches: [ "product","env/prod" ]
 
+
 env:
   S3_BUCKET_NAME: togetup-storage
   FILE_PATH: /home/ubuntu/app/
