@@ -1,7 +1,7 @@
 name: TogetUp-Server-Dev CI/CD
 on:
   push:
-    branches: [ "main" ,"env/ci-dev"]
+    branches: [ "main" ]
 
 env:
   S3_BUCKET_NAME: togetup-storage
