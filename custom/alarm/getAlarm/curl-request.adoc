@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ curl 'http://togetup.shop/app/alarms/42' -i -X GET \
+    -H 'Accept: application/json'
+----

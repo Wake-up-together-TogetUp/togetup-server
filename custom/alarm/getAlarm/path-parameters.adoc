@@ -1,0 +1,8 @@
+.+/app/alarms/{alarmId}+
+|===
+|Parameter|Description
+
+|`+alarmId+`
+|알람 Id
+
+|===

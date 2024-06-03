@@ -1,58 +1,120 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.7.10'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'java'
+    id 'org.springframework.boot' version '2.7.18'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
 group = 'com.jogijo'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
-
 compileJava.options.encoding = 'UTF-8'
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-}
-
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'com.vladmihalcea:hibernate-types-52:2.17.3'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testCompileOnly 'org.projectlombok:lombok'
-	testAnnotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.vladmihalcea:hibernate-types-52:2.17.3'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
+    implementation 'org.apache.httpcomponents:httpcore:4.4.15'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
 
-	// security
-	implementation('org.springframework.boot:spring-boot-starter-security')
+    // health check
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-	// DB
-	runtimeOnly ('mysql:mysql-connector-java:8.0.32') //mysql8
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-	// mybatis
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.0'
+    // model struct
+    implementation 'org.mapstruct:mapstruct:1.5.4.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.4.Final'
+    testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
+    implementation("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 
-	// aws s3
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    // security
+    implementation('org.springframework.boot:spring-boot-starter-security')
 
-	//jwt
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-
-
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+    // DB
+    runtimeOnly("com.mysql:mysql-connector-j")
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 
+    // mybatis
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.0'
+
+    // aws s3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    //jwt
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    // Validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    //oauth
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    //chat
+    implementation 'org.webjars:sockjs-client:1.1.2'
+    implementation 'org.webjars:stomp-websocket:2.3.3-1'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+    implementation 'org.webjars.bower:bootstrap:4.3.1'
+    implementation 'org.webjars.bower:vue:2.5.16'
+    implementation 'org.webjars.bower:axios:0.17.1'
+    implementation 'javax.xml.bind:jaxb-api'
+
+    // OpenCV
+    implementation 'org.openpnp:opencv:4.6.0-0'
+    implementation group: 'com.microsoft.onnxruntime', name: 'onnxruntime', version: '1.12.1'
+
+    // fire base
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    // Swagger
+    implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+
+    //image
+    implementation 'org.apache.commons:commons-imaging:1.0-alpha3'
+
+    // Azure AI Vision
+    implementation 'com.azure:azure-ai-vision-imageanalysis:0.15.1-beta.1'
+    implementation 'com.azure:azure-core-http-netty:1.13.6'
+    implementation 'com.microsoft.azure.cognitiveservices:azure-cognitiveservices-computervision:1.0.9-beta'
+
+    // Google vision api
+    implementation 'org.springframework.cloud:spring-cloud-gcp-starter-vision'
+    implementation 'org.springframework.cloud:spring-cloud-gcp-starter-storage'
+
+    // firebase admin 종속성에서 api-client 2.2.0 버전을 사용해서 버전 충돌이 났음
+    implementation 'com.google.api-client:google-api-client:1.31.1'
+    implementation 'com.google.cloud:google-cloud-storage:1.113.6'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+ext {
+    set('springBootVersion', '2.7.18')
+    set('springCloudGcpVersion', '1.2.8.RELEASE')
+    set('springCloudVersion', "2021.0.7")
+}
+
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+        mavenBom "org.springframework.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }

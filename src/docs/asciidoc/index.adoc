@@ -1,0 +1,22 @@
+= TogetUp API Doc
+// 번호 매기기
+// :sectnums:
+:icons: font
+// 목차
+:toc: left
+:toclevels: 2
+:toc-title: 목차
+:source-highlighter: highlightjs
+
+[%hardbreaks]
+Lee Chanmi <anytime0224@gmail.com>
+Jo HyeOn <ain0103@swu.ac.kr>
+
+v1.0.0, 2023.05.17
+
+***
+== AlarmController
+
+=== 알람 단일 조회
+
+operation::alarm-getAlarm[snippets='path-parameters,request-parameters,http-request,response-fields,http-response']

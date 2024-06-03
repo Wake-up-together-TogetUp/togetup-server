@@ -4,6 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+src/main/resources/model
 
 ### STS ###
 .apt_generated
@@ -37,5 +38,23 @@ out/
 .vscode/
 
 ### application.yml ###
+application.yml
+application-local.yml
 application-dev.yml
 application-prod.yml
+application-oauth.properties
+
+### firebase sdk json ###
+*.json
+
+### log files ###
+**/logs
+
+### apple
+AuthKey_M992KTZK9V.p8
+
+### result image file ###
+**/src/main/**/images/
+
+### generated ###
+**/src/main/generated/**
