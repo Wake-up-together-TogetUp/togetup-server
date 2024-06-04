@@ -20,7 +20,7 @@ class OpenApiConfig {
                 .description(Constant.API_DESCRIPTION);
 
         return new OpenAPI()
-                .addServersItem(new Server().url("http://13.124.52.52:9010").description("개발서버"))
+                .addServersItem(new Server().url("").description("개발서버"))
                 .addServersItem(new Server().url("http://localhost:9010").description("로컬서버"))
                 .info(info)
                 .addSecurityItem(new SecurityRequirement().addList(Constant.BEARER))
