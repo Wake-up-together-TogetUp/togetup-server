@@ -38,7 +38,7 @@ jobs:
           mkdir -p ./src/main/resources
           cd ./src/main/resources
           touch ./application.yml
-          echo '${{ secrets.TOGETUP_2024_DEV_APPLICATION }}' >> ./application.yml
+          echo '${{ secrets.TOGETUP_DEV_APPLICATION }}' >> ./application.yml
           cat ./application.yml
         shell: bash
 
