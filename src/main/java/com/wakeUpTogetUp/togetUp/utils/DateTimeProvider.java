@@ -1,6 +1,7 @@
 package com.wakeUpTogetUp.togetUp.utils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +15,10 @@ public class DateTimeProvider {
 
     public static LocalDate getCurrentDateInSeoul() {
         return ZonedDateTime.now(SEOUL_ZONE_ID).toLocalDate();
+    }
+
+    public static LocalDateTime getCurrentDateTimeInSeoul() {
+        return ZonedDateTime.now(SEOUL_ZONE_ID).toLocalDateTime();
     }
 
     public static String getDateTimeByFormat(String format) {

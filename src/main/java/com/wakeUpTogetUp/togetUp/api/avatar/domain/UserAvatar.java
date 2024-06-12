@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.avatar.model;
+package com.wakeUpTogetUp.togetUp.api.avatar.domain;
 
 import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 import java.time.LocalDateTime;
