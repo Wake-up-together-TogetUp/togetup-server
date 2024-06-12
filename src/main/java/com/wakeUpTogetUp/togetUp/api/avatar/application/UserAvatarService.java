@@ -3,8 +3,8 @@ package com.wakeUpTogetUp.togetUp.api.avatar.application;
 import static com.wakeUpTogetUp.togetUp.common.Constant.DEFAULT_AVATAR_ID;
 
 import com.wakeUpTogetUp.togetUp.api.avatar.application.model.UnlockAvatarResult;
-import com.wakeUpTogetUp.togetUp.api.avatar.model.Avatar;
-import com.wakeUpTogetUp.togetUp.api.avatar.model.UserAvatar;
+import com.wakeUpTogetUp.togetUp.api.avatar.domain.Avatar;
+import com.wakeUpTogetUp.togetUp.api.avatar.domain.UserAvatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.repository.AvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.avatar.repository.UserAvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.users.domain.User;
