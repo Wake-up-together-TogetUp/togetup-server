@@ -1,6 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.notification;
 
 import com.wakeUpTogetUp.togetUp.api.event.EventPublisher;
+import com.wakeUpTogetUp.togetUp.api.notification.vo.AvatarUnlockedNotificationEvent;
 import com.wakeUpTogetUp.togetUp.api.notification.vo.NotificationSendEvent;
 import com.wakeUpTogetUp.togetUp.api.notification.vo.RoomMissionLogNotificationEvent;
 import com.wakeUpTogetUp.togetUp.api.room.RoomRepository;
@@ -59,6 +60,11 @@ public class NotificationService {
                     fcmTokenRepository.findAllByUser_IdIn(userIdsInRoom)
             ));
         }
+    }
+
+    public void sendNotificationToAvatarUnlockedUser(Integer userId) {
+
+        EventPublisher.raise(new AvatarUnlockedNotificationEvent(fcmTokenRepository.findAllByUser_Id(userId)));
     }
 
 }

@@ -21,7 +21,9 @@ import com.wakeUpTogetUp.togetUp.api.users.domain.model.UserProgressResult;
 import com.wakeUpTogetUp.togetUp.api.users.domain.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
+
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -76,6 +78,8 @@ public class MissionService {
 
         createMissionLog(user, req);
         sendNotificationIfRoomExists(alarm, user);
+        sendNotificationIfAvatarUnlocked(isAvatarUnlocked, user.getId());
+
 
         return MissionCompleteRes.builder()
                 .userStat(UserStat.from(user))
@@ -91,6 +95,12 @@ public class MissionService {
             } catch (BaseException e) {
                 log.error(e.getMessage());
             }
+        }
+    }
+
+    private void sendNotificationIfAvatarUnlocked(boolean isAvatarUnlocked, Integer userId) {
+        if (isAvatarUnlocked) {
+            notificationService.sendNotificationToAvatarUnlockedUser(userId);
         }
     }
 
