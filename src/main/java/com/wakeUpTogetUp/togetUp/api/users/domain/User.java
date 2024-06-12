@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.users.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wakeUpTogetUp.togetUp.api.auth.LoginType;
-import com.wakeUpTogetUp.togetUp.api.avatar.model.UserAvatar;
+import com.wakeUpTogetUp.togetUp.api.avatar.domain.UserAvatar;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.domain.model.UserProgressResult;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;

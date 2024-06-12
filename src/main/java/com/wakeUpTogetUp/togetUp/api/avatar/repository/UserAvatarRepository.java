@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.avatar.repository;
 
-import com.wakeUpTogetUp.togetUp.api.avatar.model.UserAvatar;
+import com.wakeUpTogetUp.togetUp.api.avatar.domain.UserAvatar;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

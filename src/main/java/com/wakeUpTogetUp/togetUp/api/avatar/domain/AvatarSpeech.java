@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.avatar.model;
+package com.wakeUpTogetUp.togetUp.api.avatar.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
