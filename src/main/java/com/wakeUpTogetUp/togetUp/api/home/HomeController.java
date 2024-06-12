@@ -37,7 +37,7 @@ public class HomeController {
     BaseResponse<AlarmTimeLineRes> getAlarmTimeLineOfUser(
             @Parameter(hidden = true) @AuthUser Integer userId
     ) {
-        return new BaseResponse<>(Status.SUCCESS, alarmProvider.getAlarmTimeLineByUserId(userId));
+        return new BaseResponse<>(Status.SUCCESS, alarmProvider.getTimeLine(userId));
     }
 
     @Operation(summary = "아바타 대사 불러오기")

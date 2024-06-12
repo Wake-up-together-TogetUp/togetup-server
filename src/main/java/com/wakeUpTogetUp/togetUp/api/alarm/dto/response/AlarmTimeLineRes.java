@@ -1,6 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.alarm.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
@@ -14,7 +15,7 @@ public class AlarmTimeLineRes {
     private LocalDate today;
 
     @Schema(description = "요일", example = "MONDAY")
-    private String dayOfWeek;
+    private DayOfWeek dayOfWeek;
 
     @Schema(description = "다음 알람")
     private AlarmSimpleRes nextAlarm;

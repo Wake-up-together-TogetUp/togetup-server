@@ -34,7 +34,7 @@ public class FileUtil {
 
     public static String generatePath(String directoryPath, String fileName) {
         String key = generateKey(fileName);
-        String dateTime = DateTimeProvider.getDateTime(FILE_DATE_TIME_FORMAT);
+        String dateTime = DateTimeProvider.getDateTimeByFormat(FILE_DATE_TIME_FORMAT);
 
         return String.format(FILE_NAME_FORMAT, directoryPath, dateTime, key);
     }
