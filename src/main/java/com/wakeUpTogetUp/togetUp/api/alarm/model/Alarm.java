@@ -4,8 +4,6 @@ import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.domain.User;
-
-import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -17,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,9 +40,12 @@ public class Alarm {
     private Integer id;
 
     private String name;
+
     private String icon;
+
     @Column(columnDefinition = "TIME")
     private LocalTime alarmTime;
+
     private Boolean monday;
     private Boolean tuesday;
     private Boolean wednesday;
@@ -53,8 +53,11 @@ public class Alarm {
     private Boolean friday;
     private Boolean saturday;
     private Boolean sunday;
+
     private Boolean isVibrate;
+
     private Boolean isActivated;
+
     private Boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -136,28 +139,7 @@ public class Alarm {
         this.missionObject = missionObject;
     }
 
-    public boolean getDayOfWeekValue(DayOfWeek dayOfWeek) {
-        switch (dayOfWeek) {
-            case MONDAY:
-                return getMonday();
-            case TUESDAY:
-                return getTuesday();
-            case WEDNESDAY:
-                return getWednesday();
-            case THURSDAY:
-                return getThursday();
-            case FRIDAY:
-                return getFriday();
-            case SATURDAY:
-                return getSaturday();
-            case SUNDAY:
-                return getSunday();
-            default:
-                throw new IllegalArgumentException("Invalid day of the week");
-        }
-    }
-
-    public AlarmType determineAlarmType() {
+    public AlarmType getAlarmType() {
         return isRoomAlarm() ? AlarmType.GROUP : AlarmType.PERSONAL;
     }
 

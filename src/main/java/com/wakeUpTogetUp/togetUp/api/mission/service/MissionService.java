@@ -111,6 +111,7 @@ public class MissionService {
         MissionLog missionLog = MissionLog.builder()
                 .alarmName(alarm.getName())
                 .missionPicLink(req.getMissionPicLink())
+                .alarm(alarm)
                 .user(user)
                 .room(alarm.getRoom())
                 .build();

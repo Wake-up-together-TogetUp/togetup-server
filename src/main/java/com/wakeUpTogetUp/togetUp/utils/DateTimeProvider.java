@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DateTimeProvider {
+
     private final static ZoneId SEOUL_ZONE_ID = ZoneId.of("Asia/Seoul");
 
     public static LocalDate getCurrentDateInSeoul() {
@@ -20,7 +21,7 @@ public class DateTimeProvider {
         return ZonedDateTime.now(SEOUL_ZONE_ID).toLocalDateTime();
     }
 
-    public static String getDateTime(String format) {
+    public static String getDateTimeByFormat(String format) {
         return ZonedDateTime.now(SEOUL_ZONE_ID)
                 .format(
                         DateTimeFormatter

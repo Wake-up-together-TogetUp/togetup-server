@@ -12,8 +12,10 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.DateTimeProvider;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -47,14 +49,16 @@ public class AlarmProvider {
         return EntityDtoMapper.INSTANCE.toAlarmRes(alarm);
     }
 
-    public AlarmTimeLineRes getAlarmTimeLineByUserId(Integer userId) {
+    public AlarmTimeLineRes getTimeLine(Integer userId) {
         LocalDate today = DateTimeProvider.getCurrentDateInSeoul();
-        String dayOfWeek = today.getDayOfWeek().name();
-        List<Alarm> todayAlarms = alarmRepository.findOrderedTodayAlarmsByUserId(userId, dayOfWeek);
+        DayOfWeek dayOfWeek = today.getDayOfWeek();
+        LocalTime now = LocalTime.now();
+
+        List<Alarm> timeline = getAlarmTimeLineByUserId(userId, today, dayOfWeek, now);
 
         AlarmSimpleRes nextAlarmRes =
-                EntityDtoMapper.INSTANCE.toAlarmSimpleRes(getNextAlarm(todayAlarms).orElse(null));
-        List<AlarmSimpleRes> alarmSimpleResList = EntityDtoMapper.INSTANCE.toAlarmSimpleResList(todayAlarms);
+                EntityDtoMapper.INSTANCE.toAlarmSimpleRes(getNextAlarm(timeline, now).orElse(null));
+        List<AlarmSimpleRes> alarmSimpleResList = EntityDtoMapper.INSTANCE.toAlarmSimpleResList(timeline);
 
         return AlarmTimeLineRes.builder()
                 .today(today)
@@ -64,9 +68,19 @@ public class AlarmProvider {
                 .build();
     }
 
-    private Optional<Alarm> getNextAlarm(List<Alarm> alarms) {
-        LocalTime now = LocalTime.now();
+    private List<Alarm> getAlarmTimeLineByUserId(Integer userId, LocalDate today, DayOfWeek dayOfWeek, LocalTime now) {
+        List<Alarm> alarmsWithTodayLog =
+                alarmRepository.findAllUserAlarmsWithTodayLog(userId, today);
+        List<Alarm> todayActiveAlarmsAfterNow =
+                alarmRepository.findAllUserTodayActiveAlarmsAfterNow(userId, dayOfWeek.name(), now);
 
+        List<Alarm> timeline = new ArrayList<>(alarmsWithTodayLog);
+        timeline.addAll(todayActiveAlarmsAfterNow);
+
+        return timeline;
+    }
+
+    private Optional<Alarm> getNextAlarm(List<Alarm> alarms, LocalTime now) {
         return alarms.stream()
                 .filter(alarm -> alarm.getAlarmTime().isAfter(now))
                 .findFirst();
