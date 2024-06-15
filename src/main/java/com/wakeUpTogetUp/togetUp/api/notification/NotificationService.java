@@ -36,7 +36,7 @@ public class NotificationService {
                 fcmTokenRepository.findAllByUser_IdIn(userService.getAgreedNotiUsersIds()),
                 title,
                 body,
-                Map.of(DataKeyType.LINK.getKey(), DataValueType.HOME.toString())
+                Map.of(NotificationDataKeyType.LINK.getKey(), NotificationDataValueType.HOME.toString())
         ));
 
     }
