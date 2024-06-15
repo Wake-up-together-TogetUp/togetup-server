@@ -1,8 +1,8 @@
 package com.wakeUpTogetUp.togetUp.api.notification.vo;
 
 
-import com.wakeUpTogetUp.togetUp.api.notification.DataKeyType;
-import com.wakeUpTogetUp.togetUp.api.notification.DataValueType;
+import com.wakeUpTogetUp.togetUp.api.notification.NotificationDataKeyType;
+import com.wakeUpTogetUp.togetUp.api.notification.NotificationDataValueType;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.api.users.domain.User;
@@ -23,8 +23,8 @@ public class RoomMissionLogNotificationEvent extends NotificationSendEvent {
     private static Map<String, String> createDataMap(Integer roomId) {
 
         Map<String, String> dataMap = new HashMap<>();
-        dataMap.put(DataKeyType.LINK.getKey(), DataValueType.ROOM.toString());
-        dataMap.put(DataKeyType.ROOM_ID.getKey(), String.valueOf(roomId));
+        dataMap.put(NotificationDataKeyType.LINK.getKey(), NotificationDataValueType.ROOM.toString());
+        dataMap.put(NotificationDataKeyType.ROOM_ID.getKey(), String.valueOf(roomId));
 
         return dataMap;
     }
