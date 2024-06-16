@@ -3,13 +3,13 @@ package com.wakeUpTogetUp.togetUp.api.notification;
 import lombok.Getter;
 
 @Getter
-public enum DataKeyType {
+public enum NotificationDataKeyType {
     LINK("link"),
     ROOM_ID("roomId");
 
     private final String key;
 
-    DataKeyType(String key) {
+    NotificationDataKeyType(String key) {
         this.key = key;
     }
 }
