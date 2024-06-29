@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
 
-public interface AlarmCustomRepository {
+public interface AlarmRepositoryCustom {
 
     List<AlarmSimpleRes> getTimeLine(Integer userId, LocalDate today, DayOfWeek dayOfWeek, LocalTime now);
 }
