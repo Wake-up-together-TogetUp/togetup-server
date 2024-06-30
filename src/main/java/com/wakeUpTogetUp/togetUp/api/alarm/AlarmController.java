@@ -4,7 +4,7 @@ import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmsDeactivateReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PatchAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
-import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmProvider;
+import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmQueryService;
 import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmService;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.common.Status;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/app/alarm")
 public class AlarmController {
     private final AlarmService alarmService;
-    private final AlarmProvider alarmProvider;
+    private final AlarmQueryService alarmQueryService;
 
     @Operation(summary = "알람 1개 불러오기")
     @ApiResponses(value = {
@@ -47,7 +47,7 @@ public class AlarmController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 알람 입니다.")})
     @GetMapping("/{alarmId}")
     public BaseResponse<GetAlarmRes> getAlarm(@PathVariable Integer alarmId) {
-        return new BaseResponse<>(Status.SUCCESS, alarmProvider.getAlarmById(alarmId));
+        return new BaseResponse<>(Status.SUCCESS, alarmQueryService.getAlarmById(alarmId));
     }
 
     @Operation(summary = "유저 알람 목록 불러오기", description = "개인/그룹 알람 가져오기")
@@ -63,7 +63,7 @@ public class AlarmController {
             @Parameter(description = "- 개인 : personal\n- 그룹 : group", example = "personal") String type,
             @Parameter(hidden = true) @AuthUser Integer userId
     ) {
-        return new BaseResponse<>(Status.SUCCESS, alarmProvider.getAlarmsByUserIdOrderByDate(userId, type));
+        return new BaseResponse<>(Status.SUCCESS, alarmQueryService.getAlarmsByUserIdOrderByDate(userId, type));
     }
 
     @Operation(summary = "알람 생성")

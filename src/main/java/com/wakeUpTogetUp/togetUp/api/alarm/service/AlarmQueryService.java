@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AlarmProvider {
+public class AlarmQueryService {
 
     private final UserValidationService userValidationService;
     private final AlarmRepository alarmRepository;
