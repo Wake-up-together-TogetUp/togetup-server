@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.alarm.dto.response;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.model.AlarmType;
+import com.wakeUpTogetUp.togetUp.api.alarm.domain.AlarmType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalTime;
 import lombok.Getter;

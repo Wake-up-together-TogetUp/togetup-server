@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.home;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.AlarmProvider;
+import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmProvider;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmTimeLineRes;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.api.avatar.application.AvatarSpeechProvider;

@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.alarm.model;
+package com.wakeUpTogetUp.togetUp.api.alarm.domain;
 
 public enum AlarmType {
     PERSONAL,

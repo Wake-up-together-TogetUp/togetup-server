@@ -4,6 +4,8 @@ import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmsDeactivateReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PatchAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmProvider;
+import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmService;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;

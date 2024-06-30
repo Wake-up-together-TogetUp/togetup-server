@@ -1,5 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.alarm.model;
 
+import com.wakeUpTogetUp.togetUp.api.alarm.domain.AlarmType;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
