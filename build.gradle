@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.18'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com.jogijo'
@@ -13,6 +14,21 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    set('springBootVersion', '2.7.18')
+    set('springCloudGcpVersion', '1.2.8.RELEASE')
+    set('springCloudVersion', "2021.0.7")
+    set('queryDslVersion', "5.0.0")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+        mavenBom "org.springframework.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.vladmihalcea:hibernate-types-52:2.17.3'
@@ -20,9 +36,11 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
     implementation 'org.apache.httpcomponents:httpcore:4.4.15'
     implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+
+    // aop
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 
     // health check
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -43,6 +61,9 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+    // queryDSL
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
     // mybatis
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.0'
@@ -104,17 +125,24 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-storage:1.113.6'
 }
 
-ext {
-    set('springBootVersion', '2.7.18')
-    set('springCloudGcpVersion', '1.2.8.RELEASE')
-    set('springCloudVersion', "2021.0.7")
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
 }
 
+sourceSets {
+    main.java.srcDir querydslDir
+}
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-        mavenBom "org.springframework.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
     }
+    querydsl.extendsFrom compileClasspath
 }

@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.room;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
+import com.wakeUpTogetUp.togetUp.api.alarm.repository.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.avatar.repository.UserAvatarRepository;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;

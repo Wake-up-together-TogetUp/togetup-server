@@ -1,5 +1,6 @@
-package com.wakeUpTogetUp.togetUp.api.alarm;
+package com.wakeUpTogetUp.togetUp.api.alarm.service;
 
+import com.wakeUpTogetUp.togetUp.api.alarm.repository.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import java.util.List;
