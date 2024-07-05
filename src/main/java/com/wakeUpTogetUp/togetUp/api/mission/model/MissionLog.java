@@ -3,8 +3,9 @@ package com.wakeUpTogetUp.togetUp.api.mission.model;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.users.domain.User;
-import java.sql.Timestamp;
-import java.time.Instant;
+
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,17 +15,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
+
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Getter
-@Setter
 @ToString
 @NoArgsConstructor
 @Entity
@@ -46,7 +47,7 @@ public class MissionLog {
     private String missionPicLink;
 
     @Column(name = "created_at", columnDefinition = "Timestamp")
-    private Timestamp createdAt = Timestamp.from(Instant.now());
+    private LocalDateTime createdAt;
 
     @Column(name = "is_deleted")
     private Boolean isDeleted = false;

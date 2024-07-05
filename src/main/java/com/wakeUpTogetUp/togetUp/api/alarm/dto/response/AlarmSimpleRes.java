@@ -1,6 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.alarm.dto.response;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.model.AlarmType;
+import com.querydsl.core.annotations.QueryProjection;
+import com.wakeUpTogetUp.togetUp.api.alarm.domain.AlarmType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalTime;
 import lombok.Getter;
@@ -27,4 +28,14 @@ public class AlarmSimpleRes {
 
     @Schema(description = "알람 종류 (`개인`, `그룹`)")
     private AlarmType alarmType;
+
+    @QueryProjection
+    public AlarmSimpleRes(Integer id, String icon, LocalTime alarmTime, String name, String missionObject, Integer roomId) {
+        this.id = id;
+        this.icon = icon;
+        this.alarmTime = alarmTime;
+        this.name = name;
+        this.missionObject = missionObject;
+        this.alarmType = roomId != null ? AlarmType.GROUP : AlarmType.PERSONAL;
+    }
 }

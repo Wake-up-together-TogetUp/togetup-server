@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.alarm;
+package com.wakeUpTogetUp.togetUp.api.alarm.service;
 
 import static com.wakeUpTogetUp.togetUp.common.Constant.GET_ALARM_MODE_GROUP;
 import static com.wakeUpTogetUp.togetUp.common.Constant.GET_ALARM_MODE_PERSONAL;
@@ -7,23 +7,28 @@ import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmTimeLineRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+import com.wakeUpTogetUp.togetUp.api.alarm.repository.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserValidationService;
 import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.common.annotation.LogExecutionTime;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-import com.wakeUpTogetUp.togetUp.utils.DateTimeProvider;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class AlarmProvider {
+@Transactional(readOnly = true)
+public class AlarmQueryService {
 
     private final UserValidationService userValidationService;
     private final AlarmRepository alarmRepository;
@@ -31,15 +36,16 @@ public class AlarmProvider {
     public List<GetAlarmRes> getAlarmsByUserIdOrderByDate(Integer userId, String type) {
         userValidationService.validateUserExist(userId);
 
+        List<Alarm> alarms;
         if (type.equals(GET_ALARM_MODE_PERSONAL)) {
-            List<Alarm> alarmList = alarmRepository.findAllByUser_IdAndRoom_IdIsNullOrderByAlarmTime(userId);
-            return EntityDtoMapper.INSTANCE.toAlarmResList(alarmList);
+            alarms = alarmRepository.findAllByUser_IdAndRoom_IdIsNullOrderByAlarmTime(userId);
         } else if (type.equals(GET_ALARM_MODE_GROUP)) {
-            List<Alarm> alarmList = alarmRepository.findRoomAlarmByUserId(userId);
-            return EntityDtoMapper.INSTANCE.toAlarmResList(alarmList);
+            alarms = alarmRepository.findRoomAlarmByUserId(userId);
         } else {
             throw new BaseException(Status.BAD_REQUEST_PARAM);
         }
+
+        return EntityDtoMapper.INSTANCE.toAlarmResList(alarms);
     }
 
     public GetAlarmRes getAlarmById(Integer alarmId) {
@@ -49,39 +55,34 @@ public class AlarmProvider {
         return EntityDtoMapper.INSTANCE.toAlarmRes(alarm);
     }
 
-    public AlarmTimeLineRes getTimeLine(Integer userId) {
-        LocalDate today = DateTimeProvider.getCurrentDateInSeoul();
-        DayOfWeek dayOfWeek = today.getDayOfWeek();
-        LocalTime now = LocalTime.now();
+    @LogExecutionTime
+    public AlarmTimeLineRes getTimeLine(Integer userId, LocalDateTime now) {
+        LocalTime time = now.toLocalTime();
 
-        List<Alarm> timeline = getAlarmTimeLineByUserId(userId, today, dayOfWeek, now);
-
-        AlarmSimpleRes nextAlarmRes =
-                EntityDtoMapper.INSTANCE.toAlarmSimpleRes(getNextAlarm(timeline, now).orElse(null));
-        List<AlarmSimpleRes> alarmSimpleResList = EntityDtoMapper.INSTANCE.toAlarmSimpleResList(timeline);
+        List<AlarmSimpleRes> timeline = getMergedTimeLine(userId, now);
+        AlarmSimpleRes nextAlarmRes = getNextAlarmSimpleRes(timeline, time).orElse(null);
 
         return AlarmTimeLineRes.builder()
-                .today(today)
-                .dayOfWeek(dayOfWeek)
+                .today(now.toLocalDate())
+                .dayOfWeek(now.getDayOfWeek())
                 .nextAlarm(nextAlarmRes)
-                .todayAlarmList(alarmSimpleResList)
+                .todayAlarmList(timeline)
                 .build();
     }
 
-    private List<Alarm> getAlarmTimeLineByUserId(Integer userId, LocalDate today, DayOfWeek dayOfWeek, LocalTime now) {
-        List<Alarm> alarmsWithTodayLog =
-                alarmRepository.findAllUserAlarmsWithTodayLog(userId, today);
-        List<Alarm> todayActiveAlarmsAfterNow =
-                alarmRepository.findAllUserTodayActiveAlarmsAfterNow(userId, dayOfWeek.name(), now);
+    @LogExecutionTime
+    private List<AlarmSimpleRes> getMergedTimeLine(Integer userId, LocalDateTime now) {
+        List<AlarmSimpleRes> alarmsWithTodayLog = alarmRepository.findAllUserAlarmsWithTodayLog(userId, now.toLocalDate().atStartOfDay());
+        List<AlarmSimpleRes> alarmsActiveAfterNow = alarmRepository.findAllUserTodayActiveAlarmsAfterNow(userId, now);
 
-        List<Alarm> timeline = new ArrayList<>(alarmsWithTodayLog);
-        timeline.addAll(todayActiveAlarmsAfterNow);
+        List<AlarmSimpleRes> timeline = new ArrayList<>(alarmsWithTodayLog);
+        timeline.addAll(alarmsActiveAfterNow);
 
         return timeline;
     }
 
-    private Optional<Alarm> getNextAlarm(List<Alarm> alarms, LocalTime now) {
-        return alarms.stream()
+    private Optional<AlarmSimpleRes> getNextAlarmSimpleRes(List<AlarmSimpleRes> timeLine, LocalTime now) {
+        return timeLine.stream()
                 .filter(alarm -> alarm.getAlarmTime().isAfter(now))
                 .findFirst();
     }

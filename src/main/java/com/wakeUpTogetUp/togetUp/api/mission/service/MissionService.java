@@ -2,7 +2,7 @@ package com.wakeUpTogetUp.togetUp.api.mission.service;
 
 import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.findExistingUser;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.AlarmRepository;
+import com.wakeUpTogetUp.togetUp.api.alarm.repository.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.avatar.application.UserAvatarService;
 import com.wakeUpTogetUp.togetUp.api.avatar.application.model.UnlockAvatarResult;
