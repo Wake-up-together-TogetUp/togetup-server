@@ -1,47 +1,43 @@
 package com.wakeUpTogetUp.togetUp.api.mission.domain;
 
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import lombok.Builder;
 
 public class ObjectDetectionResult extends VisionAnalysisResult {
 
     private final List<CustomDetectedObject> objects;
     private final List<CustomDetectedTag> tags;
-
-    protected Pattern targetPattern;
+    private final Pattern targetPattern =
+            Pattern.compile("(^|\\s)" + targetName.toLowerCase() + "(\\s|$)");
+    private final boolean isFail;
 
     @Builder
     private ObjectDetectionResult(String target, List<CustomDetectedObject> objects, List<CustomDetectedTag> tags) {
         super(target);
         this.objects = objects;
         this.tags = tags;
-        initTarget();
+        this.isFail = determineResult();
     }
 
-    @Override
-    void initTarget() {
-        this.targetPattern = Pattern.compile("(^|\\s)" + targetName.toLowerCase() + "(\\s|$)");
+    private boolean determineResult() {
+        return !hasAnyMatchObject() && !hasAnyMatchTag();
     }
 
     @Override
     public boolean isFail() {
-        return !hasAnyMatchObject() && !hasAnyMatchTag();
+        return isFail;
     }
 
     private boolean hasAnyMatchObject() {
         return objects.stream()
-            .peek(object -> System.out.println("Checking object: " + object.getName() + ", isMatchEntity: " + object.isMatchEntity(targetPattern)))
             .anyMatch(object -> object.isMatchEntity(targetPattern));
     }
 
     private boolean hasAnyMatchTag() {
         return tags.stream()
-                .peek(tag -> System.out.println("Checking tag: " + tag.getName() + ", isMatchEntity: " + tag.isMatchEntity(targetPattern)))
                 .anyMatch(tag -> tag.isMatchEntity(targetPattern));
     }
 
@@ -56,29 +52,31 @@ public class ObjectDetectionResult extends VisionAnalysisResult {
     }
 
     @Override
-    public void print() {
-        System.out.println("\n\ntargetName = " + targetName);
-        System.out.println("[실행시간]: " + LocalDateTime.now());
-        printDetectedObjects();
-        printDetectedTags();
-    }
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
 
-    private void printDetectedObjects() {
-        System.out.println("\n[객체 인식]");
-        System.out.println("objects.size() = " + objects.size());
-        System.out.println();
+        sb.append("[미션 결과] : ");
 
+        if (isFail) {
+            sb.append("실패");
+        } else {
+            sb.append("성공");
+        }
+
+        sb.append("\ntargetName = ").append(targetName).append("\n");
+
+        sb.append("\n[객체 인식]\n");
+        sb.append("objects.size() = ").append(objects.size()).append("\n");
         objects.forEach(object -> {
-            System.out.println();
-            System.out.println("object = " + object.getName());
-            System.out.println("parent = " + object.getParent());});
-    }
+            sb.append("\n");
+            sb.append("object = ").append(object.getName()).append("\n");
+            sb.append("parent = ").append(object.getParent()).append("\n");
+        });
 
-    private void printDetectedTags() {
-        System.out.println("\n[태그]");
-        System.out.println("tags.size() = " + tags.size());
-        System.out.println();
+        sb.append("\n[태그]").append("\n");
+        sb.append("tags.size() = ").append(tags.size()).append("\n\n");
+        tags.forEach(tag -> sb.append(tag.getName()).append("\n"));
 
-        tags.forEach(tag -> System.out.println(tag.getName()));
+        return sb.toString();
     }
 }

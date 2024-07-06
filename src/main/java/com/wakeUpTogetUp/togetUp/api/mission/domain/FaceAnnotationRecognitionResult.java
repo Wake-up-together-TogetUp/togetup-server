@@ -1,34 +1,30 @@
 package com.wakeUpTogetUp.togetUp.api.mission.domain;
 
 import com.wakeUpTogetUp.togetUp.api.mission.model.Expression;
-
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import lombok.Builder;
 
 public class FaceAnnotationRecognitionResult extends VisionAnalysisResult {
 
     private final List<CustomDetectedFaceAnnotation> faceAnnotations;
-
-    private Expression targetExpression;
+    private final Expression targetExpression = Expression.fromName(targetName);
+    private final boolean isFail;
 
     @Builder
     public FaceAnnotationRecognitionResult(String target, List<CustomDetectedFaceAnnotation> faceAnnotations) {
         super(target);
         this.faceAnnotations = faceAnnotations;
-        initTarget();
-    }
-
-    @Override
-    void initTarget() {
-        this.targetExpression = Expression.fromName(targetName);
+        this.isFail = determineResult();
     }
 
     @Override
     public boolean isFail() {
+        return isFail;
+    }
+
+    private boolean determineResult() {
         return faceAnnotations.stream()
                 .noneMatch(faceAnnotation -> faceAnnotation.isMatchEntity(this.targetExpression));
     }
@@ -43,20 +39,30 @@ public class FaceAnnotationRecognitionResult extends VisionAnalysisResult {
     }
 
     @Override
-    public void print() {
-        System.out.println("\n\ntargetName = " + targetName);
-        System.out.println("[실행시간]: " + LocalDateTime.now());
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
 
-        System.out.println("\n\n[표정 인식] " + LocalDateTime.now());
-        System.out.println("emotions.size() = " + faceAnnotations.size());
-        System.out.println();
+        sb.append("[미션 결과] : ");
+
+        if (isFail) {
+            sb.append("실패");
+        } else {
+            sb.append("성공");
+        }
+
+        sb.append("\ntargetName = ").append(targetName).append("\n");
+
+        sb.append("\n[표정 인식]\n");
+        sb.append("emotions.size() = ").append(faceAnnotations.size()).append("\n\n");
 
         faceAnnotations.forEach(faceAnnotation -> {
-            System.out.println("JOY = " + faceAnnotation.getJoyLikelihood());
-            System.out.println("SORROW = " + faceAnnotation.getSorrowLikelihood());
-            System.out.println("ANGER = " + faceAnnotation.getAngerLikelihood());
-            System.out.println("SURPRISE = " + faceAnnotation.getSurpriseLikelihood());
-            System.out.println();
+            sb.append("JOY = ").append(faceAnnotation.getJoyLikelihood()).append("\n");
+            sb.append("SORROW = ").append(faceAnnotation.getSorrowLikelihood()).append("\n");
+            sb.append("ANGER = ").append(faceAnnotation.getAngerLikelihood()).append("\n");
+            sb.append("SURPRISE = ").append(faceAnnotation.getSurpriseLikelihood()).append("\n");
+            sb.append("\n");
         });
+
+        return sb.toString();
     }
 }
