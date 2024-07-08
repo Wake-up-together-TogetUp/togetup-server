@@ -4,6 +4,8 @@ package com.wakeUpTogetUp.togetUp.api.room.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.common.Constant;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
@@ -46,11 +48,11 @@ public class Room {
     private String invitationCode;
 
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "room",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomUser> roomUsers = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "room",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Alarm> alarms = new ArrayList<>();
 
     @Column(name = "created_at")
@@ -81,6 +83,11 @@ public class Room {
         this.invitationCode = UUID.randomUUID().toString().substring(0, Constant.INVITATION_CODE_LENGTH);
     }
 
+    public void join(RoomUser newRoomUser){
+        checkAleadyJoin(newRoomUser);
+        checkRoomCapacity();
+        roomUsers.add(newRoomUser);
+    }
     public boolean isEmptyRoom() {
         return this.roomUsers.size() == 0;
     }
@@ -88,6 +95,33 @@ public class Room {
     public boolean isUserInRoom(Integer userId) {
         return roomUsers.stream()
                 .anyMatch(roomUser -> userId == roomUser.getUser().getId());
+    }
+
+    public void checkRoomCapacity() {
+        if (roomUsers.size() >= 10) {
+            throw new BaseException(Status.ROOM_FULL);
+        }
+    }
+
+    public void checkAleadyJoin(RoomUser newRoomUser){
+
+        if (isUserInRoom(newRoomUser.getUser().getId())) {
+            throw new BaseException(Status.ROOM_USER_ALREADY_EXIST);
+        }
+    }
+    public void leaveRoom(Integer userId){
+        if(!isUserInRoom(userId)) {
+            throw new BaseException(Status.ROOM_USER_NOT_FOUND);
+        }
+        RoomUser userToRemove = getUserInRoom(userId);
+        roomUsers.remove(userToRemove);
+    }
+
+    private RoomUser getUserInRoom(Integer userId){
+        return roomUsers.stream()
+                .filter(roomUser -> userId.equals(roomUser.getUser().getId()))
+                .findFirst()
+                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
     }
 
 }

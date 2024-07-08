@@ -54,12 +54,9 @@ public class RoomService {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
-        if(!room.isUserInRoom(userId)) {
-            throw new BaseException(Status.ROOM_USER_NOT_FOUND);
-        }
+        room.leaveRoom(userId);
 
-        roomUserRepository.deleteByRoom_IdAndUser_Id(roomId, userId);
-        deleteUnnecessaryRoomAndAlarm(room, userId);
+        deleteUnnecessaryRoomAndAlarm(room,userId);
 
     }
 
@@ -68,6 +65,7 @@ public class RoomService {
         Alarm alarm = alarmRepository.findByUser_IdAndRoom_Id(userId, room.getId())
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
         alarmRepository.delete(alarm);
+
             if(room.isEmptyRoom())
                 roomRepository.delete(room);
 
@@ -95,12 +93,8 @@ public class RoomService {
     public void joinRoom(Integer roomId, Integer invitedUserId) {
         User user = findExistingUser(userRepository, invitedUserId);
 
-        Room room = roomRepository.findById(roomId)
+        Room room = roomRepository.findByIdUsingPessimisticLock(roomId)
                 .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
-
-        boolean isAlreadyJoin = roomUserRepository.existsRoomUserByRoom_IdAndUser_Id(roomId, invitedUserId);
-        if (isAlreadyJoin)
-            throw new BaseException(Status.ROOM_USER_ALREADY_EXIST);
 
         RoomUser roomUser = RoomUser.builder()
                 .user(user)
@@ -108,6 +102,6 @@ public class RoomService {
                 .agreePush(true)
                 .build();
 
-        roomUserRepository.save(roomUser);
+        room.join((roomUser));
     }
 }
