@@ -19,7 +19,6 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 
     @Query("SELECT r FROM Room r JOIN Alarm a ON r.id = a.room.id WHERE a.id= :alarmId")
     Optional<Room> findByAlarmId(@Param("alarmId") Integer alarmId);
-    Optional<Room> findByInvitationCode(@Param("invitationCode") String invitationCode);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints({

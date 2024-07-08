@@ -1,7 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.room.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.common.Constant;
 import com.wakeUpTogetUp.togetUp.common.Status;
