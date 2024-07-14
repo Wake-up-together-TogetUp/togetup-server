@@ -2,8 +2,8 @@ package com.wakeUpTogetUp.togetUp.api.mission.service;
 
 import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.findExistingUser;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.repository.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+import com.wakeUpTogetUp.togetUp.api.alarm.repository.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.avatar.application.UserAvatarService;
 import com.wakeUpTogetUp.togetUp.api.avatar.application.model.UnlockAvatarResult;
 import com.wakeUpTogetUp.togetUp.api.mission.domain.CustomAnalysisEntity;
@@ -21,9 +21,7 @@ import com.wakeUpTogetUp.togetUp.api.users.domain.model.UserProgressResult;
 import com.wakeUpTogetUp.togetUp.api.users.domain.vo.UserStat;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
-
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,12 +45,13 @@ public class MissionService {
     private final MissionLogRepository missionLogRepository;
     private final UserRepository userRepository;
 
-    public List<CustomAnalysisEntity> getMissionResult(MissionType type, String object, MultipartFile missionImage) {
+    public List<CustomAnalysisEntity> getMissionResult(MissionType type, String object,
+            MultipartFile missionImage) {
         VisionAnalysisResult result = visionServiceFactory
                 .getVisionService(type)
                 .getResult(missionImage, object);
 
-        result.print();
+        log.debug(result.toString());
 
         if (result.isFail()) {
             throw new BaseException(Status.MISSION_FAILURE);
@@ -79,7 +78,6 @@ public class MissionService {
         createMissionLog(user, req);
         sendNotificationIfRoomExists(alarm, user);
         sendNotificationIfAvatarUnlocked(isAvatarUnlocked, user.getId());
-
 
         return MissionCompleteRes.builder()
                 .userStat(UserStat.from(user))
