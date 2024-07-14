@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class MissionImageStrategyFactory {
 
     private final SimpleConversionStrategy simpleConversionStrategy;
-    private final AnalysisConversionStrategy imageProcessingStrategy;
+    private final AnalysisConversionStrategy analysisConversionStrategy;
 
     public MissionImageStrategy getStrategy(MissionType missionType) {
         switch (missionType) {
@@ -18,7 +18,7 @@ public class MissionImageStrategyFactory {
                 return simpleConversionStrategy;
 
             default:
-                return imageProcessingStrategy;
+                return analysisConversionStrategy;
         }
     }
 }

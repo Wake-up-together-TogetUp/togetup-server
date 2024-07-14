@@ -123,6 +123,15 @@ dependencies {
     // firebase admin 종속성에서 api-client 2.2.0 버전을 사용해서 버전 충돌이 났음
     implementation 'com.google.api-client:google-api-client:1.31.1'
     implementation 'com.google.cloud:google-cloud-storage:1.113.6'
+
+    // cache
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'javax.cache:cache-api'
+
+    // bucket4j
+    implementation 'com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:0.8.1'
+    implementation 'com.github.ben-manes.caffeine:caffeine'
+    implementation 'com.github.ben-manes.caffeine:jcache'
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
