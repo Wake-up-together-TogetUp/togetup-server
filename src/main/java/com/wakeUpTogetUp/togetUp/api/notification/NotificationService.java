@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
-    private final FcmService fcmService;
     private final UserService userService;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
@@ -54,6 +53,7 @@ public class NotificationService {
                 .collect(Collectors.toList());
 
         if (userIdsInRoom.size() > 0) {
+
             EventPublisher.raise(new RoomMissionLogNotificationEvent(
                     user,
                     room,
