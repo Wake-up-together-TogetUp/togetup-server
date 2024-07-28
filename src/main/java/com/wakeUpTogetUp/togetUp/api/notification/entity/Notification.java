@@ -46,8 +46,8 @@ public class Notification {
     @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name = "is_read" )
-    private Boolean isRead ;
+    @Column(name = "is_read")
+    private Boolean isRead;
 
     @PrePersist
     void createdAt() {
@@ -68,4 +68,7 @@ public class Notification {
                 .collect(Collectors.toList());
     }
 
+    public void readNotification() {
+        this.isRead = true;
+    }
 }

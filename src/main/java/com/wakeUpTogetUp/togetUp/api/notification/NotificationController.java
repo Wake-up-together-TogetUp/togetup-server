@@ -1,9 +1,12 @@
 package com.wakeUpTogetUp.togetUp.api.notification;
 
+import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.api.notification.dto.request.BroadCastNotificationReq;
+import com.wakeUpTogetUp.togetUp.api.notification.dto.response.NotificationListRes;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,6 +32,36 @@ public class NotificationController {
     ) {
         notificationService.sendNotificationToAllUsers(broadCastNotificationReq.getTitle(), broadCastNotificationReq.getBody());
 
+        return new BaseResponse(Status.SUCCESS);
+    }
+
+    @Operation(summary = "notifiaction list 가져오기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.")})
+    @GetMapping()
+    public BaseResponse<NotificationListRes> getNotificationList(@Parameter(hidden = true) @AuthUser Integer userId
+    ) {
+
+        return new BaseResponse(Status.SUCCESS, notificationService.getList(userId));
+    }
+
+    @Operation(summary = "notifiaction isRead 를 true로 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.")})
+    @PatchMapping
+    public BaseResponse<Status> readNotification(@Parameter(hidden = true) @AuthUser Integer userId, @Parameter(example = "1") @RequestParam Integer notificationId
+    ) {
+        notificationService.updateIsReadToTrue(userId, notificationId);
+        return new BaseResponse(Status.SUCCESS);
+    }
+
+    @Operation(summary = "notifiaction을 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.")})
+    @DeleteMapping
+    public BaseResponse<Status> deleteNotification(@Parameter(hidden = true) @AuthUser Integer userId, @Parameter(example = "1") @RequestParam Integer notificationId
+    ) {
+        notificationService.delete(userId, notificationId);
         return new BaseResponse(Status.SUCCESS);
     }
 
