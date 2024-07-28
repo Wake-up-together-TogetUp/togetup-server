@@ -1,15 +1,16 @@
 package com.wakeUpTogetUp.togetUp.api.notification.entity;
 
-import com.wakeUpTogetUp.togetUp.api.room.model.Room;
+import com.wakeUpTogetUp.togetUp.api.notification.DataMapToStringConverter;
+import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
 import com.wakeUpTogetUp.togetUp.utils.TimeFormatter;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Map;
 
 @Entity
 @Table(name = "notification")
@@ -28,14 +29,17 @@ public class Notification {
 
     private String content;
 
-    @Column(columnDefinition = "timestamp")
-    private String createdAt = TimeFormatter.timestampFormat(new Timestamp(System.currentTimeMillis()));
+    @Column(name = "created_at")
+    private Timestamp createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "roomId", columnDefinition = "INT UNSIGNED")
-    private Room room;
+    @Convert(converter = DataMapToStringConverter.class)
+    @Column(columnDefinition = "TEXT")
+    private Map<String, String> dataMap;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fcmTokenId", columnDefinition = "INT UNSIGNED")
-    private FcmToken fcmToken;
+    @Column(name = "user_id")
+    private Integer userId;
+
+    @Column(name = "is_read")
+    private boolean isRead;
+
 }
