@@ -8,5 +8,10 @@ import java.util.List;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
+    List<Notification> findByUserIdOrderByCreatedAtDesc(Integer userId);
 
+    Notification findByUserIdAndId(Integer userId, Integer notificationId);
+
+    void deleteByUserIdAndId(Integer userId, Integer notificationId);
 }
+
