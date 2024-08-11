@@ -43,7 +43,7 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer>, AlarmQue
     List<AlarmSimpleRes> findAllUserAlarmsWithTodayLog(@Param("userId") Integer userId, @Param("baseTime") LocalDateTime baseTime);
 
     @Query("SELECT a.missionObject FROM Alarm a WHERE a.room.id = :roomId ")
-    MissionObject findMissionObjectByRoomId(@Param("roomId") Integer roomId);
+    List<MissionObject> findMissionObjectByRoomId(@Param("roomId") Integer roomId);
 
     @Modifying
     @Query("UPDATE Alarm a SET a.room.id = :roomId WHERE a.id = :alarmId")
