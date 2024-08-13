@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.utils.mapper;
 
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmDetailRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.Avatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.UserAvatar;
@@ -28,20 +28,19 @@ public interface EntityDtoMapper {
 
     // Alarm
     @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "icon", source = "missionObject.icon")
     @Mapping(target = "getMissionRes", source = "mission")
     @Mapping(target = "getMissionObjectRes", source = "missionObject")
-    @Mapping(target = "roomRes", source = "room")
-    @Mapping(target = "roomRes.roomId", source = "room.id")
-    @Mapping(target = "roomRes.icon", source = "icon")
-    GetAlarmRes toAlarmRes(Alarm alarm);
+    @Mapping(target = "roomRes.roomId", source = "alarm.room.id")
+    @Mapping(target = "roomRes.name", source = "alarm.room.name")
+    AlarmDetailRes toAlarmDetailRes(Alarm alarm);
 
-    List<GetAlarmRes> toAlarmResList(List<Alarm> alarmList);
+    List<AlarmDetailRes> toAlarmDetailResList(List<Alarm> alarms);
 
+    @Mapping(target = "icon", source = "missionObject.icon")
     @Mapping(target = "alarmType", expression = "java(alarm.getAlarmType())")
     @Mapping(target = "missionObject", source = "alarm.missionObject.kr")
     AlarmSimpleRes toAlarmSimpleRes(Alarm alarm);
-
-    List<AlarmSimpleRes> toAlarmSimpleResList(List<Alarm> alarmList);
 
     // Mission
     GetMissionObjectRes toGetMissionObjectRes(MissionObject missionObject);

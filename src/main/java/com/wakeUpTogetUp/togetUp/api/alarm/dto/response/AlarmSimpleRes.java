@@ -17,7 +17,7 @@ public class AlarmSimpleRes {
     @Schema(description = "아이콘", example = "⏰")
     private String icon;
 
-    @Schema(name = "alarm_time", example = "06:00:00")
+    @Schema(name = "알람 시간", example = "06:00:00")
     private LocalTime alarmTime;
 
     @Schema(description = "알람 이름", example = "기상 알람")
