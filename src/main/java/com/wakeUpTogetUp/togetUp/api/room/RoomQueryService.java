@@ -102,7 +102,7 @@ public class RoomQueryService {
 
     public RoomDetailRes.MissionData getMissionData(Integer roomId){
         MissionObject roomMissionObject = alarmRepository.findMissionObjectByRoomId(roomId).get(0);
-        return RoomDetailRes.MissionData.of(roomMissionObject.getIcon(), roomMissionObject.getKr());
+        return RoomDetailRes.MissionData.of(roomMissionObject.getIcon(), roomMissionObject.getKr(),roomMissionObject.getName());
     }
 
     public RoomInviteInfoRes getRoomInformation(String invitationCode) {
@@ -118,7 +118,8 @@ public class RoomQueryService {
                 room.getCreatedAt(),
                 room.getRoomUsers().size(),
                 roomMissionObject.getId(),
-                roomMissionObject.getKr()
+                roomMissionObject.getKr(),
+                roomMissionObject.getName()
         );
     }
 
