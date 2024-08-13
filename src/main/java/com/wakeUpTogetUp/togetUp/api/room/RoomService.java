@@ -31,7 +31,7 @@ public class RoomService {
     private final AlarmMigrationMapper alarmMigrationMapper;
 
     @Transactional
-    public void createRoom(Integer userId, RoomReq roomReq) {
+    public Integer createRoom(Integer userId, RoomReq roomReq) {
 
         Room room = Room.builder()
                 .name(roomReq.getName())
@@ -46,6 +46,7 @@ public class RoomService {
 
         alarmRepository.updateRoomIdByAlarmId(alarmId, savedRoom.getId());
 
+        return alarmId;
     }
 
     @Transactional
@@ -82,11 +83,12 @@ public class RoomService {
     }
 
     @Transactional
-    public void createAlarmAndJoinRoom(Integer roomId, Integer invitedUserId, AlarmCreateReq alarmCreateReq) {
+    public Integer createAlarmAndJoinRoom(Integer roomId, Integer invitedUserId, AlarmCreateReq alarmCreateReq) {
         PostAlarmReq postAlarmReq = alarmMigrationMapper.convertAlarmCreateReqToPostAlarmReq(alarmCreateReq);
         Alarm alarm = alarmService.createAlarmDeprecated(invitedUserId, postAlarmReq);
         alarmRepository.updateRoomIdByAlarmId(alarm.getId(), roomId);
         joinRoom(roomId, invitedUserId);
+        return alarm.getId();
     }
 
     @Transactional
