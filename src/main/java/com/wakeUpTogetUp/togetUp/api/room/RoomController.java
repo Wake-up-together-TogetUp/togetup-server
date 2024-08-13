@@ -45,8 +45,8 @@ public class RoomController {
     @PostMapping()
     public BaseResponse<Integer> create(@Parameter(hidden = true) @AuthUser Integer userId, @RequestBody RoomReq roomReq) {
 
-        Integer aramId = roomService.createRoom(userId, roomReq);
-        return new BaseResponse<>(Status.SUCCESS_CREATED,aramId);
+        Integer alarmId = roomService.createRoom(userId, roomReq);
+        return new BaseResponse<>(Status.SUCCESS_CREATED,alarmId);
 
     }
 
