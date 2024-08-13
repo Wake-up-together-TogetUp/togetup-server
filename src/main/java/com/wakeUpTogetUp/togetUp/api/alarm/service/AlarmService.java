@@ -32,9 +32,8 @@ public class AlarmService {
     private final MissionRepository missionRepository;
     private final MissionObjectRepository missionObjectRepository;
 
-    @Deprecated
     @Transactional
-    public Alarm createAlarmDeprecated(Integer userId, PostAlarmReq postAlarmReq) {
+    public Alarm create(Integer userId, PostAlarmReq postAlarmReq) {
         User user = findExistingUser(userRepository, userId);
 
         Mission mission = null;
@@ -56,7 +55,6 @@ public class AlarmService {
 
         Alarm alarm = Alarm.create(
                 postAlarmReq.getName(),
-                postAlarmReq.getIcon(),
                 LocalTime.parse(postAlarmReq.getAlarmTime()),
                 postAlarmReq.getMonday(),
                 postAlarmReq.getTuesday(),
@@ -73,7 +71,6 @@ public class AlarmService {
 
     @Transactional
     public Alarm updateAlarm(Integer userId, Integer alarmId, PatchAlarmReq patchAlarmReq) {
-        // 알람 수정
         Alarm alarm = alarmRepository.findByIdAndUser_Id(alarmId, userId)
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
         Mission mission = null;
@@ -95,7 +92,6 @@ public class AlarmService {
 
         alarm.modifyProperties(
                 patchAlarmReq.getName(),
-                patchAlarmReq.getIcon(),
                 LocalTime.parse(patchAlarmReq.getAlarmTime()),
                 patchAlarmReq.getMonday(),
                 patchAlarmReq.getTuesday(),

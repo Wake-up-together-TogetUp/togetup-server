@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,9 +19,6 @@ public class PostAlarmReq {
     @Schema(description = "알람 이름", requiredMode = RequiredMode.REQUIRED, example = "기상")
     @NotBlank(message = "알람 이름은 공백일 수 없습니다.")
     private String name;
-
-    @Schema(description = "아이콘", defaultValue = "⏰", example = "⏰")
-    private String icon;
 
     @Schema(description = "알람 시간", requiredMode = RequiredMode.REQUIRED, example = "06:00")
     @NotNull(message = "알람 시간은 공백일 수 없습니다.")

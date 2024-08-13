@@ -83,7 +83,7 @@ public class AlarmController {
             @Parameter(hidden = true) @AuthUser Integer userId,
             @RequestBody @Valid PostAlarmReq postAlarmReq
     ) {
-        return new BaseResponse<>(Status.SUCCESS_CREATED, alarmService.createAlarmDeprecated(userId, postAlarmReq).getId());
+        return new BaseResponse<>(Status.SUCCESS_CREATED, alarmService.create(userId, postAlarmReq).getId());
     }
 
     @Operation(summary = "알람 수정")

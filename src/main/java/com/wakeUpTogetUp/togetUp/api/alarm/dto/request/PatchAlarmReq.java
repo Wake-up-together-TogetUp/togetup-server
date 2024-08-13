@@ -3,7 +3,11 @@ package com.wakeUpTogetUp.togetUp.api.alarm.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -13,10 +17,6 @@ public class PatchAlarmReq {
     @Schema(description = "알람 이름", example = "기상 알람")
     @NotNull(message = "null 값일 수 없습니다.")
     private String name;
-
-    @Schema(description = "아이콘", example = "⏰")
-    @NotNull(message = "null 값일 수 없습니다.")
-    private String icon;
 
     @Schema(description = "알람 시간", example = "06:00")
     @NotNull(message = "null 값일 수 없습니다.")
