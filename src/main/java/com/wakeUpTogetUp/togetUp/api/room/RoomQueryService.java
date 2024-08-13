@@ -101,7 +101,7 @@ public class RoomQueryService {
     }
 
     public RoomDetailRes.MissionData getMissionData(Integer roomId){
-        MissionObject roomMissionObject = alarmRepository.findMissionObjectByRoomId(roomId);
+        MissionObject roomMissionObject = alarmRepository.findMissionObjectByRoomId(roomId).get(0);
         return RoomDetailRes.MissionData.of(roomMissionObject.getIcon(), roomMissionObject.getKr());
     }
 
@@ -109,7 +109,7 @@ public class RoomQueryService {
 
         Room room = roomQueryRepository.findByInvitationCode(invitationCode)
                 .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
-        MissionObject roomMissionObject = alarmRepository.findMissionObjectByRoomId(room.getId());
+        MissionObject roomMissionObject = alarmRepository.findMissionObjectByRoomId(room.getId()).get(0);
         return RoomInviteInfoRes.of(
                 room.getId(),
                 roomMissionObject.getIcon(),
