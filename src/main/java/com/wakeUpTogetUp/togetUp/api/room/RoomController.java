@@ -43,10 +43,10 @@ public class RoomController {
     })
     @ResponseBody
     @PostMapping()
-    public BaseResponse<Status> create(@Parameter(hidden = true) @AuthUser Integer userId, @RequestBody RoomReq roomReq) {
+    public BaseResponse<Integer> create(@Parameter(hidden = true) @AuthUser Integer userId, @RequestBody RoomReq roomReq) {
 
-        roomService.createRoom(userId, roomReq);
-        return new BaseResponse(Status.SUCCESS_CREATED);
+        Integer aramId = roomService.createRoom(userId, roomReq);
+        return new BaseResponse<>(Status.SUCCESS_CREATED,aramId);
 
     }
 
@@ -61,10 +61,10 @@ public class RoomController {
     })
     @ResponseBody
     @PostMapping("/join/{roomId}")
-    public BaseResponse<Status> join(@Parameter(hidden = true) @AuthUser Integer userId, @Parameter(description = "룸 아이디", example = "1") @PathVariable Integer roomId, @RequestBody AlarmCreateReq alarmCreateReq) {
+    public BaseResponse<Integer> join(@Parameter(hidden = true) @AuthUser Integer userId, @Parameter(description = "룸 아이디", example = "1") @PathVariable Integer roomId, @RequestBody AlarmCreateReq alarmCreateReq) {
 
-        roomService.createAlarmAndJoinRoom(roomId, userId, alarmCreateReq);
-        return new BaseResponse(Status.SUCCESS);
+        Integer alarmId = roomService.createAlarmAndJoinRoom(roomId, userId, alarmCreateReq);
+        return new BaseResponse<>(Status.SUCCESS,alarmId);
 
     }
 
