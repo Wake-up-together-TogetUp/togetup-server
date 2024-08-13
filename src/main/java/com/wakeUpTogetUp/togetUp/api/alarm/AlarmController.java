@@ -3,7 +3,7 @@ package com.wakeUpTogetUp.togetUp.api.alarm;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmsDeactivateReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PatchAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmDetailRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmQueryService;
 import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmService;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
@@ -43,10 +43,10 @@ public class AlarmController {
             @ApiResponse(
                     responseCode = "200",
                     description = "요청에 성공하였습니다.",
-                    content = @Content(schema = @Schema(implementation = GetAlarmRes.class))),
+                    content = @Content(schema = @Schema(implementation = AlarmDetailRes.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 알람 입니다.")})
     @GetMapping("/{alarmId}")
-    public BaseResponse<GetAlarmRes> getAlarm(@PathVariable Integer alarmId) {
+    public BaseResponse<AlarmDetailRes> getAlarm(@PathVariable Integer alarmId) {
         return new BaseResponse<>(Status.SUCCESS, alarmQueryService.getAlarmById(alarmId));
     }
 
@@ -55,11 +55,11 @@ public class AlarmController {
             @ApiResponse(
                     responseCode = "200",
                     description = "요청에 성공하였습니다.",
-                    content = @Content(schema = @Schema(implementation = GetAlarmRes.class))),
+                    content = @Content(schema = @Schema(implementation = AlarmDetailRes.class))),
             @ApiResponse(responseCode = "400", description = "요청 파라미터를 확인해주세요."),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다.")})
     @GetMapping
-    public BaseResponse<List<GetAlarmRes>> getAlarmsByUserId(
+    public BaseResponse<List<AlarmDetailRes>> getAlarmsByUserId(
             @Parameter(description = "- 개인 : personal\n- 그룹 : group", example = "personal") String type,
             @Parameter(hidden = true) @AuthUser Integer userId
     ) {
@@ -83,7 +83,7 @@ public class AlarmController {
             @Parameter(hidden = true) @AuthUser Integer userId,
             @RequestBody @Valid PostAlarmReq postAlarmReq
     ) {
-        return new BaseResponse<>(Status.SUCCESS_CREATED, alarmService.createAlarmDeprecated(userId, postAlarmReq).getId());
+        return new BaseResponse<>(Status.SUCCESS_CREATED, alarmService.create(userId, postAlarmReq).getId());
     }
 
     @Operation(summary = "알람 수정")

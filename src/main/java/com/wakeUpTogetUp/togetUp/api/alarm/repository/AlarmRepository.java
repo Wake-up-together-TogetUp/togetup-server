@@ -4,7 +4,6 @@ import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.common.annotation.LogExecutionTime;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -28,12 +27,19 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer>, AlarmQue
 
     @Query("SELECT a "
             + "FROM Alarm a "
-            + "WHERE a.room.id IN (SELECT ru.room.id FROM RoomUser ru WHERE ru.user.id = :userId) "
+            + "WHERE a.user.id = :userId "
+            + "AND a.room.id != null "
             + "ORDER BY a.alarmTime")
     List<Alarm> findRoomAlarmByUserId(@Param("userId") Integer userId);
 
     @LogExecutionTime
-    @Query("SELECT new com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes(a.id, a.icon, a.alarmTime, a.name, mo.kr, a.room.id) "
+    @Query("SELECT new com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes("
+            + "a.id, "
+            + "a.missionObject.icon, "
+            + "a.alarmTime, "
+            + "a.name, "
+            + "mo.kr, "
+            + "a.room.id) "
             + "FROM Alarm a "
             + "JOIN MissionObject mo ON mo.id = a.missionObject.id "
             + "JOIN MissionLog ml ON a.id = ml.alarm.id "

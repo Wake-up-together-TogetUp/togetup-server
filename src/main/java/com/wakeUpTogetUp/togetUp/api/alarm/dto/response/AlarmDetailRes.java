@@ -10,12 +10,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Schema(description = "알람 1개 가져오기 response")
+@Schema(description = "알람 상세 조회 response")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetAlarmRes {
+public class AlarmDetailRes {
     @Schema(description = "알람 id")
     private Integer id;
 

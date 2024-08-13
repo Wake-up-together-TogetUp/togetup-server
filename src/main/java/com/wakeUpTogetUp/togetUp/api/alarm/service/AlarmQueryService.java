@@ -3,9 +3,9 @@ package com.wakeUpTogetUp.togetUp.api.alarm.service;
 import static com.wakeUpTogetUp.togetUp.common.Constant.GET_ALARM_MODE_GROUP;
 import static com.wakeUpTogetUp.togetUp.common.Constant.GET_ALARM_MODE_PERSONAL;
 
+import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmDetailRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmTimeLineRes;
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.alarm.repository.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserValidationService;
@@ -13,15 +13,12 @@ import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.annotation.LogExecutionTime;
 import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
-
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +30,7 @@ public class AlarmQueryService {
     private final UserValidationService userValidationService;
     private final AlarmRepository alarmRepository;
 
-    public List<GetAlarmRes> getAlarmsByUserIdOrderByDate(Integer userId, String type) {
+    public List<AlarmDetailRes> getAlarmsByUserIdOrderByDate(Integer userId, String type) {
         userValidationService.validateUserExist(userId);
 
         List<Alarm> alarms;
@@ -45,14 +42,14 @@ public class AlarmQueryService {
             throw new BaseException(Status.BAD_REQUEST_PARAM);
         }
 
-        return EntityDtoMapper.INSTANCE.toAlarmResList(alarms);
+        return EntityDtoMapper.INSTANCE.toAlarmDetailResList(alarms);
     }
 
-    public GetAlarmRes getAlarmById(Integer alarmId) {
+    public AlarmDetailRes getAlarmById(Integer alarmId) {
         Alarm alarm = alarmRepository.findById(alarmId)
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
-        return EntityDtoMapper.INSTANCE.toAlarmRes(alarm);
+        return EntityDtoMapper.INSTANCE.toAlarmDetailRes(alarm);
     }
 
     @LogExecutionTime
@@ -60,7 +57,8 @@ public class AlarmQueryService {
         LocalTime time = now.toLocalTime();
 
         List<AlarmSimpleRes> timeline = getMergedTimeLine(userId, now);
-        AlarmSimpleRes nextAlarmRes = getNextAlarmSimpleRes(timeline, time).orElse(null);
+        AlarmSimpleRes nextAlarmRes = getNextAlarmSimpleRes(timeline, time)
+                .orElse(null);
 
         return AlarmTimeLineRes.builder()
                 .today(now.toLocalDate())

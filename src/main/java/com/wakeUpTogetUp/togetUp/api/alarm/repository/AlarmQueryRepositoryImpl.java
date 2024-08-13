@@ -1,9 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.alarm.repository;
 
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
+import static com.wakeUpTogetUp.togetUp.api.alarm.model.QAlarm.alarm;
+import static com.wakeUpTogetUp.togetUp.api.mission.model.QMissionObject.missionObject;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -11,10 +9,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.QAlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.common.annotation.LogExecutionTime;
-
-import static com.wakeUpTogetUp.togetUp.api.alarm.model.QAlarm.alarm;
-import static com.wakeUpTogetUp.togetUp.api.mission.model.QMissionObject.missionObject;
-
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -29,7 +27,7 @@ public class AlarmQueryRepositoryImpl implements AlarmQueryRepository {
                 .select(
                         new QAlarmSimpleRes(
                                 alarm.id,
-                                alarm.icon,
+                                alarm.missionObject.icon,
                                 alarm.alarmTime,
                                 alarm.name,
                                 missionObject.kr,

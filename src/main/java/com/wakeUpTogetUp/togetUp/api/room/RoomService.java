@@ -2,11 +2,11 @@ package com.wakeUpTogetUp.togetUp.api.room;
 
 import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.findExistingUser;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.repository.AlarmRepository;
-import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmService;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmCreateReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+import com.wakeUpTogetUp.togetUp.api.alarm.repository.AlarmRepository;
+import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmService;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
@@ -40,7 +40,7 @@ public class RoomService {
 
         PostAlarmReq postAlarmReq = alarmMigrationMapper.convertAlarmCreateReqToPostAlarmReq(roomReq.getAlarmCreateReq());
 
-        Integer alarmId = alarmService.createAlarmDeprecated(userId, postAlarmReq).getId();
+        Integer alarmId = alarmService.create(userId, postAlarmReq).getId();
         Room savedRoom = roomRepository.save(room);
         this.joinRoom(savedRoom.getId(), userId);
 
@@ -85,7 +85,7 @@ public class RoomService {
     @Transactional
     public Integer createAlarmAndJoinRoom(Integer roomId, Integer invitedUserId, AlarmCreateReq alarmCreateReq) {
         PostAlarmReq postAlarmReq = alarmMigrationMapper.convertAlarmCreateReqToPostAlarmReq(alarmCreateReq);
-        Alarm alarm = alarmService.createAlarmDeprecated(invitedUserId, postAlarmReq);
+        Alarm alarm = alarmService.create(invitedUserId, postAlarmReq);
         alarmRepository.updateRoomIdByAlarmId(alarm.getId(), roomId);
         joinRoom(roomId, invitedUserId);
         return alarm.getId();

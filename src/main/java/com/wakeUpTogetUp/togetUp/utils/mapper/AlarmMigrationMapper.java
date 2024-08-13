@@ -9,7 +9,6 @@ public class AlarmMigrationMapper {
     public PostAlarmReq convertAlarmCreateReqToPostAlarmReq(AlarmCreateReq alarmCreateReq){
         return PostAlarmReq.of(
                 alarmCreateReq.getName(),
-                "⏰",
                 alarmCreateReq.getAlarmTime(),
                 alarmCreateReq.isMonday(),
                 alarmCreateReq.isTuesday(),
