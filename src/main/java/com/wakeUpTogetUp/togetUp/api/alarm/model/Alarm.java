@@ -42,8 +42,6 @@ public class Alarm {
 
     private String name;
 
-    private String icon;
-
     @Column(columnDefinition = "TIME")
     private LocalTime alarmTime;
 
@@ -78,11 +76,10 @@ public class Alarm {
     private Room room;
 
     @Builder
-    private Alarm(String name, String icon, LocalTime alarmTime, Boolean monday, Boolean tuesday,
+    private Alarm(String name, LocalTime alarmTime, Boolean monday, Boolean tuesday,
             Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday, Boolean sunday,
             Boolean isVibrate, User user, Mission mission, MissionObject missionObject) {
         this.name = name;
-        this.icon = icon;
         this.alarmTime = alarmTime;
         this.monday = monday;
         this.tuesday = tuesday;
@@ -97,13 +94,12 @@ public class Alarm {
         this.missionObject = missionObject;
     }
 
-    public static Alarm create(String name, String icon, LocalTime alarmTime, Boolean monday,
+    public static Alarm create(String name, LocalTime alarmTime, Boolean monday,
             Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday,
             Boolean sunday, Boolean isVibrate, User user, Mission mission,
             MissionObject missionObject) {
         return Alarm.builder()
                 .name(name)
-                .icon(icon)
                 .alarmTime(alarmTime)
                 .monday(monday)
                 .tuesday(tuesday)
@@ -119,12 +115,11 @@ public class Alarm {
                 .build();
     }
 
-    public void modifyProperties(String name, String icon, LocalTime alarmTime, Boolean monday,
+    public void modifyProperties(String name, LocalTime alarmTime, Boolean monday,
             Boolean tuesday, Boolean wednesday, Boolean thursday, Boolean friday, Boolean saturday,
             Boolean sunday, Boolean isVibrate, Boolean isActivated, Mission mission,
             MissionObject missionObject) {
         this.name = name;
-        this.icon = icon;
         this.isVibrate = isVibrate;
         this.alarmTime = alarmTime;
         this.monday = monday;
