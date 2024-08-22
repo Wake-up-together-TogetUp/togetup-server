@@ -36,7 +36,7 @@ public class AvatarSpeechProvider {
 
     public AvatarSpeechResponse getUserAvatarSpeech(int userId, int avatarId) {
         userAvatarValidationService.validateUserAvatarActive(userId, avatarId);
-        String speech = makeSpeechByCondition(getSpeechByAvatar(avatarId));
+        String speech = makeSpeechByCondition(selectSpeechByAvatar(avatarId));
 
         return EntityDtoMapper.INSTANCE.toAvatarSpeechResponse(speech);
     }
@@ -46,7 +46,7 @@ public class AvatarSpeechProvider {
         return strategy.makeSpeech(avatarSpeech);
     }
 
-    private AvatarSpeech getSpeechByAvatar(int avatarId) {
+    private AvatarSpeech selectSpeechByAvatar(int avatarId) {
         Avatar avatar = avatarRepository.findById(avatarId)
                 .orElseThrow(() -> new BaseException(Status.AVATAR_NOT_FOUND));
 
