@@ -4,7 +4,7 @@ import com.wakeUpTogetUp.togetUp.api.avatar.domain.AvatarSpeech;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BasicSpeechStrategy implements SpeechStrategy{
+public class BasicMakeSpeechStrategy implements MakeSpeechStrategy {
 
     @Override
     public String makeSpeech(AvatarSpeech avatarSpeech) {

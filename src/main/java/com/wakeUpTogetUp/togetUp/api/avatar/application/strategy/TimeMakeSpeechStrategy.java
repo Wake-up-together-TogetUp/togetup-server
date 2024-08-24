@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TimeSpeechStrategy implements SpeechStrategy{
+public class TimeMakeSpeechStrategy implements MakeSpeechStrategy {
 
     @Override
     public String makeSpeech(AvatarSpeech avatarSpeech) {
