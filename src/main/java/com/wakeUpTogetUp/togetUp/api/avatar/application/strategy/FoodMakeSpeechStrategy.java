@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class FoodSpeechStrategy implements SpeechStrategy{
+public class FoodMakeSpeechStrategy implements MakeSpeechStrategy {
 
     private final RandomFoodProvider randomFoodProvider;
 

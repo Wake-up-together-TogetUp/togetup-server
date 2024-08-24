@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.avatar.application;
 
-import com.wakeUpTogetUp.togetUp.api.avatar.application.strategy.SpeechStrategy;
+import com.wakeUpTogetUp.togetUp.api.avatar.application.strategy.MakeSpeechStrategy;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.Avatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.AvatarSpeech;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.AvatarSpeechCondition;
@@ -30,28 +30,31 @@ public class AvatarSpeechProvider {
     private final AvatarRepository avatarRepository;
     private final AvatarSpeechRepository avatarSpeechRepository;
 
-    private final SpeechStrategyFactory speechStrategyFactory;
+    private final MakeSpeechStrategyFactory makeSpeechStrategyFactory;
 
     private final Random random = new Random();
 
     public AvatarSpeechResponse getUserAvatarSpeech(int userId, int avatarId) {
         userAvatarValidationService.validateUserAvatarActive(userId, avatarId);
-        String speech = makeSpeechByCondition(getSpeechByAvatar(avatarId));
+        String speech = makeSpeechByCondition(selectSpeechByAvatar(avatarId));
 
         return EntityDtoMapper.INSTANCE.toAvatarSpeechResponse(speech);
     }
 
     private String makeSpeechByCondition(AvatarSpeech avatarSpeech) {
-        SpeechStrategy strategy = speechStrategyFactory.getStrategy(avatarSpeech.getCondition());
+        MakeSpeechStrategy strategy = makeSpeechStrategyFactory.getStrategy(avatarSpeech.getCondition());
         return strategy.makeSpeech(avatarSpeech);
     }
 
-    private AvatarSpeech getSpeechByAvatar(int avatarId) {
+    private AvatarSpeech selectSpeechByAvatar(int avatarId) {
         Avatar avatar = avatarRepository.findById(avatarId)
                 .orElseThrow(() -> new BaseException(Status.AVATAR_NOT_FOUND));
-        AvatarTheme avatarTheme = AvatarTheme.valueOf(avatar.getTheme());
 
-        switch (avatarTheme) {
+        if (!AvatarTheme.isExist(avatar.getTheme())) {
+            return getRandomOneByAvatar(avatarId);
+        }
+
+        switch (AvatarTheme.valueOf(avatar.getTheme())) {
             case ASTRONAUT_BEAR:
                 LocalDate today = LocalDate.now();
                 return getByAvatarAndLunarCondition(avatarId, today);
