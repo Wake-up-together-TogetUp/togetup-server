@@ -8,6 +8,7 @@ import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.alarm.repository.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmService;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
+import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomJoinRes;
 import com.wakeUpTogetUp.togetUp.api.room.model.Room;
 import com.wakeUpTogetUp.togetUp.api.room.model.RoomUser;
 import com.wakeUpTogetUp.togetUp.api.users.UserRepository;
@@ -23,87 +24,93 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RoomService {
 
-    private final RoomRepository roomRepository;
-    private final AlarmService alarmService;
-    private final UserRepository userRepository;
-    private final RoomUserRepository roomUserRepository;
-    private final AlarmRepository alarmRepository;
-    private final AlarmMigrationMapper alarmMigrationMapper;
+  private final RoomRepository roomRepository;
+  private final AlarmService alarmService;
+  private final UserRepository userRepository;
+  private final RoomUserRepository roomUserRepository;
+  private final AlarmRepository alarmRepository;
+  private final AlarmMigrationMapper alarmMigrationMapper;
 
-    @Transactional
-    public Integer createRoom(Integer userId, RoomReq roomReq) {
+  @Transactional
+  public RoomJoinRes createRoom(Integer userId, RoomReq roomReq) {
 
-        Room room = Room.builder()
-                .name(roomReq.getName())
-                .intro(roomReq.getIntro())
-                .build();
+    Room room = Room.builder()
+        .name(roomReq.getName())
+        .intro(roomReq.getIntro())
+        .build();
 
-        PostAlarmReq postAlarmReq = alarmMigrationMapper.convertAlarmCreateReqToPostAlarmReq(roomReq.getAlarmCreateReq());
+    PostAlarmReq postAlarmReq = alarmMigrationMapper.convertAlarmCreateReqToPostAlarmReq(
+        roomReq.getAlarmCreateReq());
 
-        Integer alarmId = alarmService.create(userId, postAlarmReq).getId();
-        Room savedRoom = roomRepository.save(room);
-        this.joinRoom(savedRoom.getId(), userId);
+    Integer alarmId = alarmService.create(userId, postAlarmReq).getId();
+    Room savedRoom = roomRepository.save(room);
+    this.joinRoom(savedRoom.getId(), userId);
 
-        alarmRepository.updateRoomIdByAlarmId(alarmId, savedRoom.getId());
+    alarmRepository.updateRoomIdByAlarmId(alarmId, savedRoom.getId());
 
-        return alarmId;
+    return RoomJoinRes.of(room.getId(), alarmId);
+
+
+  }
+
+  @Transactional
+  public void leaveRoom(Integer roomId, Integer userId) {
+
+    Room room = roomRepository.findById(roomId)
+        .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
+
+    room.leaveRoom(userId);
+
+    deleteUnnecessaryRoomAndAlarm(room, userId);
+
+  }
+
+  @Transactional
+  public void deleteUnnecessaryRoomAndAlarm(Room room, Integer userId) {
+    Alarm alarm = alarmRepository.findByUser_IdAndRoom_Id(userId, room.getId())
+        .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
+    alarmRepository.delete(alarm);
+
+    if (room.isEmptyRoom()) {
+      roomRepository.delete(room);
     }
 
-    @Transactional
-    public void leaveRoom(Integer roomId, Integer userId) {
+  }
 
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
+  @Transactional
+  public void updateAgreePush(Integer roomId, Integer userId, boolean agreePush) {
 
-        room.leaveRoom(userId);
+    RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId)
+        .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
 
-        deleteUnnecessaryRoomAndAlarm(room,userId);
+    roomUser.setAgreePush(agreePush);
 
-    }
+  }
 
-    @Transactional
-    public void deleteUnnecessaryRoomAndAlarm(Room room, Integer userId) {
-        Alarm alarm = alarmRepository.findByUser_IdAndRoom_Id(userId, room.getId())
-                .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
-        alarmRepository.delete(alarm);
+  @Transactional
+  public RoomJoinRes createAlarmAndJoinRoom(Integer roomId, Integer invitedUserId,
+      AlarmCreateReq alarmCreateReq) {
+    PostAlarmReq postAlarmReq = alarmMigrationMapper.convertAlarmCreateReqToPostAlarmReq(
+        alarmCreateReq);
+    Alarm alarm = alarmService.create(invitedUserId, postAlarmReq);
+    alarmRepository.updateRoomIdByAlarmId(alarm.getId(), roomId);
+    joinRoom(roomId, invitedUserId);
+    return RoomJoinRes.of(roomId, alarm.getId());
+  }
 
-            if(room.isEmptyRoom())
-                roomRepository.delete(room);
+  @Transactional
+  public void joinRoom(Integer roomId, Integer invitedUserId) {
+    User user = findExistingUser(userRepository, invitedUserId);
 
-    }
+    Room room = roomRepository.findByIdUsingPessimisticLock(roomId)
+        .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
 
-    @Transactional
-    public void updateAgreePush(Integer roomId, Integer userId, boolean agreePush) {
+    RoomUser roomUser = RoomUser.builder()
+        .user(user)
+        .room(room)
+        .agreePush(true)
+        .build();
 
-        RoomUser roomUser = roomUserRepository.findByRoom_IdAndUser_Id(roomId, userId)
-                .orElseThrow(() -> new BaseException(Status.ROOM_USER_NOT_FOUND));
-
-        roomUser.setAgreePush(agreePush);
-
-    }
-
-    @Transactional
-    public Integer createAlarmAndJoinRoom(Integer roomId, Integer invitedUserId, AlarmCreateReq alarmCreateReq) {
-        PostAlarmReq postAlarmReq = alarmMigrationMapper.convertAlarmCreateReqToPostAlarmReq(alarmCreateReq);
-        Alarm alarm = alarmService.create(invitedUserId, postAlarmReq);
-        alarmRepository.updateRoomIdByAlarmId(alarm.getId(), roomId);
-        joinRoom(roomId, invitedUserId);
-        return alarm.getId();
-    }
-
-    @Transactional
-    public void joinRoom(Integer roomId, Integer invitedUserId) {
-        User user = findExistingUser(userRepository, invitedUserId);
-
-        Room room = roomRepository.findByIdUsingPessimisticLock(roomId)
-                .orElseThrow(() -> new BaseException(Status.ROOM_NOT_FOUND));
-
-        RoomUser roomUser = RoomUser.builder()
-                .user(user)
-                .room(room)
-                .agreePush(true)
-                .build();
-
-        room.join((roomUser));
-    }
+    room.join((roomUser));
+  }
 }
