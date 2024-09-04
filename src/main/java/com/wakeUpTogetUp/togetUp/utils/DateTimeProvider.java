@@ -1,31 +1,57 @@
 package com.wakeUpTogetUp.togetUp.utils;
 
-import java.time.LocalDate;
+import com.wakeUpTogetUp.togetUp.common.Status;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DateTimeProvider {
+    public static final String DEFAULT_TIMEZONE = "Asia/Seoul";
 
-    private final static ZoneId SEOUL_ZONE_ID = ZoneId.of("Asia/Seoul");
+    public static LocalDateTime getCurrentDateTime() {
+        ZoneId zoneId = getZoneIdByString(DEFAULT_TIMEZONE);
 
-    public static LocalDate getCurrentDateInSeoul() {
-        return ZonedDateTime.now(SEOUL_ZONE_ID).toLocalDate();
+        return ZonedDateTime.now(zoneId)
+                .toLocalDateTime();
     }
 
-    public static LocalDateTime getCurrentDateTimeInSeoul() {
-        return ZonedDateTime.now(SEOUL_ZONE_ID).toLocalDateTime();
+    public static LocalDateTime getCurrentDateTime(String timezone) {
+        ZoneId zoneId = getZoneIdByString(timezone);
+
+        return ZonedDateTime.now(zoneId)
+                .toLocalDateTime();
     }
 
     public static String getDateTimeByFormat(String format) {
-        return ZonedDateTime.now(SEOUL_ZONE_ID)
-                .format(
-                        DateTimeFormatter
-                                .ofPattern(format)
-                                .withLocale(Locale.ROOT));
+        ZoneId zoneId = getZoneIdByString(DEFAULT_TIMEZONE);
+
+        return ZonedDateTime.now(zoneId)
+                .format(DateTimeFormatter
+                        .ofPattern(format)
+                        .withLocale(Locale.ROOT));
+    }
+
+    public static String getDateTimeByFormat(String timezone, String format) {
+        ZoneId zoneId = getZoneIdByString(timezone);
+
+        return ZonedDateTime.now(zoneId)
+                .format(DateTimeFormatter
+                        .ofPattern(format)
+                        .withLocale(Locale.ROOT));
+    }
+
+    private static ZoneId getZoneIdByString(String zoneId) {
+        try {
+            return ZoneId.of(zoneId);
+        } catch (DateTimeException e) {
+            throw new BaseException(Status.TIME_ZONE_ID_NOT_EXIST);
+        }
     }
 }
