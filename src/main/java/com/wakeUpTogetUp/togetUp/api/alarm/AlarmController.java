@@ -3,8 +3,6 @@ package com.wakeUpTogetUp.togetUp.api.alarm;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmsDeactivateReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PatchAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmDetailRes;
-import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmQueryService;
 import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmService;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.common.Status;
@@ -16,12 +14,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,41 +26,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "알람(Alarm)")
+@Tag(name = "Alarm", description = "알람")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/app/alarm")
+@RequestMapping("/app/alarms")
 public class AlarmController {
+
     private final AlarmService alarmService;
-    private final AlarmQueryService alarmQueryService;
-
-    @Operation(summary = "알람 1개 불러오기")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "요청에 성공하였습니다.",
-                    content = @Content(schema = @Schema(implementation = AlarmDetailRes.class))),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 알람 입니다.")})
-    @GetMapping("/{alarmId}")
-    public BaseResponse<AlarmDetailRes> getAlarm(@PathVariable Integer alarmId) {
-        return new BaseResponse<>(Status.SUCCESS, alarmQueryService.getAlarmById(alarmId));
-    }
-
-    @Operation(summary = "유저 알람 목록 불러오기", description = "개인/그룹 알람 가져오기")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "요청에 성공하였습니다.",
-                    content = @Content(schema = @Schema(implementation = AlarmDetailRes.class))),
-            @ApiResponse(responseCode = "400", description = "요청 파라미터를 확인해주세요."),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 유저 입니다.")})
-    @GetMapping
-    public BaseResponse<List<AlarmDetailRes>> getAlarmsByUserId(
-            @Parameter(description = "- 개인 : personal\n- 그룹 : group", example = "personal") String type,
-            @Parameter(hidden = true) @AuthUser Integer userId
-    ) {
-        return new BaseResponse<>(Status.SUCCESS, alarmQueryService.getAlarmsByUserIdOrderByDate(userId, type));
-    }
 
     @Operation(summary = "알람 생성")
     @PostMapping

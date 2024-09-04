@@ -10,7 +10,7 @@ public class TimeMakeSpeechStrategy implements MakeSpeechStrategy {
 
     @Override
     public String makeSpeech(AvatarSpeech avatarSpeech) {
-        LocalDateTime now = DateTimeProvider.getCurrentDateTimeInSeoul();
+        LocalDateTime now = DateTimeProvider.getCurrentDateTime();
         return String.format(avatarSpeech.getSpeech(), now.getHour(), now.getMinute());
     }
 }

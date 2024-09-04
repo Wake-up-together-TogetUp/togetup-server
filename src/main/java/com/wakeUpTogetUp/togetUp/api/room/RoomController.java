@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "그룹(Room)")
+@Tag(name = "Room", description = "그룹")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app/room")
