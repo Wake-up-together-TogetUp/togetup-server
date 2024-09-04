@@ -19,6 +19,7 @@ public enum Status {
     MISSION_FAILURE(HttpStatus.OK, "미션을 성공하지 못했습니다."),
     MISSION_SUCCESS(HttpStatus.CREATED, "미션을 성공했습니다."),
 
+
     /**
      * 300번대(리다이렉트)
      */
@@ -31,7 +32,6 @@ public enum Status {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."),
     UNAUTHORIZED_KAKAO_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 카카오 엑세스토큰입니다."),
     UNAUTHORIZED_APPLE_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 애플 엑세스토큰입니다."),
-
 
     // BAD REQUEST
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "요청 값을 확인해주세요."),
@@ -49,6 +49,7 @@ public enum Status {
     INVALID_FILE_NAME_EXCEPTION(HttpStatus.BAD_REQUEST, "이미지 파일 이름이 유효하지 않습니다."),
     INVALID_FILE_CONTENT_TYPE_EXCEPTION(HttpStatus.BAD_REQUEST, "이미지 컨텐트 타입이 유효하지 않습니다."),
     APP_VERSION_HIGHER_THAN_LATEST_EXCEPTION(HttpStatus.BAD_REQUEST, "데이터 내의 최신 버전보다 높은 버전입니다."),
+    TIME_ZONE_ID_NOT_EXIST(HttpStatus.BAD_REQUEST, "유효하지 않은 시간대입니다."),
 
     // FORBIDDEN
     USER_AVATAR_LOCKED(HttpStatus.FORBIDDEN, "유저가 보유하지 않은 아바타 ID 입니다."),
@@ -74,6 +75,7 @@ public enum Status {
 
     // UNSUPPORTED MEDIA TYPE
     UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "지원하지 않는 파일 확장자 입니다."),
+
 
     /**
      * 500번대(서버 에러)

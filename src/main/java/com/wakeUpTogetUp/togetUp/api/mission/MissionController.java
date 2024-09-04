@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name = "미션(Mission)")
+@Tag(name = "Mission", description = "미션")
 @Validated
 @RestController
 @RequiredArgsConstructor
