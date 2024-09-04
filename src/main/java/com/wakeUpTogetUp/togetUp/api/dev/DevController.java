@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "A-개발용")
+@Tag(name = "A-Dev", description = "개발용")
 @RestController
 @RequestMapping("/app/a-dev")
 @RequiredArgsConstructor

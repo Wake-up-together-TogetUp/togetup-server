@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "알람 (Alarm)")
+@Tag(name = "Alarm", description = "알람")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app/alarms")

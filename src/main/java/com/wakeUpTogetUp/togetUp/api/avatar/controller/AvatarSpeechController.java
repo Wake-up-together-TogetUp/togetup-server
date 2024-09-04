@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "아바타 (Avatar)")
+@Tag(name = "Avatar", description = "아바타")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/app/avatars")
