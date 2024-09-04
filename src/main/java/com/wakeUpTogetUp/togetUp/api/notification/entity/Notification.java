@@ -1,21 +1,27 @@
 package com.wakeUpTogetUp.togetUp.api.notification.entity;
 
 import com.wakeUpTogetUp.togetUp.api.notification.DataMapToStringConverter;
-import com.wakeUpTogetUp.togetUp.api.notification.NotificationDataKeyType;
-import com.wakeUpTogetUp.togetUp.api.notification.NotificationDataValueType;
 import com.wakeUpTogetUp.togetUp.api.notification.vo.NotificationSendEvent;
-import com.wakeUpTogetUp.togetUp.api.users.domain.User;
 import com.wakeUpTogetUp.togetUp.api.users.fcmToken.FcmToken;
-import com.wakeUpTogetUp.togetUp.utils.TimeFormatter;
-import lombok.*;
-import org.hibernate.annotations.DynamicInsert;
-
-import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Table(name = "notification")
@@ -25,7 +31,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Notification {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
