@@ -7,6 +7,7 @@ import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.annotation.LogExecutionTime;
 import com.wakeUpTogetUp.togetUp.common.dto.BaseResponse;
+import com.wakeUpTogetUp.togetUp.utils.DateTimeProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "알람 (Alarm)")
@@ -71,9 +73,12 @@ public class AlarmQueryController {
                     content = @Content(schema = @Schema(implementation = AlarmTimeLineRes.class)))
     })
     BaseResponse<AlarmTimeLineRes> getAlarmTimeLineOfUser(
-            @Parameter(hidden = true) @AuthUser Integer userId
+            @Parameter(hidden = true) @AuthUser Integer userId,
+            @Parameter(description = "현지 타임존") @RequestParam String timezone
     ) {
-        return new BaseResponse<>(
-                Status.SUCCESS, alarmQueryService.getTimeLine(userId, LocalDateTime.now()));
+        LocalDateTime now = DateTimeProvider.getCurrentDateTime(timezone);
+        AlarmTimeLineRes response = alarmQueryService.getTimeLine(userId, now);
+
+        return new BaseResponse<>(Status.SUCCESS, response);
     }
 }
