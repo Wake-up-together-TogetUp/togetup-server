@@ -3,6 +3,7 @@ package com.wakeUpTogetUp.togetUp.api.alarm.dto.response;
 import com.querydsl.core.annotations.QueryProjection;
 import com.wakeUpTogetUp.togetUp.api.alarm.domain.AlarmType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +27,7 @@ public class AlarmSimpleRes {
     @Schema(description = "미션 객체", example = "시계")
     private String missionObject;
 
-    @Schema(description = "알람 종류 (`개인`, `그룹`)")
+    @Schema(description = "알람 종류")
     private AlarmType alarmType;
 
     @QueryProjection
@@ -34,6 +35,16 @@ public class AlarmSimpleRes {
         this.id = id;
         this.icon = icon;
         this.alarmTime = alarmTime;
+        this.name = name;
+        this.missionObject = missionObject;
+        this.alarmType = roomId != null ? AlarmType.GROUP : AlarmType.PERSONAL;
+    }
+
+    @QueryProjection
+    public AlarmSimpleRes(Integer id, String icon, LocalDateTime performedTime, String name, String missionObject, Integer roomId) {
+        this.id = id;
+        this.icon = icon;
+        this.alarmTime = LocalTime.of(performedTime.getHour(), performedTime.getMinute(), 0);
         this.name = name;
         this.missionObject = missionObject;
         this.alarmType = roomId != null ? AlarmType.GROUP : AlarmType.PERSONAL;

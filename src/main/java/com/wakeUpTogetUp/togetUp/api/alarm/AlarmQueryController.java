@@ -74,7 +74,7 @@ public class AlarmQueryController {
     })
     BaseResponse<AlarmTimeLineRes> getAlarmTimeLineOfUser(
             @Parameter(hidden = true) @AuthUser Integer userId,
-            @Parameter(description = "현지 타임존") @RequestParam String timezone
+            @Parameter(description = "현지 타임존", example = "Asia/Seoul") @RequestParam String timezone
     ) {
         LocalDateTime now = DateTimeProvider.getCurrentDateTime(timezone);
         AlarmTimeLineRes response = alarmQueryService.getTimeLine(userId, now);
