@@ -1,7 +1,6 @@
 package com.wakeUpTogetUp.togetUp.utils.mapper;
 
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmDetailRes;
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.Avatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.UserAvatar;
@@ -37,11 +36,6 @@ public interface EntityDtoMapper {
 
     List<AlarmDetailRes> toAlarmDetailResList(List<Alarm> alarms);
 
-    @Mapping(target = "icon", source = "missionObject.icon")
-    @Mapping(target = "alarmType", expression = "java(alarm.getAlarmType())")
-    @Mapping(target = "missionObject", source = "alarm.missionObject.kr")
-    AlarmSimpleRes toAlarmSimpleRes(Alarm alarm);
-
     // Mission
     GetMissionObjectRes toGetMissionObjectRes(MissionObject missionObject);
 
@@ -49,8 +43,6 @@ public interface EntityDtoMapper {
 
     @Mapping(target = "missionObjectResList", source = "mission.missionObjectList")
     GetMissionWithObjectListRes toGetMissionRes(Mission mission);
-
-    List<GetMissionWithObjectListRes> toGetMissionResList(List<Mission> missionList);
 
 
     // GetMissionLogRes

@@ -36,7 +36,7 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer>, AlarmQue
     @Query("SELECT new com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes("
             + "a.id, "
             + "a.missionObject.icon, "
-            + "a.alarmTime, "
+            + "ml.createdAt, "
             + "a.name, "
             + "mo.kr, "
             + "a.room.id) "
