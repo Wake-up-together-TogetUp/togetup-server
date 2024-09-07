@@ -1,7 +1,7 @@
 //package com.wakeUpTogetUp.togetUp.alarm;
 //
 //import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.wakeUpTogetUp.togetUp.api.alarm.AlarmController;
+//import com.wakeUpTogetUp.togetUp.api.alarm.controller.AlarmController;
 //import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmProvider;
 //import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmService;
 //import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.GetAlarmRes;

@@ -2,8 +2,8 @@ package com.wakeUpTogetUp.togetUp.api.room;
 
 import static com.wakeUpTogetUp.togetUp.api.users.UserServiceHelper.findExistingUser;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmCreateReq;
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.request.AlarmCreateReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.alarm.repository.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmService;

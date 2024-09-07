@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.room;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmCreateReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.request.AlarmCreateReq;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.api.room.dto.request.RoomReq;
 import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomDetailRes;

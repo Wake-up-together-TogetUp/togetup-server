@@ -11,7 +11,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetMissionRes {
+public class MissionRes {
     private int id;
     private String name;
     private String createdAt;

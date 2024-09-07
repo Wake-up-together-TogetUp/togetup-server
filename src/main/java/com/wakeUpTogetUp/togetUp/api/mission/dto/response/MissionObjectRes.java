@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetMissionObjectRes {
+public class MissionObjectRes {
     private int id;
     private String name;
     private String kr;

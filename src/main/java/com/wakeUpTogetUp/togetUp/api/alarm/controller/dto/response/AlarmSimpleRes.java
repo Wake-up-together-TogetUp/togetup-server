@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.alarm.dto.response;
+package com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.wakeUpTogetUp.togetUp.api.alarm.domain.AlarmType;

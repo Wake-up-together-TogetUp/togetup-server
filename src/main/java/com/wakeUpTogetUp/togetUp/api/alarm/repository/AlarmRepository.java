@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.alarm.repository;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.common.annotation.LogExecutionTime;
@@ -33,7 +33,7 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer>, AlarmQue
     List<Alarm> findRoomAlarmByUserId(@Param("userId") Integer userId);
 
     @LogExecutionTime
-    @Query("SELECT new com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes("
+    @Query("SELECT new com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmSimpleRes("
             + "a.id, "
             + "a.missionObject.icon, "
             + "ml.createdAt, "
