@@ -20,5 +20,5 @@ public class GetMissionWithObjectListRes {
     private String createdAt;
     private Boolean isActive;
     @Schema(description = "해당 미션이 인식 가능한 객체 목록")
-    private List<GetMissionObjectRes> missionObjectResList;
+    private List<MissionObjectRes> missionObjectResList;
 }

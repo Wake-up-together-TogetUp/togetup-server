@@ -1,8 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response;
 
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionObjectRes;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionRes;
-import com.wakeUpTogetUp.togetUp.api.room.dto.response.RoomRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionObjectRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionRes;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalTime;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Schema(description = "알람 상세 조회 response")
+@Schema(description = "알람 조회 응답")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,9 +23,6 @@ public class AlarmDetailRes {
 
     @Schema(description = "알람 이름", example = "기상 알람")
     private String name;
-
-    @Schema(description = "아이콘", example = "⏰")
-    private String icon;
 
     @Schema(description = "알람 시간", example = "06:00:00")
     private LocalTime alarmTime;
@@ -59,13 +55,11 @@ public class AlarmDetailRes {
     private Boolean isActivated;
 
     @Schema(description = "미션")
-    private GetMissionRes getMissionRes;
+    private MissionRes missionRes;
 
     @Schema(description = "미션 객체")
-    private GetMissionObjectRes getMissionObjectRes;
+    private MissionObjectRes missionObjectRes;
 
     @Schema(description = "그룹 정보")
-    private RoomRes roomRes;
+    private AlarmRoomRes alarmRoomRes;
 }
-
-
