@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.alarm.dto.request;
+package com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.request;
 
 import java.util.List;
 import lombok.Getter;

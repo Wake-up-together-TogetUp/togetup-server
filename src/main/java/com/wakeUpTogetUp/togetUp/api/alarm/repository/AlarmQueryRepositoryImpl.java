@@ -6,7 +6,7 @@ import static com.wakeUpTogetUp.togetUp.api.mission.model.QMissionObject.mission
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.QAlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.common.annotation.LogExecutionTime;
 import java.time.DayOfWeek;

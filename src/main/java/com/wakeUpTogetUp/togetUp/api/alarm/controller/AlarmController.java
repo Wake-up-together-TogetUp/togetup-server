@@ -1,8 +1,8 @@
-package com.wakeUpTogetUp.togetUp.api.alarm;
+package com.wakeUpTogetUp.togetUp.api.alarm.controller;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmsDeactivateReq;
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PatchAlarmReq;
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.request.AlarmsDeactivateReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.request.PatchAlarmReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.request.PostAlarmReq;
 import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmService;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.common.Status;

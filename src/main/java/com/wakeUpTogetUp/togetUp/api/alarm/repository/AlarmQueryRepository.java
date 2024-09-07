@@ -1,9 +1,8 @@
 package com.wakeUpTogetUp.togetUp.api.alarm.repository;
 
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmSimpleRes;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
 
 public interface AlarmQueryRepository {
 

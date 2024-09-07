@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.api.alarm.repository;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
 import com.wakeUpTogetUp.togetUp.common.annotation.LogExecutionTime;

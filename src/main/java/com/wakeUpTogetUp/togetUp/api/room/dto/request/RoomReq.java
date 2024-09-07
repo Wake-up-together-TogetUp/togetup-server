@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.api.room.dto.request;
 
 
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmCreateReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.request.AlarmCreateReq;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

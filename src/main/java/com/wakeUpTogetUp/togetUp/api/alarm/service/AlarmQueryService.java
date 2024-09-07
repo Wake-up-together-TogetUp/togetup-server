@@ -3,9 +3,9 @@ package com.wakeUpTogetUp.togetUp.api.alarm.service;
 import static com.wakeUpTogetUp.togetUp.common.Constant.GET_ALARM_MODE_GROUP;
 import static com.wakeUpTogetUp.togetUp.common.Constant.GET_ALARM_MODE_PERSONAL;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmDetailRes;
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmSimpleRes;
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmTimeLineRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmDetailRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmSimpleRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmTimeLineRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.alarm.repository.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserValidationService;

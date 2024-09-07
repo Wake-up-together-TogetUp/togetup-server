@@ -1,6 +1,6 @@
 package com.wakeUpTogetUp.togetUp.utils.mapper;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmDetailRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmDetailRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.Avatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.UserAvatar;
