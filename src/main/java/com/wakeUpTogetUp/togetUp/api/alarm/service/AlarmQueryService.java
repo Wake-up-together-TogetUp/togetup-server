@@ -13,9 +13,10 @@ import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import com.wakeUpTogetUp.togetUp.utils.mapper.EntityDtoMapper;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,13 +72,15 @@ public class AlarmQueryService {
 
     @LogExecutionTime
     private List<AlarmSimpleRes> getMergedTimeLine(Integer userId, LocalDateTime now) {
-        List<AlarmSimpleRes> alarmsWithTodayLog = alarmRepository.findAllUserAlarmsWithTodayLog(userId, now.toLocalDate().atStartOfDay());
-        List<AlarmSimpleRes> alarmsActiveAfterNow = alarmRepository.findAllUserTodayActiveAlarmsAfterNow(userId, now);
+        List<AlarmSimpleRes> alarmsWithTodayLog =
+                alarmRepository.findAllUserAlarmsWithTodayLog(userId, now.toLocalDate().atStartOfDay());
+        List<AlarmSimpleRes> alarmsActiveAfterNow =
+                alarmRepository.findAllUserTodayActiveAlarmsAfterNow(userId, now);
 
-        List<AlarmSimpleRes> timeline = new ArrayList<>(alarmsWithTodayLog);
-        timeline.addAll(alarmsActiveAfterNow);
-
-        return timeline;
+        return Stream.concat(
+                        alarmsWithTodayLog.stream(),
+                        alarmsActiveAfterNow.stream())
+                .collect(Collectors.toList());
     }
 
     private Optional<AlarmSimpleRes> getNextAlarmSimpleRes(List<AlarmSimpleRes> timeLine, LocalTime now) {
