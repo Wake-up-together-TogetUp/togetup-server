@@ -1,11 +1,9 @@
 package com.wakeUpTogetUp.togetUp.api.alarm.service;
 
-import static com.wakeUpTogetUp.togetUp.common.Constant.GET_ALARM_MODE_GROUP;
-import static com.wakeUpTogetUp.togetUp.common.Constant.GET_ALARM_MODE_PERSONAL;
-
 import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmDetailRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmTimeLineRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.domain.AlarmType;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.alarm.repository.AlarmRepository;
 import com.wakeUpTogetUp.togetUp.api.users.UserValidationService;
@@ -30,26 +28,29 @@ public class AlarmQueryService {
     private final UserValidationService userValidationService;
     private final AlarmRepository alarmRepository;
 
-    public List<AlarmDetailRes> getAlarmsByUserIdOrderByDate(Integer userId, String type) {
-        userValidationService.validateUserExist(userId);
-
-        List<Alarm> alarms;
-        if (type.equals(GET_ALARM_MODE_PERSONAL)) {
-            alarms = alarmRepository.findAllByUser_IdAndRoom_IdIsNullOrderByAlarmTime(userId);
-        } else if (type.equals(GET_ALARM_MODE_GROUP)) {
-            alarms = alarmRepository.findRoomAlarmByUserId(userId);
-        } else {
-            throw new BaseException(Status.BAD_REQUEST_PARAM);
-        }
-
-        return EntityDtoMapper.INSTANCE.toAlarmDetailResList(alarms);
-    }
-
     public AlarmDetailRes getAlarmById(Integer alarmId) {
         Alarm alarm = alarmRepository.findById(alarmId)
                 .orElseThrow(() -> new BaseException(Status.ALARM_NOT_FOUND));
 
         return EntityDtoMapper.INSTANCE.toAlarmDetailRes(alarm);
+    }
+
+    public List<AlarmDetailRes> getAlarmsByUserIdOrderByDate(Integer userId, String type) {
+        userValidationService.validateUserExist(userId);
+
+        List<Alarm> alarms;
+        switch (AlarmType.valueOf(type)) {
+            case PERSONAL:
+                alarms = alarmRepository.findAllByUser_IdAndRoom_IdIsNullOrderByAlarmTime(userId);
+                break;
+            case GROUP:
+                alarms = alarmRepository.findRoomAlarmByUserId(userId);
+                break;
+            default:
+                throw new BaseException(Status.BAD_REQUEST_PARAM);
+        }
+
+        return EntityDtoMapper.INSTANCE.toAlarmDetailResList(alarms);
     }
 
     @LogExecutionTime
