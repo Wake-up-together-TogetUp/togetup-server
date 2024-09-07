@@ -1,7 +1,7 @@
-package com.wakeUpTogetUp.togetUp.api.alarm;
+package com.wakeUpTogetUp.togetUp.api.alarm.controller;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmDetailRes;
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmTimeLineRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmDetailRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmTimeLineRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.service.AlarmQueryService;
 import com.wakeUpTogetUp.togetUp.api.auth.AuthUser;
 import com.wakeUpTogetUp.togetUp.common.Status;
@@ -56,11 +56,12 @@ public class AlarmQueryController {
     })
     @GetMapping
     public BaseResponse<List<AlarmDetailRes>> getAlarmsByUserId(
-            @Parameter(description = "- 개인 : personal\n- 그룹 : group", example = "personal") String type,
+            @Parameter(description = "PERSONAL/GROUP", example = "PERSONAL") String type,
             @Parameter(hidden = true) @AuthUser Integer userId
     ) {
-        return new BaseResponse<>(Status.SUCCESS,
-                alarmQueryService.getAlarmsByUserIdOrderByDate(userId, type));
+        List<AlarmDetailRes> response = alarmQueryService.getAlarmsByUserIdOrderByDate(userId, type);
+
+        return new BaseResponse<>(Status.SUCCESS, response);
     }
 
     @LogExecutionTime

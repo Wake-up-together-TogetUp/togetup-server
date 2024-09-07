@@ -1,14 +1,14 @@
 package com.wakeUpTogetUp.togetUp.utils.mapper;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.response.AlarmDetailRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmDetailRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.Avatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.domain.UserAvatar;
 import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.AvatarSpeechResponse;
 import com.wakeUpTogetUp.togetUp.api.avatar.dto.response.UserAvatarResponse;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionLogRes;
-import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionObjectRes;
 import com.wakeUpTogetUp.togetUp.api.mission.dto.response.GetMissionWithObjectListRes;
+import com.wakeUpTogetUp.togetUp.api.mission.dto.response.MissionObjectRes;
 import com.wakeUpTogetUp.togetUp.api.mission.model.Mission;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionLog;
 import com.wakeUpTogetUp.togetUp.api.mission.model.MissionObject;
@@ -27,19 +27,18 @@ public interface EntityDtoMapper {
 
     // Alarm
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "icon", source = "missionObject.icon")
-    @Mapping(target = "getMissionRes", source = "mission")
-    @Mapping(target = "getMissionObjectRes", source = "missionObject")
-    @Mapping(target = "roomRes.roomId", source = "alarm.room.id")
-    @Mapping(target = "roomRes.name", source = "alarm.room.name")
+    @Mapping(target = "missionRes", source = "mission")
+    @Mapping(target = "missionObjectRes", source = "missionObject")
+    @Mapping(target = "alarmRoomRes.id", source = "alarm.room.id")
+    @Mapping(target = "alarmRoomRes.name", source = "alarm.room.name")
     AlarmDetailRes toAlarmDetailRes(Alarm alarm);
 
     List<AlarmDetailRes> toAlarmDetailResList(List<Alarm> alarms);
 
     // Mission
-    GetMissionObjectRes toGetMissionObjectRes(MissionObject missionObject);
+    MissionObjectRes toGetMissionObjectRes(MissionObject missionObject);
 
-    List<GetMissionObjectRes> toGetMissionObjectResList(List<MissionObject> missionObjectList);
+    List<MissionObjectRes> toGetMissionObjectResList(List<MissionObject> missionObjectList);
 
     @Mapping(target = "missionObjectResList", source = "mission.missionObjectList")
     GetMissionWithObjectListRes toGetMissionRes(Mission mission);

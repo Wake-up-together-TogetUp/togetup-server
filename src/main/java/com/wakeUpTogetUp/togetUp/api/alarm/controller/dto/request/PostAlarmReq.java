@@ -1,20 +1,21 @@
-package com.wakeUpTogetUp.togetUp.api.alarm.dto.request;
+package com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Schema(description = "알람 생성 request")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
-public class AlarmCreateReq {
+public class PostAlarmReq {
     @Schema(description = "알람 이름", requiredMode = RequiredMode.REQUIRED, example = "기상")
     @NotBlank(message = "알람 이름은 공백일 수 없습니다.")
     private String name;
@@ -25,27 +26,27 @@ public class AlarmCreateReq {
     private String alarmTime;
 
     @Schema(description = "월요일 울림 여부", defaultValue = "false", example = "false")
-    private boolean monday;
+    private Boolean monday;
 
     @Schema(description = "화요일 울림 여부", defaultValue = "false", example = "false")
-    private boolean tuesday;
+    private Boolean tuesday;
 
     @Schema(description = "수요일 울림 여부", defaultValue = "false", example = "false")
-    private boolean wednesday;
+    private Boolean wednesday;
 
     @Schema(description = "목요일 울림 여부", defaultValue = "false", example = "false")
-    private boolean thursday;
+    private Boolean thursday;
 
     @Schema(description = "금요일 울림 여부", defaultValue = "false", example = "false")
-    private boolean friday;
+    private Boolean friday;
 
     @Schema(description = "토요일 울림 여부", defaultValue = "false", example = "false")
-    private boolean saturday;
+    private Boolean saturday;
 
     @Schema(description = "일요일 울림 여부", defaultValue = "false", example = "false")
-    private boolean sunday;
+    private Boolean sunday;
 
-    @Schema(description = "진동 활성화 여부", defaultValue = "true", example = "true",name = "isVibrate")
+    @Schema(description = "진동 활성화 여부", defaultValue = "true", example = "true")
     private Boolean isVibrate;
 
     @Schema(description = "미션 id", requiredMode = RequiredMode.REQUIRED, example = "2")

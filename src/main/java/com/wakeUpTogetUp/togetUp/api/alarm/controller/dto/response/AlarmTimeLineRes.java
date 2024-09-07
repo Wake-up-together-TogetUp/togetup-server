@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.alarm.dto.response;
+package com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.DayOfWeek;

@@ -1,7 +1,7 @@
 package com.wakeUpTogetUp.togetUp.utils.mapper;
 
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.AlarmCreateReq;
-import com.wakeUpTogetUp.togetUp.api.alarm.dto.request.PostAlarmReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.request.AlarmCreateReq;
+import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.request.PostAlarmReq;
 import org.springframework.stereotype.Component;
 @Component
 public class AlarmMigrationMapper {

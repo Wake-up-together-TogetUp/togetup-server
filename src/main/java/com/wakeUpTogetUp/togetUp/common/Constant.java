@@ -8,9 +8,6 @@ public class Constant {
 	public static final String JWT_PREFIX = "Bearer";
 	public static final Integer INVITATION_CODE_LENGTH = 5;
 	public static final String AUTHORIZATION_CODE = "authorization_code";
-	public static final String GET_ALARM_MODE_PERSONAL = "personal";
-	public static final String GET_ALARM_MODE_GROUP = "group";
-
 	public static final String ROOM_USER_MISSION_IMG_WAITING = "http://waiting~";
 	public static final String ROOM_USER_MISSION_IMG_FAIL = "http://fail~";
 	public static final String ROOM_USER_MISSION_IMG_NOT_MISSION = "http://not-mission~";

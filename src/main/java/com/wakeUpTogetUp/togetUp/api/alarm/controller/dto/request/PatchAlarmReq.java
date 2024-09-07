@@ -1,4 +1,4 @@
-package com.wakeUpTogetUp.togetUp.api.alarm.dto.request;
+package com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
