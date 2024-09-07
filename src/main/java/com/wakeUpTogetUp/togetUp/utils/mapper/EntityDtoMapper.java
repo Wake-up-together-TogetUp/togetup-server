@@ -27,7 +27,6 @@ public interface EntityDtoMapper {
 
     // Alarm
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "icon", source = "missionObject.icon")
     @Mapping(target = "missionRes", source = "mission")
     @Mapping(target = "missionObjectRes", source = "missionObject")
     @Mapping(target = "alarmRoomRes.id", source = "alarm.room.id")
