@@ -35,17 +35,17 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer>, AlarmQue
     @LogExecutionTime
     @Query("SELECT new com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmSimpleRes("
             + "a.id, "
-            + "a.missionObject.icon, "
+            + "mo.icon, "
             + "ml.createdAt, "
             + "a.name, "
             + "mo.kr, "
             + "a.room.id) "
             + "FROM Alarm a "
-            + "JOIN MissionObject mo ON mo.id = a.missionObject.id "
-            + "JOIN MissionLog ml ON a.id = ml.alarm.id "
+            + "INNER JOIN MissionLog ml ON a.id = ml.alarm.id "
+            + "INNER JOIN MissionObject mo ON mo.id = a.missionObject.id "
             + "WHERE a.user.id = :userId "
             + "AND  ml.createdAt >= :baseTime "
-            + "ORDER BY a.alarmTime ASC, a.id ASC")
+            + "ORDER BY ml.createdAt ASC, a.id ASC")
     List<AlarmSimpleRes> findAllUserAlarmsWithTodayLog(@Param("userId") Integer userId, @Param("baseTime") LocalDateTime baseTime);
 
     @Query("SELECT a.missionObject FROM Alarm a WHERE a.room.id = :roomId ")
