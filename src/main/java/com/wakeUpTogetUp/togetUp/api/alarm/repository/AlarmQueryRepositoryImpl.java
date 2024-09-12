@@ -27,7 +27,7 @@ public class AlarmQueryRepositoryImpl implements AlarmQueryRepository {
                 .select(
                         new QAlarmSimpleRes(
                                 alarm.id,
-                                alarm.missionObject.icon,
+                                    missionObject.icon,
                                 alarm.alarmTime,
                                 alarm.name,
                                 missionObject.kr,
@@ -35,9 +35,12 @@ public class AlarmQueryRepositoryImpl implements AlarmQueryRepository {
                         )
                 )
                 .from(alarm)
-                .innerJoin(missionObject).on(alarm.missionObject.id.eq(missionObject.id))
+                .join(alarm.missionObject, missionObject)
                 .where(
                         alarm.user.id.eq(userId)
+                                .and(alarm.isDeleted.eq(false))
+                                .and(alarm.isActivated.eq(true))
+                                .and(alarmTimeGoe(now.toLocalTime()))
                                 .and(isDayOrOneTimeAlarm(now))
                 )
                 .orderBy(
@@ -55,8 +58,7 @@ public class AlarmQueryRepositoryImpl implements AlarmQueryRepository {
     @LogExecutionTime
     private BooleanExpression isDayOrOneTimeAlarm(LocalDateTime now) {
         return isDayAlarm(now.getDayOfWeek())
-                .or(isOneTimeAlarm())
-                .and(isActiveAlarm(now.toLocalTime()));
+                .or(isOneTimeAlarm());
     }
 
     private BooleanExpression isDayAlarm(DayOfWeek dayOfWeek) {
@@ -88,11 +90,5 @@ public class AlarmQueryRepositoryImpl implements AlarmQueryRepository {
                 .and(alarm.friday.eq(false))
                 .and(alarm.saturday.eq(false))
                 .and(alarm.sunday.eq(false));
-    }
-
-    private BooleanExpression isActiveAlarm(LocalTime now) {
-        return alarm.isActivated.eq(true)
-                .and(alarm.isDeleted.eq(false))
-                .and(alarmTimeGoe(now));
     }
 }
