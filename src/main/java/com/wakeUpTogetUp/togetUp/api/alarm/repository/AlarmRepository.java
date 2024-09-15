@@ -23,15 +23,6 @@ public interface AlarmRepository extends JpaRepository<Alarm, Integer>, AlarmQue
     @Query("SELECT a.id FROM Alarm a WHERE a.user.id = :userId")
     Set<Integer> findUserAlarmIds(@Param("userId") Integer userId);
 
-    List<Alarm> findAllByUser_IdAndRoom_IdIsNullOrderByAlarmTime(Integer userId);
-
-    @Query("SELECT a "
-            + "FROM Alarm a "
-            + "WHERE a.user.id = :userId "
-            + "AND a.room.id != null "
-            + "ORDER BY a.alarmTime")
-    List<Alarm> findRoomAlarmByUserId(@Param("userId") Integer userId);
-
     @LogExecutionTime
     @Query("SELECT new com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmSimpleRes("
             + "a.id, "
