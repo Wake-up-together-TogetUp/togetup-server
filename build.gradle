@@ -3,6 +3,8 @@ plugins {
     id 'org.springframework.boot' version '2.7.18'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+    id 'jacoco'
+    id 'org.sonarqube' version '4.4.1.3373'
 }
 
 group = 'com.jogijo'
@@ -155,3 +157,98 @@ configurations {
     }
     querydsl.extendsFrom compileClasspath
 }
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
+}
+
+jacoco {
+    toolVersion = '0.8.11'
+}
+
+jacocoTestReport {
+
+    def Qdomains = []
+
+    for (qPattern in "**/QA".."**/QZ") {
+        Qdomains.add(qPattern + "*")
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, // 리포트 결과에 제외시킬 디렉토리
+                    exclude: [
+                            '**/dto*',
+                            '**/config*',
+                            '*.Q*'] + Qdomains)
+        }))
+    }
+    reports {
+        html.required = true
+        xml.required = true
+        csv.required = false
+    }
+
+    finalizedBy jacocoTestCoverageVerification
+    dependsOn test
+}
+def includePatterns = [
+        '**/service/*',
+]
+def excludePatterns = [
+        '**/dto*',
+        '**/config*',
+        '*.Q*'
+]
+
+jacocoTestCoverageVerification {
+    violationRules {
+        failOnViolation = false
+        rule {
+            enabled = true
+            element = 'CLASS'
+
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+
+            includes = includePatterns
+            excludes = excludePatterns
+        }
+
+        rule {
+            enabled = true
+            element = 'METHOD'
+
+            limit {
+                counter = 'LINE'
+                value = 'TOTALCOUNT'
+                maximum = 200
+            }
+            includes = includePatterns
+            excludes = excludePatterns
+        }
+
+    }
+
+    dependsOn jacocoTestReport
+}
+
+sonar {
+    properties {
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        property 'sonar.organization', 'organizationKey'
+        property 'sonar.projectKey', 'projectKey'
+        property 'sonar.coverage.jacoco.xmlReportPaths', 'build/reports/jacoco/test/jacocoTestReport.xml'
+    }
+}
+
+
