@@ -245,9 +245,9 @@ jacocoTestCoverageVerification {
 sonar {
     properties {
         property 'sonar.host.url', 'https://sonarcloud.io'
-        property 'sonar.organization', 'organizationKey'
-        property 'sonar.projectKey', 'projectKey'
-        property 'sonar.coverage.jacoco.xmlReportPaths', 'build/reports/jacoco/test/jacocoTestReport.xml'
+        property 'sonar.organization', 'togetup-server'
+        property 'sonar.projectKey', 'Wake-up-together-TogetUp_togetup-server'
+        property 'sonar.coverage.jacoco.xmlReportPaths', '${buildDir}/reports/jacoco/test/jacocoTestReport.xml'
     }
 }
 
