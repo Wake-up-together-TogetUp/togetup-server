@@ -59,10 +59,10 @@ public class AlarmQueryRepositoryImpl implements AlarmQueryRepository {
         return query.selectFrom(alarm)
                 .where(
                         alarm.user.id.eq(userId),
+                        alarm.isDeleted.eq(false),
                         getAlarmTypeCondition(type)
                 )
                 .orderBy(
-                        alarm.isActivated.desc(),
                         alarm.alarmTime.asc()
                 )
                 .fetch();
