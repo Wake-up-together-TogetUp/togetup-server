@@ -50,6 +50,7 @@ public enum Status {
     INVALID_FILE_CONTENT_TYPE_EXCEPTION(HttpStatus.BAD_REQUEST, "이미지 컨텐트 타입이 유효하지 않습니다."),
     APP_VERSION_HIGHER_THAN_LATEST_EXCEPTION(HttpStatus.BAD_REQUEST, "데이터 내의 최신 버전보다 높은 버전입니다."),
     TIME_ZONE_ID_NOT_EXIST(HttpStatus.BAD_REQUEST, "유효하지 않은 시간대입니다."),
+    INVALID_ALARM_TYPE(HttpStatus.BAD_REQUEST, "알람 타입이 유효하지 않습니다."),
 
     // FORBIDDEN
     USER_AVATAR_LOCKED(HttpStatus.FORBIDDEN, "유저가 보유하지 않은 아바타 ID 입니다."),
@@ -66,6 +67,7 @@ public enum Status {
     FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "파일을 찾을 수 없습니다."),
     ACCOUNT_DOESNT_EXISTS(HttpStatus.NOT_FOUND, "계정이 존재하지 않습니다."),
     ROOM_USER_NOT_FOUND(HttpStatus.NOT_FOUND, "그룹의 해당 멤버가 없습니다."),
+    ALARM_TYPE_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 알람 타입입니다."),
 
     // CONFLICT
     USER_AVATAR_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 보유한 아바타 입니다."),
