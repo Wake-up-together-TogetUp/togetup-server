@@ -44,7 +44,7 @@ public interface EntityDtoMapper {
     GetMissionWithObjectListRes toGetMissionRes(Mission mission);
 
 
-    // GetMissionLogRes
+    // MissionLog
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "roomId", source = "room.id")
     GetMissionLogRes toMissionLogRes(MissionLog missionLog);

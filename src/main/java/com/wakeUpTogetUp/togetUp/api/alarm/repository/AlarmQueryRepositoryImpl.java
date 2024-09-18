@@ -8,7 +8,11 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.AlarmSimpleRes;
 import com.wakeUpTogetUp.togetUp.api.alarm.controller.dto.response.QAlarmSimpleRes;
+import com.wakeUpTogetUp.togetUp.api.alarm.domain.AlarmType;
+import com.wakeUpTogetUp.togetUp.api.alarm.model.Alarm;
+import com.wakeUpTogetUp.togetUp.common.Status;
 import com.wakeUpTogetUp.togetUp.common.annotation.LogExecutionTime;
+import com.wakeUpTogetUp.togetUp.exception.BaseException;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -27,7 +31,7 @@ public class AlarmQueryRepositoryImpl implements AlarmQueryRepository {
                 .select(
                         new QAlarmSimpleRes(
                                 alarm.id,
-                                alarm.missionObject.icon,
+                                    missionObject.icon,
                                 alarm.alarmTime,
                                 alarm.name,
                                 missionObject.kr,
@@ -35,9 +39,12 @@ public class AlarmQueryRepositoryImpl implements AlarmQueryRepository {
                         )
                 )
                 .from(alarm)
-                .innerJoin(missionObject).on(alarm.missionObject.id.eq(missionObject.id))
+                .join(alarm.missionObject, missionObject)
                 .where(
                         alarm.user.id.eq(userId)
+                                .and(alarm.isDeleted.eq(false))
+                                .and(alarm.isActivated.eq(true))
+                                .and(alarmTimeGoe(now.toLocalTime()))
                                 .and(isDayOrOneTimeAlarm(now))
                 )
                 .orderBy(
@@ -47,6 +54,19 @@ public class AlarmQueryRepositoryImpl implements AlarmQueryRepository {
                 .fetch();
     }
 
+    @Override
+    public List<Alarm> findUserAlarmsByType(Integer userId, AlarmType type) {
+        return query.selectFrom(alarm)
+                .where(
+                        alarm.user.id.eq(userId),
+                        alarm.isDeleted.eq(false),
+                        getAlarmTypeCondition(type)
+                )
+                .orderBy(
+                        alarm.alarmTime.asc()
+                )
+                .fetch();
+    }
 
     private BooleanExpression alarmTimeGoe(LocalTime now) {
         return alarm.alarmTime.goe(now);
@@ -55,8 +75,7 @@ public class AlarmQueryRepositoryImpl implements AlarmQueryRepository {
     @LogExecutionTime
     private BooleanExpression isDayOrOneTimeAlarm(LocalDateTime now) {
         return isDayAlarm(now.getDayOfWeek())
-                .or(isOneTimeAlarm())
-                .and(isActiveAlarm(now.toLocalTime()));
+                .or(isOneTimeAlarm());
     }
 
     private BooleanExpression isDayAlarm(DayOfWeek dayOfWeek) {
@@ -90,9 +109,14 @@ public class AlarmQueryRepositoryImpl implements AlarmQueryRepository {
                 .and(alarm.sunday.eq(false));
     }
 
-    private BooleanExpression isActiveAlarm(LocalTime now) {
-        return alarm.isActivated.eq(true)
-                .and(alarm.isDeleted.eq(false))
-                .and(alarmTimeGoe(now));
+    private BooleanExpression getAlarmTypeCondition(AlarmType type) {
+        switch (type) {
+            case PERSONAL:
+                return alarm.room.isNull();
+            case GROUP:
+                return alarm.room.isNotNull();
+            default:
+                throw new BaseException(Status.BAD_REQUEST_PARAM);
+        }
     }
 }

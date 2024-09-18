@@ -39,17 +39,8 @@ public class AlarmQueryService {
     public List<AlarmDetailRes> getAlarmsByUserIdOrderByDate(Integer userId, String type) {
         userValidationService.validateUserExist(userId);
 
-        List<Alarm> alarms;
-        switch (AlarmType.valueOf(type)) {
-            case PERSONAL:
-                alarms = alarmRepository.findAllByUser_IdAndRoom_IdIsNullOrderByAlarmTime(userId);
-                break;
-            case GROUP:
-                alarms = alarmRepository.findRoomAlarmByUserId(userId);
-                break;
-            default:
-                throw new BaseException(Status.BAD_REQUEST_PARAM);
-        }
+        AlarmType alarmType = AlarmType.getByName(type);
+        List<Alarm> alarms = alarmRepository.findUserAlarmsByType(userId, alarmType);
 
         return EntityDtoMapper.INSTANCE.toAlarmDetailResList(alarms);
     }
