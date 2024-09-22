@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  togetup-test-db:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: togetup-test
+      MYSQL_USER: togetup
+      MYSQL_PASSWORD: password!
+      MYSQL_ROOT_PASSWORD: password!
+      TZ: Asia/Seoul
+    ports:
+      - "3337:3306"
+
+
