@@ -66,8 +66,8 @@ jobs:
 
       - name: Docker build & push
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_DEV }} .
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_DEV }}
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/togetupdev .
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/togetupdev
 
       - name: Deploy to dev
         uses: appleboy/ssh-action@master
