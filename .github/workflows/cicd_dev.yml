@@ -79,8 +79,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: ${{ secrets.EC2_SSH_PORT }}
           script: |
-            sudo docker ps -qa | grep -q . && sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_DEV}}
+            docker-compose up -d
             sudo docker image prune -f
 
  
