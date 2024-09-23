@@ -18,5 +18,8 @@ services:
       TZ: Asia/Seoul
     ports:
       - "3337:3306"
+networks:
+  server-connection:
+    driver: bridge
 
 
