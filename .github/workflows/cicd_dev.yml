@@ -74,9 +74,9 @@ jobs:
       - name: Deploy to dev
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
+          host: ${{ secrets.EC2_HOST_DEV }}
+          username: ${{ secrets.EC2_USERNAME_DEV }}
+          key: ${{ secrets.EC2_SSH_KEY_DEV }}
           port: ${{ secrets.EC2_SSH_PORT }}
           script: |
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPO_DEV}}
