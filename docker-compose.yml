@@ -1,6 +1,13 @@
 version: '3.8'
 
 services:
+  togetup-server:
+    image: togetupdev/togetupdev
+    ports:
+      - "9010"
+    restart: always
+    networks:
+      - server-connection
   togetup-test-db:
     image: mysql:latest
     environment:
