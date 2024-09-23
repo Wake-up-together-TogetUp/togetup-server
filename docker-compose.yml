@@ -4,6 +4,8 @@ services:
   togetup-server:
     image: togetupdev/togetupdev
     ports:
+      - "9010:9010"
+    expose:
       - "9010"
     restart: always
     networks:
