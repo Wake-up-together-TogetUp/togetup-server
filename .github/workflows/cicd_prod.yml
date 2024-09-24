@@ -9,7 +9,7 @@ env:
   FILE_PATH: /home/ubuntu/app/
   FILE_NAME: TogetUp-0.0.1-SNAPSHOT.jar
 jobs:
-  build:
+  deploy_prod:
     runs-on: ubuntu-latest
     steps:
 
