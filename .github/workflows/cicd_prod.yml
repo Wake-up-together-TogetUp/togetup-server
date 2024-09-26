@@ -1,7 +1,7 @@
 name: TogetUp-Server-Prod CI/CD
 on:
   push:
-    branches: [ "product","env/docker-cd" ]
+    branches: [ "product" ]
 
 
 env:
