@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  togetup-server:
+    image: togetupdev/togetupdev
+    ports:
+      - "9010:9010"
+    expose:
+      - "9010"
+    restart: always
+    networks:
+      - server-connection
+    volumes:
+      - /home/ubuntu/app/src/main/resources:/app/src/main/resources
+networks:
+  server-connection:
+    driver: bridge
+
+

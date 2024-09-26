@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  togetup-server:
+    image: togetupdev/togetupprod
+    ports:
+      - "9010:9010"
+    expose:
+      - "9010"
+    restart: always
+    networks:
+      - server-connection
+    volumes:
+      - /home/ubuntu/app/src/main/resources:/app/src/main/resources
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /etc/nginx/sites-available:/etc/nginx/sites-available
+      - /etc/nginx/sites-enabled:/etc/nginx/sites-enabled
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/www/certbot:/var/www/certbot
+    networks:
+      - server-connection
+    depends_on:
+      - togetup-server
+    restart: always
+
+networks:
+  server-connection:
+    driver: bridge
