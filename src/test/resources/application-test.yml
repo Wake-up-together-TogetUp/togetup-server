@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:tc:mysql:8.0.36:///testdb
+    username: testuser
+    password: testpassword
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+
