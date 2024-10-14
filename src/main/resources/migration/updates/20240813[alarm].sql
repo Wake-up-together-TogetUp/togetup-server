@@ -1,1 +1,0 @@
-alter table alarm drop column icon;
