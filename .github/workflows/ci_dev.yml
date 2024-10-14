@@ -29,14 +29,6 @@ jobs:
           echo '${{ secrets.TOGETUP_DEV_APPLICATION }}' > ./src/main/resources/application.yml
         shell: bash
 
-      - name: 테스트 DB를 위한 MySQL 설정
-        uses: samin/mysql-action@v1.3
-        with:
-          mysql user: user
-          mysql password: password!
-          mysql database: togetup-test
-          host port: 3337
-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
