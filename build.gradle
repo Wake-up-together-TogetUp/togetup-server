@@ -141,6 +141,8 @@ dependencies {
     testImplementation "org.testcontainers:testcontainers:1.20.2"
     testImplementation "org.testcontainers:junit-jupiter:1.20.2"
     testImplementation 'org.testcontainers:mysql:1.19.0'
+    testImplementation 'mysql:mysql-connector-java:8.0.33'
+
 
     //flyway
     implementation 'org.flywaydb:flyway-core'
