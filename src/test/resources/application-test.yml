@@ -12,3 +12,7 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: false
 
+logging:
+  level:
+    org.testcontainers: debug
+
