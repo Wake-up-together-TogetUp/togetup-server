@@ -28,12 +28,12 @@ jobs:
           touch ./src/main/resources/application.yml
           echo '${{ secrets.TOGETUP_DEV_APPLICATION }}' > ./src/main/resources/application.yml
         shell: bash
+        
+      - name: Set Active Profile to 'test'
+        run: echo "SPRING_PROFILES_ACTIVE=test" >> $GITHUB_ENV
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-
-      - name: Check Docker Version
-        run: docker --version
 
       - name: Build with Gradle
         run: ./gradlew clean build --info
