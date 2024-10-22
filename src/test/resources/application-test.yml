@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:tc:mysql:8.0.36:///testdb
+    url: jdbc:tc:mysql:8.0.33:///testdb
     username: testuser
     password: testpassword
   jpa:
