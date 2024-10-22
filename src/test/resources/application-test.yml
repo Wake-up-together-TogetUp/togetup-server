@@ -9,7 +9,8 @@ spring:
       ddl-auto: none
     show-sql: true
   flyway:
-    enabled: false
-
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
 
 
