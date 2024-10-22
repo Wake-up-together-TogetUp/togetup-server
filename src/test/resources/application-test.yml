@@ -3,6 +3,7 @@ spring:
     url: jdbc:tc:mysql:8.0.33:///testdb
     username: testuser
     password: testpassword
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
   jpa:
     hibernate:
       ddl-auto: none
