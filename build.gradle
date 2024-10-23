@@ -5,6 +5,7 @@ plugins {
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
     id 'jacoco'
     id 'org.sonarqube' version '4.4.1.3373'
+
 }
 
 group = 'com.jogijo'
@@ -134,6 +135,18 @@ dependencies {
     implementation 'com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:0.8.1'
     implementation 'com.github.ben-manes.caffeine:caffeine'
     implementation 'com.github.ben-manes.caffeine:jcache'
+
+    // TestContainer
+    testImplementation "org.junit.jupiter:junit-jupiter:5.8.1"
+    testImplementation "org.testcontainers:testcontainers:1.20.2"
+    testImplementation "org.testcontainers:junit-jupiter:1.20.2"
+    testImplementation 'org.testcontainers:mysql:1.19.0'
+    testImplementation 'mysql:mysql-connector-java:8.0.33'
+
+
+    //flyway
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
@@ -250,5 +263,7 @@ sonar {
         property 'sonar.coverage.jacoco.xmlReportPaths', '${buildDir}/reports/jacoco/test/jacocoTestReport.xml'
     }
 }
+
+
 
 
