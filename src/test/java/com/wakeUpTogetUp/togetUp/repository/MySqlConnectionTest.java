@@ -2,12 +2,12 @@ package com.wakeUpTogetUp.togetUp.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.wakeUpTogetUp.togetUp.config.AbstractRepositoryTestContainers;
+import com.wakeUpTogetUp.togetUp.config.AbstractRepositoryTest;
 import javax.persistence.Query;
 import org.junit.jupiter.api.Test;
 
 
-public class MySqlConnectionTest extends AbstractRepositoryTestContainers {
+public class MySqlConnectionTest extends AbstractRepositoryTest {
 
     @Test
     void testConnection() {

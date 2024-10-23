@@ -13,7 +13,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @Import(QuerydslConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public abstract class AbstractRepositoryTestContainers {
+public abstract class AbstractRepositoryTest {
 
     @PersistenceContext
     protected EntityManager entityManager;
